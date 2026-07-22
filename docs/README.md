@@ -15,6 +15,7 @@ Docs
 - [Domains/](Domains/)
 - [Entities/](Entities/)
 - [Examples/](Examples/)
+- [Governance/](Governance/)
 - [Language/](Language/)
 - [Lifecycles/](Lifecycles/)
 - [Memory/](Memory/)

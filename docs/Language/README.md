@@ -1,7 +1,7 @@
 <!-- nav:start -->
 [Docs](../README.md) / Language
 
-[← Back](../Examples/README.md) · [↑ Up](../README.md) · [Next section →](../Lifecycles/README.md)
+[← Back](../Governance/README.md) · [↑ Up](../README.md) · [Next section →](../Lifecycles/README.md)
 
 ---
 <!-- nav:end -->

@@ -1,7 +1,7 @@
 <!-- nav:start -->
 [Docs](../README.md) / Examples
 
-[← Back](../Entities/README.md) · [↑ Up](../README.md) · [Next section →](../Language/README.md)
+[← Back](../Entities/README.md) · [↑ Up](../README.md) · [Next section →](../Governance/README.md)
 
 ---
 <!-- nav:end -->
