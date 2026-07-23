@@ -58,6 +58,7 @@ Summary pointers only. Full entries, Impact, and Architect Response live in `Arc
 |---|---|---|---|
 | OBS-001 | `AI/Context/Overview.md` and `AI/Agents/Context.md` are content-identical | Open | Architecture-Observations.md#obs-001 |
 | OBS-002 | Reference Architecture layer name retains "Business Object Architecture" while internal section headers use "Entity" | Closed | Architecture-Observations.md#obs-002 |
+| OBS-003 | Reference Case: proposed Object attribute lifecycle categories (structural/type-level/evolving/derived) — not adopted, insufficient independent corroboration | Open | Architecture-Observations.md#obs-003 |
 
 ---
 
@@ -81,3 +82,4 @@ Consciously deferred decisions. Not documentation debt.
 |----------|------|-------------|
 | 0.1 | 22 July 2026 | Initial register, populated from Documentation Health Report v0.1 |
 | 0.1 | 22 July 2026 | Added DEBT-DOC-001 (docs/README.md descriptive content regression) |
+| 0.1 | 22 July 2026 | Added pointer to OBS-003 (Reference Case: Object attribute lifecycle categories) |
