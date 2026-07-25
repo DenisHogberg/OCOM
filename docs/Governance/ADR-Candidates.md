@@ -84,6 +84,117 @@ Consequences by outcome:
 
 ---
 
+## CAND-003
+
+**Title:** Principle 11 — Separation of Professional Responsibility
+
+**Status:** Promoted to ADR — pending Core integration
+
+**Decision:** Promote to ADR (recorded 23 July 2026). Upon integration, this becomes **Core Principle 11 — Separation of Professional Responsibility** in `Core/Principles.md`.
+
+**Owner:** Chief Architect (Decision recorded); CDKO (pending: Core integration, as a separate task)
+
+**Created:** 23 July 2026
+
+**Decided:** 23 July 2026
+
+**Related Documents:** `Core/Principles.md`, `Core/Manifest.md`, `Meta/Policy.md`, `Memory/`, `Models/Workflow.md`, `AI/`
+
+**Process note:** Submitted directly as an ADR Candidate, not via a Reference Case. Per the author's explicit direction, this is treated as an architectural decision already reached, not a boundary observed through repeated evidence — Rules 1–2 of `Standard Evolution Methodology.md` (no Core extension on a single Reference Case) are accordingly not the basis for this candidate. Recorded here for transparency, consistent with Decision Transparency (`Governance-Manifest.md`, Principle 5), not to imply the normal evidentiary bar was cleared.
+
+**Discussion:**
+
+Proposed new Core Principle, to be numbered **11** (Principle 10 is already "Evolvability"; no existing numbering is disturbed).
+
+*Core idea:* OCOM is an Operational Memory / Knowledge Management / Object-Centric Operations system. It is not a system of professional expertise. The architecture deliberately separates operational memory from professional judgment.
+
+*OCOM's responsibility:* knowledge extraction, object model construction, Operational Memory management, linking objects, context retention, decision tracking, action tracking, process routing, owner assignment, change history.
+
+*Organization's responsibility:* professional decisions remain with the relevant specialist functions (Legal, Compliance, Finance, Risk Management, Information Security, HR, Internal Audit, Quality Assurance, others). OCOM does not substitute for their expertise.
+
+*Architectural rule:* where a process requires specialized evaluation, OCOM records the fact, records the context, determines that review is needed, creates a corresponding review object, and assigns the responsible unit — it does not itself reach the professional conclusion.
+
+*Worked example:* a meeting decision "the company is considering entering the German market" — OCOM extracts Strategic Initiative, Decision, Action, Target Market, Owners, and may create Legal Review / Compliance Review / Finance Review objects. It does not conclude whether the initiative is lawful, meets regulatory requirements, or should proceed — that remains the responsible units' call. (Illustrative; not an observed case.)
+
+*Company Policy link:* the organization defines its own policies (Operational, Compliance, Security, Finance, HR, Governance, Product). OCOM uses these as part of the operational model but does not substitute for their professional interpretation.
+
+*Explicitly out of scope for this candidate, per the author:* this is not an AI behavior constraint, not a safety mechanism, and not a description of any specific model's behavior. It is a Core architectural boundary, independent of whether AI is involved in operating the system.
+
+**Impact assessment (for the Architect's review, not a recommendation to act):**
+
+- `Core/Principles.md` — would add Principle 11.
+- `Core/Manifest.md` — Scope already excludes software architecture, UI, infrastructure, business strategy, etc., but does not currently exclude professional/expert judgment (legal, compliance, financial conclusions). This is a genuine gap, not a conflict — nothing currently claims OCOM makes such judgments, but nothing currently rules it out either.
+- `Meta/Policy.md` — substantial existing overlap. Its current definition ("a governed set of rules that defines expected behavior or constraints applicable to one or more Objects... independently of implementation technologies") already covers most of what "Company Policy" describes. The one genuinely new element is an explicit link from Policy to Memory (policies "becoming part of Operational Memory" and being used during Workflow execution) — today `Meta/Policy.md` and `Memory/` do not cross-reference each other.
+- `Memory/` — same cross-reference gap, from the other side.
+- `Models/Workflow.md` — the "create a review object, assign responsible unit" pattern is a Workflow-shaped concern; whether "Review" is meant as a new named Meta/Models concept or an illustrative Entity type using existing primitives is not stated in this submission and would need clarifying before any document is edited.
+- `AI/` — per the author, this principle is explicitly not an AI-specific constraint. If adopted, a light cross-reference noting that AI/ inherits this Core boundary (rather than defining its own separate one) may be warranted; no AI/ document currently states or contradicts this.
+
+**Next Action:** Decided — no further Architect action needed on this candidate. Core integration (adding Principle 11 to `Core/Principles.md`, and applying the Impact Assessment items above where the Architect confirms they're warranted) is explicitly deferred to a separate, subsequent task, per author instruction (23 July 2026). Not performed here.
+
+---
+
+## CAND-004
+
+**Title:** Principle 12 — Organizational Boundaries (provisional number: CAND-003 now occupies 11; this candidate is still undecided)
+
+**Status:** Open
+
+**Owner:** Chief Architect
+
+**Created:** 23 July 2026 · **Revised:** 23 July 2026 (Workspace framing removed; comparative analysis added, per author direction)
+
+**Related Documents:** `Core/Principles.md`, `Core/Manifest.md`, `Meta/Relationship.md`, `Meta/Contract.md`, `Entities/Partner/Partner.md`, `Models/Domain.md`, `Models/Workflow.md`, `Memory/`, `Governance/`, `AI/`
+
+**Process note:** This revision removes all framing of "Workspace" as an existing architectural entity, per author instruction. No document in the repository defines Workspace; it is not referenced below as part of the current model, and no argument here depends on it existing.
+
+**Problem, as reformulated:**
+
+OCOM today does not define an architectural model for how multiple independent organizations interact within one ecosystem. Specifically undefined:
+
+- how independent organizations interact;
+- where the architectural boundaries between them lie;
+- how relationships between organizations are modeled;
+- how the independence of each organization's operational memory is preserved.
+
+**Comparative analysis**
+
+### Option A — Existing primitives
+
+Checked against the four named concepts:
+
+- **Organization** — does not exist as a Meta primitive. No `Meta/Organization.md`, no equivalent, anywhere. `Entities/Partner/Partner.md` is the closest existing concept: *"A Partner is an operational entity representing an external individual, organization, or business that participates in one or more commercial relationships... exists independently of specific agreements, offers, campaigns, or operational systems."* An external organization could be modeled today as a `Partner` Entity — imperfectly (Partner's own definition treats "organization" as one of three possible things a Partner represents, not as its defining characteristic), but without inventing anything new.
+- **Relationship** — `Meta/Relationship.md` already defines Identifier, Source Object, Target Object, Relationship Type, with optional Direction, Cardinality, Status, Validity Period, Constraints. Its Relationship Types list is explicitly open: *"Organizations may define Relationship Types including: Ownership, Dependency, Composition, Association, Membership, Responsibility, Assignment, Delegation, Collaboration, Sequence. Additional relationship types may be introduced without affecting the model."* The proposed types (Contractor, Customer, Vendor, Supplier, Affiliate, Parent Company, Subsidiary, Investor, Regulator, Internal Department, etc.) could be added to this existing, already-extensible vocabulary directly — this part of the submission does not appear to need a new Meta Object at all.
+- **Contract** — `Meta/Contract.md` already defines governed agreements between Objects specifying interaction conditions. Covers the "Cross-Organization Objects" examples that are agreements (Contract, SLA, Purchase Order) without change.
+- **Partner and other related entities** — Partner already covers "external organization in a commercial relationship" at the Entity level, independent of specific agreements or campaigns, which is most of what the submission asks for.
+
+**What Option A does not cover:** operational memory partitioned per organization, never merging across organizations. `Models/Domain.md` partitions responsibility *within* one operational model (e.g., Finance vs. HR); it says nothing about multiple, independent operational models belonging to different organizations. No existing primitive — Relationship, Contract, Partner, or Domain — addresses memory isolation across organizational lines. This is the one part of the problem statement Option A does not answer.
+
+### Option B — New Meta Object `OrganizationRelationship`
+
+*What problem it would solve:* explicit, machine-checkable typing that a given relationship specifically connects two organizations (not any two arbitrary Objects), potentially carrying organization-specific rules — most importantly, a memory-isolation guarantee that generic `Relationship` does not carry.
+
+*Why the existing model might be insufficient:* a generic `Relationship` can express an org-to-org link by convention, but nothing enforces or labels it as such, and nothing in `Relationship` or `Contract` states or enforces that the two sides' operational memories stay separate. `OrganizationRelationship` could carry that guarantee explicitly.
+
+*Complication this option introduces:* `Relationship` requires two Objects as Source and Target. If "Organization" is not itself established as a Meta-level primitive (distinct from, or equivalent to, `Partner`), `OrganizationRelationship` has no well-defined thing to connect on one side. Option B is therefore not just "add one Meta Object" — it first requires deciding whether Organization is a new primitive, an alias for `Partner`, or unnecessary.
+
+*Not treated as pre-decided.* Both options are presented for the Architect to weigh; this record does not recommend one.
+
+**Impact assessment**
+
+| Document | Assessment |
+|---|---|
+| `Core/Principles.md` | Change required *if* an ADR is approved — a new Principle (12, or the next open number) would be added, regardless of A or B. |
+| `Core/Manifest.md` | Change required — Scope does not currently mention multi-organization modeling in either direction (neither claimed nor excluded). |
+| `Meta/` | Needs further architectural discussion — contingent entirely on Option A vs. B, and on the Organization-primitive question raised in Option B. |
+| `Models/` | Needs further architectural discussion — `Models/Domain.md`'s boundary concept is adjacent but answers a different question (responsibility within one model, not separation across organizations); whether that document should be extended or left alone is not resolved here. |
+| `Memory/` | Needs further architectural discussion — no existing document addresses per-organization memory isolation; how to express it, if adopted, is undetermined. |
+| `Governance/` | No change required — the ADR Candidate process itself is already handling this correctly; no update needed beyond this record. |
+| `AI/` | No change required — no AI/ document currently addresses or conflicts with multi-organization modeling. |
+
+**Next Action:** Chief Architect to decide between Option A (extend existing Relationship Types + use Partner as Organization) and Option B (new `OrganizationRelationship` Meta Object, with the Organization-primitive question resolved first) — or reject/merge/close without ADR. No implementation proceeds until that Decision is recorded.
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -91,3 +202,7 @@ Consequences by outcome:
 | 0.1 | 22 July 2026 | Initial queue, 1 candidate |
 | 0.1 | 22 July 2026 | Added CAND-002 (set-scoped Conformance), referenced from `docs/Specification/08 Conformance.md` |
 | 0.1 | 22 July 2026 | Migrated both candidates to the uniform ID/Title/Status/Owner/Created/Related Documents/Discussion/Next Action lifecycle |
+| 0.1 | 23 July 2026 | Added CAND-003 (Principle 11 — Separation of Professional Responsibility), submitted directly per author direction, bypassing the Reference Case stage |
+| 0.1 | 23 July 2026 | Added CAND-004 (Organizational Boundaries) — number contingent on CAND-003 resolution; recorded that "Workspace" and `Meta/Organization.md` do not currently exist in the repository |
+| 0.1 | 23 July 2026 | CAND-003: Decision recorded — Promote to ADR (becomes Core Principle 11); Core integration deferred to a separate task |
+| 0.1 | 23 July 2026 | CAND-004: revised to remove Workspace framing; added Option A/B comparative analysis and three-way impact assessment |
