@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 23 July 2026
 
 ---
 
@@ -81,10 +81,13 @@ Memory may reference:
 - Lifecycles
 - Domains
 - AI Agents
+- Policies
 
 Memory does not replace business systems.
 
 Instead, Memory augments business systems by preserving operational knowledge and contextual information.
+
+Memory retains facts, context, decisions, policies, and history. Memory does not substitute for professional expertise — interpretation and expert judgment remain the responsibility of the organization's specialized functions (see `Core/Principles.md`, Principle 11 — Separation of Professional Responsibility).
 
 ---
 
@@ -150,3 +153,4 @@ Additional Memory documents may be introduced in future versions.
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 23 July 2026 | Added Policies to referenced concepts; clarified that Memory does not substitute for professional expertise, per Principle 11 (ADR CAND-003) |

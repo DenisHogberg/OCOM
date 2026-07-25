@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 23 July 2026
 
 ---
 
@@ -172,6 +172,14 @@ An AI Agent may initiate, execute, assist, or monitor workflow activities.
 
 ---
 
+# Relationship to Professional Responsibility
+
+AI Agents help structure information, extract knowledge, build the object model, and support Workflow execution.
+
+AI Agents do not substitute for the organization's professional responsibility, consistent with Principle 11 — Separation of Professional Responsibility (`Core/Principles.md`). Where a task requires specialized professional judgment, an AI Agent shall preserve context and route the matter to the responsible organizational function rather than reaching the professional conclusion itself.
+
+---
+
 # Independence
 
 The AI Agent specification does not prescribe:
@@ -203,3 +211,4 @@ A compliant AI Agent shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 23 July 2026 | Added Relationship to Professional Responsibility section, per Principle 11 (ADR CAND-003) |

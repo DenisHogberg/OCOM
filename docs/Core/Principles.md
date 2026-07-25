@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 23 July 2026
 
 ---
 
@@ -102,6 +102,16 @@ The framework shall support organizational evolution without requiring redesign 
 
 ---
 
+# Principle 11 — Separation of Professional Responsibility
+
+OCOM deliberately separates the management of operational memory from professional expertise.
+
+OCOM is responsible for Operational Memory, the Object Model, Knowledge Management, Context Preservation, Workflow Coordination, Decision Tracking, and Action Tracking.
+
+Professional functions of the organization — including Legal, Compliance, Finance, Security, and HR — are responsible for expert judgments and decisions within their domains. OCOM shall not substitute for professional expertise; it supports that expertise through structured operational memory.
+
+---
+
 # Conformance
 
 All models created using this specification shall conform to these principles.
@@ -113,3 +123,4 @@ All models created using this specification shall conform to these principles.
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 23 July 2026 | Added Principle 11 — Separation of Professional Responsibility (ADR CAND-003, Promoted 23 July 2026) |

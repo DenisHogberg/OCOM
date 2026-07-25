@@ -88,7 +88,7 @@ Consequences by outcome:
 
 **Title:** Principle 11 — Separation of Professional Responsibility
 
-**Status:** Promoted to ADR — pending Core integration
+**Status:** Promoted to ADR — Integrated into Core (23 July 2026)
 
 **Decision:** Promote to ADR (recorded 23 July 2026). Upon integration, this becomes **Core Principle 11 — Separation of Professional Responsibility** in `Core/Principles.md`.
 
@@ -129,7 +129,7 @@ Proposed new Core Principle, to be numbered **11** (Principle 10 is already "Evo
 - `Models/Workflow.md` — the "create a review object, assign responsible unit" pattern is a Workflow-shaped concern; whether "Review" is meant as a new named Meta/Models concept or an illustrative Entity type using existing primitives is not stated in this submission and would need clarifying before any document is edited.
 - `AI/` — per the author, this principle is explicitly not an AI-specific constraint. If adopted, a light cross-reference noting that AI/ inherits this Core boundary (rather than defining its own separate one) may be warranted; no AI/ document currently states or contradicts this.
 
-**Next Action:** Decided — no further Architect action needed on this candidate. Core integration (adding Principle 11 to `Core/Principles.md`, and applying the Impact Assessment items above where the Architect confirms they're warranted) is explicitly deferred to a separate, subsequent task, per author instruction (23 July 2026). Not performed here.
+**Next Action:** None — closed. Integrated 23 July 2026 into `Core/Principles.md` (Principle 11), `Core/Manifest.md` (Scope), `Meta/Policy.md` (Relationship to Memory), `Memory/Overview.md` (Relationship to OCOM), `Models/Workflow.md` (Professional Review Escalation), and `AI/Overview.md` (Relationship to Professional Responsibility). No new Meta Objects were created; no existing definitions were changed.
 
 ---
 
@@ -206,3 +206,4 @@ Checked against the four named concepts:
 | 0.1 | 23 July 2026 | Added CAND-004 (Organizational Boundaries) — number contingent on CAND-003 resolution; recorded that "Workspace" and `Meta/Organization.md` do not currently exist in the repository |
 | 0.1 | 23 July 2026 | CAND-003: Decision recorded — Promote to ADR (becomes Core Principle 11); Core integration deferred to a separate task |
 | 0.1 | 23 July 2026 | CAND-004: revised to remove Workspace framing; added Option A/B comparative analysis and three-way impact assessment |
+| 0.1 | 23 July 2026 | CAND-003: marked Integrated — Core integration completed across 6 documents |

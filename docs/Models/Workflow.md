@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 23 July 2026
 
 ---
 
@@ -115,6 +115,16 @@ Failure handling shall not violate Lifecycle rules.
 
 ---
 
+# Professional Review Escalation
+
+Where a Workflow's outcome depends on specialized professional judgment, the Workflow shall not reach that judgment itself.
+
+Instead, the Workflow shall: preserve the relevant context; preserve the Entities and Events involved; determine that professional review is required; and assign the review to the responsible organizational function. This is consistent with Principle 11 — Separation of Professional Responsibility (`Core/Principles.md`).
+
+A Workflow may represent such a review using the existing Entity Model; this does not introduce a new Meta-level construct.
+
+---
+
 # Constraints
 
 A Workflow shall never:
@@ -143,3 +153,4 @@ Future versions of this specification may introduce additional Workflow capabili
 | Version | Date | Description |
 |----------|------|-------------|
 |0.1|20 July 2026|Initial draft|
+|0.1|23 July 2026|Added Professional Review Escalation section, per Principle 11 (ADR CAND-003)|

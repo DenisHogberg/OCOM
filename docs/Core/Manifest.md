@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 23 July 2026
 
 ---
 
@@ -125,7 +125,9 @@ This specification does not define:
 - user interface design;
 - infrastructure;
 - implementation technologies;
-- business strategy.
+- business strategy;
+- professional or expert judgments (legal, compliance, financial, or similar);
+- the responsibilities of an organization's specialized functions (Legal, Compliance, Finance, Security, HR, and others).
 
 ---
 
@@ -213,3 +215,4 @@ This document represents the initial draft of the specification and is subject t
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 23 July 2026 | Scope extended to exclude professional/expert judgments and specialized organizational functions, per Principle 11 (ADR CAND-003) |

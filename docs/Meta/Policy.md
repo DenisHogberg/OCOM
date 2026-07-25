@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 23 July 2026
 
 ---
 
@@ -218,8 +218,11 @@ Policy interacts with:
 - Ownership
 - Evaluation
 - Governance
+- Memory
 
 Policies define governing rules but do not perform operational activities.
+
+Operational Memory retains Policies as part of the organizational context available when interpreting processes and decisions. Interpretation of a Policy's meaning and applicability remains the responsibility of the organization; Operational Memory preserves Policies but does not interpret them.
 
 ---
 
@@ -253,3 +256,4 @@ A compliant implementation shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 23 July 2026 | Added Memory to Relationship to Other Specifications; clarified that Operational Memory preserves but does not interpret Policy, per Principle 11 (ADR CAND-003) |
