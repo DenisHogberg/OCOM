@@ -137,7 +137,7 @@ Proposed new Core Principle, to be numbered **11** (Principle 10 is already "Evo
 
 **Title:** Principle 12 — Organizational Boundaries (provisional number: CAND-003 now occupies 11; this candidate is still undecided)
 
-**Status:** Open
+**Status:** Blocked — see CAND-005
 
 **Owner:** Chief Architect
 
@@ -191,7 +191,90 @@ Checked against the four named concepts:
 | `Governance/` | No change required — the ADR Candidate process itself is already handling this correctly; no update needed beyond this record. |
 | `AI/` | No change required — no AI/ document currently addresses or conflicts with multi-organization modeling. |
 
-**Next Action:** Chief Architect to decide between Option A (extend existing Relationship Types + use Partner as Organization) and Option B (new `OrganizationRelationship` Meta Object, with the Organization-primitive question resolved first) — or reject/merge/close without ADR. No implementation proceeds until that Decision is recorded.
+**Next Action:** Blocked. `CAND-005 — Organization vs Domain as the Top-Level Architectural Boundary` must be decided first: it determines whether "Organization" is a new architectural layer, an alias for an existing concept, or unnecessary — which directly determines whether Option A or Option B above is even coherent. Once CAND-005 is decided, this candidate must be revisited to confirm whether it still applies as written or needs rework.
+
+---
+
+## CAND-005 — 🔴 Blocking ADR
+
+**Title:** Organization vs Domain as the Top-Level Architectural Boundary
+
+**Status:** Open
+
+**Blocking:** This candidate blocks `CAND-004`. CAND-004 shall not be decided until CAND-005 is resolved.
+
+**Owner:** Chief Architect
+
+**Created:** 23 July 2026
+
+**Related Documents:** `Meta/Object.md`, `Models/Domain.md`, `Models/Entity.md`, `Core/Principles.md`, `Governance/ADR-Candidates.md#cand-004`
+
+**What is already established:**
+
+`Domain` is an existing, formally defined architectural entity. `Models/Domain.md`: *"A Domain is an operational boundary responsible for governing one or more Entities."* The same document states directly: *"it represents what is governed, not who performs the work."* Domain, by its own definition, deliberately does not answer the question of organizational ownership.
+
+**What is missing:**
+
+No formal model exists for Organization, Organizational Boundary, Multiple Organizations, or Cross-Organization Architecture. "Organization" is used only as an ordinary-language word (e.g., in `Core/Manifest.md`'s Abstract, in `Entities/Partner/Partner.md`'s definition). No architectural entity named Organization currently exists anywhere in the repository.
+
+**The architectural question:**
+
+The system's top-level architectural boundary must be determined. Two directions:
+
+### Option A — Domain remains the top-level boundary
+
+Domain stays where it is; no new layer is introduced. This requires determining:
+- how a Domain acquires organizational ownership;
+- whether the existing `Relationship` model is sufficient to express that ownership;
+- whether a new architectural entity, Organization, is needed at all.
+
+### Option B — Organization becomes a new architectural layer
+
+```text
+Object
+    ├── Organization
+    │
+    ├── Domain
+    │
+    ├── Entity
+    │
+    ├── Workflow
+    │
+    └── ...
+```
+
+This requires determining:
+- the relationship between Organization and Domain;
+- Organization's lifecycle;
+- Organization's ownership model;
+- Organization's governance;
+- how multiple independent organizations coexist;
+- the impact on the existing Object Model.
+
+**Questions this ADR must answer, at minimum:**
+
+1. Is Domain a sufficient top-level architectural boundary?
+2. Is a new architectural layer, Organization, required?
+3. If required, is Organization a new Meta Object, or a specialization of the existing Object primitive?
+4. How do multiple independent organizations coexist architecturally?
+5. What is the impact on: Object Model; Domain Model; Entity Ownership; Governance; Operational Memory; Workflow; Registry; AI?
+
+**Impact assessment (for the Architect's review, not a recommendation to act):**
+
+| Area | Assessment |
+|---|---|
+| Object Model | Needs further architectural discussion — depends entirely on whether Organization becomes a specialization of Object (Option B) or is not introduced (Option A). |
+| Domain Model | Needs further architectural discussion — `Models/Domain.md`'s own text ("what is governed, not who performs the work") may need a companion statement once ownership is resolved, regardless of option. |
+| Entity Ownership | Needs further architectural discussion — every Entity already requires an Owner (`Models/Entity.md`); whether that Owner can or must resolve to an Organization is unresolved. |
+| Governance | No change required — this question is being handled correctly through the existing ADR Candidate process; no update to `Governance/` process documents is implied by either option. |
+| Operational Memory | Needs further architectural discussion — same open question already logged in CAND-004: whether memory isolation across organizations needs explicit architectural support. |
+| Workflow | No change required identified — no current conflict found; would only need revisiting if Option B changes what a Workflow's Entities can belong to. |
+| Registry | Needs further architectural discussion — `Meta/Registry.md` defines governed collections of Objects; whether Registries are scoped per Organization under Option B is undetermined. |
+| AI | No change required identified — no current AI/ document addresses or conflicts with either option. |
+
+**Explicitly not the goal of this candidate:** to pre-select an option. The goal is to record the fork itself, so it can be decided deliberately rather than inherited implicitly by whichever way CAND-004 happens to be written.
+
+**Next Action:** Chief Architect to decide Option A or Option B (or an alternative not listed here). Upon decision, revisit CAND-004 to confirm whether it remains valid as written or requires rework.
 
 ---
 
@@ -207,3 +290,4 @@ Checked against the four named concepts:
 | 0.1 | 23 July 2026 | CAND-003: Decision recorded — Promote to ADR (becomes Core Principle 11); Core integration deferred to a separate task |
 | 0.1 | 23 July 2026 | CAND-004: revised to remove Workspace framing; added Option A/B comparative analysis and three-way impact assessment |
 | 0.1 | 23 July 2026 | CAND-003: marked Integrated — Core integration completed across 6 documents |
+| 0.1 | 23 July 2026 | Added CAND-005 (Organization vs Domain as the Top-Level Architectural Boundary) — marked Blocking; CAND-004 marked Blocked pending its resolution |
