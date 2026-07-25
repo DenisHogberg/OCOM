@@ -47,6 +47,7 @@ Entries are split into four categories to separate real problems from consciousl
 |---|---|---|---|---|---|
 | GAP-001 | Four competing filename conventions coexist across the specification (Title Case With Spaces, snake_case/UPPER-suffix, PascalCase, kebab-case) | Low | ~237 content files across the specification | Agree on a single convention for a future version; do not rename files without a separate approved proposal | Open |
 | GAP-002 | `Core/Terminology.md` does not define Object, Capability, Policy, Contract, Context, Knowledge, or Memory, although each has its own normative document elsewhere | Medium | `Core/Terminology.md` | Extend the glossary to cover all Meta-level concepts | Open |
+| GAP-003 | Author referenced "M020 — Public Product Release" (23 July 2026) as a prior Milestone. No definition, criteria, or scope for M020 exists anywhere in the repository, its full commit history, or any Governance document. | Low | Milestone numbering generally; `ROADMAP.md` | Author decision. | Closed |
 
 ---
 
@@ -83,3 +84,4 @@ Consciously deferred decisions. Not documentation debt.
 | 0.1 | 22 July 2026 | Initial register, populated from Documentation Health Report v0.1 |
 | 0.1 | 22 July 2026 | Added DEBT-DOC-001 (docs/README.md descriptive content regression) |
 | 0.1 | 22 July 2026 | Added pointer to OBS-003 (Reference Case: Object attribute lifecycle categories) |
+| 0.1 | 23 July 2026 | Added GAP-003 (M020 does not exist; Milestone numbering begins at M021), recorded Closed per author decision |
