@@ -135,63 +135,98 @@ Proposed new Core Principle, to be numbered **11** (Principle 10 is already "Evo
 
 ## CAND-004
 
-**Title:** Principle 12 — Organizational Boundaries (provisional number: CAND-003 now occupies 11; this candidate is still undecided)
+**Title:** Modeling Cross-Organization Relationships
 
-**Status:** Superseded — CAND-005 decided (Option C); this candidate's original framing (Domain vs. Organization, Option A/B) no longer applies. Queued for rework as "Modeling Cross-Organization Relationships," per CAND-005's Consequence note. Rework not yet performed.
+**Status:** Open
 
 **Owner:** Chief Architect
 
-**Created:** 23 July 2026 · **Revised:** 23 July 2026 (Workspace framing removed; comparative analysis added, per author direction)
+**Created:** 23 July 2026 · **Rewritten:** 23 July 2026, following the CAND-005 Decision (Option C)
 
-**Related Documents:** `Core/Principles.md`, `Core/Manifest.md`, `Meta/Relationship.md`, `Meta/Contract.md`, `Entities/Partner/Partner.md`, `Models/Domain.md`, `Models/Workflow.md`, `Memory/`, `Governance/`, `AI/`
+**History:** This candidate was originally framed as "Organization vs Domain as the Top-Level Architectural Boundary" (Option A vs. Option B). CAND-005 decided that question directly — Organization is a first-class, peer specialization of Object, not a new layer and not an attribute of Domain — with a third option neither A nor B anticipated. That made this candidate's original framing inapplicable; it was not rejected, and is rewritten here rather than closed. The original text is preserved in this document's revision history for traceability.
 
-**Process note:** This revision removes all framing of "Workspace" as an existing architectural entity, per author instruction. No document in the repository defines Workspace; it is not referenced below as part of the current model, and no argument here depends on it existing.
+**Related Documents:** `Meta/Relationship.md`, `Meta/Reference.md`, `Meta/Ownership.md`, `Meta/Identity.md`, `Meta/Registry.md`, `Meta/Contract.md`, `Meta/Policy.md`, `Models/Domain.md`, `Models/Workflow.md`, `Entities/Partner/Partner.md`, `Memory/`, `AI/`, `Governance/ADR-Candidates.md#cand-005`
 
-**Problem, as reformulated:**
+**Architectural basis (from CAND-005, not re-litigated here):** Object is the sole architectural root. Organization is a new peer specialization of Object, alongside Entity, Domain, Workflow, Event, Policy, Contract, and others. Domain keeps its existing semantics unchanged. Organization connects to other Objects only through the existing Relationship model — no new hierarchy, no ownership-based containment.
 
-OCOM today does not define an architectural model for how multiple independent organizations interact within one ecosystem. Specifically undefined:
+**Problem:**
 
-- how independent organizations interact;
-- where the architectural boundaries between them lie;
-- how relationships between organizations are modeled;
-- how the independence of each organization's operational memory is preserved.
+OCOM now supports multiple independent Organization objects. The architectural model for how they interact must be defined. The question is no longer "Organization or Domain?" — it is:
 
-**Comparative analysis**
+**How do independent Organizations interact with one another while each retains the autonomy of its own operational model?**
 
-### Option A — Existing primitives
+**Research questions**
 
-Checked against the four named concepts:
+### 1. Inter-organizational relationships
 
-- **Organization** — does not exist as a Meta primitive. No `Meta/Organization.md`, no equivalent, anywhere. `Entities/Partner/Partner.md` is the closest existing concept: *"A Partner is an operational entity representing an external individual, organization, or business that participates in one or more commercial relationships... exists independently of specific agreements, offers, campaigns, or operational systems."* An external organization could be modeled today as a `Partner` Entity — imperfectly (Partner's own definition treats "organization" as one of three possible things a Partner represents, not as its defining characteristic), but without inventing anything new.
-- **Relationship** — `Meta/Relationship.md` already defines Identifier, Source Object, Target Object, Relationship Type, with optional Direction, Cardinality, Status, Validity Period, Constraints. Its Relationship Types list is explicitly open: *"Organizations may define Relationship Types including: Ownership, Dependency, Composition, Association, Membership, Responsibility, Assignment, Delegation, Collaboration, Sequence. Additional relationship types may be introduced without affecting the model."* The proposed types (Contractor, Customer, Vendor, Supplier, Affiliate, Parent Company, Subsidiary, Investor, Regulator, Internal Department, etc.) could be added to this existing, already-extensible vocabulary directly — this part of the submission does not appear to need a new Meta Object at all.
-- **Contract** — `Meta/Contract.md` already defines governed agreements between Objects specifying interaction conditions. Covers the "Cross-Organization Objects" examples that are agreements (Contract, SLA, Purchase Order) without change.
-- **Partner and other related entities** — Partner already covers "external organization in a commercial relationship" at the Entity level, independent of specific agreements or campaigns, which is most of what the submission asks for.
+What relationship types are valid between two Organizations — e.g., Contractor, Customer, Vendor, Supplier, Partner, Affiliate, Parent Company, Subsidiary, Regulator, Investor?
 
-**What Option A does not cover:** operational memory partitioned per organization, never merging across organizations. `Models/Domain.md` partitions responsibility *within* one operational model (e.g., Finance vs. HR); it says nothing about multiple, independent operational models belonging to different organizations. No existing primitive — Relationship, Contract, Partner, or Domain — addresses memory isolation across organizational lines. This is the one part of the problem statement Option A does not answer.
+*What's already in place:* `Meta/Relationship.md`'s Relationship Types list is explicitly open: *"Organizations may define Relationship Types including: Ownership, Dependency, Composition, Association, Membership, Responsibility, Assignment, Delegation, Collaboration, Sequence. Additional relationship types may be introduced without affecting the model."* Every type named in this question can plausibly be added to this already-extensible list without a new mechanism. This part of the problem looks close to already solved by an existing, unmodified primitive.
 
-### Option B — New Meta Object `OrganizationRelationship`
+*What's not yet decided:* whether this list needs to stay a free-text/example vocabulary (as it is today) or become a constrained enumeration specifically for inter-Organization relationships — an open design choice, not a gap in the model.
 
-*What problem it would solve:* explicit, machine-checkable typing that a given relationship specifically connects two organizations (not any two arbitrary Objects), potentially carrying organization-specific rules — most importantly, a memory-isolation guarantee that generic `Relationship` does not carry.
+### 2. Ownership
 
-*Why the existing model might be insufficient:* a generic `Relationship` can express an org-to-org link by convention, but nothing enforces or labels it as such, and nothing in `Relationship` or `Contract` states or enforces that the two sides' operational memories stay separate. `OrganizationRelationship` could carry that guarantee explicitly.
+What can an Organization own — Domain, Entity, Workflow, Policy, Asset, Contract, some subset?
 
-*Complication this option introduces:* `Relationship` requires two Objects as Source and Target. If "Organization" is not itself established as a Meta-level primitive (distinct from, or equivalent to, `Partner`), `OrganizationRelationship` has no well-defined thing to connect on one side. Option B is therefore not just "add one Meta Object" — it first requires deciding whether Organization is a new primitive, an alias for `Partner`, or unnecessary.
+*What's already in place:* `Meta/Ownership.md` already anticipates this: *"Ownership identifies the individual, team, **organizational unit**, or system responsible for governing an Object."* Once Organization exists as a first-class Object, it fits this definition without any change to `Meta/Ownership.md`'s text.
 
-*Not treated as pre-decided.* Both options are presented for the Architect to weigh; this record does not recommend one.
+*What's not yet decided:* `Models/Entity.md` requires *"Every Entity shall have **one** responsible owner"* — singular. Whether an Organization can be that one owner for Domain, Workflow, Policy, etc. (likely yes, no conflict) is different from whether an object can have **more than one** owning Organization at once (see Question 4 — this is where a real tension with the existing single-owner invariant appears).
+
+### 3. Cross-Organization references
+
+Can an object belonging to one Organization reference an object belonging to another? If so, how, with what constraints, and how is each Organization's model independence preserved?
+
+*What's already in place:* the existing distinction between `Meta/Reference.md` (a directed pointer, no implied meaning) and `Meta/Relationship.md` (a governed, meaningful association) already gives two different-weight mechanisms for one Organization's objects to point at another's, without merging anything.
+
+*What's not yet decided:* nothing in either document today states that a Reference or Relationship crossing an Organization boundary must not, by itself, grant access to or merge the target Organization's Operational Memory. This is an omission, not a contradiction — worth deciding explicitly rather than assuming.
+
+### 4. Shared objects
+
+Are objects shared across Organizations permitted — e.g., Contract, SLA, Project, Campaign? If so, what governs their ownership, lifecycle, governance, and versioning?
+
+*What's already in place:* `Meta/Contract.md` already defines a Contract as *"a governed agreement between **two or more** Objects"* — multi-party participation is already native to Contract. Campaign already exists as an Entity (`Entities/Campaign/`); SLA and Project do not exist anywhere yet.
+
+*What's not yet decided, and in real tension:* the single-owner invariant in Question 2. A Contract naturally involves two or more Organizations as parties, but "party to a Contract" and "owner of a Contract" are not stated as the same thing anywhere today. Whether a shared object has exactly one owning Organization (with the others as parties, not owners) or requires a different ownership model is unresolved — this is the sharpest open question in this candidate.
+
+### 5. Operational Memory
+
+Is Operational Memory fully independent per Organization, or can shared memory regions exist?
+
+*Status:* unresolved, carried over unchanged from the original CAND-004 and from CAND-005's impact assessment. No document in `Memory/` addresses per-organization isolation or sharing. This remains open.
+
+### 6. Registry
+
+How does a Registry identify objects belonging to different Organizations — global identifiers, or Organization as part of Identity?
+
+*What's already in place:* `Meta/Identity.md` defines Identity as *"the persistent and unique representation of an Object"* but says nothing about namespacing or scope. `Meta/Registry.md` defines a Registry as a governed collection preserving identity and traceability, also silent on multi-Organization scope.
+
+*Status:* genuinely undecided; existing text neither supports nor rules out either approach.
+
+### 7. AI
+
+How does AI operate across multiple Organizations at once, without mixing context, crossing organizational boundaries, or ambiguous object interpretation?
+
+*What's already in place:* `AI/Overview.md` already requires AI Agents to *"operate within organizational governance"* and to *"respect organizational policies"* (Design Principles), and — per Principle 11's integration — to route matters requiring professional judgment to the responsible organizational function rather than deciding itself. None of this currently addresses operating across more than one Organization concurrently.
+
+*Status:* genuinely undecided; this is new territory, not a gap in an existing multi-Organization design.
 
 **Impact assessment**
 
-| Document | Assessment |
+| Area | Assessment |
 |---|---|
-| `Core/Principles.md` | Change required *if* an ADR is approved — a new Principle (12, or the next open number) would be added, regardless of A or B. |
-| `Core/Manifest.md` | Change required — Scope does not currently mention multi-organization modeling in either direction (neither claimed nor excluded). |
-| `Meta/` | Needs further architectural discussion — contingent entirely on Option A vs. B, and on the Organization-primitive question raised in Option B. |
-| `Models/` | Needs further architectural discussion — `Models/Domain.md`'s boundary concept is adjacent but answers a different question (responsibility within one model, not separation across organizations); whether that document should be extended or left alone is not resolved here. |
-| `Memory/` | Needs further architectural discussion — no existing document addresses per-organization memory isolation; how to express it, if adopted, is undetermined. |
-| `Governance/` | No change required — the ADR Candidate process itself is already handling this correctly; no update needed beyond this record. |
-| `AI/` | No change required — no AI/ document currently addresses or conflicts with multi-organization modeling. |
+| Object Model | No change required identified — Organization's introduction as a peer specialization was already settled by CAND-005; this candidate does not reopen it. |
+| Relationship Model | Needs further architectural discussion — Question 1 suggests the existing extensible Relationship Types list is likely sufficient; whether it should be constrained specifically for inter-Organization use is an open design choice. |
+| Identity | Needs further architectural discussion — Question 6; genuinely undecided whether Organization becomes part of Identity scope. |
+| Registry | Needs further architectural discussion — same as Identity; no existing text addresses multi-Organization scope. |
+| Memory | Needs further architectural discussion — Question 5, carried over unresolved from CAND-004's original version and from CAND-005. |
+| Workflow | No change required identified — no current conflict found; would only need revisiting once Questions 3–4 are resolved, if a Workflow needs to act across Organizations. |
+| Policy | No change required identified — `Meta/Policy.md`'s existing Policy Scope already lists "Organizations" as a valid scope; no contradiction found. |
+| AI | Needs further architectural discussion — Question 7; genuinely new territory. |
 
-**Next Action:** Blocked. `CAND-005 — Organization vs Domain as the Top-Level Architectural Boundary` must be decided first: it determines whether "Organization" is a new architectural layer, an alias for an existing concept, or unnecessary — which directly determines whether Option A or Option B above is even coherent. Once CAND-005 is decided, this candidate must be revisited to confirm whether it still applies as written or needs rework.
+**Explicitly out of scope for this candidate:** proposing an implementation mechanism, introducing any new Meta Object, and proposing any new Core Principle. This candidate's purpose is to enumerate the open questions precisely, using only what already exists, so the Architect can decide with full information — not to pre-select answers.
+
+**Next Action:** Chief Architect to review the seven questions above and decide which require a Core change, which are already resolved by existing primitives (per the "what's already in place" notes), and which need further, separate architectural discussion before any decision is recorded.
 
 ---
 
@@ -329,3 +364,4 @@ This requires determining:
 | 0.1 | 23 July 2026 | CAND-003: marked Integrated — Core integration completed across 6 documents |
 | 0.1 | 23 July 2026 | Added CAND-005 (Organization vs Domain as the Top-Level Architectural Boundary) — marked Blocking; CAND-004 marked Blocked pending its resolution |
 | 0.1 | 23 July 2026 | CAND-005: Decision recorded — Option C (Organization as a first-class peer specialization of Object, connected via Relationship, not a new layer). CAND-004 marked Superseded, queued for rework as "Modeling Cross-Organization Relationships." |
+| 0.1 | 23 July 2026 | CAND-004: fully rewritten as "Modeling Cross-Organization Relationships," on the CAND-005 Option C basis — old Organization-vs-Domain framing replaced with 7 research questions (relationship types, ownership, cross-org references, shared objects, memory, registry, AI) and a revised impact assessment |
