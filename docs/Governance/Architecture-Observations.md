@@ -96,9 +96,57 @@ The CDKO records observations. It does not resolve them. Resolution is the respo
 
 ---
 
+## AO-001
+
+**Title:** Domain Definition Divergence
+
+**Date observed:** 25 July 2026
+
+**Description:** `Models/Domain.md` (`Model-XX`) and `Domains/Common/Domain.md` (`DOM-DOMAIN-01`) contain two independent normative models of Domain, with differing scope:
+
+- `Models/Domain.md`: "A Domain is an operational boundary responsible for governing one or more **Entities**... A Domain represents what is governed, not who performs the work."
+- `Domains/Common/Domain.md`: "A Domain is a logical business boundary responsible for managing a coherent set of **Objects**, capabilities, policies, processes, and operational outcomes."
+
+The two documents use separate Document ID schemes, define different Core Characteristics (`Domains/Common/Domain.md` additionally includes Capabilities, Policies, Constraints, and Integration Points), and neither cross-references the other as authoritative.
+
+**Impact:** It is unclear which document is the canonical normative source for Domain, whether one is a specialization of the other, or whether the two require consolidation. No specification changes have been made pending this determination.
+
+**Recommendation:** The Chief Architect should determine: (1) which of the two is canonical; (2) whether one is a specialization of the other; (3) or whether consolidation is required. No changes to be made to either document until this is decided.
+
+**Status:** Open
+
+**Architect Response:** *(pending)*
+
+**Related:** `Models/Domain.md`, `Domains/Common/Domain.md`
+
+---
+
+## AO-002
+
+**Title:** Relationship Participant Inconsistency
+
+**Date observed:** 25 July 2026
+
+**Description:** `Meta/Relationship.md` defines Relationship as a governed association between **Objects** (`Source Object` / `Target Object`). `Models/Relationship.md` (`Model-03`) normatively restricts participants to **Entity** only ("Every Relationship shall define: Source Entity; Target Entity").
+
+Following the adoption of the Organization model (ADR CAND-005, Option C — Organization as a first-class peer specialization of Object) and the integration of `Meta/Organization.md`, this divergence has become architecturally significant: `Meta/Organization.md` states that Organization connects to other Objects "exclusively through ordinary, governed Relationships," yet Organization is explicitly not an Entity, so it cannot satisfy `Models/Relationship.md`'s current Source/Target Entity constraint.
+
+**Impact:** As currently written, `Models/Relationship.md` does not permit Organization (or any non-Entity Object) to participate in a Relationship, which contradicts the architectural model established by CAND-005 and `Meta/Organization.md`. No specification changes have been made pending resolution.
+
+**Recommendation:** A separate architectural decision is required to determine how `Models/Relationship.md` should accommodate non-Entity Object participants (e.g., broadening participants to Object, or defining an explicit specialization relationship between the Meta and Model layers). No changes to be made until that decision is recorded.
+
+**Status:** Open — related to ADR CAND-005 and the pending CAND-004 rework (Modeling Cross-Organization Relationships)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Relationship.md`, `Models/Relationship.md`, `Meta/Organization.md`, `ADR-Candidates.md#cand-005`, `ADR-Candidates.md#cand-004`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 22 July 2026 | Initial log, 2 entries |
 | 0.1 | 22 July 2026 | Added OBS-003 (Reference Case: Object Attribute Lifecycle Categories) |
+| 0.1 | 25 July 2026 | Added AO-001 (Domain Definition Divergence) and AO-002 (Relationship Participant Inconsistency) |
