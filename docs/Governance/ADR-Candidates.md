@@ -137,7 +137,7 @@ Proposed new Core Principle, to be numbered **11** (Principle 10 is already "Evo
 
 **Title:** Principle 12 — Organizational Boundaries (provisional number: CAND-003 now occupies 11; this candidate is still undecided)
 
-**Status:** Blocked — see CAND-005
+**Status:** Superseded — CAND-005 decided (Option C); this candidate's original framing (Domain vs. Organization, Option A/B) no longer applies. Queued for rework as "Modeling Cross-Organization Relationships," per CAND-005's Consequence note. Rework not yet performed.
 
 **Owner:** Chief Architect
 
@@ -195,19 +195,54 @@ Checked against the four named concepts:
 
 ---
 
-## CAND-005 — 🔴 Blocking ADR
+## CAND-005 — ✅ Decided (was Blocking)
 
 **Title:** Organization vs Domain as the Top-Level Architectural Boundary
 
-**Status:** Open
+**Status:** Decided — Option C
 
-**Blocking:** This candidate blocks `CAND-004`. CAND-004 shall not be decided until CAND-005 is resolved.
+**Decision:** **Option C — Organization is a First-Class Object (a peer specialization of Object, alongside Entity, Domain, Workflow, Event, Policy, Contract, and others) — not a new Meta layer, and not an attribute or owner of Domain.** Recorded 23 July 2026.
 
-**Owner:** Chief Architect
+**Editorial note on wording:** the Decision as submitted titled this "Organization is a First-Class Entity." Its own body and diagram describe Organization as a peer of `Entity` under `Object` — i.e., a new, independent specialization, not a kind of `Entity` in the sense `Models/Entity.md` defines the term. This record uses "Object" (not "Entity") to describe Organization's level, to match the Decision's own diagram and avoid conflating two specific, already-defined terms. The substance of the Decision is unchanged; this is a transcription clarification only.
 
-**Created:** 23 July 2026
+**Rationale:**
 
-**Related Documents:** `Meta/Object.md`, `Models/Domain.md`, `Models/Entity.md`, `Core/Principles.md`, `Governance/ADR-Candidates.md#cand-004`
+- **Against Option A** (Domain as owner/attribute of Organization): Domain answers *what is governed*; Organization answers *who exists as an independent participant in the ecosystem*. These are different dimensions of the model. Collapsing them would make Domain represent organizational identity, which contradicts `Models/Domain.md`'s own definition ("what is governed, not who performs the work").
+- **Against Option B** (Organization as a new layer above Domain): introducing `Object → Organization → Domain` would create a structural exception — today every specialization of Object sits at the same level. A second, superior tier would break that uniformity and sit in tension with Principle 2 (Entity-Centric Modeling) and the single-root Object Model.
+- **Option C accepted because:** it preserves Object as the sole architectural root, introduces no second root and no new tier, and adds only what is actually missing — a specialization of Object that was never defined.
+
+**Accepted model:**
+
+```text
+Object
+├── Organization
+├── Domain
+├── Entity
+├── Workflow
+├── Event
+├── Policy
+├── Contract
+└── ...
+```
+
+**Domain** keeps its existing, unchanged semantics — an operational boundary describing an area of responsibility (Payments, Compliance, Marketing, CRM). Domain does **not** become an organizational boundary.
+
+**Organization** describes an independent participant in the ecosystem — for example UBT, Traffic Titans, AffVector, a PSP, a Supplier, a Regulator, a customer company. Organization is a first-class Object, at the same architectural level as Entity, Domain, Workflow, Event, Policy, and Contract — not superior to them, not a container for them.
+
+**What connects them is Relationship, not hierarchy or ownership.** Example relationships, all expressed through the existing `Relationship` model (`Meta/Relationship.md`), not a new containment structure:
+
+```text
+Organization ── owns ─────► Domain
+Organization ── contracts ─► Organization
+Organization ── employs ───► Person
+Organization ── owns ─────► Asset
+```
+
+**Owner:** Chief Architect (Decision recorded)
+
+**Created:** 23 July 2026 · **Decided:** 23 July 2026
+
+**Related Documents:** `Meta/Object.md`, `Models/Domain.md`, `Models/Entity.md`, `Meta/Relationship.md`, `Core/Principles.md` (Principle 2), `Governance/ADR-Candidates.md#cand-004`
 
 **What is already established:**
 
@@ -272,9 +307,11 @@ This requires determining:
 | Registry | Needs further architectural discussion — `Meta/Registry.md` defines governed collections of Objects; whether Registries are scoped per Organization under Option B is undetermined. |
 | AI | No change required identified — no current AI/ document addresses or conflicts with either option. |
 
-**Explicitly not the goal of this candidate:** to pre-select an option. The goal is to record the fork itself, so it can be decided deliberately rather than inherited implicitly by whichever way CAND-004 happens to be written.
+**Explicitly not the goal of this candidate:** to pre-select an option. The goal is to record the fork itself, so it can be decided deliberately rather than inherited implicitly by whichever way CAND-004 happens to be written. (Resolved: the Decision above answers the fork with a third option, not listed among A or B at the time this candidate was created.)
 
-**Next Action:** Chief Architect to decide Option A or Option B (or an alternative not listed here). Upon decision, revisit CAND-004 to confirm whether it remains valid as written or requires rework.
+**Consequence for CAND-004:** CAND-004, as originally framed ("Organization vs Domain," Option A vs. Option B), is no longer accurate — this Decision answers that framing directly (neither A nor B; Organization is a peer Object of Domain, connected only through Relationship). CAND-004 requires rework, not just an unblock. Suggested reframing, per the Architect: **"Modeling Cross-Organization Relationships"** — the question is no longer "what sits above what," but how independent Organizations interact through the now-clarified object model (Relationship types such as `owns`, `contracts`, `employs`, per the diagram above). CAND-004's rework is a separate, subsequent task — not performed here.
+
+**Next Action:** None on CAND-005 — decided and closed. CAND-004 is queued for rework under the new framing; `Core/`, `Meta/`, `Models/` remain unmodified until that rework is reviewed and its own Core integration is separately authorized.
 
 ---
 
@@ -291,3 +328,4 @@ This requires determining:
 | 0.1 | 23 July 2026 | CAND-004: revised to remove Workspace framing; added Option A/B comparative analysis and three-way impact assessment |
 | 0.1 | 23 July 2026 | CAND-003: marked Integrated — Core integration completed across 6 documents |
 | 0.1 | 23 July 2026 | Added CAND-005 (Organization vs Domain as the Top-Level Architectural Boundary) — marked Blocking; CAND-004 marked Blocked pending its resolution |
+| 0.1 | 23 July 2026 | CAND-005: Decision recorded — Option C (Organization as a first-class peer specialization of Object, connected via Relationship, not a new layer). CAND-004 marked Superseded, queued for rework as "Modeling Cross-Organization Relationships." |
