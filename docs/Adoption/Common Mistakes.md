@@ -1,3 +1,11 @@
+<!-- nav:start -->
+[Docs](../README.md) / [Adoption](README.md) / Common Mistakes
+
+[← Back](FAQ.md) · [↑ Up](README.md)
+
+---
+<!-- nav:end -->
+
 # Common Adoption Mistakes
 
 **Document ID:** ADOPTION-MISTAKES-01

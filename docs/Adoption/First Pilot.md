@@ -1,3 +1,11 @@
+<!-- nav:start -->
+[Docs](../README.md) / [Adoption](README.md) / First Pilot
+
+[← Back](Getting%20Started.md) · [↑ Up](README.md) · [Next →](FAQ.md)
+
+---
+<!-- nav:end -->
+
 # Running a First Pilot
 
 **Document ID:** ADOPTION-FIRST-PILOT-01
