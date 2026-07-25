@@ -28,7 +28,9 @@ All terms defined here are authoritative.
 
 # Organization
 
-A structured operational system consisting of domains, entities, workflows, and relationships.
+An independent participant in the operational ecosystem, modeled as a specialization of Object at the same architectural level as Entity, Domain, and Workflow.
+
+Organization does not contain domains, entities, or workflows.
 
 ---
 
@@ -109,3 +111,4 @@ The complete collection of normative documents defining the operational modeling
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 25 July 2026 | Corrected Organization definition to align with ADR CAND-005 (Option C) |

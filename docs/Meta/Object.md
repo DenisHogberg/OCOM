@@ -1,7 +1,7 @@
 <!-- nav:start -->
 [Docs](../README.md) / [Meta](README.md) / Object
 
-[← Back](Metadata.md) · [↑ Up](README.md) · [Next →](Overview.md)
+[← Back](Metadata.md) · [↑ Up](README.md) · [Next →](Organization.md)
 
 ---
 <!-- nav:end -->
@@ -209,6 +209,7 @@ Examples include, but are not limited to:
 - Policy
 - Registry
 - Contract
+- Organization
 
 Organizations may define additional Object types.
 
@@ -256,3 +257,4 @@ A compliant implementation shall ensure that every managed Object:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 25 July 2026 | Added Organization to Examples of Objects, per ADR CAND-005 (Option C) |

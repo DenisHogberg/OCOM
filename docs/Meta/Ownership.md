@@ -208,6 +208,7 @@ Ownership interacts with:
 - Contract
 - Lifecycle
 - Evaluation
+- Organization
 
 Ownership establishes accountability without changing Object behavior.
 
@@ -243,3 +244,4 @@ A compliant implementation shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 25 July 2026 | Added Organization to Relationship to Other Specifications, per ADR CAND-005 (Option C) |

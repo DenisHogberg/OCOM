@@ -183,8 +183,11 @@ Relationship interacts with:
 - Ownership
 - Policy
 - Constraint
+- Organization
 
 Relationship defines business semantics, while Reference provides object connectivity.
+
+Organization connects to other Objects exclusively through Relationship (see Meta/Organization.md).
 
 ---
 
@@ -220,3 +223,4 @@ A compliant implementation shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 25 July 2026 | Added Organization to Relationship to Other Specifications, per ADR CAND-005 (Option C) |

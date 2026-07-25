@@ -1,7 +1,7 @@
 <!-- nav:start -->
 [Docs](../README.md) / [Meta](README.md) / Meta
 
-[← Back](Object.md) · [↑ Up](README.md) · [Next →](Ownership.md)
+[← Back](Organization.md) · [↑ Up](README.md) · [Next →](Ownership.md)
 
 ---
 <!-- nav:end -->

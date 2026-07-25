@@ -98,6 +98,8 @@ A Contract may involve:
 
 Organizations may define additional participant types.
 
+Organization, as listed above, is defined as a specialization of Object (see Meta/Organization.md).
+
 ---
 
 # Responsibilities
@@ -221,6 +223,7 @@ Contract interacts with:
 - Ownership
 - Evaluation
 - Workflow
+- Organization
 
 Contracts govern interactions between Objects.
 
@@ -257,3 +260,4 @@ A compliant implementation shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 25 July 2026 | Added Organization to Relationship to Other Specifications and Participants, per ADR CAND-005 (Option C) |
