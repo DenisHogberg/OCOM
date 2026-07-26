@@ -1,0 +1,120 @@
+name: CI
+
+# Continuous Integration only. No deploy, no publish, no release, no
+# GitHub Pages, no secrets. This repository is a pure Markdown
+# specification (373 .md files, zero code, zero JSON/YAML, zero
+# Mermaid) — every job below exists because it checks something this
+# repository actually contains. See CI-DESIGN.md for the analysis
+# behind each decision, and for what was deliberately left out.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Cancel a still-running check for an older push once a newer one
+# lands on the same branch/PR — different branches and different PRs
+# each get their own group (github.ref differs), so this never cancels
+# unrelated work, only a superseded run of the same one.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # 5 minutes on every job below: none of these checks take more than a
+  # minute in practice against 373 files — this is a safety net against
+  # a hung process, not a real budget, so it is generous on purpose.
+  required-documents:
+    name: Required project documents present
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify required files exist
+        run: |
+          set -e
+          required_files=(
+            "README.md"
+            "LICENSE"
+            "CONTRIBUTING.md"
+            "CHANGELOG.md"
+            "ROADMAP.md"
+            "CI-DESIGN.md"
+            "docs/README.md"
+            "docs/PROJECT_STATUS.md"
+          )
+          missing=0
+          for f in "${required_files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Missing required project file: $f"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+  markdown-lint:
+    name: Markdown structural lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Markdown structure with markdownlint
+        # Pinned to the exact commit for the v17 tag, verified directly
+        # against the GitHub API before pinning (not guessed) — this is
+        # a third-party action, not an official actions/* one; see
+        # CI-DESIGN.md for why that distinction sets the pinning policy.
+        # Dependabot (.github/dependabot.yml) proposes updates as a
+        # reviewable PR when a new version is released.
+        #
+        # No `with: globs:` here on purpose — `.markdownlint-cli2.jsonc`
+        # already declares its own top-level `globs`, which the tool
+        # auto-discovers from the repo root with no action input
+        # needed (verified against the tool's own documented config
+        # discovery, not assumed). Setting it in both places would be
+        # the same value declared twice for no reason.
+        uses: DavidAnson/markdownlint-cli2-action@db43aef879112c3119a410d69f66701e0d530809 # v17
+
+  link-check:
+    name: Internal link integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check internal links with lychee
+        # Pinned the same way and for the same reason as markdownlint
+        # above — third-party action, SHA verified against the GitHub
+        # API before use.
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
+        with:
+          # No external links exist in this repository today (verified
+          # directly) — lychee is still ready to check them at no
+          # extra cost if any are ever added.
+          #
+          # --include-fragments (checking that "file.md#anchor" targets
+          # a real heading, not just a real file) was deliberately left
+          # out: zero real anchor-fragment links exist today — all
+          # cross-references of that shape are written as plain
+          # backtick-quoted text, not actual Markdown links, so lychee
+          # cannot see them either way — and enabling it would add a
+          # real, currently pointless risk (GitHub's heading-to-anchor
+          # slug rules and lychee's own can diverge) for zero present
+          # benefit. Revisit if real anchor links are ever introduced.
+          # lychee's --exclude-path takes a regular expression, not a
+          # glob (verified against the tool's own source at the pinned
+          # version) — the dot is escaped so it matches a literal ".",
+          # not "any character", even though the unescaped form would
+          # have worked by coincidence against this repository's actual
+          # paths.
+          args: >-
+            --no-progress
+            --exclude-path '\.github'
+            '**/*.md'
+          fail: true
+          jobSummary: true

@@ -1,0 +1,53 @@
+// Markdownlint configuration for the OCOM Specification repository.
+//
+// Rules disabled below are disabled because they conflict with a
+// convention already used consistently across this repository's ~370
+// documents, verified directly against the actual files, not disabled
+// because the rules are bad in general. See CI-DESIGN.md for the full
+// review this config came out of.
+//
+// - MD025 (single top-level heading per document): every OCOM document
+//   uses a flat "#"-level heading per section (Purpose, Definition,
+//   Business Meaning, ...), separated by "---" rules, not a nested
+//   H1/H2/H3 hierarchy. Core/Manifest.md alone has 18 "#" headings —
+//   this is the repository's normal shape, not a defect.
+// - MD041 (first line must be a top-level heading): every document
+//   begins with a "<!-- nav:start -->" navigation comment block before
+//   its title, by repository-wide convention.
+// - MD033 (no inline HTML): the nav block *is* inline HTML —
+//   "<!-- nav:start -->" / "<!-- nav:end -->" comments, present in 359
+//   of 373 files.
+// - MD013 (line length): specification prose is not hard-wrapped;
+//   enforcing a line limit would flag ordinary paragraphs, not a real
+//   structural problem.
+// - MD024 (no duplicate headings): confirmed present and legitimate —
+//   e.g. Models/Relationship.md has two "# Constraints" sections,
+//   Models/Domain.md two "# Purpose" sections, by design, not error.
+//   (Verified directly; a first, space-naive check undercounted this,
+//   so the true count is at least what was found, likely higher.)
+// - MD040 (fenced code blocks must declare a language): 62 existing
+//   fenced blocks — mostly ASCII pipeline diagrams and worked
+//   examples — have no language tag. Retrofitting 62 blocks across
+//   many files is a content rewrite, out of scope for a CI-only task.
+//
+// Left enabled (default) because the repository was checked directly
+// and found already clean against them: no hard tabs, no trailing
+// whitespace, every file ends with a single final newline.
+{
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD024": false,
+    "MD025": false,
+    "MD033": false,
+    "MD040": false,
+    "MD041": false
+  },
+  // "globs" here is the single source of truth for which files get
+  // linted — deliberately not repeated as a `with:` input in ci.yml.
+  // Verified against markdownlint-cli2's own documented config
+  // discovery: this file is auto-read from the directory the tool is
+  // run from, no extra flag required.
+  "globs": ["**/*.md"],
+  "ignores": [".github/**"]
+}
