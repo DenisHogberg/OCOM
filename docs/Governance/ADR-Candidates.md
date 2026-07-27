@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 July 2026
+**Last Updated:** 26 July 2026
 
 ---
 
@@ -350,6 +350,69 @@ This requires determining:
 
 ---
 
+## CAND-006 — ✅ Decided
+
+**Title:** OCOM Constitution — Foundational Principles
+
+**Status:** Decided — Adopted as v1.0 (26 July 2026)
+
+**Owner:** Chief Architect (decided); CDKO to await separate authorization for Core integration.
+
+**Created:** 26 July 2026
+
+**Related Documents:** `Core/Principles.md` (Principle 11, referenced by Constitution §14), `Meta/Object.md` (Object as universal abstraction, §1), `Meta/Relationship.md` (§9's Core-Meta-Model boundary). Also draws on findings from the sibling implementation repository, OCOM-Reader — `ADR-007` (Memory Before Knowledge), `RF-001` (Domain-Owned Identity, tested against infrastructure and a business domain as neutral test-beds), and the M017/M019 structural-isolation precedent. Recorded transparently: this is the first Governance record in this repository whose empirical grounding was substantially developed in the implementation repository rather than purely within the Specification itself.
+
+**Decision:**
+
+# OCOM Constitution v1.0
+
+**Purpose**
+
+This document defines the fundamental principles that make a system an implementation of OCOM. These principles are intentionally technology-independent and domain-independent. They apply regardless of programming language, storage engine, deployment model, AI model, or business domain. Implementation details may evolve. Architecture may evolve. These principles should not.
+
+**Canonical Principles**
+
+1. **Object-Centric Reality.** Object is the universal abstraction of OCOM. Everything represented by OCOM is expressed as an Object or as a specialization of Object.
+2. **Domain-Owned Identity.** An entity becomes an OCOM Object only when its identity belongs to the operational domain rather than to the implementation. Operational role takes precedence over ontological classification. The same entity may be represented differently depending on the operational question being answered.
+3. **Evidence Before Belief.** Every operational fact must be traceable to Evidence. Evidence and Metadata are independent concepts and must never be merged.
+4. **Immutable Memory.** Memory is append-only. A Memory Entry is immutable after creation. Corrections are represented as new Memory Entries, never by modifying historical records.
+5. **Memory Precedes Knowledge.** Knowledge is always derived from Memory. World Models are always derived from Knowledge. Memory → Knowledge → World Model.
+6. **Reconstructability.** Knowledge and World Models must always be reproducible from Memory without requiring access to the original external systems.
+7. **Separation of Dimensions.** Architecture, Capability and Autonomy are independent dimensions. Progress in one dimension never implies progress in another.
+8. **Static Before Dynamic.** Static World Modelling precedes Dynamic World Modelling.
+9. **Domain-Neutral Core.** The OCOM Core must never contain domain-specific knowledge. The Core must never branch on organization-specific concepts or business entities. Domain knowledge belongs only to configuration, data and adapters.
+10. **Extensibility Over Enumeration.** Business vocabularies are extensible. Organizations extend OCOM through specialization rather than modification of the Core.
+11. **Structural Isolation.** Every architectural layer must be structurally incapable of exceeding its defined responsibilities. Boundaries are enforced by architecture rather than convention.
+12. **Grounded Reasoning.** Statements derived from Memory and Knowledge must remain distinguishable from interpretation, inference or expert opinion. The system must communicate provenance and confidence appropriately.
+13. **Adaptation Flows Toward the Model.** Implementations adapt to OCOM. OCOM never adapts to implementation-specific constraints.
+14. **Professional Responsibility.** OCOM augments professional decision-making. Responsibility remains with the designated human role unless a higher Autonomy level has been explicitly delegated.
+
+**Architectural Principles**
+
+- New sources integrate through Adapters and Normalizers.
+- Identity Resolution thresholds are deployment configuration.
+- Source trust is deployment configuration.
+- Concept namespaces are deployment scoped.
+- One deployment currently represents one organization.
+
+**Implementation Principle**
+
+Every implementation must be evaluated against the Canonical Principles *before* architectural or implementation-specific optimizations are accepted. No optimization may violate the Canonical Principles.
+
+**Meta-Principle**
+
+When a conflict exists between an implementation, an architectural decision and the Constitution, the Constitution prevails.
+
+**Governance implication of this Decision:**
+
+- Future changes to the Canonical Principles require the same process used to establish them — a Reference Case or direct proposal → ADR Candidate → Chief Architect Decision — never an editorial edit to whatever document eventually carries the Constitution's text. This reuses the existing Standard Evolution Methodology rather than introducing a separate amendment process.
+- New architectural proposals (Bot, Observer, Expert, multi-tenancy, and any future component, in either this Specification or an implementation repository) are to be evaluated against these Canonical Principles before acceptance — per the Constitution's own Implementation Principle. The Constitution is the standard proposals are checked against, not the other way around.
+- The Architectural Principles and the two Meta-level principles are explicitly *not* frozen the same way the Canonical Principles are — they record the current architectural direction and may evolve through ordinary ADR Candidates, without amending the Constitution itself.
+
+**Next Action:** Core integration — deciding where the Constitution's full text is authored as a standing document (e.g. a new `Core/Constitution.md`, or distributed across existing Core documents) and updating any documents that should reference it — is a separate, not-yet-authorized task. Recorded here first, per the same two-step discipline already used for CAND-003 (Principle 11) and CAND-005 (Organization): Decision recorded now, Core integration only on separate, explicit instruction.
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -365,3 +428,4 @@ This requires determining:
 | 0.1 | 23 July 2026 | Added CAND-005 (Organization vs Domain as the Top-Level Architectural Boundary) — marked Blocking; CAND-004 marked Blocked pending its resolution |
 | 0.1 | 23 July 2026 | CAND-005: Decision recorded — Option C (Organization as a first-class peer specialization of Object, connected via Relationship, not a new layer). CAND-004 marked Superseded, queued for rework as "Modeling Cross-Organization Relationships." |
 | 0.1 | 23 July 2026 | CAND-004: fully rewritten as "Modeling Cross-Organization Relationships," on the CAND-005 Option C basis — old Organization-vs-Domain framing replaced with 7 research questions (relationship types, ownership, cross-org references, shared objects, memory, registry, AI) and a revised impact assessment |
+| 0.1 | 26 July 2026 | Added CAND-006 (OCOM Constitution — Foundational Principles) — Decision recorded, adopted as v1.0. Fourteen Canonical Principles plus Architectural, Implementation, and Meta-Principles; establishes that future changes go through this same ADR Candidate process and that new proposals are evaluated against the Constitution, not the reverse. Core integration deferred to a separate, not-yet-authorized task. |
