@@ -137,7 +137,7 @@ Confidence may increase when:
 
 Confidence may decrease when:
 
-- evidence is removed;
+- evidence is superseded by subsequent evidence;
 - contradictory evidence appears;
 - information becomes outdated;
 - verification expires.
@@ -209,3 +209,4 @@ A compliant implementation shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 27 July 2026 | Replaced "evidence is removed" with "evidence is superseded by subsequent evidence" in Confidence Evolution — Evidence is append-only and immutable, so evidence is never removed, only superseded — per Constitution §4 and ARCH-006 |

@@ -43,6 +43,7 @@ Memory is treated as a governed business capability rather than an implementatio
 The Memory Specification is based on the following principles:
 
 - Memory shall be independent of AI models.
+- Memory shall be append-only.
 - Memory shall preserve provenance.
 - Memory shall preserve evidence.
 - Memory shall support confidence assessment.
@@ -66,6 +67,8 @@ The Memory Specification consists of the following components:
 - Retention Policies
 
 Each component defines one aspect of operational memory management.
+
+Memory Record and Evidence Overlay are both governed by the same immutability principle: each is append-only, and every record within each is immutable after creation (Constitution §4).
 
 ---
 
@@ -124,6 +127,7 @@ Implementations may choose any technology while remaining compliant with this sp
 A compliant implementation shall:
 
 - implement the Memory Specification;
+- preserve immutability of Memory Records and Evidence Records;
 - preserve provenance;
 - preserve evidence;
 - support confidence evaluation;
@@ -154,3 +158,4 @@ Additional Memory documents may be introduced in future versions.
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 23 July 2026 | Added Policies to referenced concepts; clarified that Memory does not substitute for professional expertise, per Principle 11 (ADR CAND-003) |
+| 0.1 | 27 July 2026 | Added "Memory shall be append-only" to Principles; noted that Memory Record and Evidence Overlay share the same immutability principle in Memory Architecture; added immutability preservation to Conformance — per Constitution §4, ARCH-001, ARCH-006 |

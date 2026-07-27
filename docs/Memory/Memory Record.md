@@ -32,7 +32,7 @@ The Memory Record provides a consistent representation of retained knowledge reg
 
 A Memory Record represents a single retained fact, observation, inference, or decision together with its operational metadata.
 
-A Memory Record is immutable in identity but may evolve through controlled updates.
+A Memory Record is immutable after creation. Corrections to previously retained information are represented as new Memory Records; an existing Memory Record is never modified.
 
 ---
 
@@ -41,6 +41,7 @@ A Memory Record is immutable in identity but may evolve through controlled updat
 Every Memory Record shall be:
 
 - uniquely identifiable;
+- immutable after creation;
 - explainable;
 - evidence-backed;
 - confidence-aware;
@@ -180,7 +181,7 @@ A Memory Record may reference:
 
 # Evidence
 
-A Memory Record may reference one or more Evidence Records.
+A Memory Record shall reference at least one Evidence Record.
 
 Evidence provides the basis for explainability and confidence assessment.
 
@@ -205,7 +206,7 @@ Every Memory Record shall define its governance policy.
 Governance may include:
 
 - write permissions;
-- update permissions;
+- correction permissions;
 - approval requirements;
 - write-back policy;
 - retention policy.
@@ -214,15 +215,12 @@ Governance may include:
 
 # Auditability
 
-Every Memory Record shall preserve an audit trail including:
+Every Memory Record shall preserve, at creation:
 
 - creator;
-- creation time;
-- last modification;
-- modifier;
-- modification reason.
+- creation time.
 
-Audit information shall not be removed.
+A Memory Record's audit trail is established at creation and never changes. There is no modification, modifier, or modification reason to record, because a Memory Record is never altered after creation. Corrections to previously retained information are represented as new Memory Records; the audit trail of the retained knowledge is the append-only sequence of Memory Records itself.
 
 ---
 
@@ -246,6 +244,7 @@ A compliant implementation shall:
 
 - implement all mandatory attributes;
 - preserve record identity;
+- never modify a Memory Record after creation, and represent corrections as new Memory Records;
 - support evidence references;
 - support confidence assessment;
 - preserve audit history;
@@ -258,3 +257,5 @@ A compliant implementation shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 27 July 2026 | Removed "may evolve through controlled updates" from Definition; added immutability to Design Principles and Conformance; rewrote Auditability to remove modification/modifier/modification-reason language; replaced "update permissions" with "correction permissions" in Governance — per Constitution §4 and ARCH-001 (Step 0, Decision 1) |
+| 0.1 | 27 July 2026 | Changed Evidence section from "may reference" to "shall reference at least one Evidence Record" — per Constitution §3 and ARCH-002 (Step 0, Decision 2) |
