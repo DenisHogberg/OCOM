@@ -143,6 +143,29 @@ Following the adoption of the Organization model (ADR CAND-005, Option C — Org
 
 ---
 
+## AO-003
+
+**Title:** Mutable Status in an Immutable Memory Model
+
+**Date observed:** 27 July 2026
+
+**Description:** Following adoption of Constitution §4 (Immutable Memory), §5 (Memory Precedes Knowledge), and §6 (Reconstructability), and their migration into `Memory/Memory Record.md` (ARCH-001) and `Memory/Evidence Overlay.md` (ARCH-006), the `Status` attribute of a Memory Record (`Active`, `Pending Verification`, `Archived`, `Expired`, `Rejected`) was found to have undefined semantics relative to the append-only model. Two readings are both defensible from the current text and neither is decided:
+
+- **Option A — Status is part of the Memory Record.** A record's Status is fixed at creation. A transition such as `Pending Verification → Active` cannot occur without modifying an existing record, which conflicts directly with §4.
+- **Option B — Status is not a record field but a derived projection.** "Current status" is computed at read/derivation time from the full append-only sequence of Memory Records for a given subject (Memory → Knowledge → Current Status), consistent with §5 and §6. This is a materially different model from what `Memory Record.md` currently describes.
+
+**Impact:** As currently written, `Memory Record.md` lists `Status` as a Mandatory Attribute without resolving which reading applies, leaving an open contradiction between the Status model and §4 under Option A. No specification changes have been made pending resolution; this was deliberately left unresolved during the Memory/Evidence migration (Constitution integration, Stage 2) as out of scope for a migration task.
+
+**Recommendation:** The Chief Architect should determine whether Status is a Memory Record attribute (with transition semantics to be defined) or a Knowledge-layer derived projection. This is a new architectural question, not a migration of an already-decided principle, and should be evaluated on its own via the standard evolution process before any document is changed.
+
+**Status:** Open
+
+**Architect Response:** *(pending)*
+
+**Related:** `Memory/Memory Record.md`, `Governance/Constitution-Step0-Summary.md`, `Core/Constitution.md` (§4, §5, §6)
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -150,3 +173,4 @@ Following the adoption of the Organization model (ADR CAND-005, Option C — Org
 | 0.1 | 22 July 2026 | Initial log, 2 entries |
 | 0.1 | 22 July 2026 | Added OBS-003 (Reference Case: Object Attribute Lifecycle Categories) |
 | 0.1 | 25 July 2026 | Added AO-001 (Domain Definition Divergence) and AO-002 (Relationship Participant Inconsistency) |
+| 0.1 | 27 July 2026 | Added AO-003 (Mutable Status in an Immutable Memory Model), surfaced during Constitution integration Stage 2 (Memory/Evidence migration) |
