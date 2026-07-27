@@ -413,6 +413,87 @@ When a conflict exists between an implementation, an architectural decision and 
 
 ---
 
+## CAND-007 — ✅ Decided
+
+**Title:** Architecture Freeze for OCOM v1.0 — Transition from Architecture Discovery to Architecture Stabilization
+
+**Status:** Decided — Adopted (27 July 2026)
+
+**Owner:** Chief Architect (Decision recorded); CDKO to await separate authorization for each Backlog work item and for the §9/§11 Core-text integration.
+
+**Created:** 27 July 2026
+
+**Decided:** 27 July 2026
+
+**Related Documents:** `Architecture-Discovery-Summary.md`, `Architecture-Principles.md`, `Architecture-Audit-Current-State.md`, `Master-Architecture-Backlog.md`, `Architecture-Release-Review-v1.0.md`, `Standard Evolution Methodology.md`, `Development-Readiness.md`, `Release-Readiness.md`. Two source names used when this candidate was originally requested — "Agent Readiness Audit" and "Documentation Architecture" — do not correspond to standalone documents; they refer to material already covered by `Architecture-Health.md`'s Reference Agent tracking / the "OCOM without Reader" analysis in `Architecture-Release-Review-v1.0.md`, and by the Specification Map in `Architecture-Audit-Current-State.md`, Part 1, respectively. Recorded here for traceability, not as new sources.
+
+**Revision note (27 July 2026):** an independent Committee review of this candidate's first draft found four defects: (i) two of the four cited evidentiary passes existed only in prior conversation, with no citable document; (ii) Sections 1–2 asserted that every finding fit an existing Epic, which `Architecture-Release-Review-v1.0.md` Part 2 itself contradicts for two of its three findings; (iii) Section 6 cited Architecture Principle 3, which does not support the claim made; (iv) Section 4's closing sentence was ambiguous about whether it was inherited or new. `Architecture-Discovery-Summary.md` was created to resolve (i). This is the corrected text; all four defects are fixed below, not merely re-asserted.
+
+**Decision:**
+
+# ADR — Architecture Freeze for OCOM v1.0
+
+## 1. Why Architectural Discovery Is Considered Complete
+
+Not because every question is answered — `Architecture-Release-Review-v1.0.md` (Part 3) explicitly found the Specification is not yet a closed system (Knowledge/World Model unresolved, "Autonomy level" undefined). Discovery is considered complete in a narrower, checkable sense: repeated, deliberately adversarial searches for *new fundamental architectural questions* have stopped finding them, and every finding either fits already-open work or is now explicitly named as an exception, none concealed.
+
+Four independent search passes were run, each with a citable record: (1) the standards-analogy and reasoning-pipeline-independence analysis, recorded in `Architecture-Discovery-Summary.md`; (2) the architecture stress test (Red Team against the Specification/Reader boundary), whose conclusions are recorded principle-by-principle in `Architecture-Principles.md`; (3) `Architecture-Release-Review-v1.0.md` Part 2, a dedicated final search for gaps not covered by (1) or (2); (4) `Architecture-Release-Review-v1.0.md` Part 6, a Red Team pass against the Backlog itself.
+
+Pass (3) — Release Review Part 2 — produced three findings, not zero. One, the `Layered Memory.md`/`Retention.md` mutability finding, widened `EPIC-A`'s Definition of Done rather than requiring a new Epic. The other two — **absence of a stewardship/naming-rights model for "OCOM"/"OCOM-compatible,"** and **absence of a tamper-evidence guarantee for Memory/Evidence** — do **not** fit inside any existing Epic, by Part 2's own explicit statement (*"sits outside all six Epics"*; *"distinct from every current Epic"*). This Decision does not claim otherwise. Both are carried forward as named, open Freeze-exception candidates under Section 5, not treated as resolved and not concealed.
+
+Pass (4) — Release Review Part 6, the Red Team pass — did not produce discrete catalogued gaps the way Part 2 did; it produced a structural critique: that ecosystem-scale verification (an independent Reference Implementation, real adversarial external pressure) has not yet happened for any part of this architecture. Release Review Parts 1 and 7 both treat this as a real, named, permanent condition to be tested later (Section 8), not as a Backlog item to be closed now — this Decision does not claim otherwise either.
+
+This is a measurable trend across the four passes, not an assertion of completeness: successive passes found progressively narrower, more boundable issues — contradictions, then gaps, then two residual, explicitly-named exceptions, plus one acknowledged, permanent verification limit — never a new question about the root shape of the model. The Object/Memory/Evidence/Knowledge-derivation shape itself was independently re-derived and stress-tested in all four passes and held every time, including under pass (4), whose strongest argument concerned unproven ecosystem-scale verification — a real, named limitation about *proof*, not about the *shape* of the model.
+
+## 2. Criteria Confirming This
+
+- `Architecture-Audit-Current-State.md` rated the root layers (Constitution, Memory/Evidence, the Governance methodology itself) Stable-to-Mature; every unresolved item traces to integration or sequencing, never to the root abstractions.
+- `Master-Architecture-Backlog.md` normalized every open AO, ADR Candidate, and Documentation Debt entry into six Epics. Two items found after the Backlog was written (Section 1 above) are not yet in it — named as open exceptions, not as evidence the Backlog is already complete.
+- `Architecture-Release-Review-v1.0.md` Part 8 recommended **B — freeze and execute the Backlog**, with one scope correction (`EPIC-A`) and the two exceptions named in Section 1 — after its own dedicated final-gap search (Part 2) and Red Team pass (Part 6). The same review explicitly declined to recommend either continued discovery (A) or a return to the fundamental model (C).
+- No open item anywhere in the current record — Audit, Backlog, Release Review, `ADR-Candidates.md`, `Architecture-Observations.md`, `Documentation-Debt.md` — questions Object as root, Memory as append-only Evidence-backed log, or the Memory→Knowledge→World Model derivation direction. This claim is about the *root model* specifically, and is narrower than, and does not imply, "no open items remain" generally — Section 1 names two that do.
+
+## 3. Permitted Changes Before v1.0
+
+- Execution of `Master-Architecture-Backlog.md`'s existing Epics A–F, exactly as scoped there, including the `EPIC-A` Definition-of-Done correction named in `Architecture-Release-Review-v1.0.md` Part 2 (adding `Layered Memory.md` and `Retention.md`).
+- Decisions on already-open ADR Candidates (`CAND-001`, `CAND-002`, `CAND-004`) and Architecture Observations (`AO-001`, `AO-002`, `AO-003`), provided the decision stays within each candidate's already-recorded scope.
+- Writing Constitution §9 and §11's wording to match Decisions already recorded in `Constitution-Step0-Summary.md` (Decisions 4 and 5) — transcription of an existing decision, not a new one.
+- Editorial, presentational, and documentation-currency work (`EPIC-F`): refreshing `Specification/`, re-pointing `Adoption/`, closing `DEBT-DOC-001`, `GAP-001`, `FW-002`, `FW-005`.
+
+## 4. Forbidden Changes Before v1.0
+
+Directly inherited from `Master-Architecture-Backlog.md` Part 9 (Stop List) — not restated with new reasoning, only reaffirmed as binding for the Freeze period: no new Domains subdomains beyond the existing 14; no new Entity types; no new AI/* subsections or capabilities; no new Workflows content; no new Examples industry collections; no new Canonical Principle or Constitution amendment beyond the §9/§11 transcription in Section 3 above; no new Conformance Profile ahead of `CAND-002`; no pulling Reader/product-roadmap concepts (e.g. persona-adaptive explainer work) into the Specification.
+
+One further item is forbidden here that is **not** inherited from the Stop List — stated plainly as new, not represented as an existing norm: **no redesign of Object, Memory, Evidence, or the Knowledge/World Model derivation direction without going through Section 5.** This is not an independent new governance norm; it is this Decision's own Section 5 test (does a proposal fail to fit any existing Epic/ADR/AO) applied explicitly to the one category of proposal — root-model redesign — where the consequence of skipping that test would be most severe. Its source is Section 5 of this same Decision, not any prior document.
+
+## 5. When Breaking the Freeze Is Permitted
+
+Only when a genuinely new fundamental question is found — one that fails the same test Section 1 just applied: it does not fit inside any existing Epic, ADR Candidate, or Architecture Observation, and is not a bounded scope-correction to one. Meeting that bar does not itself authorize a change. It authorizes escalation through the existing pipeline (`Standard Evolution Methodology.md`: Reference Case → Repeated Pattern → ADR Candidate → Chief Architect Decision), with the escalation explicitly labeled a Freeze exception at the point it is raised — never absorbed silently into ordinary Backlog work.
+
+Two candidates already meet this bar today, named in Section 1: the "OCOM"/"OCOM-compatible" stewardship gap, and the Memory/Evidence tamper-evidence gap. Naming them here is not the same as filing them — filing either through the Reference Case format is separate, not-yet-authorized follow-up work. They are recorded now so this Decision does not itself become a second instance of the defect it was revised to fix: claiming completeness while an unresolved item goes unmentioned.
+
+A second, standing trigger: real contact with an independent implementation attempt (Milestone 4 in `Architecture-Release-Review-v1.0.md` Part 9) revealing the contract is not buildable as specified. This is the category of evidence Green Team (`Architecture-Release-Review-v1.0.md` Part 7) identified as the legitimate next test of the architecture — it is a valid Freeze-exception trigger precisely because it is evidence from outside the same two-party process that produced the Freeze decision itself.
+
+## 6. How New Proposals Are Evaluated
+
+Every new proposal, regardless of source, is checked in this order: (a) does it already fit inside a `Master-Architecture-Backlog.md` Epic or work item — if so, it is not new work, it is routed there under its existing ID; (b) if not, is it product- or implementation-shaped rather than contract-shaped, per Architecture Principle 1 (Specification Defines Contracts, Not Products) and Architecture Principle 5 (Reader Is Reference, Not Authority) — if so, it does not belong in the Specification and is redirected to Reader or another implementation, not queued here at all; (c) if it survives both checks, it is treated as a candidate Freeze exception under Section 5 and must go through the full Reference Case → ADR Candidate pipeline, explicitly flagged as such — it is never adopted directly into a document on the strength of the proposal alone.
+
+## 7. The Backlog as the Sole Source of Architectural Work
+
+Effective on this Decision, `Master-Architecture-Backlog.md` is the sole authoritative work queue for architectural work during the Freeze. No architectural document is edited for architectural (as opposed to purely editorial) reasons unless the change traces to a named Epic or work item there. Any item newly approved under Section 6 is added to the Backlog, under an existing Epic where it fits or, if Section 5's bar is met, a new Epic recorded through the same Decision process as this one — never executed ad hoc outside it. `Development-Readiness.md` and `Release-Readiness.md` entries reference Backlog item IDs going forward, consistent with their existing logging convention.
+
+## 8. Criteria to Lift the Freeze After v1.0
+
+The Freeze is scoped to reaching v1.0, not indefinite. It lifts, returning to a discovery-permitted phase, when v1.0 has shipped (per the Release Readiness criteria already logged in `Release-Readiness.md`) and at least one of: (a) Milestone 4 (`Architecture-Release-Review-v1.0.md` Part 9) is reached — an implementation independent of this Specification's own authors exists and has been run against Conformance criteria, surfacing real integration lessons; (b) the Chief Architect schedules a formal post-v1.0 review cycle; (c) an accepted Section 5 Freeze exception grows, on independent review, into a question broad enough to warrant reopening discovery generally rather than a single narrow amendment. None of these criteria is met today; this section records the condition, not a current event.
+
+**Governance implication of this Decision:**
+
+- This is a process/lifecycle decision, not a modeling decision — it changes how proposals are handled, not what OCOM's architecture is. It introduces no new Meta Object, no new Canonical Principle, and no new Epic.
+- Sections 3, 4, and 7 are immediately binding on how the CDKO evaluates any future request, including requests from the same author who adopted this Decision — consistent with Decision Transparency (`Governance-Manifest.md`, Principle 5), a request to bypass Section 6's evaluation order is itself a Section 5 Freeze-exception question, not a reason to skip it.
+
+**Next Action:** Execution of any individual Backlog work item (Section 3) requires its own separate, explicit authorization, per the two-step discipline already used for `CAND-003` and `CAND-006`. The §9/§11 Core-text transcription (Section 3) is likewise not authorized by this Decision alone.
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -429,3 +510,4 @@ When a conflict exists between an implementation, an architectural decision and 
 | 0.1 | 23 July 2026 | CAND-005: Decision recorded — Option C (Organization as a first-class peer specialization of Object, connected via Relationship, not a new layer). CAND-004 marked Superseded, queued for rework as "Modeling Cross-Organization Relationships." |
 | 0.1 | 23 July 2026 | CAND-004: fully rewritten as "Modeling Cross-Organization Relationships," on the CAND-005 Option C basis — old Organization-vs-Domain framing replaced with 7 research questions (relationship types, ownership, cross-org references, shared objects, memory, registry, AI) and a revised impact assessment |
 | 0.1 | 26 July 2026 | Added CAND-006 (OCOM Constitution — Foundational Principles) — Decision recorded, adopted as v1.0. Fourteen Canonical Principles plus Architectural, Implementation, and Meta-Principles; establishes that future changes go through this same ADR Candidate process and that new proposals are evaluated against the Constitution, not the reverse. Core integration deferred to a separate, not-yet-authorized task. |
+| 0.1 | 27 July 2026 | Added CAND-007 (Architecture Freeze for OCOM v1.0) — Decision recorded, adopted. Formalizes the transition from Architecture Discovery to Architecture Stabilization: architectural discovery considered complete per four independent adversarial search passes finding no new root-shape question; `Master-Architecture-Backlog.md` becomes the sole source of architectural work; permitted/forbidden changes, Freeze-exception criteria, new-proposal evaluation order, and post-v1.0 unfreeze criteria all recorded. No new Meta Object, Canonical Principle, or Epic introduced. |
