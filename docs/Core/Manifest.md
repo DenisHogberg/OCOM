@@ -127,7 +127,7 @@ This specification does not define:
 - implementation technologies;
 - business strategy;
 - professional or expert judgments (legal, compliance, financial, or similar);
-- the responsibilities of an organization's specialized functions (Legal, Compliance, Finance, Security, HR, and others).
+- the responsibilities of an organization's specialized functions (Legal, Compliance, Finance, Security, HR, and others) — per Constitution §14, Professional Responsibility.
 
 ---
 
@@ -143,7 +143,7 @@ Workflows transform entity states.
 
 Knowledge belongs to entities.
 
-Software implements the operational model but does not define it.
+Software implements the operational model but does not define it — per Constitution §13, Adaptation Flows Toward the Model.
 
 Operational models should remain understandable by both humans and artificial intelligence.
 
@@ -195,6 +195,7 @@ Future revisions may introduce new concepts, models, and extensions without chan
 
 # Related Documents
 
+- Core-00 Constitution
 - Core-02 Principles
 - Core-03 Terminology
 - Core-04 Naming
@@ -216,3 +217,4 @@ This document represents the initial draft of the specification and is subject t
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 23 July 2026 | Scope extended to exclude professional/expert judgments and specialized organizational functions, per Principle 11 (ADR CAND-003) |
+| 0.1 | 27 July 2026 | Added cross-references to Constitution §14 and §13; added Core-00 Constitution to Related Documents, per CAND-006 Step 0 integration |

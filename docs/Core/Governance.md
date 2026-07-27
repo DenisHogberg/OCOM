@@ -1,7 +1,7 @@
 <!-- nav:start -->
 [Docs](../README.md) / [Core](README.md) / Governance
 
-[↑ Up](README.md) · [Next →](Manifest.md)
+[← Back](Constitution.md) · [↑ Up](README.md) · [Next →](Manifest.md)
 
 ---
 <!-- nav:end -->

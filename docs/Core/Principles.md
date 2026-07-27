@@ -24,6 +24,8 @@ This document defines the fundamental principles governing the operational model
 
 These principles are normative and apply to every model created using this specification.
 
+These Principles operate within, and shall not contradict, the Canonical Principles of the OCOM Constitution (`Core/Constitution.md`).
+
 ---
 
 # Principle 1 — Organization Before Technology
@@ -35,6 +37,8 @@ Technology implements the model but never defines it.
 ---
 
 # Principle 2 — Entity-Centric Modeling
+
+Object is the universal abstraction of the operational model (Constitution §1). Entity is a specialization of Object.
 
 Every operational concept shall be represented through identifiable entities.
 
@@ -67,6 +71,8 @@ Domains define accountability, governance, and operational boundaries.
 ---
 
 # Principle 6 — Separation of Model and Implementation
+
+Implementations adapt to the operational model; the operational model never adapts to implementation-specific constraints (Constitution §13).
 
 The operational model shall remain independent of software architecture, databases, APIs, programming languages, and infrastructure.
 
@@ -104,6 +110,8 @@ The framework shall support organizational evolution without requiring redesign 
 
 # Principle 11 — Separation of Professional Responsibility
 
+This principle is canonically stated in Constitution §14 — Professional Responsibility (`Core/Constitution.md`).
+
 OCOM deliberately separates the management of operational memory from professional expertise.
 
 OCOM is responsible for Operational Memory, the Object Model, Knowledge Management, Context Preservation, Workflow Coordination, Decision Tracking, and Action Tracking.
@@ -124,3 +132,4 @@ All models created using this specification shall conform to these principles.
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 23 July 2026 | Added Principle 11 — Separation of Professional Responsibility (ADR CAND-003, Promoted 23 July 2026) |
+| 0.1 | 27 July 2026 | Added Object-as-root sentence to Principle 2 per ARCH-003 (existing scope preserved); added Constitution §14 reference to Principle 11 (existing body preserved); added Constitution §13 cross-reference to Principle 6; added Purpose-section pointer to Constitution, per CAND-006 Step 0 integration |

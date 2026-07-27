@@ -10,6 +10,7 @@
 
 ## Contents
 
+- [Constitution](Constitution.md)
 - [Governance](Governance.md)
 - [Manifest](Manifest.md)
 - [Modeling Rules](Modeling-Rules.md)

@@ -223,6 +223,8 @@ All managed concepts defined by the specification are specializations of Object.
 
 Specifications may extend Object but shall preserve its core characteristics.
 
+This principle is canonically stated in Constitution §1 — Object-Centric Reality (`Core/Constitution.md`).
+
 ---
 
 # Independence
@@ -258,3 +260,4 @@ A compliant implementation shall ensure that every managed Object:
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 25 July 2026 | Added Organization to Examples of Objects, per ADR CAND-005 (Option C) |
+| 0.1 | 27 July 2026 | Added cross-reference to Constitution §1 in Architectural Role, per CAND-006 Step 0 integration |
