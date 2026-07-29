@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 July 2026
+**Last Updated:** 29 July 2026
 
 ---
 
@@ -166,6 +166,26 @@ Following the adoption of the Organization model (ADR CAND-005, Option C — Org
 
 ---
 
+## AO-004
+
+**Title:** Reader Produces No Memory-Record-Shaped Output
+
+**Date observed:** 29 July 2026
+
+**Description:** RC-005 (Vector repository, `reference/rc005/`) ran `OCOM-Reader`'s real, unmodified `FilesystemDocumentationAdapter` and `to_memory_entry()` against real documents and compared the resulting `MemoryEntry` (`ocom_reader/core/memory.py`) against `Memory Record.md`'s (Memory-02) Mandatory Attributes. Of 8 required attributes (Identifier, Subject, Memory Type, Value, Layer, Status, Created Date, Evidence), only Identifier and Evidence have a corresponding field on `MemoryEntry`. Subject, Memory Type, Value, Layer, and Status have no corresponding concept — not on `MemoryEntry`, and not on `OCOMObject` (`ocom_reader/core/object.py`), the output of Reader's one existing Normalizer stage (`FilesystemDocumentationNormalizer`), which targets OCOM's Object model (`Meta/Object.md`'s Core Characteristics: Identity, Metadata, Classification, Relationships, Lifecycle, Ownership, Governance), not Memory Record. Reader's own `ADR-007` frames `MemoryEntry` explicitly as a pre-Memory-Record staging concept ("Memory Before Knowledge"), and the existing Normalizer's docstring states it deliberately does not interpret document content, deferring that to a future LLM-based Normalizer.
+
+**Impact:** Reader currently produces `MemoryEntry` objects that cannot be consumed as public Memory Records without implementation-specific adaptation. Any system (such as Vector) intending to consume Reader's output as OCOM Memory Records must either wait for Reader to implement that stage, or build an intermediary of its own — a real interoperability gap, demonstrated directly rather than assumed, though confined to one implementation's current stage of development, not the Specification.
+
+**Recommendation:** None offered here. This is an observation, not a decision. At least three directions are visible and are explicitly not chosen or ranked by this entry: (a) Reader's own Normalizer pipeline evolves to eventually produce a full Memory Record; (b) a separate Memory Builder component is introduced between Reader and any Memory-Record consumer; (c) the Memory Record contract itself is reconsidered. Selecting among these is a Chief Architect / `OCOM-Reader` roadmap decision, not something this observation resolves.
+
+**Status:** Open
+
+**Architect Response:** *(pending)*
+
+**Related:** `Memory/Memory Record.md`, `AO-003` (this observation follows directly from validating AO-003's Option B direction against real code), `OCOM-Reader` (`core/memory.py`, `core/object.py`, `adapters/filesystem_documentation.py`, `normalizers/filesystem_documentation_normalizer.py`, `ADR-007`), Vector (`reference/rc005/RESULTS.md`)
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -174,3 +194,4 @@ Following the adoption of the Organization model (ADR CAND-005, Option C — Org
 | 0.1 | 22 July 2026 | Added OBS-003 (Reference Case: Object Attribute Lifecycle Categories) |
 | 0.1 | 25 July 2026 | Added AO-001 (Domain Definition Divergence) and AO-002 (Relationship Participant Inconsistency) |
 | 0.1 | 27 July 2026 | Added AO-003 (Mutable Status in an Immutable Memory Model), surfaced during Constitution integration Stage 2 (Memory/Evidence migration) |
+| 0.1 | 29 July 2026 | Added AO-004 (Reader Produces No Memory-Record-Shaped Output), surfaced by RC-005 (Vector, `reference/rc005/`) |
