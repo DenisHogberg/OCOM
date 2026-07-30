@@ -30,6 +30,7 @@ These are directions for exploration, evidenced by observed need, not commitment
 - What a Reference Implementation and a Reference Agent would require, if and when the specification is judged stable enough to support them — not yet scoped.
 - Whether further Domain-level practice (Business Intelligence, Operations, and others already present in `Domains/`) surfaces additional Reference Cases worth recording.
 - Two items named in earlier planning were never realized as distinct deliverables and remain open, unscoped questions rather than committed work: an "Object Passport" concept (no corresponding document exists; `Meta/Identity.md` and `Meta/Metadata.md` cover related but not identical ground), and a dedicated Security specification (nothing currently exists under this name anywhere in the repository).
+- Idea (not a governance artifact): Consider documenting the evidence thresholds and promotion criteria for Specification evolution if multiple independent governance reviews reveal recurring patterns not fully covered by Standard Evolution Methodology.
 
 ---
 
