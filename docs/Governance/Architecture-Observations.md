@@ -186,6 +186,92 @@ Following the adoption of the Organization model (ADR CAND-005, Option C — Org
 
 ---
 
+## AO-005
+
+**Title:** Attribute Data-Type Facet Has No Self-Describing Value Structure — Evidenced Concretely by Quantitative Measurement Ambiguity
+
+**Date observed:** 29 July 2026
+
+**Description:** `Models/Entity.md` requires every Attribute to declare a "data type" (its Attributes section: "name; meaning; data type; optional constraints") but defines no structure for what a data type's content must self-describe beyond a bare label. Two independent Reference Cases surfaced the same boundary from unrelated sources.
+
+| Field | Content |
+|---|---|
+| **Reference Case** | RC-006 — Quantitative Ambiguity in Real Operational Data |
+| **Purpose** | Determine whether OCOM's existing Attribute/data-type concept can unambiguously carry the quantitative business facts surfaced in six real internal meeting transcripts of an operating company (a traffic/UGC agency), processed this session to build an operational-intelligence dashboard. |
+| **Expressive Coverage** | Partially expressible. `Models/Entity.md` names "data type" as a required Attribute facet but defines no structure for it; nothing in `Meta/` or `Models/` states what a numeric Attribute's content must self-describe beyond its bare value. |
+| **Boundary Conditions** | (1) A stated debt of "37 000" and a tax obligation of "64 500" appear in the source material with no currency ever specified on the call — an AI agent consuming these as plain Attribute values cannot determine USD/EUR/UAH/other. (2) Sales KPI targets and ROI figures appear as bare numbers with no indication of whether they are a percent, a fraction, or a plain score. (3) A "2-week" vacation and a "30-day" project timeline appear with no calendar anchor, so neither is safely convertible to the other or to a common base unit. |
+| **Boundary Tags** | `structural-integrity`; `input-completeness`; `environmental-signal` (comparing money depends on an external market rate the model has nowhere to record); `cross-object-dependency` (a rate/ratio's meaning depends on two coordinated parts, not expressible as one bare Attribute). |
+| **External Assurance** | Drawn from real, dated meeting transcripts of an existing operating company (27–28 July 2026), not a hypothesis — the same material already used earlier in the same session to construct a real BI object model, where the ambiguity was directly encountered, not synthesized for this filing. |
+| **Architectural Observations** | This entry (`AO-005`). |
+| **Core Impact** | Recommended. |
+| **Decision** | Escalated to ADR Candidate — see `ADR-Candidates.md#cand-008`. |
+
+| Field | Content |
+|---|---|
+| **Reference Case** | RC-007 — The Same Ambiguity Already Latent in OCOM's Own Released v0.1 Core |
+| **Purpose** | Determine whether the RC-006 boundary is specific to one external system, or already present inside OCOM's own already-published Domain content — a second, independent source, per Rule 2 (Repeatability Before Standardization). |
+| **Expressive Coverage** | Partially expressible, by the same gap as RC-006. `Domains/Finance/Finance_KPIs.md`, `Domains/Operations/Operations_KPIs.md`, and `Domains/BI/BI_Objects.md` all name quantitative KPI/Metric concepts without a representation model. |
+| **Boundary Conditions** | (1) `Domains/Finance/Finance_KPIs.md` names "average processing time," "reconciliation cycle time," and "financial close duration" — Duration concepts with no unit. (2) `Domains/Operations/Operations_KPIs.md` names "Work Completion Rate," "Task Completion Rate," and "Milestone Achievement Rate" — Rate concepts with no numerator/denominator structure. (3) `Domains/BI/BI_Objects.md` lists "Ratio" as an example Metric Object with no representation rule distinguishing a percent from a fraction from a plain score. |
+| **Boundary Tags** | `structural-integrity`; `input-completeness`. |
+| **External Assurance** | Drawn from already-released, already-reviewed v0.1 Core content (`Domains/Finance/`, `Domains/Operations/`, `Domains/BI/`), independent of RC-006's source company and independent of this filing's own motivation — the boundary was already present in the Specification before this filing was written, not introduced by it. |
+| **Architectural Observations** | This entry (`AO-005`). |
+| **Core Impact** | Recommended. |
+| **Decision** | Escalated to ADR Candidate — see `ADR-Candidates.md#cand-008`. |
+
+RC-006 and RC-007 reach the same Boundary Condition from two independent sources — a real external company's operational data, and OCOM's own already-published Domain content — satisfying Repeatability Before Standardization without requiring a hypothetical second case. Neither Reference Case fits inside an existing `Master-Architecture-Backlog.md` Epic (A–F); the closest, `EPIC-D` (Constitution & Terminology Closure), closes undefined *terms*, not undefined value *structure*.
+
+**Impact:** As currently written, no OCOM Attribute — in this Specification's own Domain content or in any conformant implementation — can express a Money, Percentage, Duration, Quantity, Physical Unit, or Rate value in a way that is self-describing enough for an AI agent to compare, aggregate, or normalize it without an undocumented assumption. This is a gap in the Meta-model (`Meta/`), not in any single Domain profile, since every Domain's KPI documents inherit it identically.
+
+**Recommendation:** Per `Standard Evolution Methodology.md`'s Minimal Core principle, the recommended resolution is not a narrow Measurement-only addition, but a general **Value** Meta-construct (the self-describing content an Attribute's data-type facet holds — Value Kind, Representation, Semantics, Context, Resolution Status) with Measurement specified as its first fully-designed Value Kind, since that is the one with concrete, repeated evidence here. Other plausible Value Kinds (Scalar, Reference, Composite) should be named but left unspecified pending their own Reference Cases — this observation has no evidence for those boundaries and should not pre-design them. A full Concept Paper is attached to the escalation (`ADR-Candidates.md#cand-008` → `Concept-Paper-Value-Model.md`) for the Chief Architect's review; no change is made to `Meta/` or `Models/` by this entry.
+
+**Status:** Open — escalated, see `ADR-Candidates.md#cand-008`
+
+**Architect Response:** *(pending)*
+
+**Related:** `Models/Entity.md`, `Domains/Finance/Finance_KPIs.md`, `Domains/Operations/Operations_KPIs.md`, `Domains/BI/BI_Objects.md`, `Standard Evolution Methodology.md` (Reference Case template, Repeatability Before Standardization, Minimal Core), `ADR-Candidates.md#cand-007` (Architecture Freeze — this is filed as a Freeze exception under its §5/§6), `ADR-Candidates.md#cand-008`, `Concept-Paper-Value-Model.md`
+
+---
+
+## AO-006
+
+**Title:** Observation vs. Interpretation vs. Value vs. Meaning — Does an Attribute Hold a Value Directly, or an Interpretation of One or More Observations?
+
+**Date observed:** 29 July 2026
+
+**Description:** During Chief Architect review of `CAND-008` (the Value Model, filed on `AO-005`), a further architectural question was raised, independent of `AO-005`'s own boundary and not a defect in it: `CAND-008` assumes an Attribute directly holds a Value. That assumption is stated to be appropriate for a business data model, but may not hold as OCOM evolves toward an operational knowledge graph intended to support AI reasoning, where a Value is often not a primitive fact but the interpretation of one or more Observations. The conceptual pipeline offered for comparison is `Observation → Interpretation → Value → Meaning`, against the simpler `Attribute → Value` pipeline `CAND-008` currently assumes.
+
+**Impact:** If a Value is, in general, derived from one or more Observations rather than held directly, `CAND-008`'s Value Model as designed has no place to record which Observation(s) a Value derives from, how conflicting Observations of the same fact are represented and resolved, how uncertainty in that derivation is carried, or how the derivation stays reproducible for AI reasoning — evidence traceability, conflicting observations, uncertainty handling, provenance, and reproducible AI reasoning were named specifically. This is recorded so `CAND-008`'s eventual promotion decision is made with the question visible, not silently closed — it is explicitly not raised as a defect requiring correction now.
+
+**Recommendation:** No change to `CAND-008` or `Concept-Paper-Value-Model.md` on the basis of this observation alone — per `Standard Evolution Methodology.md` Rule 1 (Evidence Before Architecture), no Reference Case currently demonstrates the need for an Observation layer, so none is proposed here. This is recorded as a standing precondition check: before `CAND-008` is promoted to ADR (before Value becomes normative), this question should be checked against any Reference Case that surfaces an evidence-traceability, conflicting-observation, uncertainty, provenance, or reproducibility need that `Attribute → Value` cannot express. If such a case is filed and the boundary repeats independently (Rule 3 — Repeatability Before Standardization), `CAND-008` or a successor candidate would need to revisit whether Value sits atop an Observation/Interpretation layer rather than being held directly by an Attribute.
+
+**Status:** Open — recorded per Chief Architect review of `CAND-008`; not escalated to an ADR Candidate (no Reference Case exists yet)
+
+**Architect Response:** No Core impact at this time. No Reference Case currently demonstrates the need for an Observation layer, so `CAND-008` is not required to address it now. Recorded as an open architectural question to be checked against future Reference Cases before `CAND-008`'s promotion, not resolved here.
+
+**Related:** `ADR-Candidates.md#cand-008`, `Concept-Paper-Value-Model.md`, `AO-005`, `Standard Evolution Methodology.md` (Rule 1 — Evidence Before Architecture, Rule 3 — Repeatability Before Standardization)
+
+---
+
+## AO-007
+
+**Title:** Core Concepts Must Eliminate a Demonstrated Deficiency, Not Introduce a New Abstraction — a Candidate Refinement to Standard Evolution Methodology's Evidence Before Architecture Principle
+
+**Date observed:** 29 July 2026
+
+**Description:** During Chief Architect review of `AO-005` → `CAND-008` → `Concept-Paper-Value-Model.md` → `AO-006`, a further observation was made about the evolution methodology itself, not about any specific Core concept: `Standard Evolution Methodology.md`'s existing principles (Evidence Before Architecture, Minimal Core, Principle of Minimal Evolution) already argue against adding concepts speculatively, but do not yet state, as one explicit rule, the sharper distinction this session's work actually applied — a new Core concept must **eliminate** a demonstrated deficiency in the existing model, not merely **add** a new abstraction that happens to be elegant, general, or plausibly useful. The distinction was demonstrated directly, not hypothesized: the original submission proposed Measurement; only because the existing model could not express the boundary at all was Measurement generalized to Value; had Value also failed to resolve it, the correct next step would have been a further Observation, not a further concept. Architecture is stated to grow bottom-up — reality forcing an expansion — never top-down — a concept proposed first and a justification found for it after.
+
+**Impact:** Not itself a deficiency in `Standard Evolution Methodology.md` — its existing principles already point in this direction, and the methodology already produced the correct outcome in this session's work without this rule being written down anywhere. This is a candidate sharpening of it: making explicit, as a checkable rule, a distinction the methodology currently implies but does not state directly. Recorded so the refinement is not lost, and so it is evaluated on its own evidentiary terms rather than adopted on the strength of one clean example.
+
+**Recommendation:** Do not amend `Standard Evolution Methodology.md` on the basis of this single episode — both the Chief Architect's own framing ("оформить явно когда-нибудь," someday, not now) and the methodology's own Repeatability Before Standardization principle argue for waiting on further instances before formalizing this as an explicit rule. If a future episode independently reproduces the same shape (a concept proposed, found to be a symptom rather than a cause, and generalized or deferred to a further Observation instead of being adopted as proposed), that would be a second independent instance and sufficient grounds to open an ADR Candidate proposing new text for `Standard Evolution Methodology.md` itself — noting the Governance Framework is a reviewed, frozen baseline (`ROADMAP.md`: "further changes to this section go only through its own approved process"), so such a Candidate would need to satisfy that section's own approval process, not only the general Reference Case pipeline it describes.
+
+**Status:** Open — recorded per Chief Architect observation; not escalated to an ADR Candidate (one instance only; awaiting independent repetition per Repeatability Before Standardization)
+
+**Architect Response:** Agreed this should not be formalized yet. The distinction is real — a new concept should appear only when the existing model cannot express reality, this is confirmed by multiple independent Reference Cases, and a minimal extension genuinely removes the deficiency, never because a concept is "beautiful," "general," or "might be useful" — but it should be recorded as evidence toward a future, independently-corroborated refinement of `Standard Evolution Methodology.md`, not written into it now on one example.
+
+**Related:** `Standard Evolution Methodology.md` (Evidence Before Architecture, Minimal Core, Principle of Minimal Evolution, Repeatability Before Standardization), `AO-005`, `ADR-Candidates.md#cand-008`, `Concept-Paper-Value-Model.md`, `AO-006`, `Governance-Manifest.md`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -195,3 +281,6 @@ Following the adoption of the Organization model (ADR CAND-005, Option C — Org
 | 0.1 | 25 July 2026 | Added AO-001 (Domain Definition Divergence) and AO-002 (Relationship Participant Inconsistency) |
 | 0.1 | 27 July 2026 | Added AO-003 (Mutable Status in an Immutable Memory Model), surfaced during Constitution integration Stage 2 (Memory/Evidence migration) |
 | 0.1 | 29 July 2026 | Added AO-004 (Reader Produces No Memory-Record-Shaped Output), surfaced by RC-005 (Vector, `reference/rc005/`) |
+| 0.1 | 29 July 2026 | Added AO-005 (Attribute Data-Type Facet Has No Self-Describing Value Structure), evidenced by RC-006 (real operating-company meeting data) and RC-007 (OCOM's own Finance/Operations/BI Domain KPI content); escalated to `CAND-008` |
+| 0.1 | 29 July 2026 | Added AO-006 (Observation vs. Interpretation vs. Value vs. Meaning), recorded per Chief Architect review of `CAND-008`; no Reference Case yet, not escalated — a precondition check on `CAND-008`'s eventual promotion |
+| 0.1 | 29 July 2026 | Added AO-007 (Core Concepts Must Eliminate a Demonstrated Deficiency, Not Introduce a New Abstraction), recorded per Chief Architect observation on the Measurement→Value episode; one instance only, not escalated — evidence toward a possible future refinement of `Standard Evolution Methodology.md` |

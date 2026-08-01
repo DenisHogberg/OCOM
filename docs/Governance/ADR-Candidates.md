@@ -494,6 +494,35 @@ The Freeze is scoped to reaching v1.0, not indefinite. It lifts, returning to a 
 
 ---
 
+## CAND-008
+
+**Title:** OCOM Value Model — a Meta-level construct for self-describing Attribute values, with Measurement as its first realized Value Kind
+
+**Status:** Open
+
+**Owner:** Chief Architect
+
+**Created:** 29 July 2026
+
+**Related Documents:** `Architecture-Observations.md#ao-005`, `Concept-Paper-Value-Model.md`, `Models/Entity.md`, `Meta/Object.md`, `Meta/Classification.md`, `Meta/Relationship.md`, `Domains/Finance/Finance_KPIs.md`, `Domains/Operations/Operations_KPIs.md`, `Domains/BI/BI_Objects.md`. Filed under `CAND-007` (Architecture Freeze) §5/§6 as a named Freeze exception, not as ordinary Backlog work.
+
+**Discussion:** `AO-005` found, via two independent Reference Cases (`RC-006`: a real operating company's meeting transcripts; `RC-007`: OCOM's own already-released `Domains/Finance/`, `Domains/Operations/`, `Domains/BI/` content), that `Models/Entity.md`'s Attribute "data type" facet has no structure for what a quantitative value must self-describe — an AI agent cannot determine whether "10000" is USD, EUR, or BTC, whether "35" is a percent, a fraction, or a plain score, or whether "30" is days or hours, from the Attribute alone.
+
+This is filed as a Freeze exception under `CAND-007` because it does not survive check (a) of that Decision's §6 (no `Master-Architecture-Backlog.md` Epic covers value/data-type structure — the closest, `EPIC-D`, closes undefined *terms*, not undefined value *structure*), and it passes check (b): this is contract-shaped, not product-shaped, by Architecture Principle 1's own test ("does it constrain what gets written, or how a written corpus gets read?" — a Value's structure is what gets written; how any given Reader or Agent interprets it afterward remains free, consistent with Principle 5).
+
+Rather than adopting the narrower Measurement concept the original submission proposed, this candidate proposes the smaller, more defensible ask that Minimal Core (`Standard Evolution Methodology.md`) argues for: a general **Value** Meta-construct (Value Kind / Representation / Semantics / Context / Resolution Status — the same five-characteristic shape `Meta/Object.md` uses for Object) with **Measurement** specified as its one fully-designed Value Kind, since that is the only kind with concrete Reference Case evidence. Three further Value Kinds (ScalarValue, ReferenceValue, CompositeValue) are named in the attached Concept Paper but deliberately left unspecified — no Reference Case evidences their boundaries yet, and speculatively designing them now would itself violate Minimal Core.
+
+The full design — Value's Core Characteristics; Measurement's six kinds (Money, Percentage, Duration, Quantity, PhysicalUnit, Rate); `ExchangeRateObservation`; the unit-normalization comparison procedure; a conceptual diagram; worked examples; edge cases; integration with Objects/Attributes, Evidence, Lifecycle, Relationships, and Governance; and a migration strategy — is attached as `Concept-Paper-Value-Model.md`, Status: Informative, following the same non-normative pattern `Concept-Paper-Knowledge-vs-World-Model.md` used ahead of `AO-003`'s resolution. Nothing in `Meta/`, `Models/`, `Core/`, or `Domains/` is changed by this candidate.
+
+Consequences by outcome:
+- *Promote to ADR:* `Meta/Value.md` is authored (by the Chief Architect, per this document's own §6 / `CAND-004` precedent — "the CDKO proposes candidates... the Chief Architect authors the actual ADR"), Measurement is integrated as its first Value Kind, and a follow-up item is opened to eventually retype the bare Rate/Duration KPI names already in `Finance_KPIs.md`/`Operations_KPIs.md` — not required for this Decision, named so it isn't concealed.
+- *Merged into an existing item:* if the Chief Architect judges this fits inside an Epic not surfaced during evaluation, or is better sequenced as part of one, `AO-005` and this candidate are re-pointed there rather than tracked separately.
+- *Closed without ADR:* if the Chief Architect judges the two Reference Cases insufficient, or the boundary better left to Reader/Vector as implementation-specific accommodation (Principle 8's sufficiency test resolved the other way), both `AO-005` and this candidate close with that reasoning recorded in `AO-005`'s Architect Response.
+
+**Next Action:** Chief Architect to review `Concept-Paper-Value-Model.md` and `AO-005`, and record a Decision.
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -511,3 +540,4 @@ The Freeze is scoped to reaching v1.0, not indefinite. It lifts, returning to a 
 | 0.1 | 23 July 2026 | CAND-004: fully rewritten as "Modeling Cross-Organization Relationships," on the CAND-005 Option C basis — old Organization-vs-Domain framing replaced with 7 research questions (relationship types, ownership, cross-org references, shared objects, memory, registry, AI) and a revised impact assessment |
 | 0.1 | 26 July 2026 | Added CAND-006 (OCOM Constitution — Foundational Principles) — Decision recorded, adopted as v1.0. Fourteen Canonical Principles plus Architectural, Implementation, and Meta-Principles; establishes that future changes go through this same ADR Candidate process and that new proposals are evaluated against the Constitution, not the reverse. Core integration deferred to a separate, not-yet-authorized task. |
 | 0.1 | 27 July 2026 | Added CAND-007 (Architecture Freeze for OCOM v1.0) — Decision recorded, adopted. Formalizes the transition from Architecture Discovery to Architecture Stabilization: architectural discovery considered complete per four independent adversarial search passes finding no new root-shape question; `Master-Architecture-Backlog.md` becomes the sole source of architectural work; permitted/forbidden changes, Freeze-exception criteria, new-proposal evaluation order, and post-v1.0 unfreeze criteria all recorded. No new Meta Object, Canonical Principle, or Epic introduced. |
+| 0.1 | 29 July 2026 | Added CAND-008 (OCOM Value Model, with Measurement as its first realized Value Kind) — filed as a named Freeze exception under `CAND-007` §5/§6, on evidence from `AO-005` (`RC-006`, `RC-007`); full design attached as `Concept-Paper-Value-Model.md`; Decision pending |
