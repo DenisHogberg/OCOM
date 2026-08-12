@@ -2,7 +2,7 @@
 
 Object-Centric Operating Model (OCOM): A memory-first architecture for enterprise AI systems.
 
-**Website:** [ocom.uno](https://ocom.uno)
+**Website / specification:** [OCOM — the Object-Centric Operating Model specification](https://ocom.uno) · [ocom.uno](https://ocom.uno)
 
 **Specification status:** v0.1 Core — Released · Governance & Specification v0.2 (Reading Path) — Baseline
 
