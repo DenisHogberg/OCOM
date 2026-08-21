@@ -142,13 +142,15 @@ This does not match the example structure given in the task ("Entry Point, Knowl
 
 **Why it exists:** `Specification/` (v0.2) was approved 22 July 2026, before Constitution existed, and `Adoption/` still names it "the actual entry point" (C8). `Examples/Overview.md` promises six industry collections and silently has one (C11) — unlike `Workflows/`, which honestly labels itself "Planned for future versions." `DEBT-DOC-001`, `GAP-001`, `FW-002`, `FW-005`, and the `Entities/Department` stub are each individually small, already-tracked items in this same category.
 
-**Documents affected:** `Specification/*` (10 docs), `Adoption/README.md`, `Examples/Overview.md`, `docs/README.md`, `Entities/Department/`, `Entities/Campaign/Campaign.md`, `Governance/Knowledge-Map.md`.
+**Documents affected:** `Specification/*` (10 docs), `Adoption/README.md`, `Adoption/Worked Example - Library Lending.md` (new), `Examples/Overview.md`, `docs/README.md`, `Entities/Department/`, `Entities/Campaign/Campaign.md`, `Governance/Knowledge-Map.md`.
 
-**Related AO/ADR:** `DEBT-DOC-001`, `GAP-001`, `FW-002`, `FW-005`.
+**Related AO/ADR:** `DEBT-DOC-001`, `GAP-001`, `FW-002`, `FW-005`, `CAND-010`.
 
-**Definition of Done:** `Specification/` either reflects Constitution or is explicitly marked superseded, with `Adoption/` re-pointed accordingly; `Examples/Overview.md`'s stated scope matches what actually exists, the same way `Workflows/README.md` already does; the four small Documentation-Debt items are closed or have a recorded disposition.
+**Definition of Done:** `Specification/` either reflects Constitution or is explicitly marked superseded, with `Adoption/` re-pointed accordingly; `Examples/Overview.md`'s stated scope matches what actually exists, the same way `Workflows/README.md` already does; the four small Documentation-Debt items are closed or have a recorded disposition; one universal, Informative Worked Example exists under `Adoption/`, per `CAND-010`.
 
 **Execution note (20 August 2026):** the publication-governance slice of this Epic — disambiguating Constitution/Core Vocabulary/Specification/Release as four independent version tracks, single-sourcing the RFC 2119/8174 definition to `Core/Manifest.md`, correcting `Entities/Overview.md`'s Status against `Constitution-Step0-Summary.md` Decision 4, adding a Status Taxonomy, and documenting (not silently fixing) the `v1.0.0` Release's scope mismatch — has been executed via `Governance/Publication-Model.md`, `Governance/Publication-Manifest.md`, and `Governance/Release-Workflow.md`. This closes the version-identity and normative-reference portion of "stop routing newcomers into a pre-Constitution picture of OCOM." The `Specification/*`↔`Constitution` content re-pointing itself, `Adoption/README.md`'s entry-point claim, and `Examples/Overview.md`'s scope-parity gap remain open — this note does not close this Epic.
+
+**Scope amendment (21 August 2026):** Adds one explicit work item to this Epic — a single universal, Informative Worked Example under `Adoption/` (not `Examples/`, which is reserved for industry-specific collections per `Examples/Overview.md`'s own "Organization" section). Authorized by `CAND-010` — Decided, 21 August 2026 (`Governance/ADR-Candidates.md#cand-010`), as a scope-authorization-only decision: it does not certify the example's content, does not privilege Library Lending as the only valid domain, grants no authorization to Shape Check, and does not itself authorize any second or future Adoption artifact.
 
 ---
 

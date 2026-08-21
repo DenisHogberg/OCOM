@@ -691,6 +691,54 @@ as a separate, checkable item before requesting Layer 3 authorization.
 
 ---
 
+## CAND-010 — ✅ Decided
+
+**Title:** Authorize one universal Informative Worked Example under docs/Adoption/
+
+**Status:** Decided — Promote — Scope Authorization Only (21 August 2026)
+
+**Owner:** Chief Architect
+
+**Created:** 21 August 2026 · **Decided:** 21 August 2026
+
+**Why this does not require the Reference Case → ADR Candidate pipeline:** Per `CAND-007` §7, items newly approved under §6 are "added to the Backlog, under an existing Epic where it fits." This item is an instance of the kind of work `EPIC-F` already does (re-pointing `Adoption/`, closing small content gaps) — not a new category, unlike `CAND-008` (Value Model) or `CAND-009` (publication governance), both of which needed the full pipeline because no existing Epic covered that kind of work at all. This entry exists to give the authorization a real, citable Decision record with its own Status lifecycle — not because §5's Freeze-exception bar is met.
+
+**Related Documents:** `Master-Architecture-Backlog.md` (`EPIC-F`, and §7's Backlog-addition mechanism), `CAND-007` §3/§6/§7, `Adoption/README.md`, `Examples/Overview.md` ("Organization" section — grounds why this belongs under `Adoption/`, not `Examples/`), `Governance/Documentation-Standards.md` (Status Taxonomy — Informative definition).
+
+**Decision:**
+
+Authorize the addition of exactly one file, `docs/Adoption/Worked Example - Library Lending.md`, as a new `EPIC-F` work item.
+
+Scope:
+- one static worked example;
+- Status: Informative;
+- domain-neutral (no industry, no company, no real data);
+- hand-authored, illustrative only;
+- no normative changes;
+- no Reference Implementation;
+- no Conformance claims.
+
+This decision does not:
+- modify Core/Meta/Models;
+- modify `CAND-008`;
+- create new types, enums, cardinalities, or schema rules;
+- change the Object Model;
+- authorize additional Adoption artifacts beyond this one example.
+
+**Scope authorization only — explicitly not asserted by this Decision:**
+- that the content of the Worked Example is already correct;
+- that the chosen Library Lending domain is the only valid choice;
+- that Shape Check has received any authorization of any kind;
+- that `EPIC-F` is automatically extended to any other Adoption artifact beyond this one file.
+
+**Governance implication of this Decision:**
+- A second or future worked example is a new `EPIC-F` work item requiring its own amendment and, if precedent is by then established, may not need a new CAND entry at all — that is a future question, not decided here.
+- This Decision does not touch `Examples/Overview.md`'s industry-collection scope, `CAND-009`, or any Shape Check design work.
+
+**Next Action:** Executed same-session, per author instruction: the corresponding `EPIC-F` scope amendment in `Master-Architecture-Backlog.md` is applied, and `docs/Adoption/Worked Example - Library Lending.md` is authored per the Library Lending design. Neither step draws on any authority beyond what this Decision records above.
+
+---
+
 # Revision History
 
 | Version | Date | Description |
