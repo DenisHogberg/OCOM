@@ -20,6 +20,8 @@
 
 # Purpose
 
+**Status note (20 August 2026):** `Constitution-Step0-Summary.md` Decision 4 found `Domains/` to be a "genuine borderline case" for Constitution §9's Domain-Neutral Core — most domain names are universal business-function categories, but at least one (`Affiliate`) leans toward a specific business model — and explicitly declined a blanket ruling in favor of "ongoing, per-document judgment." This Status is deliberately left as `Draft`, not changed to `Informative`, pending that ongoing review — see `Governance/Publication-Model.md` and `Governance/Documentation-Standards.md`'s Status Taxonomy. This is not an oversight; changing it now would decide something Decision 4 explicitly left open.
+
 This specification defines the domain architecture of the OCOM framework.
 
 Domains provide a structured way to organize enterprise operational capabilities into cohesive business areas while maintaining a unified object-centric operational model.
@@ -203,3 +205,4 @@ A conforming Domain specification shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 21 July 2026 | Initial draft |
+| 0.1 | 20 August 2026 | Added status note citing `Constitution-Step0-Summary.md` Decision 4's "genuine borderline case" finding; Status left unchanged (`Draft`), deliberately, pending ongoing per-document review |

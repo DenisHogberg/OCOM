@@ -118,3 +118,103 @@ jobs:
             '**/*.md'
           fail: true
           jobSummary: true
+
+  publication-metadata:
+    name: Publication metadata consistency
+    # Added per docs/Governance/Publication-Model.md and Release-Workflow.md.
+    # Scope: this repository's OWN internal consistency only — whether the
+    # Publication Manifest, the Specification version fields, and file
+    # Status values agree with each other. It cannot and does not check
+    # whether the live ocom.uno site matches this repository — the
+    # Publication Engine that builds that site is confirmed to be entirely
+    # external (no code, workflow, or config for it exists here). See
+    # "Known Gaps" in Publication-Model.md. This is publication-metadata
+    # consistency checking, not the Conformance Test Suite (EPIC-E, a
+    # separate, unrelated, not-yet-built thing).
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # full history needed to verify Manifest commits are real ancestors
+
+      - name: Manifest commits must resolve to real, reachable commits
+        run: |
+          set -e
+          manifest="docs/Governance/Publication-Manifest.md"
+          if [ ! -f "$manifest" ]; then
+            echo "::error::$manifest not found"
+            exit 1
+          fi
+          fail=0
+          # Extract every non-TBD value of the `**Commit**` field.
+          while IFS= read -r sha; do
+            if ! git cat-file -e "${sha}^{commit}" 2>/dev/null; then
+              echo "::error::Publication-Manifest.md declares commit '$sha' which does not exist in this repository's history"
+              fail=1
+            fi
+          done < <(grep -oE '\*\*Commit\*\* \| `[0-9a-f]{7,40}`' "$manifest" | grep -oE '`[0-9a-f]{7,40}`' | tr -d '`')
+          exit "$fail"
+
+      - name: Manifest's Specification Version must match docs/Specification/*
+        run: |
+          set -e
+          manifest="docs/Governance/Publication-Manifest.md"
+          # Last non-TBD "Specification Version" value in the manifest is
+          # treated as the one describing the current docs/Specification/
+          # tree — deliberately simple: one manifest, one currently-live
+          # Specification version, not a general multi-version diff tool.
+          declared=$(grep -oE '\*\*Specification Version\*\* \| [0-9]+\.[0-9]+' "$manifest" | grep -v 'TBD' | tail -1 | grep -oE '[0-9]+\.[0-9]+$')
+          if [ -z "$declared" ]; then
+            echo "::warning::No resolvable, non-TBD Specification Version found in $manifest — skipping consistency check"
+            exit 0
+          fi
+          fail=0
+          for f in "docs/Specification"/*.md; do
+            actual=$(grep -m1 -oE '\*\*Version:\*\* [0-9]+\.[0-9]+' "$f" | grep -oE '[0-9]+\.[0-9]+$' || true)
+            if [ -n "$actual" ] && [ "$actual" != "$declared" ]; then
+              echo "::error::$f declares Version $actual but Publication-Manifest.md's current Specification Version is $declared"
+              fail=1
+            fi
+          done
+          exit "$fail"
+
+      - name: Entities/Overview.md Status must be Draft
+        # Constitution-Step0-Summary.md Decision 4 excludes Entities/ from
+        # Constitution §9's Core scope, but does not address this
+        # document's own Status field, and its content remains normative
+        # ("shall") throughout — so Status stays Draft. This is a narrow,
+        # specific check, not a general Decision-vs-Status linter — see
+        # Publication-Model.md for why Domains/Overview.md is deliberately
+        # NOT checked the same way (a genuine, still-open per-document
+        # judgment call, not a settled disposition).
+        run: |
+          set -e
+          f="docs/Entities/Overview.md"
+          status=$(grep -m1 -oE '\*\*Status:\*\* [A-Za-z]+' "$f" | awk '{print $2}')
+          if [ "$status" != "Draft" ]; then
+            echo "::error::$f Status is '$status', expected 'Draft' — its normative content was not reduced, per Constitution-Step0-Summary.md Decision 4 review"
+            exit 1
+          fi
+
+      - name: Dangling normative-reference heuristic (advisory, non-blocking)
+        # Heuristic only, grep-based, deliberately not made blocking: it
+        # cannot reliably distinguish a genuine dangling reference (like
+        # the "Lifecycle" case found in 05 Object Model.md before Core
+        # Vocabulary coverage was checked) from an ordinary capitalized
+        # word in a SHALL sentence that was never meant to resolve to a
+        # term card. Surfaces candidates for a human to check — same
+        # "suggest, never auto-apply" discipline already used by this
+        # ecosystem's other heuristic tools (e.g. Vector's identity
+        # normalization pass). Never fails the build.
+        run: |
+          set +e
+          grep -noE '(shall|SHALL)[^.]*\b(participate in|define a|support|possess)[^.]*\b[A-Z][a-zA-Z]+' docs/Specification/*.md 2>/dev/null | \
+          while IFS=: read -r file line match; do
+            term=$(echo "$match" | grep -oE '[A-Z][a-zA-Z]+$')
+            [ -z "$term" ] && continue
+            if ! find docs/Meta docs/Models docs/AI docs/Core docs/Memory docs/Lifecycles -iname "*${term}*" 2>/dev/null | grep -q .; then
+              echo "::warning file=${file},line=${line}::Possible dangling normative reference to '${term}' — no matching file found under Meta/Models/AI/Core/Memory/Lifecycles"
+            fi
+          done
+          exit 0

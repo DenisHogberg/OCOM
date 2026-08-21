@@ -63,15 +63,17 @@ Enterprise Architects, Operations Leaders, Solution Architects, System Designers
 
 ## Normative Language
 
-The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** in this specification are to be interpreted as described in RFC 2119:
+`Core/Manifest.md`'s "Normative Language" section is the single authoritative definition of **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** for this entire specification, including this reading path. It is restated here, verbatim, for reader convenience — this chapter does not define these terms independently, and any future change to their meaning is made in `Core/Manifest.md`, not here:
 
-- **MUST** — an absolute requirement.
-- **MUST NOT** — an absolute prohibition.
-- **SHOULD** — a recommended practice; valid reasons may exist to ignore it in particular circumstances.
-- **SHOULD NOT** — a discouraged practice.
-- **MAY** — an optional capability or implementation choice.
+> The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY**, when they appear in all capitals in this document, and in every document of this specification, are to be interpreted as described in RFC 2119, as amended by RFC 8174:
+>
+> - **MUST** indicates an absolute requirement.
+> - **MUST NOT** indicates an absolute prohibition.
+> - **SHOULD** indicates a recommended practice.
+> - **SHOULD NOT** indicates a practice that is generally discouraged.
+> - **MAY** indicates an optional capability or implementation choice.
 
-Chapters 2–8 use the lowercase forms **shall**, **shall not**, **should**, and **may**, matching the convention already used throughout the granular OCOM documents (`Meta/`, `Models/`, `Core/`, `Language/`). These are equivalent to **MUST**, **MUST NOT**, **SHOULD**, and **MAY** respectively; this specification does not distinguish the two forms.
+Chapters 2–8 use the lowercase forms **shall**, **shall not**, **should**, and **may**, matching the convention already used throughout the granular OCOM documents (`Meta/`, `Models/`, `Core/`, `Language/`). Independently of RFC 8174's own all-capitals restriction, this specification extends the same defined meanings to these lowercase forms, by its own convention: they are equivalent to **MUST**, **MUST NOT**, **SHOULD**, and **MAY** respectively.
 
 ## How to Read This Specification
 
@@ -95,4 +97,4 @@ This specification is intended to evolve through successive versions while prese
 
 ---
 
-*Source: compiled from `Core/Manifest.md`. The shall/MUST equivalence note reflects the existing observation in `docs/Governance/Documentation-Standards.md` ("Normative documents consistently use 'shall'... consistent with RFC 2119-style usage, though not currently cited explicitly") — this chapter is the first to state that equivalence outright. (Committee Review, 22 July 2026: minor wording fixes to the Intended Audience list and the Chapters 3–8 cross-reference; no normative change.)*
+*Source: compiled from `Core/Manifest.md`. The Normative Language section is quoted verbatim from `Core/Manifest.md`'s own "Normative Language" section, which is the specification's single authoritative source for these key words as of 20 August 2026 (see `Governance/Publication-Model.md`) — this chapter restates it, it does not independently define it. The shall/MUST equivalence note reflects the existing observation in `docs/Governance/Documentation-Standards.md` ("Normative documents consistently use 'shall'... consistent with RFC 2119-style usage, though not currently cited explicitly") — this chapter was the first to state that equivalence outright. (Committee Review, 22 July 2026: minor wording fixes to the Intended Audience list and the Chapters 3–8 cross-reference; no normative change.)*

@@ -41,6 +41,17 @@ Normative documents consistently use "shall" for mandatory requirements, "may" f
 
 ---
 
+# Status Taxonomy
+
+No prior document defined these four `Status` values precisely — this section makes existing, observed usage explicit, per this document's own stated purpose. It does not change any document's Status; it only states what the values already mean in practice.
+
+- **Draft** — normative, currently in force, subject to revision before a final version. The default status for accepted content under `Core/`, `Meta/`, `Models/`, `Memory/`, `Language/`, `Governance/` (process documents), `Lifecycles/`, `AI/`, `Domains/`, `Entities/`, and `Specification/`. A `Draft` document's requirements apply now; "Draft" describes its maturity, not its authority.
+- **Informative** — non-normative. Explanatory, illustrative, or analytical material that imposes no requirement of its own. Used for `Examples/`, `Reference Architecture/`, and every `Governance/` analysis document (Concept Papers, Architecture Discussions, Audits, this document itself). A Core-scope decision (e.g. `Constitution-Step0-Summary.md` Decision 4, on `Entities/`) does not, by itself, change a document's Status — Status tracks whether the document's own content is normative, which is a separate question from Constitution §9 Core scope.
+- **Reserved** — a named section or attribute inside an otherwise-`Draft` document, explicitly deferred to a future version. A section-level marker, not a whole-document Status value: the document around it remains `Draft`/normative; only the reserved part is absent by design (example: `Memory/Evidence Overlay.md`'s "Reserved Sections," tracked as `FW-001`).
+- **Planned** — content that does not yet exist, tracked in `Documentation-Debt.md`'s Future Work table or stated directly in a stub file (example: `Workflows/README.md`, "Status: Planned for future versions"). Distinguished from `Reserved`: `Reserved` names a gap inside an existing document; `Planned` may have no document at all yet.
+
+---
+
 # Markdown Rules
 
 - Headings use ATX style (`#`, `##`) only.
@@ -85,3 +96,5 @@ ASCII diagrams are used for layered/sequential relationships, inside ```text``` 
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 22 July 2026 | Initial capture of existing conventions |
+| 0.1 | 20 August 2026 | Added Status Taxonomy section, defining Draft/Informative/Reserved/Planned precisely from existing observed usage — per `Governance/Publication-Model.md` |
+| 0.1 | 20 August 2026 | Corrected the Draft-directory list on independent review: it omitted `Domains/`, `Entities/`, and `Specification/`, the three largest Draft populations in the repository, contradicting the section's own descriptive claim. Removed the `Entities/`-as-Informative-example clause after `Entities/Overview.md`'s Status was reverted to Draft |

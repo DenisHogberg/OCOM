@@ -84,7 +84,7 @@ This does not match the example structure given in the task ("Entry Point, Knowl
 
 **Documents affected:** `AI/Knowledge/*` (5 docs), a new World Model document (does not yet exist), `Memory/Memory Record.md` (`AO-003` clause), `Memory/Evidence Overlay.md` (`FW-001` reserved sections).
 
-**Related AO/ADR:** `AO-003`; analysis already complete in `Concept-Paper-Knowledge-vs-World-Model.md` and `Architecture-Discussion-Knowledge-vs-World-Model.md` (Decision Readiness: **Да**, per that document's own Part 8) — no ADR Candidate has been filed yet for the actual choice among its four options.
+**Related AO/ADR:** `AO-003`; analysis already complete in `Concept-Paper-Knowledge-vs-World-Model.md` and `Architecture-Discussion-Knowledge-vs-World-Model.md` (Decision Readiness: **Yes**, per that document's own Part 8) — no ADR Candidate has been filed yet for the actual choice among its four options.
 
 **Definition of Done:** an ADR Candidate is filed and decided for the Knowledge/World Model split; `AI/Knowledge/*` no longer contradicts §5/§6/§3; a World Model document exists with at least a Definition and a stated relationship to Knowledge and Memory; `AO-003` is resolved as part of the same decision (the Discussion document already frames it as the same question at a smaller scale); `FW-001`'s reserved sections are written only as needed to support the decision, not before.
 
@@ -147,6 +147,8 @@ This does not match the example structure given in the task ("Entry Point, Knowl
 **Related AO/ADR:** `DEBT-DOC-001`, `GAP-001`, `FW-002`, `FW-005`.
 
 **Definition of Done:** `Specification/` either reflects Constitution or is explicitly marked superseded, with `Adoption/` re-pointed accordingly; `Examples/Overview.md`'s stated scope matches what actually exists, the same way `Workflows/README.md` already does; the four small Documentation-Debt items are closed or have a recorded disposition.
+
+**Execution note (20 August 2026):** the publication-governance slice of this Epic — disambiguating Constitution/Core Vocabulary/Specification/Release as four independent version tracks, single-sourcing the RFC 2119/8174 definition to `Core/Manifest.md`, correcting `Entities/Overview.md`'s Status against `Constitution-Step0-Summary.md` Decision 4, adding a Status Taxonomy, and documenting (not silently fixing) the `v1.0.0` Release's scope mismatch — has been executed via `Governance/Publication-Model.md`, `Governance/Publication-Manifest.md`, and `Governance/Release-Workflow.md`. This closes the version-identity and normative-reference portion of "stop routing newcomers into a pre-Constitution picture of OCOM." The `Specification/*`↔`Constitution` content re-pointing itself, `Adoption/README.md`'s entry-point claim, and `Examples/Overview.md`'s scope-parity gap remain open — this note does not close this Epic.
 
 ---
 
@@ -274,7 +276,7 @@ Only items architecturally blocked by the backlog above, per the instruction to 
 
 If leading OCOM's development starting tomorrow morning, the first three items, in this order:
 
-**1. File and decide the ADR Candidate for Knowledge vs. World Model (EPIC-A).** This is the single highest-leverage item in the entire backlog: it is already fully analyzed (`Concept-Paper-Knowledge-vs-World-Model.md`, `Architecture-Discussion-Knowledge-vs-World-Model.md`, explicitly rated "Decision Readiness: Да"), so no new research is needed — only the decision itself — and it unblocks more downstream work (EPIC-C's Entities bridge, EPIC-E's Test Suite, part of EPIC-D) than any other single item in the graph.
+**1. File and decide the ADR Candidate for Knowledge vs. World Model (EPIC-A).** This is the single highest-leverage item in the entire backlog: it is already fully analyzed (`Concept-Paper-Knowledge-vs-World-Model.md`, `Architecture-Discussion-Knowledge-vs-World-Model.md`, explicitly rated "Decision Readiness: Yes"), so no new research is needed — only the decision itself — and it unblocks more downstream work (EPIC-C's Entities bridge, EPIC-E's Test Suite, part of EPIC-D) than any other single item in the graph.
 
 **2. Update Constitution §9 and §11's own wording (EPIC-D).** The lowest-cost item in the entire backlog — pure transcription of decisions already made (`Constitution-Step0-Summary.md`, Decisions 4 and 5) — and it closes a standing inconsistency in the single most authoritative document in the Specification. Near-zero risk, immediate credibility gain, and it can proceed in full parallel with item 1.
 

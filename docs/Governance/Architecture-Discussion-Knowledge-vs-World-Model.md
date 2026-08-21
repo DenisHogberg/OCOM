@@ -138,7 +138,7 @@ Matters this discussion does not resolve or investigate:
 
 # 8. Decision Readiness
 
-**Да.**
+**Yes.**
 
 The problem is bounded (Section 1), grounded in already-decided Constitution principles and ARCH decisions rather than new speculation (Section 2), the responsibilities on both sides are enumerated (Section 3), the tensions are named concretely (Section 4), and a set of distinct, comparable options already exists in the same Option-A/B/C/D format used for every prior ARCH decision in this repository (Section 6). Nothing remains to be discovered before a choice can be made; the Open Questions (Section 7) are exploratory context, not blocking prerequisites, in the same way the `Domains/` boundary was left as an ongoing discipline rather than a blocker for Decision 4.
 

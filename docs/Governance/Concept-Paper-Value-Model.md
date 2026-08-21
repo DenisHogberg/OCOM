@@ -97,7 +97,7 @@ Every Measurement additionally carries a `value` (arbitrary-precision numeric �
 | `valuationTime` | The point in time the amount was true — non-optional; a Money value without a timestamp cannot be normalized once more than one currency is in play. |
 | `normalized` | Optional: `{baseCurrency, baseAmount, exchangeRate}` — an inline instance of §2.7 (ExchangeRateObservation), for a base-currency figure computed alongside the original. |
 
-Example (from the task's own sample, and matching RC-006's real "37 000"/"64 500" figures, corrected to be self-describing):
+Example (illustrative figures, corrected to be self-describing — matching the ambiguity class RC-006 identified, without reproducing its source figures):
 
 ```
 Money
@@ -256,9 +256,9 @@ classDiagram
 
 # 5. Examples
 
-- **Money:** §2.1's worked example, and RC-006's real "37 000" debt / "64 500" tax figure, corrected: both require an explicit `currency` (and, per RC-006, neither call ever stated one — recorded as `unresolved: true` until confirmed).
+- **Money:** §2.1's worked example, illustrating RC-006's boundary class (a debt figure and a tax figure), corrected: both require an explicit `currency` (per RC-006, neither source call ever stated one — recorded as `unresolved: true` until confirmed).
 - **Percentage:** ROI = 35, `representation: percent`, `semantic: ratio` → canonical fraction 0.35. Contrast: "conversion improved by 5" → `semantic: percentagePoints`, never treated as 0.05 of anything.
-- **Duration:** Project duration = 30, `unit: day`, `calendarBasis: fixed`; contrast a "2-week" vacation, same treatment, both safely comparable because both are fixed-length units — the RC-006 boundary this resolves.
+- **Duration:** Project duration = 30, `unit: day`, `calendarBasis: fixed`; contrast a vacation given in weeks, same treatment, both safely comparable because both are fixed-length units — the RC-006 boundary this resolves.
 - **Quantity:** 15 meetings (`unitLabel: meeting`, `discrete: true`); 230 users (`unitLabel: user`, `discrete: true`); 4 action items; 120 orders (`unitDomain: Sales`, to disambiguate from an Operations "order").
 - **PhysicalUnit:** distance 120, `dimension: Length`, `unit: km` → base metres = 120000.
 - **Rate:** Revenue/day = `numerator: Money(10000 USD)` / `denominator: Duration(1 day)`, `window: trailing-30-day-average`.

@@ -74,6 +74,8 @@ Consciously deferred decisions. Not documentation debt.
 | FW-003 | Reference Agent does not exist anywhere in the repository — the final link of the traceability chain | Next stage of OCOM | Repository-wide | CDKO role charter, "Дополнительная задача" | Planned |
 | FW-004 | Reference Implementation does not exist anywhere in the repository | Next stage of OCOM | Repository-wide | CDKO role charter, "Дополнительная задача" | Planned |
 | FW-005 | Extend `Knowledge-Map.md` traceability and `docs/README.md` visibility to fully reflect Governance as a peer section of OCOM | Undetermined | `Governance/Knowledge-Map.md`, `docs/README.md` | CDKO proposal, pending Architect confirmation | Open |
+| FW-006 | The external Publication Engine that builds ocom.uno exposes no commit or version marker this repository can check its output against — `Publication-Model.md`'s six authoritative-version questions can be answered from inside this repository, but "does the live site match the repository" cannot be verified without cooperation from that external system | Undetermined | `Governance/Publication-Model.md`, `Governance/Release-Workflow.md` (Steps 8–9) | Publication Governance work, 20 August 2026 | Open |
+| FW-007 | A correctly-scoped next Release (containing Constitution v1.0, matching `CAND-007`'s Architecture Freeze) has not been cut — `Publication-Manifest.md`'s placeholder entry is structural only, all fields `TBD` | Next release, criteria TBD | `Governance/Publication-Manifest.md`, `Governance/Master-Architecture-Backlog.md` Part 8 (Release Readiness) | Publication Governance work, 20 August 2026 — explicitly deferred, not this plan's scope | Planned |
 
 ---
 
@@ -85,3 +87,4 @@ Consciously deferred decisions. Not documentation debt.
 | 0.1 | 22 July 2026 | Added DEBT-DOC-001 (docs/README.md descriptive content regression) |
 | 0.1 | 22 July 2026 | Added pointer to OBS-003 (Reference Case: Object attribute lifecycle categories) |
 | 0.1 | 23 July 2026 | Added GAP-003 (M020 does not exist; Milestone numbering begins at M021), recorded Closed per author decision |
+| 0.1 | 20 August 2026 | Added FW-006 (external Publication Engine exposes no commit/version marker) and FW-007 (next correctly-scoped Release not yet cut), per `Governance/Publication-Model.md` and `Governance/Publication-Manifest.md` |

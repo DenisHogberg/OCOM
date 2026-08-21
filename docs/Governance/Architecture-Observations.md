@@ -197,11 +197,11 @@ Following the adoption of the Organization model (ADR CAND-005, Option C — Org
 | Field | Content |
 |---|---|
 | **Reference Case** | RC-006 — Quantitative Ambiguity in Real Operational Data |
-| **Purpose** | Determine whether OCOM's existing Attribute/data-type concept can unambiguously carry the quantitative business facts surfaced in six real internal meeting transcripts of an operating company (a traffic/UGC agency), processed this session to build an operational-intelligence dashboard. |
+| **Purpose** | Determine whether OCOM's existing Attribute/data-type concept can unambiguously carry the quantitative business facts surfaced in real internal operational data from an operating company in the traffic/UGC-agency sector. |
 | **Expressive Coverage** | Partially expressible. `Models/Entity.md` names "data type" as a required Attribute facet but defines no structure for it; nothing in `Meta/` or `Models/` states what a numeric Attribute's content must self-describe beyond its bare value. |
-| **Boundary Conditions** | (1) A stated debt of "37 000" and a tax obligation of "64 500" appear in the source material with no currency ever specified on the call — an AI agent consuming these as plain Attribute values cannot determine USD/EUR/UAH/other. (2) Sales KPI targets and ROI figures appear as bare numbers with no indication of whether they are a percent, a fraction, or a plain score. (3) A "2-week" vacation and a "30-day" project timeline appear with no calendar anchor, so neither is safely convertible to the other or to a common base unit. |
+| **Boundary Conditions** | (1) A stated debt figure and a tax obligation figure appear in the source material with no currency ever specified — an AI agent consuming these as plain Attribute values cannot determine USD/EUR/UAH/other. (2) Sales KPI targets and ROI figures appear as bare numbers with no indication of whether they are a percent, a fraction, or a plain score. (3) A vacation duration and a project timeline appear with no calendar anchor, so neither is safely convertible to the other or to a common base unit. |
 | **Boundary Tags** | `structural-integrity`; `input-completeness`; `environmental-signal` (comparing money depends on an external market rate the model has nowhere to record); `cross-object-dependency` (a rate/ratio's meaning depends on two coordinated parts, not expressible as one bare Attribute). |
-| **External Assurance** | Drawn from real, dated meeting transcripts of an existing operating company (27–28 July 2026), not a hypothesis — the same material already used earlier in the same session to construct a real BI object model, where the ambiguity was directly encountered, not synthesized for this filing. |
+| **External Assurance** | Drawn from real, dated internal operational data from an existing operating company, not a hypothesis — the same underlying material was independently used to construct a real BI object model, where the ambiguity was directly encountered, not synthesized for this filing. Specific figures and the company's identity are withheld from this public record; the ambiguity class described above is fully reproducible without them. |
 | **Architectural Observations** | This entry (`AO-005`). |
 | **Core Impact** | Recommended. |
 | **Decision** | Escalated to ADR Candidate — see `ADR-Candidates.md#cand-008`. |
@@ -272,6 +272,52 @@ RC-006 and RC-007 reach the same Boundary Condition from two independent sources
 
 ---
 
+## AO-008
+
+**Title:** Publication Version-Identity Has No Documented Relationship Between Core Vocabulary, Constitution, Specification, and Release — Evidenced by Two Independent Verification Passes Against `ocom.uno`
+
+**Date observed:** 20 August 2026
+
+**Description:** No document in this repository states the relationship between the four version identifiers a public reader of `ocom.uno` or this repository actually encounters — Core Vocabulary (`v0.1`), Constitution (`v1.0`), Specification (`v0.2`), and the sole GitHub Release (`v1.0.0`) — leaving it possible for a Release to be cut, named, and published before the Constitution it might be assumed to bundle actually existed. This is a `repository-scope` boundary (Controlled Boundary Vocabulary: *"the boundary is specific to how this specification's repository is organized, not to the OCOM model itself"*), not a Core-modeling one — no Object, Entity, Domain, or Relationship concept is implicated. Two independent Reference Cases surfaced this boundary.
+
+| Field | Content |
+|---|---|
+| **Reference Case** | RC-008 — External Audit Comparison of `ocom.uno` Against the GitHub Repository |
+| **Purpose** | Determine whether the publication artifacts on `ocom.uno` accurately and unambiguously reflect the canonical GitHub repository's current state — specifically version identifiers, publication content, and structural claims. |
+| **Expressive Coverage** | Not applicable in Object/Entity/Domain/Relationship terms — this Reference Case concerns how this specification's own repository and publication artifacts are organized, not any OCOM-modeled concept. |
+| **Boundary Conditions** | An eleven-point comparison of the live `ocom.uno` site against the `DenisHogberg/OCOM` GitHub repository found multiple discrepancies between the live site and the repository. |
+| **Boundary Tags** | `repository-scope`. |
+| **External Assurance** | Weak, and recorded honestly rather than concealed: this Reference Case is grounded in an external audit report provided by the Chief Architect; the report's own author, tooling, and preparation date are not established in this record. Three of the report's own eleven findings were self-flagged by the report itself as unconfirmed, and it explicitly requested independent re-verification — which RC-009 below provides. |
+| **Architectural Observations** | This entry (`AO-008`). |
+| **Core Impact** | None — this boundary is governance/publication-metadata-shaped, not Core-modeling-shaped; no Meta Object, Canonical Principle, Entity type, or Domain is implicated. |
+| **Decision** | Escalated, together with `RC-009`, to an ADR Candidate — see `ADR-Candidates.md#cand-009`, filed as a `CAND-007` §5/§6 Freeze exception, not as a Core-extension proposal. |
+
+| Field | Content |
+|---|---|
+| **Reference Case** | RC-009 — Independent Workflow Re-Verification of `ocom.uno` Against the Repository and the GitHub API |
+| **Purpose** | Independently re-verify RC-008's findings using a distinct, technically direct method, per Repeatability Before Standardization — a single Reference Case does not, by itself, justify escalation. |
+| **Expressive Coverage** | Not applicable in Object/Entity/Domain/Relationship terms, for the same reason as RC-008. |
+| **Boundary Conditions** | An independent three-part verification pass, undertaken specifically to re-verify RC-008, read the local repository directly, the live `ocom.uno` site, and the GitHub API. It confirmed most of RC-008's findings and corrected RC-008's most significant claim: RC-008 stated no GitHub tag or release existed; direct GitHub API access found that a real tag/release (`v1.0.0`) does exist, cut before Constitution v1.0 was adopted — a materially different and more severe finding than RC-008 reached. |
+| **Boundary Tags** | `repository-scope`. |
+| **External Assurance** | Strong: drawn from direct, live technical access (GitHub API, live-site fetch, local repository read) at the time of execution (20 August 2026), independently reproducible by re-running the same queries against the same public sources. |
+| **Architectural Observations** | This entry (`AO-008`). |
+| **Core Impact** | None, for the same reason as RC-008. |
+| **Decision** | Escalated, together with `RC-008`, to an ADR Candidate — see `ADR-Candidates.md#cand-009`, filed as a `CAND-007` §5/§6 Freeze exception, not as a Core-extension proposal. |
+
+RC-008 and RC-009 reach the same boundary condition (undocumented version-identity relationships, most severely the Release-predates-Constitution gap) from two independent sources — an externally-provided audit of unestablished authorship, and an independently commissioned direct-access verification pass — satisfying Repeatability Before Standardization without requiring a hypothetical second case. Independence rests on method and result, not on an authorship claim RC-008 cannot support: RC-009 used a specifically-described, independently reproducible method, and reached a materially different, corrective conclusion rather than reproducing RC-008's findings — two reports of one investigation would be expected to agree, not to correct each other's central claim.
+
+**Impact:** As things stand, a reader of `ocom.uno` or this repository cannot, from published material alone, determine the relationship between `v0.1` (Core Vocabulary), `v1.0` (Constitution), `v0.2` (Specification), and `v1.0.0` (the sole GitHub Release) — nor that the Release predates the Constitution by construction. This is a gap in this repository's own governance/publication documentation, not in any OCOM Core concept.
+
+**Recommendation:** Per `CAND-007` §5/§6 (not the Core-extension pathway `EPIC-D`/Rule 4 describes, since Core Impact is None), escalate to an ADR Candidate proposing a documented version-identity model and publication manifest, filed as a Freeze exception. Full design attached as `Governance/Publication-Model.md`, `Governance/Publication-Manifest.md`, and `Governance/Release-Workflow.md` (Status: Informative pending their own content review), for the Chief Architect's review via `ADR-Candidates.md#cand-009`. Nothing in `Meta/`, `Models/`, `Core/`, or `Domains/` is implicated by this Observation.
+
+**Status:** Escalated, see `ADR-Candidates.md#cand-009`
+
+**Architect Response:** *(recorded via the `CAND-009` Decision — see `ADR-Candidates.md#cand-009`)*
+
+**Related:** `Governance/Publication-Model.md`, `Governance/Publication-Manifest.md`, `Governance/Release-Workflow.md`, `Standard Evolution Methodology.md` (Reference Case template, Repeatability Before Standardization, the `repository-scope` Controlled Boundary Vocabulary tag), `ADR-Candidates.md#cand-007` (Architecture Freeze — this is filed as a Freeze exception under its §5/§6), `ADR-Candidates.md#cand-009`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -284,3 +330,4 @@ RC-006 and RC-007 reach the same Boundary Condition from two independent sources
 | 0.1 | 29 July 2026 | Added AO-005 (Attribute Data-Type Facet Has No Self-Describing Value Structure), evidenced by RC-006 (real operating-company meeting data) and RC-007 (OCOM's own Finance/Operations/BI Domain KPI content); escalated to `CAND-008` |
 | 0.1 | 29 July 2026 | Added AO-006 (Observation vs. Interpretation vs. Value vs. Meaning), recorded per Chief Architect review of `CAND-008`; no Reference Case yet, not escalated — a precondition check on `CAND-008`'s eventual promotion |
 | 0.1 | 29 July 2026 | Added AO-007 (Core Concepts Must Eliminate a Demonstrated Deficiency, Not Introduce a New Abstraction), recorded per Chief Architect observation on the Measurement→Value episode; one instance only, not escalated — evidence toward a possible future refinement of `Standard Evolution Methodology.md` |
+| 0.1 | 20 August 2026 | Added AO-008 (Publication Version-Identity Has No Documented Relationship), evidenced by RC-008 (external audit, weak External Assurance, honestly recorded) and RC-009 (independent Workflow re-verification, strong External Assurance); Core Impact None — a `repository-scope`, not Core-modeling, boundary; escalated to `CAND-009` as a `CAND-007` §5/§6 Freeze exception, completing that candidate's Path A |

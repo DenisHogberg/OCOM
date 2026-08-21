@@ -229,7 +229,7 @@ Applying the Constitution's own test directly (a term used but nowhere defined c
 
 Order only; no solutions proposed.
 
-1. Resolve the Knowledge vs. Constitution contradiction (C1/C7). — Already the most analyzed, most decision-ready item in the entire inventory (Stage 4's own readiness check concluded "Да"); everything in layers four through six depends on it.
+1. Resolve the Knowledge vs. Constitution contradiction (C1/C7). — Already the most analyzed, most decision-ready item in the entire inventory (Stage 4's own readiness check concluded "Yes"); everything in layers four through six depends on it.
 2. Define World Model at least minimally (C2). — Coupled to (1): resolving Knowledge without giving it something real to derive into leaves the fix half-finished.
 3. Reconcile Domain vs. Domain (C3) and the Relationship/Organization inconsistency (C4). — Independent of (1)/(2); foundational term-level fixes that can proceed in parallel, but must land before Domains/Entities conformance work is trusted.
 4. Resolve AO-003, Memory Record Status semantics (C6). — Narrower scope; should close before any Conformance Test Suite work begins, since Memory is otherwise the most finished layer and should not carry a known ambiguity into a test suite.

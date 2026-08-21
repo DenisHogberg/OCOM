@@ -167,13 +167,15 @@ This specification is intended for:
 
 # Normative Language
 
-The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** are to be interpreted as follows:
+The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY**, when they appear in all capitals in this document, and in every document of this specification, are to be interpreted as described in RFC 2119, as amended by RFC 8174:
 
 - **MUST** indicates an absolute requirement.
 - **MUST NOT** indicates an absolute prohibition.
 - **SHOULD** indicates a recommended practice.
 - **SHOULD NOT** indicates a practice that is generally discouraged.
 - **MAY** indicates an optional capability or implementation choice.
+
+This is the single authoritative definition of these key words for the entire specification. Independently of RFC 8174's own all-capitals restriction, this specification additionally extends the same defined meanings to the lowercase forms (**shall**, **shall not**, **should**, **may** — the convention already used throughout `Meta/`, `Models/`, `Core/`, and `Language/`): a document using a lowercase form intends the same normative weight as its uppercase equivalent above, by this specification's own convention, not because RFC 8174 itself extends that far. Any document restating this definition, rather than citing it, is a duplication to be corrected, not a second source.
 
 ---
 
@@ -218,3 +220,4 @@ This document represents the initial draft of the specification and is subject t
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 23 July 2026 | Scope extended to exclude professional/expert judgments and specialized organizational functions, per Principle 11 (ADR CAND-003) |
 | 0.1 | 27 July 2026 | Added cross-references to Constitution §14 and §13; added Core-00 Constitution to Related Documents, per CAND-006 Step 0 integration |
+| 0.1 | 20 August 2026 | Added explicit RFC 2119 / RFC 8174 citation to Normative Language, making this section the specification's single authoritative source for MUST/SHOULD/MAY — per `Governance/Publication-Model.md` |

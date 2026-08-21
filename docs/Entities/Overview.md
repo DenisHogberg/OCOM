@@ -14,11 +14,13 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 20 August 2026
 
 ---
 
 # Purpose
+
+**Status note (20 August 2026):** `Constitution-Step0-Summary.md` Decision 4 excludes `Entities/` from Constitution §9's Domain-Neutral Core, describing it as *"mixed, mostly domain-specific by design."* That decision concerns Constitution §9's Core-scope test only; it does not itself address this document's own Status field, and this document's own content, the mandatory structure, attributes, and Conformance requirements below, remains normative ("shall") throughout. Status is therefore left as `Draft`, reflecting that content, rather than reclassified to `Informative` on the strength of a Core-scope decision alone. See `Governance/Documentation-Standards.md`'s Status Taxonomy.
 
 This document defines how Entities shall be specified within the OCOM Specification.
 
@@ -160,3 +162,4 @@ Additional Lifecycle categories may be introduced in future versions of the spec
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 20 August 2026 | Status briefly changed to Informative, then reverted to Draft on independent review: Decision 4 governs Constitution §9 Core scope only, not this document's own Status, and this document's normative "shall" content was never actually reduced. Status note corrected to quote Decision 4's actual hedged wording ("mixed, mostly domain-specific") |

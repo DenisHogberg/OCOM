@@ -53,12 +53,12 @@ Nothing in the underlying architecture — Object, Entity, Domain, Relationship,
 
 # 4. Open Issues
 
-Issues identified during editorial preparation (Этап 1) and left unresolved by design — flagged, not corrected, per Governance policy that editorial review records tensions rather than silently resolving them.
+Issues identified during the editorial preparation phase and left unresolved by design — flagged, not corrected, per Governance policy that editorial review records tensions rather than silently resolving them.
 
 | ID | Location | Issue | Disposition |
 |---|---|---|---|
 | EDIT-01 | `05 Object Model.md` | `Meta/Relationship.md` frames Relationship by the *meaning* it conveys; `Models/Relationship.md` frames it as *structural*, not behavioral. Not stated as contradictory in the source documents, but different emphasis. | Recorded as an editorial note in-chapter. No source document changed. Committee may accept as-is or request rewording. |
-| EDIT-02 | `01 Introduction.md` | Chapters 2–8 use lowercase "shall/should/may," matching v0.1 source style; Chapter 1 originally defined only uppercase MUST/SHOULD/MAY without stating equivalence. | **Fixed during Этап 1** — an equivalence statement was added to Chapter 1. No longer open. |
+| EDIT-02 | `01 Introduction.md` | Chapters 2–8 use lowercase "shall/should/may," matching v0.1 source style; Chapter 1 originally defined only uppercase MUST/SHOULD/MAY without stating equivalence. | **Fixed during the editorial preparation phase** — an equivalence statement was added to Chapter 1. No longer open. |
 
 ---
 
@@ -120,7 +120,7 @@ Per `docs/Governance/Release-Readiness.md`, v0.1 remains the only released versi
 
 **Notes:** No finding required reconsideration of OCOM's architecture, Core, or model. All findings concerned specification quality — terminology, editorial precision, traceability, and normative-language consistency. Per the Committee's basis for decision: work now shifts from designing the model to maintaining it, documenting it, and accumulating practice through Reference Cases.
 
-**Next step:** Commit `docs/Specification/` and mark it **Specification Baseline v0.2**, per Этап 4.
+**Next step:** Commit `docs/Specification/` and mark it **Specification Baseline v0.2**, per the publication step.
 
 ---
 
