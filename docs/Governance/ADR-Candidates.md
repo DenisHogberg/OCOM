@@ -873,6 +873,59 @@ No other Adoption file is authorized or published by this Decision.
 
 ---
 
+## CAND-013 — ✅ Decided
+
+**Title:** Recognize "Consumer Tool" as a new publication category and authorize native Shape Check at /shape-check
+
+**Status:** Decided — Promote (21 August 2026)
+
+**Owner:** Chief Architect
+
+**Created:** 21 August 2026 · **Decided:** 21 August 2026
+
+**Decision summary:** `CAND-013` is Promoted. `Publication-Model.md` gains a fifth category, **Consumer Tool**. **Shape Check is authorized as its one instance**, published at route `/shape-check`. Every non-assertion and the Decision Boundary below remain binding, unchanged from the reviewed draft. The terminology-drift risk named in the Governance implication remains an explicitly **named residual risk**, not a blocking condition — it is watched, not solved by any new mechanism. This Decision authorizes no other Consumer Tool, no other interactive page, no `/tools/` directory, no arbitrary JavaScript as a class, and no other top-level interactive route — each would need its own separate decision.
+
+**Why this may NOT simply extend an existing authorization (stated honestly, not assumed away):** Unlike `CAND-010`/`CAND-011` (individual Adoption files) and `CAND-012` (a second instance of the already-existing Projection tier), Shape Check does not fit any of `Publication-Model.md`'s four existing tiers. It has no canonical source document at all — ruling out Canonical Source, Compiled Publication, and Projection (Projection always renders one canonical document 1:1; Shape Check's `CONCEPTS` list and matching logic are hand-maintained code, not a rendering of any `docs/` file). It also arguably exceeds Convenience Representation, which `Publication-Model.md` defines as informative/illustrative and static — Shape Check is interactive. This is a genuinely new category question, not an instance of one already answered.
+
+**`CAND-007` §6 test, applied honestly, not assumed:**
+- (a) *Does it fit an existing Epic?* `EPIC-F`'s literal scope (re-pointing Adoption, closing four named debt items) does not mention tools. `CAND-010`/`011`/`012`'s "kind of work" reasoning (small-scope, non-normative content added to the ocom.uno surface) arguably extends, but Shape Check is categorically different — a tool, not documentation. This filing does not assume (a) is satisfied.
+- (b) *Product-shaped or contract-shaped?* Checked directly against both principles' primary text (`Architecture-Principles.md`, not just their titles), across two rounds of independent adversarial review. **Principle 1 — PASS:** no Specification requirement is added and no product is privileged in Specification text; the principle's own forbidden pattern (a Spec requirement justified only by "product X needs it") is not present, since nothing about the Specification changes. **Principle 5 — PASS, by analogy:** Shape Check isn't Reader-shaped in the sense the principle addresses (it implements nothing normative), but its three named drift mechanisms were checked regardless — documentation gravity and governance capture are structurally low risk given the tool's narrow, disclosed, read-only scope; terminology drift is real and is carried forward as a **named residual risk**, not an unresolved compliance question, in this filing's own Governance implication below.
+
+(a) remains a genuine judgment call — whether `CAND-010`/`011`/`012`'s "kind of work" reasoning extends from documents to a tool is for the Chief Architect to decide, not something either review resolved by assumption. (b) has now been checked and passed on both principles. This is filed as an ordinary CAND entry that still asks the Chief Architect to make the (a) call, rather than one that pre-selects every answer.
+
+**Related Documents:** `CAND-007` (§6 test, Architecture Principles 1 and 5), `CAND-010`, `CAND-011`, `CAND-012`, `Publication-Model.md` (four existing tiers), the existing Claude-artifact Shape Check (`https://claude.ai/code/artifact/b331b03b-1f22-4796-a907-8df6f66bd126`).
+
+**Decision:**
+
+1. `Publication-Model.md` gains a fifth category, **Consumer Tool** — outside the canonical-source chain (no `source_file`/`source_url`/`history_url`, because none exists), non-normative, not derived from compiling any specific document. A Consumer Tool may reference vocabulary terms and must state which vocabulary version it checks against, displayed to the user on the page itself.
+2. Authorize exactly one instance: Shape Check, published at `/shape-check`, using the already-reviewed matching algorithm (unchanged from the Claude-artifact version), tied explicitly to Core Vocabulary v0.1 (`Meta/Object.md`'s seven Core Characteristics).
+3. `/shape-check` intentionally sits outside `/adoption/` because Shape Check is a consumer tool, not an Adoption document or Adoption Projection. This is a statement about this one artifact's placement, not a new taxonomy rule for where future tools must live.
+
+This decision does not authorize, and does not create a precedent for:
+- any other Consumer Tool;
+- any other interactive page;
+- creation or authorization of a `/tools/` directory of any kind;
+- arbitrary JavaScript as a class of permitted content;
+- other consumer applications;
+- other top-level interactive routes;
+- automatic publication of any future interactive artifact — each needs its own separate decision, individually, the same way this one does;
+- any loosening of `CAND-012`'s own blanket-authorization prohibition on `docs/Adoption/` — that prohibition is unrelated to and unaffected by this filing.
+
+This decision also does not:
+- change Core/Meta/Models/Specification/Governance;
+- change First Pilot's or Worked Example's canonical Markdown source;
+- remove the existing Claude-artifact Shape Check (retained as historical/prototype reference, linked from the native page's own footer);
+- make Claude, or any external AI service, a production dependency of ocom.uno — the native page is fully self-contained static HTML/CSS/JS with no runtime calls to Claude or any backend;
+- resolve the Architecture Principle 1/5 tension above by assumption.
+
+**Decision Boundary:** This Decision, if adopted, authorizes publication architecture and category definition only. It does not certify the tool's algorithm as normatively correct or complete — Shape Check already, independently, discloses that it checks names only, with no fuzzy matching, and deliberately excludes Governance and Evidence from its current concept list. The page itself states, in plain unhedged terms: not part of the Specification; creates no normative requirements; not a source of truth (`Meta/Object.md` is); makes no conformance or validation claim.
+
+**Governance implication:** Any future Consumer Tool needs its own individual decision, per the same no-blanket-authorization discipline `CAND-012` already established for Adoption Projections. **Residual risk, named and not solved by any new mechanism:** Shape Check's own terminology (`Shape Check`, `coverage`, `Required`, `Optional`, and similar UI labels) does not become part of OCOM Specification terminology automatically, and must not be carried into normative text without its own separate governance review — the same terminology-drift risk `Architecture-Principles.md` Principle 5 names for Reader, applied here by analogy, watched rather than assumed away.
+
+**Next Action:** Awaiting Chief Architect Decision. On Decision, the already-prepared `/shape-check` page (algorithm unchanged; version banner and First Pilot forward link added) is published, Worked Example's CTAs and the homepage/discovery pointers are switched to `/shape-check`, and the existing Claude artifact is kept live as a labeled historical/prototype reference, not removed.
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -900,3 +953,7 @@ No other Adoption file is authorized or published by this Decision.
 | 0.1 | 20 August 2026 | Revised CAND-009 a sixth time — a focused review found the "method" and "subject" grounds substituted for authorship in the fifth revision reproduced the identical defect: "distinct method" claimed a contrast against Reference Case 1's method, which the same sentence admits is not established, and "distinct subject" directly contradicted Reference Case 2's own "What was checked" field, which states both examined "the same overall question." Fixed by dropping every comparative claim against an unestablished or explicitly-shared property: independence is now grounded only in facts established for BOTH sides — Reference Case 2's own method considered on its own terms (not contrasted with Reference Case 1's, since that is unknown), and the two Reference Cases' divergent, established results (Reference Case 2 corrected rather than reproduced Reference Case 1's central claim) — with authorship and subject-matter distinctness both explicitly disclaimed as grounds |
 | 0.1 | 21 August 2026 | Added CAND-011 (presentation-level navigation adaptation for /adoption/first-pilot) — Status: Proposed, awaiting Chief Architect Decision. Scoped explicitly narrower than CAND-010: authorizes adaptation of one file's presentation for one compiled page only, not new content; does not modify First Pilot.md itself |
 | 0.1 | 21 August 2026 | Added CAND-012 (Adoption pages as a second instance of the existing Projection tier) — Status: Decided — Promote, Scope / Publication Architecture Authorization. Reclassified from an earlier "Compiled Publication tier" framing after independent review found the mechanical shape (single source file → HTML + source_file/source_url/history_url) matches the Projection tier, not the multi-source Compiled Publication tier. Authorization is conditional per-file (directory membership under docs/Adoption/ plus an individual Decision); currently covers Worked Example (CAND-010) and, once decided, First Pilot (CAND-011 — noted as not yet Decided at time of this filing). Explicitly excludes Shape Check and Getting Started/FAQ/Common Mistakes/README. Next Action: generalize Publication-Model.md's tier 3 wording only |
+| 0.1 | 21 August 2026 | CAND-011: final review found the original draft only authorized presentation adaptation, not the base per-file Projection grant CAND-012's own Scope condition 2 requires. Corrected (base grant + Decision Boundary added, both verified against First Pilot.md's actual header) and recorded as Decided — Promote. CAND-012's editorial note updated to reflect CAND-011 is now Decided |
+| 0.1 | 21 August 2026 | Added CAND-013 (Consumer Tool publication category + native Shape Check authorization) — Status: Proposed, not Decided. Filed because Shape Check fits none of Publication-Model.md's four existing tiers (no canonical source document at all) and because Architecture Principles 1/5 (contracts not products; Reader is reference not authority) raise a genuine, unresolved question about whether an interactive tool belongs on the Specification's own domain — both points flagged for Chief Architect judgment, not resolved by this filing. Native /shape-check page prepared (algorithm unchanged from the Claude artifact; added version banner and First Pilot forward link) but explicitly not published pending this Decision |
+| 0.1 | 21 August 2026 | Revised CAND-013 after a focused adversarial review: added two explicit page-level normative-boundary statements ("creates no normative requirements," "not a source of truth"), itemized non-assertions to name each excluded category individually (other tools, other interactive pages, /tools/, arbitrary JavaScript, other top-level interactive routes, automatic future publication, and preserved CAND-012's docs/Adoption/ blanket-authorization prohibition), added a named terminology-drift residual risk to the Governance implication, and added one sentence explaining why /shape-check sits outside /adoption/ without creating a general taxonomy rule. Algorithm/CONCEPTS list confirmed unchanged |
+| 0.1 | 21 August 2026 | CAND-013: a second focused adversarial review confirmed all four fixes correctly applied and the algorithm still unchanged, verdict READY FOR DECISION. Synchronized the "why this may not simply extend an existing authorization" section's Principle 1/5 discussion with that review's findings (Principle 1 PASS, Principle 5 PASS by analogy, terminology drift reframed from open tension to named residual risk) without touching scope or decision architecture, then recorded as Decided — Promote: Publication-Model.md gains a fifth category (Consumer Tool), Shape Check authorized as its one instance at /shape-check, all non-assertions and the Decision Boundary binding as drafted |
