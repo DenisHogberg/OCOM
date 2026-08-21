@@ -22,7 +22,7 @@
 
 # Purpose
 
-This document defines the fundamental principles that make a system an implementation of OCOM. These principles are intentionally technology-independent and domain-independent. They apply regardless of programming language, storage engine, deployment model, AI model, or business domain. Implementation details may evolve. Architecture may evolve. These principles should not.
+OCOM (Object-Centric Operating Model) is an open, technology-independent operating model for organizations. This document defines the fundamental principles that make a system an implementation of OCOM. These principles are intentionally technology-independent and domain-independent. They apply regardless of programming language, storage engine, deployment model, AI model, or business domain. Implementation details may evolve. Architecture may evolve. These principles should not.
 
 ---
 
@@ -72,3 +72,4 @@ When a conflict exists between an implementation, an architectural decision and 
 | Version | Date | Description |
 |----------|------|-------------|
 | 1.0 | 27 July 2026 | Adopted as Core-00, per `CAND-006` (`Governance/ADR-Candidates.md`). Verbatim transcription of the Decision text — no wording changes. |
+| 1.0 | 21 August 2026 | Added one identity sentence to Purpose ("OCOM is an open, technology-independent operating model for organizations"), aligning with the canonical identity used across `ocom.uno`, `llms.txt`, and `Core/Manifest.md`. Semantic positioning only — no Canonical Principle added, removed, or reworded; no constitutional meaning changed. |

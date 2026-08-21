@@ -20,7 +20,7 @@
 
 # Abstract
 
-This specification defines a technology-independent operational modeling framework for describing organizations through entities, domains, workflows, and their relationships.
+OCOM (Object-Centric Operating Model) is an open, technology-independent operating model for organizations, describing organizations through entities, domains, workflows, and their relationships. This document defines the modeling framework through which that operating model is expressed.
 
 The framework provides a common operational language that enables consistent understanding by humans, software systems, and artificial intelligence while remaining independent of implementation technologies, vendors, organizational structures, and industries.
 
@@ -221,3 +221,4 @@ This document represents the initial draft of the specification and is subject t
 | 0.1 | 23 July 2026 | Scope extended to exclude professional/expert judgments and specialized organizational functions, per Principle 11 (ADR CAND-003) |
 | 0.1 | 27 July 2026 | Added cross-references to Constitution §14 and §13; added Core-00 Constitution to Related Documents, per CAND-006 Step 0 integration |
 | 0.1 | 20 August 2026 | Added explicit RFC 2119 / RFC 8174 citation to Normative Language, making this section the specification's single authoritative source for MUST/SHOULD/MAY — per `Governance/Publication-Model.md` |
+| 0.1 | 21 August 2026 | Abstract reworded to lead with the canonical identity statement ("OCOM is an open, technology-independent operating model for organizations"), aligning with `ocom.uno` and `llms.txt`; "framework" retained as a secondary description of this document's own modeling apparatus, not as OCOM's primary identity noun — semantic positioning only, no change to normative content |
