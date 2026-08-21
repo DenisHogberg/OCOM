@@ -92,6 +92,12 @@ Neither is a limitation of the library domain specifically — the same two fact
 
 Illustrative only. Conformance to OCOM is determined exclusively by the normative Specification, never by this document — the same principle `Examples/Overview.md` states for its own examples. This example does not constitute a Reference Implementation and makes no Conformance claim.
 
+## Try This on Your Own Model
+
+**Try OCOM on your own model → [Shape Check](https://claude.ai/code/artifact/b331b03b-1f22-4796-a907-8df6f66bd126)**
+
+A separate, read-only tool: paste your own model's field names and see which of the Core Characteristics above it already has a name for. It is not part of this Specification, not a validator, and not authorized or governed by any OCOM ADR — see the tool's own page for exactly what it checks and doesn't.
+
 ---
 
 *Source: illustrates `Meta/Object.md`'s Core Characteristics (Identity, Metadata, Classification, Relationships, Lifecycle, Ownership), `Meta/Identity.md`, `Meta/Ownership.md`, `Meta/Relationship.md`, `Meta/Metadata.md`, `Meta/Classification.md`, and `Models/Lifecycle.md`. Authorized as a single, scope-limited work item under `EPIC-F` by `Governance/ADR-Candidates.md#cand-010` (Decided, 21 August 2026).*
