@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 August 2026
+**Last Updated:** 21 August 2026
 
 ---
 
@@ -66,7 +66,10 @@ The granular Markdown documents under `Core/`, `Meta/`, `Models/`, `Memory/`, `L
 
 ## 3. Projection
 
-The individual term-cards on ocom.uno (`/vocabulary/<term>`) — HTML, JSON, JSON-LD, and Markdown representations, generated from the Core Vocabulary (`Meta/`) canonical source by the external Publication Engine (see "Known Gaps" — this repository contains no code, config, or documentation for that engine; it lives entirely outside this repository).
+A machine-generated representation of a single canonical document, produced by the external Publication Engine (see "Known Gaps" — this repository contains no code, config, or documentation for that engine; it lives entirely outside this repository). Two instances currently recognized — recognizing a second instance does not create a new tier; both share the same mandatory fields (`Version`, `Status`, `source_file`, `source_url`, `history_url`) and the same rule that canonical source is GitHub and the projection itself is never edited directly:
+
+- **Core Vocabulary term-cards** — the individual term-cards on ocom.uno (`/vocabulary/<term>`) — HTML, JSON, JSON-LD, and Markdown representations, generated from the Core Vocabulary (`Meta/`) canonical source.
+- **Adoption pages** — `ocom.uno/adoption/<page>` — generated from an individually-authorized `docs/Adoption/*.md` file. A file qualifies only once it has its own separate Decision (`CAND-012`; e.g. `CAND-010` for the Worked Example, `CAND-011` for First Pilot) — directory membership in `docs/Adoption/` grants nothing by itself.
 
 ## 4. Convenience Representation
 

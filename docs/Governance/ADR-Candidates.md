@@ -739,6 +739,140 @@ This decision does not:
 
 ---
 
+## CAND-011 — ✅ Decided
+
+**Title:** Authorize `docs/Adoption/First Pilot.md` as an Adoption Projection, with presentation-level navigation adaptation for the compiled /adoption/first-pilot page
+
+**Status:** Decided — Promote (21 August 2026)
+
+**Owner:** Chief Architect
+
+**Created:** 21 August 2026 · **Decided:** 21 August 2026
+
+**Revision note (21 August 2026):** a final focused review, run after `CAND-012` was decided, found this candidate's original draft authorized only the presentation-adaptation question and never stated the base grant `CAND-012`'s own Scope condition 2 requires ("that specific file has its own individual Decision authorizing it as an Adoption Projection"). Fixed below by adding an explicit base-grant clause, mirroring `CAND-010`'s own structure, and an explicit Decision Boundary clause separating publication authorization from content correctness, mirroring `CAND-012`'s own. Both fields verified directly against `docs/Adoption/First Pilot.md`'s current header, not assumed from memory.
+
+**Why this does not require the Reference Case pipeline:** Same reasoning `CAND-010` already established — this is an instance of already-authorized Adoption-compilation work (per `CAND-010`'s own precedent for Worked Example, and per `CAND-012`'s own recognition of Adoption as a second Projection-tier instance), not a new kind of decision.
+
+**Related Documents:** `CAND-010`, `CAND-012`, `First Pilot.md`, `Adoption/README.md` ("How to Read These Documents" — the sequence this adaptation breaks).
+
+**Decision:**
+
+Authorize `docs/Adoption/First Pilot.md` as an Adoption Projection under `CAND-012`.
+
+Base grant (mirroring `CAND-010`'s structure for the one prior instance):
+- Scope: exactly one file, `docs/Adoption/First Pilot.md`;
+- Status: Informative (confirmed in the file's own header);
+- Version: 0.1 (confirmed in the file's own header);
+- hand-authored, pre-existing text — no new content is introduced by this Decision;
+- canonical source remains GitHub; the compiled page is a projection, never edited directly.
+
+Presentation-level adaptation, authorized for the compiled /adoption/first-pilot page only:
+- omission of Back/Next navigation controls (Getting Started.md, FAQ.md are not being published);
+- de-linkification of the "Getting Started.md §4" citation in Suggested Steps, step 3, to a plain, non-clickable parenthetical note.
+
+This decision does not:
+- modify `docs/Adoption/First Pilot.md` itself (canonical text unchanged);
+- authorize `Getting Started.md`, `FAQ.md`, `Common Mistakes.md`, or `Adoption/README.md`;
+- authorize navigation adaptation for any other Adoption file;
+- extend `CAND-010`'s own scope or non-assertions;
+- change Shape Check in any way;
+- change the OCOM Specification, Core, Meta, Models, or Governance model.
+
+**Decision Boundary:** This Decision authorizes publication (Projection status, plus the specific presentation adaptation above) only. It does not certify the factual, semantic, normative, or editorial correctness of First Pilot.md's content — that remains subject to its own, separate content/governance review.
+
+**Governance implication:** Any future compiled Adoption page facing the same kind of dependency gap needs its own explicit instance of this reasoning — this is not a general policy, per file, per decision.
+
+**Next Action:** /adoption/first-pilot may be published with this exact adaptation, disclosed in the page's own footer note.
+
+---
+
+## CAND-012 — ✅ Decided
+
+**Title:** Recognize Adoption pages as a second instance of the existing Projection tier
+
+**Status:** Decided — Promote — Scope / Publication Architecture Authorization (21 August 2026)
+
+**Owner:** Chief Architect
+
+**Created:** 21 August 2026 · **Decided:** 21 August 2026
+
+**Why this does not require the Reference Case pipeline:** `Publication-Model.md` already defines a generic third publication tier, "Projection" — a machine-generated representation of a single canonical document, currently instantiated once (Core Vocabulary term-cards, generated from `Meta/`). This Decision recognizes a second instance of that same, already-existing tier. It does not create a new tier, layer, or publication concept, and is accordingly filed as an ordinary Decision rather than a `CAND-007` §5/§6 Freeze exception.
+
+**Related Documents:** `CAND-010`, `CAND-011` (unchanged by this Decision), `Publication-Model.md` (tier 3 wording generalized per this Decision).
+
+**Decision:**
+
+CAND-012 is Promoted.
+
+This Decision recognizes Adoption pages as a second instance of the existing Projection tier defined by the OCOM Publication Model.
+
+This Decision authorizes only the publication architecture described by CAND-012.
+
+**Scope**
+
+The authorization applies only when both conditions are satisfied:
+
+1. The source is an explicitly identified file under `docs/Adoption/`.
+2. That specific file has its own individual Decision authorizing it as an Adoption Projection.
+
+No blanket authorization of `docs/Adoption/` is granted.
+
+**Currently authorized Projection instances**
+
+The following files are recognized as Adoption Projections only under their existing individual Decisions:
+
+- `docs/Adoption/Worked Example - Library Lending.md` — CAND-010
+- `docs/Adoption/First Pilot.md` — CAND-011
+
+No other Adoption file is authorized by this Decision.
+
+**Editorial note (recorded at filing, superseded 21 August 2026):** at the time this Decision was recorded, `CAND-011` was Status: Proposed, and `docs/Adoption/First Pilot.md` did not yet qualify as an Adoption Projection under this Decision's own Scope test (condition 2). `CAND-011` was Decided the same day, correcting its original draft to include the base grant this Scope condition requires — `docs/Adoption/First Pilot.md` now qualifies. No amendment to this entry was needed, per the note's own original prediction.
+
+**Non-authorization**
+
+This Decision does not:
+
+- authorize `Getting Started.md`;
+- authorize `FAQ.md`;
+- authorize `Common Mistakes.md`;
+- authorize `Adoption/README.md`;
+- authorize any future file under `docs/Adoption/` without its own individual Decision;
+- grant Shape Check Projection status;
+- establish Shape Check as a canonical OCOM repository artifact;
+- change the OCOM Specification, Core, Meta, Models, Memory, Evidence, or Governance model.
+
+**Canonical Source**
+
+GitHub remains the canonical source for every Adoption Projection.
+
+The production representation at `ocom.uno/adoption/*` is a projection only.
+
+Changes must be made to the canonical source document and subsequently reflected through the Publication Engine.
+
+**Publication-Model consequence**
+
+Following this Decision, the Projection tier definition in `Publication-Model.md` may be generalized from its current single-instance wording to:
+
+A Projection is a machine-generated representation of a single canonical document.
+
+This wording does not create a new publication tier. It defines the existing boundary of the Projection tier sufficiently to represent both its current Core Vocabulary instance and the newly recognized Adoption instance.
+
+**Decision Boundary**
+
+This Decision authorizes publication architecture only.
+
+It does not certify the factual, semantic, normative, editorial, or implementation correctness of any individual Adoption document.
+
+Individual Adoption documents remain subject to their own content, status, and governance decisions.
+
+**Next Action**
+
+Update `Publication-Model.md` only as required to reflect this Decision.
+
+No other Adoption file is authorized or published by this Decision.
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -764,3 +898,5 @@ This decision does not:
 | 0.1 | 20 August 2026 | Revised CAND-009 a fourth time — a focused review of the Repeated Pattern fix found Section 6 claimed its two proposed Reference Cases were "already cited throughout this filing," which did not check out against the document's own text (neither source was actually described anywhere earlier in the filing), and prematurely asserted Methodology Rule 2 compliance while, one sentence later, correctly disclaiming Rules 3-4 compliance for the same unformalized material — an internal inconsistency in how much weight the same evidence was given from one sentence to the next. Fixed by removing the "already cited" claim and giving each candidate Reference Case its own specific, honestly-hedged description (source, date/period, what was checked, result, and why it is independent of the other), marking anything not actually established in this filing as such rather than guessing; and by replacing the premature Rule 2 compliance claim with "these two independent sources are offered as the basis for satisfying the independence requirement of Rule 2; formal Reference Case records remain to be created under Rules 3-4." No change to Section 8 or any other Section |
 | 0.1 | 20 August 2026 | Revised CAND-009 a fifth time — a focused review found the independence bullet's "distinct authorship (an external party vs. this engagement's own Workflow tooling)" contradicted Reference Case 1's own description two lines earlier, which states authorship is not established in this filing — the same one-sentence-later inconsistency pattern recurring in a new location. Fixed conservatively: removed authorship as a ground for independence entirely (not softened to "presumed external" — dropped outright), keeping only method and subject/result differences, which the filing's own text actually supports; explicitly stated authorship is not offered as a ground, since it is not established. Also replaced "forming this filing's Repeated Pattern" (present tense, could read as already-formed) with "proposed as the evidence base for establishing a Repeated Pattern; the formal observation record has not yet been created," and corrected "records... under Rules 3-4" to cite Standard Evolution Methodology.md's "Reference Case Methodology" section by name, where the template obligation actually lives. No other change |
 | 0.1 | 20 August 2026 | Revised CAND-009 a sixth time — a focused review found the "method" and "subject" grounds substituted for authorship in the fifth revision reproduced the identical defect: "distinct method" claimed a contrast against Reference Case 1's method, which the same sentence admits is not established, and "distinct subject" directly contradicted Reference Case 2's own "What was checked" field, which states both examined "the same overall question." Fixed by dropping every comparative claim against an unestablished or explicitly-shared property: independence is now grounded only in facts established for BOTH sides — Reference Case 2's own method considered on its own terms (not contrasted with Reference Case 1's, since that is unknown), and the two Reference Cases' divergent, established results (Reference Case 2 corrected rather than reproduced Reference Case 1's central claim) — with authorship and subject-matter distinctness both explicitly disclaimed as grounds |
+| 0.1 | 21 August 2026 | Added CAND-011 (presentation-level navigation adaptation for /adoption/first-pilot) — Status: Proposed, awaiting Chief Architect Decision. Scoped explicitly narrower than CAND-010: authorizes adaptation of one file's presentation for one compiled page only, not new content; does not modify First Pilot.md itself |
+| 0.1 | 21 August 2026 | Added CAND-012 (Adoption pages as a second instance of the existing Projection tier) — Status: Decided — Promote, Scope / Publication Architecture Authorization. Reclassified from an earlier "Compiled Publication tier" framing after independent review found the mechanical shape (single source file → HTML + source_file/source_url/history_url) matches the Projection tier, not the multi-source Compiled Publication tier. Authorization is conditional per-file (directory membership under docs/Adoption/ plus an individual Decision); currently covers Worked Example (CAND-010) and, once decided, First Pilot (CAND-011 — noted as not yet Decided at time of this filing). Explicitly excludes Shape Check and Getting Started/FAQ/Common Mistakes/README. Next Action: generalize Publication-Model.md's tier 3 wording only |
