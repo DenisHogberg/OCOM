@@ -98,6 +98,12 @@ Illustrative only. Conformance to OCOM is determined exclusively by the normativ
 
 A separate, read-only tool: paste your own model's field names and see which of the Core Characteristics above it already has a name for. It is not part of this Specification, not a validator, and not authorized or governed by any OCOM ADR — see the tool's own page for exactly what it checks and doesn't.
 
+See OCOM Shape Check in action
+
+![Pasting a model's field names into OCOM Shape Check, running the coverage check, and reviewing the Required/Optional result with a link out to the OCOM vocabulary](assets/shape-check-demo.gif)
+
+Try it yourself → [Shape Check](https://claude.ai/code/artifact/b331b03b-1f22-4796-a907-8df6f66bd126)
+
 ---
 
 *Source: illustrates `Meta/Object.md`'s Core Characteristics (Identity, Metadata, Classification, Relationships, Lifecycle, Ownership), `Meta/Identity.md`, `Meta/Ownership.md`, `Meta/Relationship.md`, `Meta/Metadata.md`, `Meta/Classification.md`, and `Models/Lifecycle.md`. Authorized as a single, scope-limited work item under `EPIC-F` by `Governance/ADR-Candidates.md#cand-010` (Decided, 21 August 2026).*
