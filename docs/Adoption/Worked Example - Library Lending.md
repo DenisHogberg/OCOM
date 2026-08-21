@@ -104,6 +104,10 @@ See OCOM Shape Check in action
 
 Try it yourself → [Shape Check](https://claude.ai/code/artifact/b331b03b-1f22-4796-a907-8df6f66bd126)
 
+## Run a First Pilot
+
+**Try OCOM on your own team → [First Pilot](https://github.com/DenisHogberg/OCOM/blob/main/docs/Adoption/First%20Pilot.md)**
+
 ---
 
 *Source: illustrates `Meta/Object.md`'s Core Characteristics (Identity, Metadata, Classification, Relationships, Lifecycle, Ownership), `Meta/Identity.md`, `Meta/Ownership.md`, `Meta/Relationship.md`, `Meta/Metadata.md`, `Meta/Classification.md`, and `Models/Lifecycle.md`. Authorized as a single, scope-limited work item under `EPIC-F` by `Governance/ADR-Candidates.md#cand-010` (Decided, 21 August 2026).*
