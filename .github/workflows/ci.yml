@@ -78,7 +78,7 @@ jobs:
         # needed (verified against the tool's own documented config
         # discovery, not assumed). Setting it in both places would be
         # the same value declared twice for no reason.
-        uses: DavidAnson/markdownlint-cli2-action@6bf21b07787794f89a243495939cd651942aeabe # v24.1.0
+        uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff # v24.2.0
 
   link-check:
     name: Internal link integrity
