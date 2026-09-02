@@ -26,6 +26,8 @@ It is a Reference Case. It demonstrates the model, it does not extend it. Every 
 
 The organization is **fictional**. "Meridian" is a placeholder for any performance-marketing operator, used purely for illustration. No real company, brand, or person is named or implied.
 
+Distilled from real rollouts conducted under NDA; the organization, names, and details are fictionalized.
+
 ---
 
 # The Organization Before OCOM

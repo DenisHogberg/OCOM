@@ -16,11 +16,22 @@ Meta-model (`Meta/`), normative structural models (`Models/`), language and conf
 **Adoption Framework (M021)** — 22 July 2026.
 `docs/Adoption/` — a Getting Started guide, a First Pilot guide, an FAQ, and a Common Mistakes guide, restating the existing specification for a first-time reader.
 
+**Publication Node — ocom.uno** — 3 August 2026.
+Source-of-truth projections of this repository published as a machine-authoritative site: Vocabulary, Specification reading path, Comparisons, Knowledge API, Graph JSON-LD, Discovery, and llms.txt. The site is a rebuildable projection of the repository, never a second source of truth.
+
+**Implementation Reference Case (EXAMPLES-CASE-PERFMKT-01)** — 12 August 2026.
+An anonymized end-to-end adoption narrative in `Examples/Implementation-Case/`: the sequence a real rollout follows (identity first, events and evidence second, the commercial layer last), including the mistakes. Distilled from real rollouts conducted under NDA; the organization, names, and details are fictionalized.
+
+**Public Essay — "Your organization is not your software"** — September 2026.
+Published at ocom.uno/why: the motivation, origin, honest boundaries of applicability, and an open invitation to break the model.
+
 ## Current State
 
 - The Standard Evolution Methodology is active. Its first Reference Case (OBS-003, *Object Attribute Lifecycle Categories*) is logged and Open, pending independent corroboration before any Core impact is considered — see `docs/Governance/Architecture-Observations.md`.
 - Governance and Specification v0.2 are frozen baselines. Neither changes except through their own approved processes (editorial fixes, or ADR for architectural change).
 - The repository is documentation only. There is no reference implementation, SDK, or runtime, and none is in progress.
+- The specification's principles are applied in production settings under NDA (the author works as architect or consultant; in-house teams implement). No public case studies exist yet; converting private practice into public evidence is the explicit goal of the current phase.
+- The specification has entered its public review phase: ocom.uno/why invites critique, and independent implementations are actively sought.
 
 ## Future Directions
 
@@ -31,6 +42,8 @@ These are directions for exploration, evidenced by observed need, not commitment
 - Whether further Domain-level practice (Business Intelligence, Operations, and others already present in `Domains/`) surfaces additional Reference Cases worth recording.
 - Two items named in earlier planning were never realized as distinct deliverables and remain open, unscoped questions rather than committed work: an "Object Passport" concept (no corresponding document exists; `Meta/Identity.md` and `Meta/Metadata.md` cover related but not identical ground), and a dedicated Security specification (nothing currently exists under this name anywhere in the repository).
 - Idea (not a governance artifact): Consider documenting the evidence thresholds and promotion criteria for Specification evolution if multiple independent governance reviews reveal recurring patterns not fully covered by Standard Evolution Methodology.
+- Whether agent-facing access beyond the static Knowledge API (for example, a governed-context endpoint AI agents can consume directly) is warranted: depends on observed demand from the public review phase, not yet scoped.
+- Public, independently authored case studies: the bar for claiming adoption maturity; sought, not scheduled.
 
 ---
 
