@@ -16,6 +16,8 @@ Conformance establishes the criteria by which an implementation, model, or repos
 
 Conformance is the degree to which an implementation satisfies the normative requirements defined by this specification. **Conformance applies to implementations, not to individual models.**
 
+> **Editorial note.** Chapters 2, 5 and 6 state conformance conditions for models and model elements ("All models created using this specification shall conform to these principles"; "An Entity, Domain, Relationship, Event, State, or Workflow conforms to this specification only if ..."), while this chapter, following `Language/Conformance.md`, scopes conformance claims to implementations. Read together: an implementation makes the conformance claim, and the models it produces are required to satisfy Chapters 2, 5 and 6 as part of that claim. This chapter records the difference in scope rather than resolving it, per the editorial policy stated in Chapter 5; it is logged as an Architecture Observation.
+
 ## Mandatory Requirements
 
 A conforming implementation **shall**:
@@ -55,4 +57,4 @@ This chapter does not prescribe certification bodies, compliance programs, testi
 
 ---
 
-*Source: compiled from `Language/Conformance.md` and the Conformance clauses of `Core/Manifest.md` and `Core/Principles.md`. The "Note on scope" reflects the explicit decision that set-scoped conformance remains a separate discussion from this Core reading path.*
+*Source: compiled from `Language/Conformance.md` and the Conformance clauses of `Core/Manifest.md` and `Core/Principles.md`. The "Note on scope" reflects the explicit decision that set-scoped conformance remains a separate discussion from this Core reading path. (4 September 2026: editorial note added on the scope of conformance across Chapters 2, 5, 6 and 8; no requirement changed.)*

@@ -418,6 +418,186 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-014
+
+**Title:** Conformance Scope Differs Between Chapters 2, 5, 6 and 8
+
+**Date observed:** 4 September 2026
+
+**Description:** Surfaced by an external pre-launch red-team review of the published site (4 September 2026). `Specification/08 Conformance.md` (from `Language/Conformance.md`) states "Conformance applies to implementations, not to individual models", while `02 Design Principles.md` states "All models created using this specification shall conform to these principles" and `05 Object Model.md` and `06 Lifecycle Model.md` state conditions under which an Entity, Domain, Relationship, Event, State, Workflow or Lifecycle "conforms to this specification". Chapter 8 also widened its Purpose to "an implementation, model, or repository" while keeping the implementation-only Definition, and scopes Core Conformance to Chapters 4 to 6, leaving the Chapter 2 principles outside the tested range.
+
+**Impact:** A reader cannot tell whether a model, a model element, or only an implementation is the subject of a conformance claim; two conforming implementations could disagree on whether a non-conforming model invalidates an implementation's claim.
+
+**Recommendation:** Record only. An editorial note was added to Chapter 8 on 4 September 2026 recording the difference. A future Reference Case should propose one scoping rule: the implementation claims conformance, and the models it produces are required to satisfy Chapters 2, 5 and 6 as part of that claim.
+
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Specification/02 Design Principles.md`, `Specification/05 Object Model.md`, `Specification/06 Lifecycle Model.md`, `Specification/08 Conformance.md`, `Language/Conformance.md`
+
+---
+
+## AO-015
+
+**Title:** Ownership Modality Is Inconsistent Across Meta, Models and the Reading Path
+
+**Date observed:** 4 September 2026
+
+**Description:** Surfaced by an external pre-launch red-team review of the published site (4 September 2026). `Core/Principles.md` Principle 3: "Ownership shall never be implicit"; `Meta/Object.md`: "Objects should have defined ownership appropriate to organizational governance"; `Meta/Ownership.md` Conformance: "assign Ownership to managed Objects where applicable" and Shared Ownership: "Objects may have multiple Owners"; `Models/Entity.md`: "Every Entity shall have one responsible owner"; `Specification/04 Meta Model.md` lists Ownership among the seven core characteristics but omits it from the chapter's Conformance sentence. The same obligation is therefore shall, should, "where applicable" and, for Entities, singular.
+
+**Impact:** An Entity with two Owners is conformant under `Meta/Ownership.md` and non-conformant under `Models/Entity.md`; the Chapter 4 characteristic list and its own conformance sentence do not match.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should state whether Ownership is mandatory for every managed Object or only for Entities, and align the Chapter 4 conformance sentence with its characteristic list.
+
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Object.md`, `Meta/Ownership.md`, `Models/Entity.md`, `Specification/04 Meta Model.md`, `Core/Principles.md`
+
+---
+
+## AO-016
+
+**Title:** Identity Replacement Clause Conflicts With the No-Reuse Rule
+
+**Date observed:** 4 September 2026
+
+**Description:** Surfaced by an external pre-launch red-team review of the published site (4 September 2026). `Meta/Identity.md` Identity Assignment: "Once assigned, Identity shall not be reused for another Object. Replacement of an Object shall result in a new Identity unless organizational policy specifies otherwise." The Conformance section requires implementations to "prevent Identity reuse" and the Design Principles require Identity to "be immutable". The "unless organizational policy specifies otherwise" clause permits a policy to carry an Identity onto a replacement Object, which the preceding sentence forbids absolutely. Distinct from AO-009 (scope) and AO-010 (merge/split).
+
+**Impact:** Two implementations can both claim conformance while one recycles identifiers on replacement and the other never does.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should clarify whether "replacement" means a new Object (new Identity, no exception) or physical replacement of the same operational Object (same Object, same Identity), and remove the policy exception or bound it explicitly.
+
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Identity.md`
+
+---
+
+## AO-017
+
+**Title:** Relationship Arity, Direction and Cardinality Modality Diverge Between Meta and Models
+
+**Date observed:** 4 September 2026
+
+**Description:** Surfaced by an external pre-launch red-team review of the published site (4 September 2026). `Meta/Relationship.md`: "semantic association between two or more Objects", core characteristics Source Object and Target Object (binary), Direction may be Directed, Bidirectional or Undirected, "Relationships may define cardinality". `Models/Relationship.md`: "Every Relationship shall define cardinality", Source Entity and Target Entity only. Three divergences: n-ary versus a mandatory source/target pair; Undirected relationships that must still name a Source and a Target; cardinality optional at the Meta tier and mandatory at the Models tier. The Chapter 5 editorial note records only the meaning-versus-behaviour tension; AO-002 records only the Object-versus-Entity participant gap.
+
+**Impact:** Conforming implementations can disagree on whether an n-ary or undirected Relationship is representable and on whether cardinality is required.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should state whether the Models tier may tighten the Meta tier (cardinality mandatory for Entity relationships) and how n-ary and undirected relationships are represented with a Source/Target pair.
+
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Relationship.md`, `Models/Relationship.md`, `Specification/04 Meta Model.md`, `Specification/05 Object Model.md`, AO-002
+
+---
+
+## AO-018
+
+**Title:** Metadata Categories Overlap the Concepts Metadata Is Said Not to Define
+
+**Date observed:** 4 September 2026
+
+**Description:** Surfaced by an external pre-launch red-team review of the published site (4 September 2026). `Meta/Metadata.md` Definition: "Metadata supplements an Object but does not define its identity or operational state"; the same record's Core Characteristics list "identity attributes" and "operational attributes", and its examples include Owner, Status, Classification and Policy References. Status, Owner and Classification therefore have candidate homes in Entity State, the Ownership record, the Classification record and Metadata. This is the Core-tier analogue of AO-003 (Memory Record Status).
+
+**Impact:** Implementations can store the same fact in different Core constructs and disagree on which one is authoritative.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should state that Metadata may carry non-authoritative copies (caches) of facts whose authoritative home is another record, or narrow the category list.
+
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Metadata.md`, `Meta/Classification.md`, `Meta/Ownership.md`, AO-003
+
+---
+
+## AO-019
+
+**Title:** Organization Is Restricted to Relationships While Contract and Reference Admit It
+
+**Date observed:** 4 September 2026
+
+**Description:** Surfaced by an external pre-launch red-team review of the published site (4 September 2026). `Meta/Organization.md`: Organizations "participate in the operational model only through governed Relationships" and "connect to other Objects exclusively through ordinary, governed Relationships"; the same record's Business Meaning says interactions are "modeled using existing Relationship and Contract mechanisms". `Meta/Contract.md` lists Organizations among Contract participants, and `Meta/Object.md` allows any Object to hold References. Read literally, an Organization may not be a Contract participant and may not hold a Reference. Related to CAND-004 (Open).
+
+**Impact:** Implementations can disagree on whether an Organization may appear as a Contract participant or as the source of a Reference.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should restate the "exclusively through Relationships" clause as excluding hierarchy and containment, not Contracts or References, or resolve it under CAND-004.
+
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Organization.md`, `Meta/Contract.md`, `Meta/Reference.md`, `ADR-Candidates.md#cand-004`
+
+---
+
+## AO-020
+
+**Title:** Contract, Capability and Policy Participant Lists Name Parties the Core Does Not Define
+
+**Date observed:** 4 September 2026
+
+**Description:** Surfaced by an external pre-launch red-team review of the published site (4 September 2026). `Meta/Contract.md` defines a Contract as "a governed agreement between two or more Objects" and then lists participants "Objects, Organizations, Departments, Teams, Employees, AI Agents, Tools, External Systems"; `Meta/Capability.md` and `Meta/Policy.md` carry similar lists (Business Units, Business Processes, Workflows, Memory, Knowledge, Domains). Only Organization is reconciled as a specialization of Object; Departments, Teams, Employees, Business Units, Business Processes and External Systems are defined nowhere in the Core, and `Specification/03 Core Concepts.md` states that AI-specific concepts are extensions, not Core.
+
+**Impact:** A reader cannot tell whether a Department or an AI Agent may be a Contract party as such, or only once modelled as an Object.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should add one sentence to the affected records: every participant, provider or scope entry is modelled as an Object (or a specialization) before it can take part.
+
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Contract.md`, `Meta/Capability.md`, `Meta/Policy.md`, `Specification/03 Core Concepts.md`
+
+---
+
+## AO-021
+
+**Title:** Evidence Is a Published Pillar Without a Core, Models or Language Definition
+
+**Date observed:** 4 September 2026
+
+**Description:** Surfaced by an external pre-launch red-team review of the published site (4 September 2026). The site's tagline, `/why`, `llms.txt`, `Specification/01 Introduction.md` ("identity, ownership, lifecycle, and evidence") and every comparison capability matrix present Evidence as a defining characteristic of OCOM. `Core/Constitution.md` §3 (Evidence Before Belief) is adopted canon and `Models/Event.md` supplies the mechanism, but the word does not occur in `Meta/`, `Models/` or `Language/`; `Memory/Evidence Overlay.md` reserves the definition for a future version, and `Documentation-Debt.md` FW-001 records the definition as intentionally removed during the v0.1 release candidate review. The Worked Example and Shape Check disclose the gap.
+
+**Impact:** A critical reader can quote a headline pillar that has no normative definition at the tiers the site publishes; comparisons score Evidence as an OCOM capability against that gap.
+
+**Recommendation:** Record only. Track together with FW-001. If corroborated, a future Reference Case should either promote a minimal Evidence definition (per FW-001) or restate the public tagline in terms the Core defines (Identity, Ownership, Lifecycle, Governance) with Evidence named as a Constitution principle.
+
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Constitution.md`, `Memory/Evidence Overlay.md`, `Documentation-Debt.md#FW-001`, `Specification/01 Introduction.md`
+
+---
+
+## AO-022
+
+**Title:** Object Obligations Use Shall, Should and May for the Same Characteristic; "Managed Object" Is Undefined
+
+**Date observed:** 4 September 2026
+
+**Description:** Surfaced by an external pre-launch red-team review of the published site (4 September 2026). `Meta/Object.md` Design Principles: "Every Object shall: possess an identity, contain metadata, support relationships, participate in governance, support lifecycle management"; the same record: "Objects may contain descriptive metadata" and "Every managed Object should participate in a Lifecycle"; `Meta/Metadata.md`: "All managed Objects may possess Metadata"; `Specification/04 Meta Model.md` Conformance: "every managed Object ... supports metadata". The qualifier "managed Object", used in every Meta conformance clause, is defined nowhere, and no document states whether unmanaged Objects exist. Related: `Models/Entity.md` requires every Entity to "participate in relationships" while the minimum conforming Entity lists no Relationship.
+
+**Impact:** RFC 2119 readers will not accept shall, should and may for the same clause; implementations can disagree on whether an Object without Metadata or without a Lifecycle is conformant.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should define "managed Object" once (an Object under governance in a Registry) and settle each characteristic's modality in one place.
+
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Object.md`, `Meta/Metadata.md`, `Models/Entity.md`, `Specification/04 Meta Model.md`, `Specification/05 Object Model.md`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -432,3 +612,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 29 July 2026 | Added AO-007 (Core Concepts Must Eliminate a Demonstrated Deficiency, Not Introduce a New Abstraction), recorded per Chief Architect observation on the Measurement→Value episode; one instance only, not escalated — evidence toward a possible future refinement of `Standard Evolution Methodology.md` |
 | 0.1 | 20 August 2026 | Added AO-008 (Publication Version-Identity Has No Documented Relationship), evidenced by RC-008 (external audit, weak External Assurance, honestly recorded) and RC-009 (independent Workflow re-verification, strong External Assurance); Core Impact None — a `repository-scope`, not Core-modeling, boundary; escalated to `CAND-009` as a `CAND-007` §5/§6 Freeze exception, completing that candidate's Path A |
 | 0.1 | 4 September 2026 | Added AO-009 through AO-013 (identity scope, identity merge/split, policy exception precedence, temporal boundary semantics, event validity/trust), evidenced by an external adversarial review of the published site; all recorded, none escalated, per Standard Evolution Methodology Rules 1 and 2 |
+| 0.1 | 4 September 2026 | Added AO-014 through AO-022 (conformance scope, ownership modality, identity replacement clause, relationship arity/direction/cardinality, metadata categories, organization participation, participant lists, evidence pillar, object obligation modality), evidenced by an external pre-launch red-team review of the published site; all recorded, none escalated |

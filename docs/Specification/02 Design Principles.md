@@ -8,7 +8,7 @@
 
 ---
 
-These ten principles are normative and apply to every model created using this specification.
+These eleven principles are normative and apply to every model created using this specification.
 
 ## 1. Organization Before Technology
 
@@ -16,7 +16,7 @@ Operational models describe organizations independently of software, platforms, 
 
 ## 2. Entity-Centric Modeling
 
-Every operational concept **shall** be represented through identifiable entities. Entities are the primary building blocks of the operational model.
+Object is the universal abstraction of the operational model (Constitution §1). Entity is a specialization of Object. Every operational concept **shall** be represented through identifiable entities. Entities are the primary building blocks of the operational model.
 
 ## 3. Explicit Ownership
 
@@ -32,7 +32,7 @@ Responsibilities belong to domains. Domains define accountability, governance, a
 
 ## 6. Separation of Model and Implementation
 
-The operational model **shall** remain independent of software architecture, databases, APIs, programming languages, and infrastructure. Implementations may change without changing the operational model.
+Implementations adapt to the operational model; the operational model never adapts to implementation-specific constraints (Constitution §13). The operational model **shall** remain independent of software architecture, databases, APIs, programming languages, and infrastructure. Implementations may change without changing the operational model.
 
 ## 7. Single Source of Truth
 
@@ -50,10 +50,14 @@ Operational models **should** be understandable by both humans and artificial in
 
 The framework **shall** support organizational evolution without requiring redesign of the underlying operational model.
 
+## 11. Separation of Professional Responsibility
+
+This principle is canonically stated in Constitution §14 — Professional Responsibility (`Core/Constitution.md`). OCOM deliberately separates the management of operational memory from professional expertise. OCOM is responsible for Operational Memory, the Object Model, Knowledge Management, Context Preservation, Workflow Coordination, Decision Tracking, and Action Tracking. Professional functions of the organization — including Legal, Compliance, Finance, Security, and HR — are responsible for expert judgments and decisions within their domains. OCOM **shall not** substitute for professional expertise; it supports that expertise through structured operational memory.
+
 ## Conformance
 
 All models created using this specification **shall** conform to these principles.
 
 ---
 
-*Source: compiled from `Core/Principles.md`, verbatim, including principle titles. (Committee Review, 22 July 2026: an earlier draft retitled Principle 9 to "Interpretability"; the Architecture Committee directed reversion to the source title, on the basis that retitling a sourced principle is an architectural judgment requiring an ADR, not an editorial choice.)*
+*Source: compiled from `Core/Principles.md`, verbatim, including principle titles. (Committee Review, 22 July 2026: an earlier draft retitled Principle 9 to "Interpretability"; the Architecture Committee directed reversion to the source title, on the basis that retitling a sourced principle is an architectural judgment requiring an ADR, not an editorial choice.) (4 September 2026: resynchronised with `Core/Principles.md` after Principle 11 (ADR CAND-003, 23 July 2026) and the Constitution cross-references in Principles 2 and 6 (CAND-006) were added to the source; editorial recompilation, no content of its own.)*

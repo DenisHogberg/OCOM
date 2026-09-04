@@ -22,7 +22,7 @@
 
 This document tells the story of *how* an organization adopted OCOM, in the order it actually happened. It is not a feature tour and it is not a mapping table. It follows the sequence of decisions a real rollout goes through, the problem that forced each step, and what changed once the step landed.
 
-It is a Reference Case. It demonstrates the model, it does not extend it. Every concept named here is defined normatively in the Core Vocabulary and only referenced from this document.
+It is a Reference Case. It demonstrates the model, it does not extend it. Every concept named here is defined normatively in the Core Vocabulary or at the Models tier of the specification and only referenced from this document.
 
 The organization is **fictional**. "Meridian" is a placeholder for any performance-marketing operator, used purely for illustration. No real company, brand, or person is named or implied.
 
@@ -51,7 +51,7 @@ The goal of the rollout was not "adopt a data model." It was: **one governed sou
 
 # How OCOM Was Rolled Out
 
-The rollout followed the grain of the model's own design principles: Evidence Before Belief, and Governance by Default. In practice that dictated the order. You cannot govern what you cannot identify, and you cannot trust what you cannot evidence, so Identity and Events came first, and the commercial layer came last.
+The rollout followed the grain of the model's own design principles: Evidence Before Belief, and governance built in from the start. In practice that dictated the order. You cannot govern what you cannot identify, and you cannot trust what you cannot evidence, so Identity and Events came first, and the commercial layer only after them.
 
 ## Phase 1: Identity first
 
@@ -113,9 +113,9 @@ The rollout followed the grain of the model's own design principles: Evidence Be
 
 **Problem.** Once it worked, the temptation was to keep adding new concepts for every edge case.
 
-**What was applied.** The Core was frozen. New concepts stopped being added directly. A candidate now has to be observed in real usage, written up as a Reference Case, and pass an Architecture Objection before anything changes. This is Governance by Default applied to the model itself.
+**What was applied.** The Core was frozen. New concepts stopped being added directly. A candidate now has to be observed in real usage, written up as a Reference Case, and pass an Architecture Observation review before anything changes. This is governance built in from the start, applied to the model itself.
 
-**Outcome.** The model stayed small. The whole business still fits inside the thirteen Core concepts, which is exactly the point of this document.
+**Outcome.** The model stayed small. The whole business still fits inside the thirteen Core Vocabulary terms and the Models tier, which is exactly the point of this document.
 
 ## Phase 8: Everything else is a projection
 
@@ -165,7 +165,7 @@ After the rollout, every core OCOM concept has a concrete counterpart in the bus
 # Related Specifications
 
 - Vocabulary: Object, Identity, Metadata, Relationship, Reference, Registry, Classification, Capability, Contract, Policy, Constraint, Ownership, Organization
-- Specification: Executive (Design Principles, Architecture, Governance), Normative
+- Specification: Executive Overview, Normative (Chapters 1 to 8)
 - Examples: Affiliate Example, Campaign Example, Payment Example
 
 ---
