@@ -39,7 +39,8 @@ See [ROADMAP.md](ROADMAP.md) for what's completed, the current state, and future
 
 ## License
 
-Apache License 2.0 — see [LICENSE](LICENSE).
+Specification text (`docs/`): Creative Commons Attribution 4.0 (CC BY 4.0); see [LICENSE-docs.md](LICENSE-docs.md).
+Code: Apache License 2.0; see [LICENSE](LICENSE).
 
 ## Contributing
 

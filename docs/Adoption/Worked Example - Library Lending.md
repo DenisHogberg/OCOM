@@ -49,7 +49,7 @@ Ownership answers *who is accountable for this Object*. It does not answer who c
 
 ## Relationship
 
-Every Object requires Relationships (`Meta/Relationship.md`), which itself requires an Identifier, a Source Object, a Target Object, and a Relationship Type.
+Every Object requires Relationships (`Meta/Relationship.md`), each of which requires an Identifier, a Source Object, a Target Object, and a Relationship Type.
 
 - Identifier: `LOAN-2026-08-0431`.
 - Source Object: Patron `P-10432`.
@@ -96,7 +96,7 @@ Illustrative only. Conformance to OCOM is determined exclusively by the normativ
 
 **Try OCOM on your own model → [Shape Check](https://claude.ai/code/artifact/b331b03b-1f22-4796-a907-8df6f66bd126)**
 
-A separate, read-only tool: paste your own model's field names and see which of the Core Characteristics above it already has a name for. It is not part of this Specification, not a validator, and not authorized or governed by any OCOM ADR — see the tool's own page for exactly what it checks and doesn't.
+A separate, read-only tool: paste your own model's field names and see which of the Core Characteristics above it already has a name for. It is not part of this Specification and not a validator; it is authorized and governed as a Consumer Tool by ADR Candidate CAND-013 (Decided, 21 August 2026). See the tool's own page for exactly what it checks and doesn't.
 
 See OCOM Shape Check in action
 

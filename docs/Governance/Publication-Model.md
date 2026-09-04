@@ -54,7 +54,7 @@ Treating Release as its own track, rather than assuming it equals Constitution's
 
 # Publication Layers
 
-Four tiers, not two. Confusing "what OCOM says" with "what got compiled into a reading path" or "what got rendered onto a web page" is the direct cause of several findings in the re-verification audit (e.g., a `SHALL` sentence in `Specification/05 Object Model.md` referencing "Lifecycle" as if it had a Core Vocabulary term card, when Lifecycle is defined at `Models/` tier, not `Meta/` tier, and so has no card at all).
+Five tiers, not two. Confusing "what OCOM says" with "what got compiled into a reading path" or "what got rendered onto a web page" is the direct cause of several findings in the re-verification audit (e.g., a `SHALL` sentence in `Specification/05 Object Model.md` referencing "Lifecycle" as if it had a Core Vocabulary term card, when Lifecycle is defined at `Models/` tier, not `Meta/` tier, and so has no card at all).
 
 ## 1. Canonical Source
 
@@ -75,6 +75,10 @@ A machine-generated representation of a single canonical document, produced by t
 
 The homepage, `/changelog`, and `/comparisons/*` pages — informative, illustrative, explicitly not carrying independent normative weight, and not required to cite a versioned canonical source the way a Projection of a specific term is.
 
+## 5. Consumer Tool
+
+An interactive, read-only tool published on the site (currently one instance: `ocom.uno/shape-check`), authorized by its own ADR Candidate (`CAND-013`, Decided 21 August 2026). A Consumer Tool consumes published projections, creates no normative requirements, is not a source of truth, and must state its non-normative status on its own page.
+
 ---
 
 # Authoritative Source Per Publication Unit
@@ -84,7 +88,7 @@ The homepage, `/changelog`, and `/comparisons/*` pages — informative, illustra
 | **Source of Truth** | `docs/Meta/*.md` (13 files) | `docs/Specification/*.md` (compiled from `Core/`, `Meta/`, `Models/`, `Memory/`, `Language/`, `Governance/`) |
 | **Release Identifier** | Resolved via `Publication-Manifest.md` | Resolved via `Publication-Manifest.md` |
 | **Commit** | Resolved via `Publication-Manifest.md` | Resolved via `Publication-Manifest.md` |
-| **Specification Version** | n/a (Core Vocabulary is its own track) | `0.2` (`docs/Specification/*` headers) — **the live site currently shows `0.1`; see "Known Gaps"** |
+| **Specification Version** | n/a (Core Vocabulary is its own track) | `0.2` (`docs/Specification/*` headers; the live site shows `0.2` as of 4 September 2026) |
 | **Publication Date** | 2026-07-20 (site) — not independently confirmable against a repo commit; see "Known Gaps" | 2026-07-22 (Committee Review Package `Prepared` date) |
 | **Publication URL** | `https://ocom.uno/vocabulary` and `https://ocom.uno/vocabulary/<term>` | `https://ocom.uno/specification` and `https://ocom.uno/specification/normative` |
 | **Machine-readable Projection** | HTML, JSON, JSON-LD, Markdown (per `/changelog`'s own claim) — no versioned source file for the generated JSON-LD exists in this repository | None currently generated per-chapter; the compiled Markdown itself is the only machine-readable form |
@@ -93,7 +97,7 @@ The homepage, `/changelog`, and `/comparisons/*` pages — informative, illustra
 
 # Known Gaps (Stated Honestly, Not Solved Here)
 
-- **The live site currently shows Specification `v0.1`; this repository states `v0.2`.** `ocom.uno/specification` and `ocom.uno/specification/normative` display "Version 0.1" throughout; `docs/Specification/*.md`'s own headers all declare `0.2`. The live site has not been updated to reflect the `v0.2` reading path that has existed in this repository since 22 July. This is the same class of gap as the `v1.0.0` mislabeling: an unqualified version claim that does not match the public artifact. Closing it requires the external Publication Engine to republish from the current repository state; tracked as `FW-007` in `Documentation-Debt.md`, not solved by this document.
+- **Resolved, 4 September 2026: the live site previously showed Specification `v0.1` while this repository stated `v0.2`.** The site was republished from the current repository state: `ocom.uno/specification`, `/executive`, `/normative` and `/annex` now carry the nine-chapter v0.2 reading path (SPEC-00..08) compiled verbatim from `docs/Specification/`, with per-chapter source-file citations. The remaining, unsolved part is the general one recorded in the next bullet: this repository still cannot verify from inside itself which commit the site was built from.
 - **No exposed commit/version marker from the external Publication Engine.** This repository can declare, in `Publication-Manifest.md`, which commit a release corresponds to. It cannot verify from inside itself that the live site was actually built from that commit — the Publication Engine is confirmed to be entirely external (no deploy/publish workflow, no site-generator config, no GitHub Pages configured, "Publication Engine" appears nowhere in this repository). Closing this gap requires the external system to expose its own build/source marker; tracked as a Future Work item in `Documentation-Debt.md`, not solved by this document.
 - **The generated JSON-LD projection has no versioned source file in this repository.** The site claims (`/changelog`) that each of the 13 Core Vocabulary terms carries an HTML/JSON/JSON-LD/Markdown projection. The Markdown source (`Meta/*.md`) is versioned and reviewable; the JSON-LD is not — it is generated by the external engine with no corresponding artifact here to diff or review against.
 - **`v1.0.0`'s actual scope does not match its name.** Documented precisely in `Publication-Manifest.md`.
@@ -105,4 +109,5 @@ The homepage, `/changelog`, and `/comparisons/*` pages — informative, illustra
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 August 2026 | Initial document — versioning model, publication-layer tiers, authoritative-source table, known gaps. Executes `Master-Architecture-Backlog.md` `EPIC-F`. |
+| 0.1 | 4 September 2026 | Added tier 5 (Consumer Tool, per `CAND-013`); recorded the live site's republication of the v0.2 reading path and closed the corresponding Known Gap. |
 | 0.1 | 20 August 2026 | Corrected on independent review: Status changed Informative → Draft (this is a `Governance/` process document, not an analysis document, per `Documentation-Standards.md`'s Status Taxonomy); question 2's answer no longer cites a nonexistent `canonical_sources` Manifest field; added a Known Gap disclosing the live site's Specification `v0.1` vs. this repository's `v0.2` |
