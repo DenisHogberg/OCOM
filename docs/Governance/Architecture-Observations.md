@@ -318,6 +318,106 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-009
+
+**Title:** Identity Scope Is Referenced but Not Formally Defined
+
+**Date observed:** 4 September 2026
+
+**Description:** `Meta/Identity.md` requires Identity to be unique and persistent, and the Identity Scope section describes scope-qualified uniqueness. An external adversarial review of the published site (4 September 2026) constructed the counterexample of two Objects carrying the same identifier value in two different scopes (for example, one in a CRM context and one in an ERP context). Under the current text, the effective identifier is the pair (scope, identifier), yet Scope itself is not defined as an Object, has no Identity of its own, and has no term record. The review framed this as an infinite-regress test: either Scope is an Object (introducing a further level of identity) or the fundamental model depends on an element that sits outside the model.
+
+**Impact:** Two conforming implementations can disagree on whether identifier collisions across scopes are permitted, and on what identifies a scope. No specification text is currently wrong; the gap is that scope identity is unspecified.
+
+**Recommendation:** Record only. If independently corroborated, a future Reference Case should propose either (1) defining scope as a governed attribute of Identity with its own uniqueness rules, or (2) explicitly stating that Identity uniqueness is always evaluated within a declared Registry, making Registry the scope carrier.
+
+**Status:** Open; not escalated (single external source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Identity.md`, `Meta/Registry.md`
+
+---
+
+## AO-010
+
+**Title:** Identity Merge and Split Have No Normative Semantics
+
+**Date observed:** 4 September 2026
+
+**Description:** `Meta/Identity.md` requires that Identity remain stable throughout the Object's lifetime and never be reused. `Examples/Implementation-Case/Performance-Marketing-Operator.md` describes alias handling on evidence, with no automatic merging. The external adversarial review (4 September 2026) posed the merge scenario: two Objects are created for what is later evidenced to be one real-world subject. Deleting one violates persistence; re-pointing historical Relationships rewrites history; keeping both with a sameAs assertion yields two unique Identities for one subject, which strains the canonical-identity promise. The split scenario (one Object later evidenced to be two subjects) is symmetric and equally unspecified.
+
+**Impact:** Conforming implementations will inevitably face merge/split in production and will resolve it in incompatible ways. The Implementation Case demonstrates a practice (evidence-gated aliasing) but no normative document defines it.
+
+**Recommendation:** Record only. A future Reference Case drawn from a real merge incident should propose normative alias semantics for Identity (assertion, evidence requirement, effect on Relationships and history) without weakening the no-reuse rule.
+
+**Status:** Open; not escalated (single external source; the Implementation Case provides supporting but not independent evidence)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Identity.md`, `Meta/Relationship.md`, `Examples/Implementation-Case/Performance-Marketing-Operator.md`
+
+---
+
+## AO-011
+
+**Title:** Policy Exceptions Have No Precedence Model
+
+**Date observed:** 4 September 2026
+
+**Description:** `Meta/Policy.md` lists Exceptions among Policy characteristics and allows Policies to be mandatory, recommended, or optional. The external adversarial review (4 September 2026) constructed a stack of one Policy and three Exceptions whose pairwise overrides are individually plausible but jointly cyclic, producing simultaneously valid ALLOW and DENY evaluations. The specification defines no precedence, ordering, or conflict-resolution rule between a Policy and its Exceptions, or between overlapping Policies applying to the same Object.
+
+**Impact:** Two conforming implementations can evaluate the same governed records to opposite decisions. This is consistent with the specification's position that it describes the governed record rather than an evaluation engine, but that position is not stated in `Meta/Policy.md` itself, so a reader can reasonably expect deterministic evaluation.
+
+**Recommendation:** Record only. Candidate remedies for a future Reference Case: (1) an explicit statement in `Meta/Policy.md` that evaluation order and conflict resolution are implementation responsibilities to be declared per model; or (2) a minimal normative precedence rule (for example, most specific scope wins; on remaining conflict, escalate to the accountable Owner rather than auto-resolve).
+
+**Status:** Open; not escalated (single external source)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Policy.md`, `Meta/Constraint.md`, `Meta/Ownership.md`
+
+---
+
+## AO-012
+
+**Title:** Temporal Boundary Semantics Are Undefined
+
+**Date observed:** 4 September 2026
+
+**Description:** Several term records carry validity periods: Ownership has Effective and Expiration Dates, Policy has Effective and Expiration Dates, Relationship has a Validity Period. The external adversarial review (4 September 2026) posed three boundary cases: (1) two consecutive Ownership records meeting exactly at one timestamp (who owns the Object at that instant); (2) one Policy expiring and another taking effect at the same timestamp (which applies at that instant); (3) an Event recorded on one date but effective at an earlier date (whether and how far derived projections must be recomputed). Interval closure (inclusive or exclusive bounds) and retroactive-effect rules are not defined anywhere in `Meta/` or `Models/`.
+
+**Impact:** Implementations will pick different closure conventions and different backdating policies, producing divergent histories from identical records.
+
+**Recommendation:** Record only. A future Reference Case should propose a single closure convention (for example, half-open intervals: inclusive start, exclusive end) and a stated rule for effective-dated records, both as small additive clauses.
+
+**Status:** Open; not escalated (single external source)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Ownership.md`, `Meta/Policy.md`, `Meta/Relationship.md`, `Models/Event.md`
+
+---
+
+## AO-013
+
+**Title:** Event Immutability Needs a Validity and Trust Distinction
+
+**Date observed:** 4 September 2026
+
+**Description:** `Models/Event.md` defines Events as immutable records of fact, and the Implementation Case demonstrates state computed from immutable Events with corrections recorded as new Events. The external adversarial review (4 September 2026) pressed the fraudulent-event case: a correction Event neutralizes an erroneous amount, but a fraudulent Event poses a sharper question, whether it belongs in canonical history at all. If it stays, history contains records that are true as occurrences but false as claims; if it is removed, history is no longer immutable. The review's formulation: the model currently has one notion of Event where four are latent (the event occurred; the event was valid; the event is trusted; the event is currently effective).
+
+**Impact:** Without this distinction, "history is immutable" and "history is truthful" can be read as the same promise, and implementations will conflate occurrence with validity in incompatible ways.
+
+**Recommendation:** Record only. A future Reference Case drawn from a real correction or fraud incident should propose whether validity/trust status belongs on the Event (as governed Metadata), in a separate assessment record, or out of scope with an explicit statement.
+
+**Status:** Open; not escalated (single external source; the Implementation Case's correction pattern is supporting evidence)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Models/Event.md`, `Meta/Metadata.md`, `Examples/Implementation-Case/Performance-Marketing-Operator.md`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -331,3 +431,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 29 July 2026 | Added AO-006 (Observation vs. Interpretation vs. Value vs. Meaning), recorded per Chief Architect review of `CAND-008`; no Reference Case yet, not escalated — a precondition check on `CAND-008`'s eventual promotion |
 | 0.1 | 29 July 2026 | Added AO-007 (Core Concepts Must Eliminate a Demonstrated Deficiency, Not Introduce a New Abstraction), recorded per Chief Architect observation on the Measurement→Value episode; one instance only, not escalated — evidence toward a possible future refinement of `Standard Evolution Methodology.md` |
 | 0.1 | 20 August 2026 | Added AO-008 (Publication Version-Identity Has No Documented Relationship), evidenced by RC-008 (external audit, weak External Assurance, honestly recorded) and RC-009 (independent Workflow re-verification, strong External Assurance); Core Impact None — a `repository-scope`, not Core-modeling, boundary; escalated to `CAND-009` as a `CAND-007` §5/§6 Freeze exception, completing that candidate's Path A |
+| 0.1 | 4 September 2026 | Added AO-009 through AO-013 (identity scope, identity merge/split, policy exception precedence, temporal boundary semantics, event validity/trust), evidenced by an external adversarial review of the published site; all recorded, none escalated, per Standard Evolution Methodology Rules 1 and 2 |
