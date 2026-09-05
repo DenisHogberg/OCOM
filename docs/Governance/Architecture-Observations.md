@@ -594,7 +594,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Architect Response:** *(pending)*
 
-**Related:** `Meta/Object.md`, `Meta/Metadata.md`, `Models/Entity.md`, `Specification/04 Meta Model.md`, `Specification/05 Object Model.md`, `Adoption/Worked Example - Library Lending.md`
+**Related:** `Meta/Object.md`, `Meta/Metadata.md`, `Meta/Ownership.md`, `Models/Entity.md`, `Specification/04 Meta Model.md`, `Specification/05 Object Model.md`, `Adoption/Worked Example - Library Lending.md`, `AO-018`
 
 ---
 
@@ -1038,6 +1038,106 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-045
+
+**Title:** The Publication Model Recognizes Two Projection Instances While the Site Publishes Four, and Places Comparisons in a Tier the Site Calls Canonical
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by a claim-provenance red-team of the published site (5 September 2026). Governance/Publication-Model.md:69 defines tier 3, Projection, as "A machine-generated representation of a single canonical document, produced by the external Publication Engine", and states "Two instances currently recognized", naming Core Vocabulary term-cards and individually authorized Adoption pages. Line 75 places the remaining site surface in tier 4: "The homepage, /changelog, and /comparisons/* pages, together with the site-held informative records", which are "informative, illustrative, explicitly not carrying independent normative weight". The published site nonetheless carries the tier-3 field set (source_file, source_url, history_url) and the word projection on two further routes: /examples/implementation-case (mirror examples/implementation-case/index.html:229, "This page is a compiled projection of docs/Examples/Implementation-Case/Performance-Marketing-Operator.md") and /evolution (mirror evolution/index.html, "This page is a compiled projection of ROADMAP.md"), and it labels every tier-4 comparison a canonical record (mirror comparisons/ddd/index.html, "This comparison is a canonical record; the page is a deterministic projection of it."). No Decision authorizes a projection of docs/Examples/ or of ROADMAP.md; CAND-012 and CAND-013 authorize only Adoption pages and the Consumer Tool.
+
+**Impact:** The five-tier model exists precisely to stop "what OCOM says" being confused with "what got rendered onto a web page" (Publication-Model.md:57). A reader who applies the model to the live site finds two publication units it does not classify and one whole tier the site relabels, so the model cannot be used to decide what carries normative weight.
+
+**Recommendation:** Record only. Track together with FW-006 and AO-008. If corroborated, a future Reference Case should either extend the Projection tier with an explicit instance list and an authorization rule for Examples and root-level documents, or state that anything outside the two recognized instances is tier 4 and must not use the tier-3 vocabulary.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Governance/Publication-Model.md`, `Governance/ADR-Candidates.md (CAND-012`, `CAND-013)`, `Governance/Documentation-Debt.md#FW-006`, AO-008
+
+---
+
+## AO-046
+
+**Title:** No Canonical Document States Which Tier Defines Which Term, so "Core Vocabulary" Reads as the Whole Definition Set
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by a claim-provenance red-team of the published site (5 September 2026). The thirteen Meta tier terms carry term records; Entity, Domain, Event, State, Lifecycle and Workflow are defined at the Models tier and have no term record. Publication-Model.md:57 notes the consequence in passing, "Lifecycle is defined at Models/ tier, not Meta/ tier, and so has no card at all", but no canonical document states the split as a rule, and Core/Manifest.md:109 lists "entities; domains; workflows" among what the specification defines without saying where. Examples/Implementation-Case/Performance-Marketing-Operator.md:143 is the only place the repository spells it out for a reader: "Lifecycle, State and Domain, which are defined at the Models tier, are not mapped in this table." The absence is what let three site artefacts assert that "Every definition lives once in the Core Vocabulary and is referenced everywhere else" without contradicting any single canonical sentence.
+
+**Impact:** A reviewer who reads Core Vocabulary as the definition set of OCOM will conclude that six of the concepts the specification most depends on are undefined; a reviewer who reads it as the Meta tier subset has no canonical sentence to cite for that reading.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should add one tier-to-term statement at the Core tier naming which concepts are defined at Meta and which at Models, so that both the site and a reader can cite it.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Manifest.md`, `Governance/Publication-Model.md`, `Meta/Overview.md`, `Models/Overview.md`, `Examples/Implementation-Case/Performance-Marketing-Operator.md`, AO-002, AO-017
+
+---
+
+## AO-047
+
+**Title:** "Reference Case" Names Both a Templated Evidence Unit and a Published Narrative That Uses None of Its Fields
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by a claim-provenance red-team of the published site (5 September 2026). Standard Evolution Methodology.md makes Reference Case a governed unit of evidence with a fixed template (Purpose, Expressive Coverage, Boundary Conditions, Boundary Tags, External Assurance, Core Impact, Decision), recorded inside Architecture-Observations.md; the register uses it that way at AO-008, whose Reference Case field reads "RC-008 - External Audit Comparison of ocom.uno Against the GitHub Repository". Examples/Implementation-Case/Performance-Marketing-Operator.md:25 uses the same words for something else: "It is a Reference Case. It demonstrates the model, it does not extend it." That document carries none of the template fields, has no RC identifier, and appears in no register. The site reprints the label on the page eyebrow and in the Evidence Register row "Reference Cases published: 1".
+
+**Impact:** The methodology's central evidence unit shares a name with an informative narrative, so a reader counting Reference Cases can reach one or nine depending on which sense is meant, and the Evidence Register's own count is ambiguous.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either rename the published narrative (Implementation Case) or state in Standard Evolution Methodology.md that Reference Case is reserved for RC-nnn records and give the illustrative sense its own term.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Governance/Standard Evolution Methodology.md`, `Governance/Architecture-Observations.md (AO-008`, `RC-006 to RC-009)`, `Examples/Implementation-Case/Performance-Marketing-Operator.md`, `ROADMAP.md`
+
+---
+
+## AO-048
+
+**Title:** AI Retrieval Is Presented as an OCOM Capability While the AI Tier Disclaims Retrieval Mechanics and No Tier Defines It
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by a claim-provenance red-team of the published site (5 September 2026). AI/Context/Context Assembly.md's Independence section states that the specification "does not prescribe: retrieval algorithms; vector search; graph traversal; ranking models", and no document at the Core, Meta, Models or Language tier defines retrieval as a concept. Every published concept-coverage matrix nonetheless scores "AI retrieval: Covered" for OCOM under a legend meaning the model defines the concept explicitly (mirror comparisons/ddd/index.html and eight sibling pages). The shape is identical to AO-021, which records the same defect for Evidence.
+
+**Impact:** A second headline capability is scored as defined against a tier that explicitly declines to define it; a reviewer applying the published review question on definitions can falsify nine matrices at once.
+
+**Recommendation:** Record only. Track together with AO-021. If corroborated, a future Reference Case should either define what OCOM does supply to a retrieval system (a governed, addressable record set) at a tier that can be cited, or restate the public capability claim in Context Assembly's own terms.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `AI/Context/Context Assembly.md`, AO-021, `Governance/Publication-Model.md`
+
+---
+
+## AO-049
+
+**Title:** Notation Is Defined Normatively at the Language Tier but Appears in Neither List of Core/Manifest.md's Scope
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by a claim-provenance red-team of the published site (5 September 2026). Language/Notation.md (LANG-NOTATION-01, Status Draft) states at line 21 "This document defines the notation used by the OCOM Language", lists graphical notation among five Representation Types, and closes that section with "All representations shall preserve semantic equivalence." Core/Manifest.md:109 lists what the specification defines (operational concepts; entities; domains; workflows; operational relationships; modeling principles; semantic interpretation rules) and line 119 lists what it does not define (software architecture; databases; APIs; programming languages; user interface design; infrastructure; implementation technologies; business strategy; and two Constitution-scoped exclusions). Notation appears in neither list, so no canonical sentence says whether an implementer must adopt the OCOM notation or may ignore it.
+
+**Impact:** A shall-clause at the Language tier binds a representation an implementer cannot tell is in scope; public positioning statements about whether OCOM is or is not a notation have no canonical sentence to rest on.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should place Notation explicitly in one of Core/Manifest.md's two Scope lists and state its conformance modality once.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Manifest.md`, `Language/Notation.md`, `Language/Overview.md`, AO-034
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1056,3 +1156,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 5 September 2026 | Added AO-023 (Core definitions close on each other through the undefined word "governable"), surfaced independently by two external reviews of the published site; record only, not escalated, tracked with CAND-010 and AO-021. |
 | 0.1 | 5 September 2026 | Added AO-024 through AO-036 (Architectural Principles vocabulary, register Status, Constitution edit under the Freeze, no terminating rule for Object obligations on Lifecycle and Registry, Lifecycle cardinality, Entity versus Object characteristics, Domain and Entity bootstrap, identifier reuse, conformance aggregation, Owner typing, Reference versus Relationship, duplicated AI definitions, template shall clauses), surfaced by an external logic audit of commit 37c986a; all record only, not escalated. AO-015 and AO-018 marked independently corroborated; AO-016 and AO-022 Related extended; AO-023 corrected (no ADR Candidate records the Governance gap; CAND-010 is the Worked Example's publication authorization) and the third usage of Governance in `AI/` added. |
 | 0.1 | 5 September 2026 | Added AO-037 through AO-044 (Process undefined above the Domain tier, KPI undefined and doubly owned, Lifecycle cardinality in three Domain profiles, profiles not carrying the components their Domain Architecture mandates, Entity profiles naming Lifecycles that do not exist, AI Knowledge declared independent of Memory against Constitution Principles 5 and 6, Reference Architecture carrying shall-clauses under an Informative Status, a Deprecated Tool remaining operational against the Active precondition), surfaced by a full read of the Domains, Entities, AI and Reference Architecture tiers; all record only, not escalated. |
+| 0.1 | 5 September 2026 | Added AO-045 through AO-049 (the Projection tier recognizing two instances while the site publishes four and labelling Convenience Representations canonical, no canonical statement of which tier defines which term, Reference Case naming two different things, AI retrieval presented as a defined capability, Notation absent from both Scope lists), surfaced by a claim-provenance red-team of the published site; all record only, not escalated. AO-022 Related extended with `Meta/Ownership.md` and `AO-018`. |
