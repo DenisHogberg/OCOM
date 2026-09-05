@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 29 July 2026
+**Last Updated:** 5 September 2026
 
 ---
 
@@ -598,6 +598,26 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-023
+
+**Title:** Core Definitions Close on Each Other Through the Undefined Word "Governable"
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced independently by two external reviews of the published site (5 September 2026). `Meta/Object.md` defines an Object as "an identifiable and governable element that exists within the operational model"; `Meta/Identity.md` defines Identity as "the persistent and unique representation of an Object". Neither "governable" nor "operational model" is defined at the Core, Models or Language tiers, and Governance is a referenced concept recorded as a governance candidate (`ADR-Candidates.md#cand-010`), not a Core Vocabulary term, although six term records (Identity, Metadata, Reference, Classification, Constraint, Policy) reference it. The published relationship graph shows 44 directed cycles among the 13 terms (35 mutual pairs); cycles are expected where terms define each other, but they make the circularity visible to any reader who checks the definitions.
+
+**Impact:** A reviewer applying the published review question on definitions can show that the two foundational definitions close on each other through a word the specification does not define; conformance clauses that require an Object to "support governance" (`Specification/04 Meta Model.md`) inherit the same gap.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either define "governable" once at the Core tier, in terms of the Core terms Ownership, Policy and Constraint, or restate the Object definition without it. Resolution belongs together with `CAND-010`.
+
+**Status:** Open; not escalated (external review sources; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Object.md`, `Meta/Identity.md`, `ADR-Candidates.md#cand-010`, `Specification/04 Meta Model.md`, `AO-021`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -613,3 +633,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 20 August 2026 | Added AO-008 (Publication Version-Identity Has No Documented Relationship), evidenced by RC-008 (external audit, weak External Assurance, honestly recorded) and RC-009 (independent Workflow re-verification, strong External Assurance); Core Impact None — a `repository-scope`, not Core-modeling, boundary; escalated to `CAND-009` as a `CAND-007` §5/§6 Freeze exception, completing that candidate's Path A |
 | 0.1 | 4 September 2026 | Added AO-009 through AO-013 (identity scope, identity merge/split, policy exception precedence, temporal boundary semantics, event validity/trust), evidenced by an external adversarial review of the published site; all recorded, none escalated, per Standard Evolution Methodology Rules 1 and 2 |
 | 0.1 | 4 September 2026 | Added AO-014 through AO-022 (conformance scope, ownership modality, identity replacement clause, relationship arity/direction/cardinality, metadata categories, organization participation, participant lists, evidence pillar, object obligation modality), evidenced by an external pre-launch red-team review of the published site; all recorded, none escalated |
+| 0.1 | 5 September 2026 | Added AO-023 (Core definitions close on each other through the undefined word "governable"), surfaced independently by two external reviews of the published site; record only, not escalated, tracked with CAND-010 and AO-021. |
