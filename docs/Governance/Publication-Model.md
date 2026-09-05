@@ -73,7 +73,7 @@ A machine-generated representation of a single canonical document, produced by t
 
 ## 4. Convenience Representation
 
-The homepage, `/changelog`, and `/comparisons/*` pages — informative, illustrative, explicitly not carrying independent normative weight, and not required to cite a versioned canonical source the way a Projection of a specific term is.
+The homepage, `/changelog`, and `/comparisons/*` pages, together with the site-held informative records (`/why`, `/evidence-register`, `/specification/how-to-review`, `/api`, `/observatory` and their JSON records, whose canonical record lives in the external Publication Engine, not in this repository) — informative, illustrative, explicitly not carrying independent normative weight, and not required to cite a versioned canonical source the way a Projection of a specific term is.
 
 ## 5. Consumer Tool
 
@@ -111,3 +111,4 @@ An interactive, read-only tool published on the site (currently one instance: `o
 | 0.1 | 20 August 2026 | Initial document — versioning model, publication-layer tiers, authoritative-source table, known gaps. Executes `Master-Architecture-Backlog.md` `EPIC-F`. |
 | 0.1 | 4 September 2026 | Added tier 5 (Consumer Tool, per `CAND-013`); recorded the live site's republication of the v0.2 reading path and closed the corresponding Known Gap. |
 | 0.1 | 20 August 2026 | Corrected on independent review: Status changed Informative → Draft (this is a `Governance/` process document, not an analysis document, per `Documentation-Standards.md`'s Status Taxonomy); question 2's answer no longer cites a nonexistent `canonical_sources` Manifest field; added a Known Gap disclosing the live site's Specification `v0.1` vs. this repository's `v0.2` |
+| 0.1 | 5 September 2026 | Tier 4 now names the site-held informative records (`/why`, `/evidence-register`, `/specification/how-to-review`, `/api`, `/observatory`), which previously belonged to no tier. |

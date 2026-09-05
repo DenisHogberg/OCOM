@@ -34,6 +34,8 @@ A Memory Record represents a single retained fact, observation, inference, or de
 
 A Memory Record is immutable after creation. Corrections to previously retained information are represented as new Memory Records; an existing Memory Record is never modified.
 
+Terminology note. `Core/Constitution.md` paragraph 4 names this concept Memory Entry. Per `Governance/Constitution-Step0-Summary.md` Decision 1, Memory Entry and Memory Record are one concept and Memory Entry is the canonical term; this document keeps its title pending the rename, tracked as `Governance/Documentation-Debt.md` GAP-004.
+
 ---
 
 # Design Principles
@@ -259,3 +261,4 @@ A compliant implementation shall:
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 27 July 2026 | Removed "may evolve through controlled updates" from Definition; added immutability to Design Principles and Conformance; rewrote Auditability to remove modification/modifier/modification-reason language; replaced "update permissions" with "correction permissions" in Governance — per Constitution §4 and ARCH-001 (Step 0, Decision 1) |
 | 0.1 | 27 July 2026 | Changed Evidence section from "may reference" to "shall reference at least one Evidence Record" — per Constitution §3 and ARCH-002 (Step 0, Decision 2) |
+| 0.1 | 5 September 2026 | Added a terminology note: Memory Entry (Constitution paragraph 4) and Memory Record are one concept per Step 0 Decision 1; rename pending, tracked as GAP-004. No requirement changed. |

@@ -48,6 +48,7 @@ Entries are split into four categories to separate real problems from consciousl
 | GAP-001 | Four competing filename conventions coexist across the specification (Title Case With Spaces, snake_case/UPPER-suffix, PascalCase, kebab-case) | Low | ~237 content files across the specification | Agree on a single convention for a future version; do not rename files without a separate approved proposal | Open |
 | GAP-002 | `Core/Terminology.md` does not define Object, Capability, Policy, Contract, Context, Knowledge, or Memory, although each has its own normative document elsewhere | Medium | `Core/Terminology.md` | Extend the glossary to cover all Meta-level concepts | Open |
 | GAP-003 | Author referenced "M020 — Public Product Release" (23 July 2026) as a prior Milestone. No definition, criteria, or scope for M020 exists anywhere in the repository, its full commit history, or any Governance document. | Low | Milestone numbering generally; `ROADMAP.md` | Author decision. | Closed |
+| GAP-004 | `Core/Constitution.md` paragraph 4 names the retained-fact concept Memory Entry while the Memory tier's document is titled Memory Record; `Constitution-Step0-Summary.md` Decision 1 ruled them one concept with Memory Entry canonical, and the rename was never executed | Low | `Memory/Memory Record.md`, `Core/Constitution.md` | Execute the rename through the change process; a terminology note was added to `Memory Record.md` on 5 September 2026 | Open |
 
 ---
 
@@ -76,6 +77,7 @@ Consciously deferred decisions. Not documentation debt.
 | FW-005 | Extend `Knowledge-Map.md` traceability and `docs/README.md` visibility to fully reflect Governance as a peer section of OCOM | Undetermined | `Governance/Knowledge-Map.md`, `docs/README.md` | CDKO proposal, pending Architect confirmation | Open |
 | FW-006 | The external Publication Engine that builds ocom.uno exposes no commit or version marker this repository can check its output against — `Publication-Model.md`'s six authoritative-version questions can be answered from inside this repository, but "does the live site match the repository" cannot be verified without cooperation from that external system | Undetermined | `Governance/Publication-Model.md`, `Governance/Release-Workflow.md` (Steps 8–9) | Publication Governance work, 20 August 2026 | Open |
 | FW-007 | A correctly-scoped next Release (containing Constitution v1.0, matching `CAND-007`'s Architecture Freeze) has not been cut — `Publication-Manifest.md`'s placeholder entry is structural only, all fields `TBD` | Next release, criteria TBD | `Governance/Publication-Manifest.md`, `Governance/Master-Architecture-Backlog.md` Part 8 (Release Readiness) | Publication Governance work, 20 August 2026 — explicitly deferred, not this plan's scope | Planned |
+| FW-008 | World Model (`Core/Constitution.md` paragraphs 5, 6 and 8) and Autonomy level (paragraphs 7 and 14) are named in the Constitution and defined in no document; `Workflows/` holds ten planned workflow stubs with no content | Undetermined | `Core/Constitution.md`, `Workflows/` | Tracked as `Master-Architecture-Backlog.md` EPIC-A (Concept Paper written; an ADR Candidate is the Definition of Done) and EPIC-D; named as open exceptions in `ADR-Candidates.md` CAND-007 §1; pointer row added 5 September 2026 so that the three registers name the gap | Open |
 
 ---
 
@@ -88,3 +90,4 @@ Consciously deferred decisions. Not documentation debt.
 | 0.1 | 22 July 2026 | Added pointer to OBS-003 (Reference Case: Object attribute lifecycle categories) |
 | 0.1 | 23 July 2026 | Added GAP-003 (M020 does not exist; Milestone numbering begins at M021), recorded Closed per author decision |
 | 0.1 | 20 August 2026 | Added FW-006 (external Publication Engine exposes no commit/version marker) and FW-007 (next correctly-scoped Release not yet cut), per `Governance/Publication-Model.md` and `Governance/Publication-Manifest.md` |
+| 0.1 | 5 September 2026 | Added GAP-004 (Memory Entry / Memory Record rename pending) and FW-008 (World Model, Autonomy level and the Workflows/ stubs), so that gaps tracked only in the Backlog and CAND-007 are visible from this register. |

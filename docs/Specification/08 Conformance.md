@@ -16,6 +16,8 @@ Conformance establishes the criteria by which an implementation, model, or repos
 
 Conformance is the degree to which an implementation satisfies the normative requirements defined by this specification. **Conformance applies to implementations, not to individual models.**
 
+> **Editorial note (5 September 2026).** In this specification the adjectives conforming, compliant and conformant, when applied to an implementation, are used interchangeably and mean an implementation that satisfies the Mandatory Requirements of this document for the specification version it claims. (Source: `Language/Conformance.md`, Definition.)
+
 > **Editorial note.** Chapters 2, 5 and 6 state conformance conditions for models and model elements ("All models created using this specification shall conform to these principles"; "An Entity, Domain, Relationship, Event, State, or Workflow conforms to this specification only if ..."), while this chapter, following `Language/Conformance.md`, scopes conformance claims to implementations. Read together: an implementation makes the conformance claim, and the models it produces are required to satisfy Chapters 2, 5 and 6 as part of that claim. This chapter records the difference in scope rather than resolving it, per the editorial policy stated in Chapter 5; it is logged as an Architecture Observation.
 
 ## Mandatory Requirements

@@ -34,6 +34,8 @@ Conformance is the degree to which an implementation satisfies the normative req
 
 Conformance applies to implementations rather than individual models.
 
+In this specification the adjectives conforming, compliant and conformant, when applied to an implementation, are used interchangeably and mean an implementation that satisfies the Mandatory Requirements of this document for the specification version it claims.
+
 ---
 
 # Business Meaning
@@ -223,3 +225,4 @@ Supports a formally defined OCOM profile while preserving compatibility with the
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 5 September 2026 | Definition: stated that conforming, compliant and conformant are used interchangeably for an implementation; no requirement changed. |

@@ -28,7 +28,7 @@ It describes existing, observed practice. It does not introduce new rules that e
 
 # Normative Language
 
-Normative documents consistently use "shall" for mandatory requirements, "may" for optional behavior, and "should" for recommendations — consistent with RFC 2119-style usage, though not currently cited explicitly in the specification text.
+Normative documents consistently use "shall" for mandatory requirements, "may" for optional behavior, and "should" for recommendations — consistent with RFC 2119 / RFC 8174 usage, cited explicitly since 20 August 2026 in `Core/Manifest.md`'s Normative Language section, the single authoritative definition of the key words; lowercase forms are equivalent by that section's own convention.
 
 ---
 
@@ -98,3 +98,4 @@ ASCII diagrams are used for layered/sequential relationships, inside ```text``` 
 | 0.1 | 22 July 2026 | Initial capture of existing conventions |
 | 0.1 | 20 August 2026 | Added Status Taxonomy section, defining Draft/Informative/Reserved/Planned precisely from existing observed usage — per `Governance/Publication-Model.md` |
 | 0.1 | 20 August 2026 | Corrected the Draft-directory list on independent review: it omitted `Domains/`, `Entities/`, and `Specification/`, the three largest Draft populations in the repository, contradicting the section's own descriptive claim. Removed the `Entities/`-as-Informative-example clause after `Entities/Overview.md`'s Status was reverted to Draft |
+| 0.1 | 5 September 2026 | Normative Language: replaced the stale statement that RFC 2119 is not cited explicitly (it has been cited in `Core/Manifest.md` since 20 August 2026). |

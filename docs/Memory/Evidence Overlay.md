@@ -103,7 +103,7 @@ Confidence shall not exist without supporting Evidence.
 
 # Relationship to Memory Record
 
-A Memory Record may reference one or more Evidence Records.
+A Memory Record shall reference at least one Evidence Record, and may reference more than one.
 
 Evidence provides the basis for explainability and confidence assessment.
 
@@ -140,3 +140,4 @@ An Evidence Record is never altered after creation; there is no previous value o
 | 0.1 | 21 July 2026 | Reconstructed from existing Memory specifications (Design Principles, Attributes, Evidence Sources, Relationship to Confidence and Memory Record, Auditability). Definition, Independence, and Conformance reserved for a future version. |
 | 0.1 | 27 July 2026 | Added "be append-only" to Design Principles and a new Immutability section explicitly stating that an Evidence Record is immutable after creation and corrections are new Evidence Records; rewrote Auditability to remove previous-value/new-value language — per Constitution §4 and ARCH-006 |
 | 0.1 | 27 July 2026 | Added "unknown source" to Evidence Sources — per Constitution §3 and ARCH-002 (Step 0, Decision 2) |
+| 0.1 | 5 September 2026 | Relationship to Memory Record: "may reference one or more" changed to "shall reference at least one Evidence Record, and may reference more than one", propagating ARCH-002 (Step 0, Decision 2), already applied to `Memory Record.md` on 27 July 2026 and to this document's Evidence Sources section ("the complete absence of an Evidence Record is never permitted"). |

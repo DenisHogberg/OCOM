@@ -28,20 +28,22 @@ This is a snapshot, not a normative document. For the full history and forward-l
 
 | Subsystem | Location | Status |
 |---|---|---|
-| Meta-model | `Meta/` | Released, part of v0.1 Core |
-| Structural models | `Models/` | Released, part of v0.1 Core |
-| Language & Conformance | `Language/` | Released, part of v0.1 Core |
-| Domain profiles (12 domains) | `Domains/` | Released, part of v0.1 Core |
-| Entity catalog | `Entities/` | Released, part of v0.1 Core |
+| Meta-model | `Meta/` | Released in v0.1 |
+| Structural models | `Models/` | Released in v0.1 |
+| Language & Conformance | `Language/` | Released in v0.1 |
+| Domain profiles (12 domains) | `Domains/` | Released in v0.1 |
+| Entity catalog | `Entities/` | Released in v0.1 |
 | Reference Architecture | `Reference Architecture/` | Released, Informative |
 | Worked example (iGaming) | `Examples/` | Released, Informative |
 | Memory | `Memory/` | Released; two subsections (Definition, Independence, Conformance) intentionally deferred — see Future Work FW-001 |
-| AI extension layer | `AI/` | Released, part of v0.1 Core |
+| AI extension layer | `AI/` | Released in v0.1 |
 | Workflows | `Workflows/` | Not started — folder exists, no content |
+
+In this table, "v0.1" is the release named "v0.1: Core Specification" in `ROADMAP.md`. The word "Core" in that release name is a release label; it is not the Domain-Neutral Core of Constitution §9. For §9's purposes, `Governance/Constitution-Step0-Summary.md` Decision 4 defines Core by semantic invariance across industries: it includes `Core/`, `Meta/`, `Models/`, `Language/`, `Governance/`, `Memory/`, `AI/`, `Lifecycles/` and `Reference Architecture/`; it excludes `Entities/` and `Examples/`; it treats `Domains/` as a borderline case under ongoing per-document review. `Domains/` and `Entities/` are therefore released content of v0.1, normative by their own Status, and not part of the §9 Core. §9's own wording has not yet been updated to state its scope; that transcription is an open Backlog item (`Master-Architecture-Backlog.md` EPIC-D, `CAND-007` §3).
 
 ## Governance Status
 
-**Baseline**, established and frozen 22 July 2026. 10 documents: Governance Manifest, Standard Evolution Methodology, Documentation Debt, Architecture Observations, ADR Candidates, Knowledge Map, Documentation Standards, Development Readiness, Release Readiness, Architecture Health. Further change to this section requires the process it defines — it does not change by direct edit.
+**Baseline**, established and frozen 22 July 2026. 10 documents at the 22 July 2026 baseline (the directory has since grown through the same process; 25 files as of 5 September 2026): Governance Manifest, Standard Evolution Methodology, Documentation Debt, Architecture Observations, ADR Candidates, Knowledge Map, Documentation Standards, Development Readiness, Release Readiness, Architecture Health. Further change to this section requires the process it defines — it does not change by direct edit.
 
 ## Adoption Status
 
@@ -67,7 +69,7 @@ This is a snapshot, not a normative document. For the full history and forward-l
 
 Per-document `Status` fields are authoritative; as a general guide:
 
-- **Normative (Status: Draft):** `Meta/`, `Models/`, `Language/`, most of `Core/`, `Domains/`, `Entities/`, `AI/`, most of `Memory/`, the Governance rule-sets (e.g. `Standard Evolution Methodology.md`), and Specification Chapters 1–2, 4–8.
+- **Normative (Status: Draft):** `Meta/`, `Models/`, `Language/`, most of `Core/`, `Domains/`, `Entities/`, `AI/`, most of `Memory/`, the Governance rule-sets (e.g. `Standard Evolution Methodology.md`), and Specification Chapters 1–8 (Chapter 3 contains no shall-statement and keeps Status Draft by Architecture Committee decision, `Specification/Committee Review Package.md` Section 8 item 5: status reflects chapter maturity as part of the normative specification, not shall-density).
 - **Informative (Status: Informative):** `Examples/`, `Reference Architecture/`, `Adoption/` in full, the Specification's Executive Overview and Committee Review Package, and most of `Governance/`'s registers and logs.
 
 ## Known Discrepancy (recorded, not corrected)

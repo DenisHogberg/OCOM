@@ -175,7 +175,7 @@ The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY**, w
 - **SHOULD NOT** indicates a practice that is generally discouraged.
 - **MAY** indicates an optional capability or implementation choice.
 
-This is the single authoritative definition of these key words for the entire specification. Independently of RFC 8174's own all-capitals restriction, this specification additionally extends the same defined meanings to the lowercase forms (**shall**, **shall not**, **should**, **may** — the convention already used throughout `Meta/`, `Models/`, `Core/`, and `Language/`): a document using a lowercase form intends the same normative weight as its uppercase equivalent above, by this specification's own convention, not because RFC 8174 itself extends that far. Any document restating this definition, rather than citing it, is a duplication to be corrected, not a second source.
+This is the single authoritative definition of these key words for the entire specification. Independently of RFC 8174's own all-capitals restriction, this specification additionally extends the same defined meanings to the lowercase forms (**shall**, **shall not**, **should**, **may**, and the forms **must** and **must not** as used in `Core/Constitution.md` — the convention already used throughout `Meta/`, `Models/`, `Core/`, and `Language/`): a document using a lowercase form intends the same normative weight as its uppercase equivalent above, by this specification's own convention, not because RFC 8174 itself extends that far. Any document restating this definition, rather than citing it, is a duplication to be corrected, not a second source.
 
 ---
 
@@ -200,10 +200,10 @@ Future revisions may introduce new concepts, models, and extensions without chan
 - Core-00 Constitution
 - Core-02 Principles
 - Core-03 Terminology
-- Core-04 Naming
-- Core-05 Modeling Rules
-- Core-06 Governance
-- Core-07 Versioning
+- Core-04 Modeling Rules
+- Core-05 Naming
+- Core-06 Versioning
+- Core-07 Governance
 
 ---
 
@@ -222,3 +222,4 @@ This document represents the initial draft of the specification and is subject t
 | 0.1 | 27 July 2026 | Added cross-references to Constitution §14 and §13; added Core-00 Constitution to Related Documents, per CAND-006 Step 0 integration |
 | 0.1 | 20 August 2026 | Added explicit RFC 2119 / RFC 8174 citation to Normative Language, making this section the specification's single authoritative source for MUST/SHOULD/MAY — per `Governance/Publication-Model.md` |
 | 0.1 | 21 August 2026 | Abstract reworded to lead with the canonical identity statement ("OCOM is an open, technology-independent operating model for organizations"), aligning with `ocom.uno` and `llms.txt`; "framework" retained as a secondary description of this document's own modeling apparatus, not as OCOM's primary identity noun — semantic positioning only, no change to normative content |
+| 0.1 | 5 September 2026 | Related Documents: corrected the Core-04/05 and Core-06/07 labels to match each document's own Document ID field (Modeling Rules is Core-04, Naming Core-05, Versioning Core-06, Governance Core-07); no identifier changed. Normative Language: the lowercase extension now names must and must not, the forms `Core/Constitution.md` uses; no requirement changed. |

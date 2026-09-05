@@ -14,7 +14,7 @@
 
 **Version:** 1.0
 
-**Last Updated:** 27 July 2026
+**Last Updated:** 21 August 2026
 
 **Adopted via:** `Governance/ADR-Candidates.md#cand-006`
 

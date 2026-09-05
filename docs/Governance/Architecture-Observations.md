@@ -450,7 +450,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If corroborated, a future Reference Case should state whether Ownership is mandatory for every managed Object or only for Entities, and align the Chapter 4 conformance sentence with its characteristic list.
 
-**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2) Independently corroborated by an external logic audit of commit 37c986a (5 September 2026), per Standard Evolution Methodology Rule 2; still awaiting a Reference Case.
 
 **Architect Response:** *(pending)*
 
@@ -474,7 +474,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Architect Response:** *(pending)*
 
-**Related:** `Meta/Identity.md`
+**Related:** `Meta/Identity.md`, `Adoption/Worked Example - Library Lending.md`
 
 ---
 
@@ -510,7 +510,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If corroborated, a future Reference Case should state that Metadata may carry non-authoritative copies (caches) of facts whose authoritative home is another record, or narrow the category list.
 
-**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2) Independently corroborated by an external logic audit of commit 37c986a (5 September 2026), per Standard Evolution Methodology Rule 2; still awaiting a Reference Case.
 
 **Architect Response:** *(pending)*
 
@@ -594,7 +594,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Architect Response:** *(pending)*
 
-**Related:** `Meta/Object.md`, `Meta/Metadata.md`, `Models/Entity.md`, `Specification/04 Meta Model.md`, `Specification/05 Object Model.md`
+**Related:** `Meta/Object.md`, `Meta/Metadata.md`, `Models/Entity.md`, `Specification/04 Meta Model.md`, `Specification/05 Object Model.md`, `Adoption/Worked Example - Library Lending.md`
 
 ---
 
@@ -604,17 +604,277 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Date observed:** 5 September 2026
 
-**Description:** Surfaced independently by two external reviews of the published site (5 September 2026). `Meta/Object.md` defines an Object as "an identifiable and governable element that exists within the operational model"; `Meta/Identity.md` defines Identity as "the persistent and unique representation of an Object". Neither "governable" nor "operational model" is defined at the Core, Models or Language tiers, and Governance is a referenced concept recorded as a governance candidate (`ADR-Candidates.md#cand-010`), not a Core Vocabulary term, although six term records (Identity, Metadata, Reference, Classification, Constraint, Policy) reference it. The published relationship graph shows 44 directed cycles among the 13 terms (35 mutual pairs); cycles are expected where terms define each other, but they make the circularity visible to any reader who checks the definitions.
+**Description:** Surfaced independently by two external reviews of the published site (5 September 2026). `Meta/Object.md` defines an Object as "an identifiable and governable element that exists within the operational model"; `Meta/Identity.md` defines Identity as "the persistent and unique representation of an Object". Neither "governable" nor "operational model" is defined at the Core, Models or Language tiers, and Governance is not a Core Vocabulary term and no OCOM document defines it as a per-Object characteristic; six term records (Identity, Metadata, Reference, Classification, Constraint, Policy) reference it, and `Adoption/Worked Example - Library Lending.md` (whose publication `CAND-010` authorizes) discloses the gap. No ADR Candidate records the gap itself. A third usage, Governance as an organizational framework for a class of Objects, appears in `AI/Evaluation/Evaluation Governance.md`, `AI/Prompts/Prompt Governance.md`, `AI/Tools/Tool Governance.md`; it is the per-Object sense applied to a class and is not covered by the two-sense note in `Specification/04 Meta Model.md`. The published relationship graph shows 44 directed cycles among the 13 terms (35 mutual pairs); cycles are expected where terms define each other, but they make the circularity visible to any reader who checks the definitions.
 
 **Impact:** A reviewer applying the published review question on definitions can show that the two foundational definitions close on each other through a word the specification does not define; conformance clauses that require an Object to "support governance" (`Specification/04 Meta Model.md`) inherit the same gap.
 
-**Recommendation:** Record only. If corroborated, a future Reference Case should either define "governable" once at the Core tier, in terms of the Core terms Ownership, Policy and Constraint, or restate the Object definition without it. Resolution belongs together with `CAND-010`.
+**Recommendation:** Record only. If corroborated, a future Reference Case should either define "governable" once at the Core tier, in terms of the Core terms Ownership, Policy and Constraint, or restate the Object definition without it. Resolution requires a Reference Case; no ADR Candidate exists for it yet.
 
 **Status:** Open; not escalated (external review sources; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
 
 **Architect Response:** *(pending)*
 
-**Related:** `Meta/Object.md`, `Meta/Identity.md`, `ADR-Candidates.md#cand-010`, `Specification/04 Meta Model.md`, `AO-021`
+**Related:** `Meta/Object.md`, `Meta/Identity.md`, `Adoption/Worked Example - Library Lending.md`, `Specification/04 Meta Model.md`, `Specification/07 Governance.md`, `AI/Evaluation/Evaluation Governance.md`, `AI/Prompts/Prompt Governance.md`, `AI/Tools/Tool Governance.md`, `AO-021`
+
+---
+
+## AO-024
+
+**Title:** Constitution's Architectural Principles Use Implementation Vocabulary Undefined at Any Tier and Carry No Marker Distinguishing Them From the Canonical Principles
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the canonical repository at commit 37c986a (5 September 2026). `Core/Constitution.md:25` states the principles "apply regardless of programming language, storage engine, deployment model, AI model, or business domain". The same document's Architectural Principles, `Core/Constitution.md:50-54`, read: "New sources integrate through Adapters and Normalizers.", "Identity Resolution thresholds are deployment configuration.", "Source trust is deployment configuration.", "Concept namespaces are deployment scoped.", "One deployment currently represents one organization."; Canonical Principle 9 (`:39`) adds "Domain knowledge belongs only to configuration, data and adapters." None of Adapter, Normalizer, Source trust, Concept namespace, deployment or threshold is defined in `Core/`, `Meta/`, `Models/`, `Language/`, `Memory/`, `AI/`, `Reference Architecture/` or `Specification/`. `Meta/Identity.md:127-136` defines Identity Resolution with no threshold concept; `Meta/Object.md:232-238` states the Object specification does not prescribe "deployment architectures"; `Core/Manifest.md:119-127` states the specification does not define software architecture, databases, APIs or implementation technologies. The only other occurrences of Adapter and Normalizer are in `AO-004` (`:175`), naming an implementation's `FilesystemDocumentationAdapter` and `FilesystemDocumentationNormalizer` classes as code facts. `Governance/ADR-Candidates.md:410` (CAND-006) records that the Architectural Principles "are explicitly *not* frozen the same way the Canonical Principles are" and "record the current architectural direction", but `Core/Constitution.md` itself, a "Verbatim transcription of the Decision text" (`:74`), carries no such marker, and its Meta-Principle (`:66`, "the Constitution prevails") does not say whether the Architectural Principles are part of what prevails. `Architecture-Release-Review-v1.0.md:57` closed the terminology check with "Terms used but not fully defined anywhere: two, both already tracked" (World Model, Autonomy level) and "No third was found beyond these in this pass."; Adapter, Normalizer and the other four terms were not caught by that pass, nor was the Memory Entry / Memory Record naming split (Constitution paragraph 4 against `Memory/Memory Record.md`, now GAP-004).
+
+**Impact:** A reader of Core-00 alone cannot tell that lines 50-54 are architectural direction rather than model rules, and can cite them against Principle 6 (`Core/Principles.md:77`) and `Core/Manifest.md:119-127`; substantively the section defines no technology, so Principle 6 is not violated, but the gap of status and vocabulary is real. Canonical Principle 9 names a location for domain knowledge ("adapters") that is undefined, so an implementer cannot tell whether Adapter and Normalizer are Conformance concepts or a description of one implementation's ingestion architecture. The Release Review's closure statement is falsified, so Part 3 cannot be cited as evidence that Constitution terminology is closed.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case drawn from an independent implementation's ingestion layer should choose between (a) moving the Architectural Principles out of Core-00 into an Architecture document that Core-00 references, and (b) keeping them in Core-00 with the CAND-006 status marker and an explicit statement that their terms are implementation vocabulary outside the model, defining Adapter and Normalizer once at whichever tier holds source integration. Either path is a Constitution change under CAND-006's governance implication and CAND-007 §4. Fold Adapter, Normalizer, Source trust, Concept namespace, deployment and threshold into `EPIC-D`'s terminology-closure Definition of Done alongside Autonomy level and Memory Entry.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Constitution.md` (lines 25, 39, 50-54, 66, 74), `Core/Manifest.md` (Scope), `Core/Principles.md` (Principle 6), `Meta/Identity.md`, `Meta/Object.md`, `Architecture-Release-Review-v1.0.md` Part 3, `Master-Architecture-Backlog.md` EPIC-D, `ADR-Candidates.md#cand-004`, `ADR-Candidates.md#cand-006`, `ADR-Candidates.md#cand-007`, AO-004, AO-021, AO-023, `Constitution-Step0-Summary.md` Decision 1, GAP-004
+
+---
+
+## AO-025
+
+**Title:** Decision Registers Carry Binding Decisions Under a Status That Declares Their Content Non-Normative
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the canonical repository (5 September 2026). `Governance/ADR-Candidates.md:13` and `Governance/Architecture-Observations.md:13` both read "**Status:** Informative". `Governance/Documentation-Standards.md:49` defines Informative as "non-normative. Explanatory, illustrative, or analytical material that imposes no requirement of its own. Used for `Examples/`, `Reference Architecture/`, and every `Governance/` analysis document", and `:48` assigns Draft to "`Governance/` (process documents)". Yet `ADR-Candidates.md:491` states "Sections 3, 4, and 7 are immediately binding on how the CDKO evaluates any future request", and `Core/Constitution.md:19` derives the Constitution's authority from that register ("**Adopted via:** `Governance/ADR-Candidates.md#cand-006`"). The taxonomy has been applied unevenly inside `Governance/`: `Publication-Model.md:113` records "Status changed Informative → Draft (this is a `Governance/` process document, not an analysis document, per `Documentation-Standards.md`'s Status Taxonomy)", and `Standard Evolution Methodology.md`, `Publication-Manifest.md` and `Release-Workflow.md` are Draft, while `ADR-Candidates.md`, `Architecture-Observations.md`, `Constitution-Step0-Summary.md` (which carries Decisions marked "Decided", `:39`), `Master-Architecture-Backlog.md` and `Governance-Manifest.md` (whose §9, `:65`, states "Every version of the specification shall be reproducible.") remain Informative. No document states where the binding force of a Decision resides: in the carrying register, in the Decision text, or in the Chief Architect role (`Governance-Manifest.md:75`). The four-value taxonomy has no value for a register whose individual entries are normative. `CAND-009` revision item (iv) (`ADR-Candidates.md:536`) recognises that a Status change alters enforceability, for `Entities/Overview.md` only.
+
+**Impact:** A reader applying the Status Taxonomy literally concludes that the Constitution was adopted through, and the Architecture Freeze is enforced through, documents that by their own Status impose no requirement. The Informative/Draft split inside `Governance/` is a per-document judgment, not a rule, and `PROJECT_STATUS.md:70-71` publishes that split as settled.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either add one sentence to the Status Taxonomy locating the binding force of a Decision in the Chief Architect's recorded Decision text rather than in the Status of the register that carries it, or re-classify the decision registers as Draft under the existing "process documents" clause, following the `Publication-Model.md:113` precedent and the scope-authorization discipline `CAND-009` applied to `Entities/Overview.md`.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Governance/Documentation-Standards.md` (Status Taxonomy), `Governance/ADR-Candidates.md` (`CAND-006`, `CAND-007`, `CAND-009` item (iv)), `Core/Constitution.md`, `Governance/Governance-Manifest.md`, `Governance/Constitution-Step0-Summary.md`, `Governance/Publication-Model.md`, `PROJECT_STATUS.md` ("What Is Normative vs. Informative")
+
+---
+
+## AO-026
+
+**Title:** Constitution v1.0 Was Edited Under the Architecture Freeze Without a Version Change or a Governance Record
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the canonical repository (5 September 2026). Commit `e0b54ed` (21 August 2026, "semantic: align OCOM public identity") added the sentence "OCOM (Object-Centric Operating Model) is an open, technology-independent operating model for organizations." to the Purpose section of `Core/Constitution.md` (`:25`). The document still reads "**Version:** 1.0" (`:15`); the only trace is the revision row at `:75`: "| 1.0 | 21 August 2026 | Added one identity sentence to Purpose ... Semantic positioning only - no Canonical Principle added, removed, or reworded; no constitutional meaning changed. |" (the "Last Updated: 27 July 2026" field at `:17` was stale and is corrected separately). Three rules in force at that date read against the edit: `CAND-007` §4 (`ADR-Candidates.md:464`), "no new Canonical Principle or Constitution amendment beyond the §9/§11 transcription in Section 3 above"; `Publication-Model.md:35`, Constitution changes via "RFC-like amendment only ... never an editorial edit"; `Core/Versioning.md:57`, Patch version "Incremented when documentation, examples, or editorial corrections are introduced." `Governance-Manifest.md:65` states "Every version of the specification shall be reproducible." No entry in `ADR-Candidates.md`, `Architecture-Observations.md` or `Documentation-Debt.md` records the edit. The label "Constitution v1.0" now denotes two different texts (27 July and 21 August 2026); the file set remains reproducible by commit, which `Publication-Model.md:47` names as the pinning mechanism, but not by version label. `CAND-006`'s amendment rule (`ADR-Candidates.md:408`) covers Canonical Principles only, so whether a Purpose sentence is an "amendment" is undefined; `CAND-007` §4 and `Publication-Model.md:35` use the broader word. `Publication-Manifest.md:36` already records the same no-bump pattern for `Meta/Organization.md`.
+
+**Impact:** The apex document's version label is not a reliable citation key, and a reviewer with repository access can show in one command that an editorial commit crossed the Freeze's own "no Constitution amendment" rule with no Decision behind it. Whether editorial, non-Principle text in the Constitution is amendable at all, and at which version increment, is not decided anywhere.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should decide whether the 21 August sentence is ratified retroactively by a Chief Architect Decision, with the Version raised to 1.0.1 per `Core/Versioning.md`, or reverted, and whether the Constitution track in `Publication-Model.md` admits a patch-level editorial class for non-Principle text.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Constitution.md`, `Core/Versioning.md`, `Governance/Publication-Model.md` (Versioning Model table), `Governance/Publication-Manifest.md`, `Governance/Governance-Manifest.md` §9, `ADR-Candidates.md#cand-006`, `ADR-Candidates.md#cand-007` §4, `Documentation-Debt.md#FW-007`, AO-008
+
+---
+
+## AO-027
+
+**Title:** Object Obligations Applied to Lifecycle and Registry Themselves Have No Terminating Rule
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the published site and repository (5 September 2026). `Specification/03 Core Concepts.md:19` makes Lifecycle a specialization of Object and `:51` adds Registry; `Meta/Object.md:202` and `:210` list Lifecycle and Registry among Examples of Objects. `Meta/Object.md:51-57`: "Every Object shall: ... support lifecycle management"; `Meta/Object.md:128`: "Every managed Object should participate in a Lifecycle appropriate to its purpose." The only normative Lifecycle model is Entity-scoped: `Models/Lifecycle.md:31` "define the operational existence of an Entity", `:41` "belong to exactly one Entity". Read together, a Lifecycle, being an Object, must support lifecycle management, but the Lifecycle that a Lifecycle (or a Policy, Registry or Contract) participates in is defined nowhere, and no clause states whether the chain terminates. `Models/Lifecycle.md:101-105` ("Changes to a Lifecycle definition shall preserve consistency ... Breaking changes should be versioned") and `Models/Relationship.md:108` ("A Relationship may have its own lifecycle independent of the participating Entities") show that non-Entity Objects are intended to have lifecycles without naming the model that governs them. The same question exists for Registry: `Meta/Registry.md:33` defines a Registry as "a managed collection of identifiable Objects"; a Registry is an Object; no text states whether a Registry is itself registered, or in which Registry. The audit's stronger conclusions (an infinite regress; a Registry must contain itself) do not follow: no clause requires a distinct Lifecycle per Lifecycle, and no clause requires any Registry to hold every Object (`Meta/Registry.md:62-68` scopes each Registry by "Registry Scope" and "Registered Object Types"; `:90` "Organizations shall define the appropriate scope for each Registry"). `Architecture-Release-Review-v1.0.md:61` checked two self-references and found them ordinary; this pair was not among them.
+
+**Impact:** A reader can show that the Core's universal obligations, applied to the Core's own constructs, have no stated stopping point; implementations can disagree on whether a Lifecycle, Policy or Registry object must carry a Lifecycle and what form it takes. The stronger charge is answerable, but the answer is not in the text.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should state one terminating rule: definitional Objects (Lifecycle, Policy, Registry, Contract) participate in a definition-level lifecycle (versioning, as `Models/Lifecycle.md` Lifecycle Evolution already implies) that applies to itself, and a Registry may register Registries, itself included. Resolve together with AO-022: defining "managed Object" as an Object in a Registry would otherwise leave the root Registry unmanaged.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Object.md`, `Meta/Registry.md`, `Models/Lifecycle.md`, `Models/Relationship.md`, `Specification/03 Core Concepts.md`, `Governance/Architecture-Release-Review-v1.0.md`, AO-009, AO-022, AO-023, AO-028
+
+---
+
+## AO-028
+
+**Title:** Lifecycle Is Bound to Exactly One Entity at the Models Tier and Reusable by Many at the Lifecycles Tier
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the published site and repository (5 September 2026). `Models/Lifecycle.md:39-41`: "Every Lifecycle shall: - belong to exactly one Entity;" and `:31`: "the complete set of States and permitted State Transitions that define the operational existence of an Entity." `Lifecycles/Lifecycles.md:33`: "A Lifecycle is a reusable operational model describing the allowed States and valid State Transitions of an Entity."; `:46`: "shall be reusable by multiple Entities;"; `:53-55`: "An Entity references a Lifecycle rather than redefining its own lifecycle. Multiple Entities may share the same Lifecycle." Both documents carry Status Draft, which `Governance/Documentation-Standards.md:48` defines as "normative, currently in force". `Specification/06 Lifecycle Model.md:17` (live at `ocom.uno/specification.md:445`) compiles the two sources into one paragraph, keeping "Every Entity shall have exactly one Lifecycle" and "A Lifecycle is a reusable operational model" while omitting the "belong to exactly one Entity" characteristic; the reading path is internally consistent (many Entities to one Lifecycle) but silently selects one side of a shall-level divergence between its sources, and the source footnote at `:45` records no such choice. `Specification/06:13` also classes `docs/Lifecycles/` as "non-normative" Reference Material while `Documentation-Standards.md:48` lists `Lifecycles/` among Draft-normative directories, so the tier of the reuse rule is itself ambiguous. The underlying cause is that no document distinguishes a Lifecycle definition (a reusable type) from the Lifecycle an Entity follows (an instance): `Models/Lifecycle.md:97` reads at instance level, `Lifecycles/Lifecycles.md:53` at definition level, and `Domains/Operations/Operations_Lifecycles.md:214` ("Each Operational Entity owns its own Lifecycle") follows the instance reading.
+
+**Impact:** An implementation that models one shared Lifecycle referenced by many Entities conforms to `Lifecycles/Lifecycles.md` and violates `Models/Lifecycle.md:41`; one that copies a Lifecycle per Entity does the reverse. A reviewer can quote the two shall clauses side by side, and can show that the compiled chapter resolved the divergence without saying so.
+
+**Recommendation:** Record only. Add an editorial note to Chapter 6 recording the divergence, as was done for Chapter 8 under AO-014: "Editorial note (5 September 2026): the source documents diverge on Lifecycle cardinality. `Models/Lifecycle.md` requires every Lifecycle to 'belong to exactly one Entity'; `Lifecycles/Lifecycles.md` requires every Lifecycle to 'be reusable by multiple Entities'. This chapter states the Entity-side rule (every Entity shall have exactly one Lifecycle) and the reuse sentence; it does not resolve the divergence, which is recorded as AO-028. No requirement changed." If corroborated, a future Reference Case should state whether "Lifecycle" names the reusable definition or the per-Entity progression, restate `Models/Lifecycle.md:41` accordingly, and settle whether `Lifecycles/Lifecycles.md` is normative or Reference Material.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Models/Lifecycle.md`, `Models/State.md`, `Lifecycles/Lifecycles.md`, `Specification/06 Lifecycle Model.md`, `Governance/Documentation-Standards.md`, `Core/Terminology.md`, `Domains/Operations/Operations_Lifecycles.md`, AO-014, AO-022, AO-027
+
+---
+
+## AO-029
+
+**Title:** Entity Names Four of Object's Seven Core Characteristics as Shared; the Minimal Entity Omits Metadata and Classification Although Specializations Shall Preserve Core Characteristics
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the published site (5 September 2026). `Meta/Object.md:65-73` lists seven core characteristics (Identity, Metadata, Classification, Relationships, Lifecycle, Ownership, Governance) and `Meta/Object.md:224` states "Specifications may extend Object but shall preserve its core characteristics" (restated in `Specification/04 Meta Model.md:23`). `Models/Entity.md:171` declares "An Entity is a specialization of Object as defined in the Meta specification.", and `:173` states that an Entity "shares the Identity, Ownership, Relationship, and Lifecycle principles defined for Object", naming four of the seven and omitting Metadata, Classification and Governance. The Characteristics list (`Models/Entity.md:41-51`) does require an Entity to "participate in relationships" and "be governed by the rules of this specification" but never mentions Metadata or Classification, and the Minimal Entity (`:156-164`: "Identifier, Name, Domain, Owner, Attributes, State, Lifecycle") contains neither. `Specification/03 Core Concepts.md:23` summarises Entity with six properties and none of the four; Chapter 3 is a self-declared at-a-glance orientation (`:13`), so the audit's chapter-level count is not itself a defect. Read against the Core Characteristics list the primary specialization is narrower than its base; read against `Meta/Object.md:98` ("Objects may contain descriptive metadata") and `:146` ("Objects may be classified") it is not. The Object-side modality split is AO-022; the Entity-side inheritance gap is recorded here.
+
+**Impact:** A reviewer applying the published review questions can show that the specification's own preservation rule for specializations is not satisfied by its primary specialization as written, or is satisfiable only by reading Metadata and Classification as optional, which the Core Characteristics list does not say. Implementations can disagree on whether a conforming Entity must carry Metadata or Classification.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either restate `Models/Entity.md` Relationship to Other Specifications to name all seven characteristics and state which are inherited unchanged, or state once, at the Object tier, which of the seven are mandatory for every specialization and which are optional, resolving together with AO-022. Chapter 3 needs no change. An editorial note in `Specification/05 Object Model.md`, in the form of the existing Relationship note, may flag the difference: "Editorial note. `Meta/Object.md` lists seven core characteristics that every specialization shall preserve; this chapter's Entity summary names four of them as shared and the minimum conforming Entity lists neither Metadata nor Classification. The difference is recorded (AO-029), not resolved, per editorial policy."
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Object.md`, `Models/Entity.md`, `Specification/03 Core Concepts.md`, `Specification/04 Meta Model.md`, `Specification/05 Object Model.md`, AO-005, AO-015, AO-022
+
+---
+
+## AO-030
+
+**Title:** Domain and Entity Each Require the Other to Exist; No Text States How the First Pair Is Formed
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the published site (5 September 2026). `Models/Domain.md:31` defines a Domain as "an operational boundary responsible for governing one or more Entities"; `Models/Domain.md:45` requires every Domain to "govern one or more Entities" and `:121` forbids a Domain to "govern undefined Entities". `Models/Entity.md:45` requires every Entity to "belong to exactly one primary Domain", `:127` restates it ("Every Entity belongs to one primary operational Domain."), and the Minimal Entity (`:156-164`) lists Domain as a mandatory element. `Specification/03 Core Concepts.md:27` and `Specification/05 Object Model.md:37` (live at `ocom.uno/specification.md:394`) publish the same pair. Mutual reference between peer definitions is ordinary in a vocabulary; what makes this pair an implementation question is that both sides carry a shall with a cardinality floor. Read as existence conditions, a Domain is non-conforming until it governs an Entity and an Entity is non-conforming until it belongs to a Domain, so the first pair cannot be created one at a time under either record's shall. AO-023 covers definitional cycles among the 13 Meta terms only; Entity and Domain are Models-tier.
+
+**Impact:** Low for readers, since mutual reference between peer definitions is expected; real for implementers, who must decide whether an empty Domain or a Domain-less Entity during creation is a conformance violation or a transient state, with no guidance. Registries and shape-checkers that validate on every write will reject the first Domain or the first Entity of every model.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case drawn from a real bootstrap of a model (first Domain, first Entity) should state either that "govern one or more Entities" is a steady-state expectation rather than a creation-time requirement, or that a Domain and its first Entity are established together, and place that sentence in `Models/Domain.md`.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Models/Domain.md`, `Models/Entity.md`, `Specification/03 Core Concepts.md`, `Specification/05 Object Model.md`, AO-001, AO-023
+
+---
+
+## AO-031
+
+**Title:** Identifier Reuse After Retirement Is Governance-Permitted in Language but Absolutely Forbidden in Meta
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the repository (5 September 2026). `Meta/Identity.md` Identity Assignment: "Once assigned, Identity shall not be reused for another Object." (`:106`); Conformance: "prevent Identity reuse" (`:177`). `Language/Identifier Syntax.md` Identifier Lifecycle: "Identifiers shall remain associated with the same Identity throughout their effective lifetime." (`:132`) and "If an element is retired, its identifier should not be reassigned unless organizational governance explicitly permits reuse." (`:134`). `Identifier Syntax.md:35` defines an Identifier as "the syntactic representation of an Identity within an OCOM model", and `:39` allows one Identity to have several identifiers, so the two records are not literally about the same construct; but a reassigned identifier is, to every consumer of a serialized model, indistinguishable from a reused Identity, and the Language record turns Meta's unconditional shall-not into a should-not with a governance escape hatch. Under `Core/Manifest.md:178` lowercase shall/should carry RFC 2119 weight, so this is a modality downgrade across tiers, not a stylistic variance. Distinct from AO-016 (the replacement-policy exception inside `Meta/Identity.md` itself), AO-009 (scope) and AO-010 (merge/split); no register entry mentions `Language/Identifier Syntax.md`.
+
+**Impact:** An implementation that recycles retired identifiers under a documented governance policy is conformant to `Language/Identifier Syntax.md` and non-conformant to `Meta/Identity.md` Conformance; two implementations exchanging serialized models can disagree on whether an identifier value denotes one Object or two across time.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should state whether identifier reuse after retirement is ever permitted, and if so, define what distinguishes identifier reuse from Identity reuse (for example, a mandatory Version or Scope component that changes on reassignment); it should also settle whether Language may weaken a Meta obligation at all.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Identity.md`, `Language/Identifier Syntax.md`, `Core/Manifest.md` (Normative Language), AO-009, AO-010, AO-016
+
+---
+
+## AO-032
+
+**Title:** Per-Document Conformance Sections Have No Stated Relationship to the Core Conformance Level
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the published site (5 September 2026). Sixty-one documents open a Conformance section with "A compliant implementation shall" (`Meta/Object.md:244-246`: "# Conformance / A compliant implementation shall ensure that every managed Object:"; 13 in `Meta/`, 34 in `AI/`, 6 in `Memory/`, 8 in `Language/`), 15 more with "A conforming implementation shall", and 70 `Domains/` documents with "A conforming <Domain> implementation shall". The only global statements are `Language/Conformance.md:77-85` ("A conforming implementation shall: implement the required language constructs; preserve language semantics; ... Mandatory requirements are normative.") and `Specification/08 Conformance.md:40` ("Core Conformance ... supports all mandatory requirements defined in Chapters 4–6"). No document states whether the per-document sections are the constituent Mandatory Requirements of Core Conformance, or which of them count: `Specification/03 Core Concepts.md:64` calls AI-specific concepts "extensions, not prerequisites", yet `AI/` holds 34 of the 61 blocks; `Memory/` and `Domains/` blocks fall outside Chapters 4-6 entirely. Chapter 8's editorial note (`:19`) addresses the model-versus-implementation question (AO-014) and its Note on scope (`:44`) addresses profile mechanics (CAND-002); neither addresses aggregation. `Core/Manifest.md:184` ("Conformance to this specification requires compliance with the normative documents that form part of this specification") implies all Draft documents bind, which contradicts the Chapters 4-6 limit in Chapter 8. `Master-Architecture-Backlog.md:133` already names every `# Conformance` section as a consumer of criteria EPIC-E has yet to define.
+
+**Impact:** An assessor applying Chapter 8 (the clause the Evidence Register promises to check implementations against) cannot determine which of the 146 per-document Conformance sections constitute Core Conformance; two assessors could reach opposite verdicts on an implementation that satisfies every `Meta/` and `Models/` requirement but none in `AI/`, `Memory/` or `Domains/`.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should propose one aggregation rule, for example: Core Conformance is satisfied by the Conformance sections of the documents compiled into Chapters 4 to 6 (`Meta/`, `Models/`); the Conformance sections of `Memory/`, `AI/`, `Domains/` and `Entities/` bind Extended or Profile Conformance only; and `Core/Manifest.md`'s Conformance sentence is to be read subject to that rule. Any change belongs to EPIC-E.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Language/Conformance.md`, `Specification/08 Conformance.md`, `Specification/03 Core Concepts.md`, `Core/Manifest.md`, `Meta/Object.md`, `Master-Architecture-Backlog.md` EPIC-E, `ADR-Candidates.md#cand-002`, AO-014, FW-003, FW-004
+
+---
+
+## AO-033
+
+**Title:** Owner Is Untyped and Its Admissible Kinds Differ Between Core Terminology and the Ownership Record, so Identity, Governance and Audit Do Not Reach the Owner
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the repository (5 September 2026). `Core/Terminology.md:69` defines Owner as "The role, domain, or organizational unit accountable for an entity." `Meta/Ownership.md:35` states "Ownership identifies the individual, team, organizational unit, or system responsible for governing an Object during all or part of its lifecycle."; the word "role" does not occur in that document, and `Specification/04 Meta Model.md:61` (the published wording, live at `ocom.uno/specification.md:342`) repeats the Ownership.md list. The two lists share only "organizational unit": Terminology admits a Domain (defined at `Core/Terminology.md:50` as "A logical boundary responsible for governing one or more entities") and a role, and scopes Owner to an entity; Ownership.md admits an individual, a team and a system, and scopes Owner to any managed Object. `Core/Terminology.md:24` states "All terms defined here are authoritative", so the repository carries two authoritative and non-overlapping answers. `Meta/Ownership.md:64-70` requires every Ownership assignment to define an "Owner" with no type constraint; `Meta/Identity.md:33` defines Identity only for Objects ("the persistent and unique representation of an Object"), and `Meta/Ownership.md:195` ("Audit records shall remain immutable.") governs the assignment record, not the party named in it. `Meta/Organization.md:33` makes Organization an Object, and `Entities/` defines Employee, Team and Department, but no Core text requires an Owner to be an Object or any specialization; `Models/Entity.md:67` requires "one responsible owner" without saying what may fill the slot. This is the Ownership-record analogue of AO-020, which records the same defect for Contract, Capability and Policy participants. Neither AO-015 (modality) nor GAP-002 (missing glossary entries) records which kinds of party may hold Ownership.
+
+**Impact:** An implementation recording a Domain or a role as Owner conforms to Core-03 but has no counterpart in `Meta/Ownership.md`; one recording a system or an individual conforms to `Meta/Ownership.md` but not to Core-03. An Owner can be a free-text role or an external system with no Identity, no Lifecycle, no Governance and no audit trail, while Principle 3 ("Ownership shall never be implicit") and every accountability clause assume the accountable party is itself identifiable. Two implementations can disagree on whether "Owner: Finance" (a string) is conformant. Whether a Domain may be an Owner has consequences for AO-001. The published site is internally consistent because only the Ownership.md wording is published.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should state once, at the Meta tier and together with AO-020, that the Owner of an Ownership assignment is an Object (or a named specialization such as Organization or an Entity), which kinds of party may hold Ownership and whether a Domain is among them, and align `Core/Terminology.md`'s Owner entry to that record; track together with `GAP-002`, since the glossary entry will be revised in the same pass.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Terminology.md`, `Meta/Ownership.md`, `Meta/Identity.md`, `Meta/Object.md`, `Meta/Organization.md`, `Core/Principles.md`, `Models/Entity.md`, `Specification/04 Meta Model.md`, `ADR-Candidates.md#cand-004`, AO-001, AO-015, AO-020, GAP-002
+
+---
+
+## AO-034
+
+**Title:** Reference and Relationship Are Distinguished Only by an Undefined Semantic Test
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the repository (5 September 2026). `Meta/Reference.md:33`: "A Reference is a directed association from one Object to another."; `Meta/Relationship.md:33`: "A Relationship is a governed semantic association between Objects." Core Characteristics overlap almost completely: Reference (`:64-75`) requires Source Object, Target Object, Reference Direction and may add Reference Type, Reference Purpose, Validity Period, Status; Relationship (`:64-78`) requires Identifier, Source Object, Target Object, Relationship Type and may add Direction, Cardinality, Status, Validity Period, Constraints, Governance Rules. Both records allow an independent lifecycle (`Meta/Reference.md:133`: "References may have their own lifecycle independent of the referenced Objects."; `Meta/Relationship.md:130`: "Relationships may possess an independent lifecycle."). The stated discriminator is `Meta/Relationship.md:37`: "Unlike a Reference, a Relationship conveys business meaning", restated in `Specification/03 Core Concepts.md:31` ("a Reference is a pointer, a Relationship carries business meaning") and relied on by `CAND-004` (`ADR-Candidates.md:180`) as an existing two-weight mechanism. "Business meaning" is not defined, and `Meta/Relationship.md:89` lists "Association" as a Relationship Type, so a typed Reference and an Association Relationship carry the same fields. The audit's word "indistinguishable" overstates: Relationship requires an Identifier and a Type, Reference requires a Direction and has no Identifier. The Chapter 5 editorial note (`Specification/05 Object Model.md:42`) addresses only the Meta-versus-Models framing of Relationship; AO-017 addresses arity, direction and cardinality. Neither addresses the Reference boundary.
+
+**Impact:** Two conforming implementations can model the same link as a Reference in one and as a Relationship in the other, with different mandatory fields and different governance expectations, while both claim conformance. Reviewers applying the published review questions can show the distinction is asserted, not testable.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either state a structural criterion (for example: a Reference has no Identifier of its own and no Relationship Type; anything with a Type is a Relationship) or make Reference a named Relationship Type, so that the distinction becomes checkable.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Reference.md`, `Meta/Relationship.md`, `Models/Relationship.md`, `Specification/03 Core Concepts.md`, `Specification/05 Object Model.md`, `ADR-Candidates.md#cand-004`, AO-002, AO-017, AO-019
+
+---
+
+## AO-035
+
+**Title:** Overview Documents Restate Definitions in Different Words, Contravening Principle 7 for AI Agent, Event, Context, Prompt, Tool, Evaluation and Knowledge
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the repository (5 September 2026). `Core/Principles.md:85`: "Each operational concept shall have a single authoritative definition within the model."; `Language/Vocabulary.md:35`: each term "shall have a single unambiguous meaning within the specification". Counted definitional sentences: AI Agent 5 (`AI/Overview.md:25` "an autonomous operational component ..." and `:33` "a software entity that performs business tasks ...", `AI/Agents/Overview.md:33` "an operational software component ...", `AI/Agents/Agent.md:31` "an autonomous operational entity ...", `Entities/AI-Agent/AI Agent.md:31` "a business Entity representing an artificial actor ..."); Event 3 (`Models/Event.md:31` "an immutable record describing something that has occurred"; `Entities/Event/Event.md:31` "a business Entity representing the occurrence of a business action"; `Domains/Common/Domain Events.md:31`); Context 3 (`AI/Context/Context.md:31` "a dynamically assembled collection of information relevant to a specific execution" plus the identical pair `AI/Context/Overview.md:33` and `AI/Agents/Context.md:33` already recorded as OBS-001 / CAND-001); Prompt 3 (`AI/Prompts/Overview.md:31` and `:33`, `AI/Prompts/Prompt.md:31`; the audit undercounts as 2); Tool, Evaluation and Knowledge 2 each (`AI/Tools/Overview.md:31` vs `AI/Tools/Tool.md:31`, `AI/Evaluation/Overview.md:31` vs `AI/Evaluation/Evaluation.md:31`, `AI/Knowledge/Overview.md:31` vs `AI/Knowledge/Knowledge.md:31`). The pattern is structural: every `AI/` section has an Overview.md and a concept file that each carry a "# Definition" heading. `PROJECT_STATUS.md:39` lists `AI/` as released v0.1 content with Status Draft, so these are normative texts, not commentary. Only the verbatim Context copy is recorded.
+
+**Impact:** A reader cannot tell which sentence is authoritative; AI Agent is simultaneously a component, an entity and an Entity (a specialization of Object with a required Owner, State and Lifecycle), and Event is both an immutable record and a business Entity, which are different Object specializations under `Specification/04 Meta Model.md:23`. The specification's own Principle 7 is violated in its released text, which a launch-day reviewer will quote.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should fix one authoritative Definition per term (the concept file), demote Overview.md "# Definition" sections to a cross-reference, and decide whether `Entities/AI-Agent` and `Entities/Event` are profiles of the `AI/` and `Models/` concepts or distinct Entities with their own names. Resolve CAND-001 in the same pass.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Principles.md` (Principle 7), `Language/Vocabulary.md`, `AI/Overview.md`, `AI/Agents/Overview.md`, `AI/Agents/Agent.md`, `Entities/AI-Agent/AI Agent.md`, `Models/Event.md`, `Entities/Event/Event.md`, `Domains/Common/Domain Events.md`, `AI/Context/Context.md`, `AI/Prompts/Overview.md`, `AI/Prompts/Prompt.md`, `AI/Tools/`, `AI/Evaluation/`, `AI/Knowledge/`, OBS-001, `ADR-Candidates.md#cand-001`, GAP-002
+
+---
+
+## AO-036
+
+**Title:** Fifty-Nine Shall Clauses Are Per-Record Template Output Rather Than Subject-Specific Obligations
+
+**Date observed:** 5 September 2026
+
+**Description:** Surfaced by an external logic audit of the repository (5 September 2026). Three sentences recur verbatim as normative clauses: "Audit records shall remain immutable." (22 files: 8 in `Meta/` (Classification, Constraint, Contract, Ownership, Policy, Reference, Registry, Relationship), 14 in `AI/`; e.g. `Meta/Reference.md:163`); "Breaking semantic changes shall require explicit governance." (16 files, all `Domains/`, e.g. `Domains/HR/HR_KPIs.md:246` and `Domains/Finance/Finance_KPIs.md:207`, each closing an identical list "- improved calculation methods; - compatibility-preserving enhancements."); "Organizations shall preserve:" followed by a per-record list (21 files across `Meta/`, `AI/` and `Language/Schema.md:132`). In every case the sentence closes a template section ("# Auditability", a KPI evolution section, an "# Evolution" or "# Governance" section) whose preceding list items are also template text; 59 of the 2138 shall clauses in `docs/` are therefore template restatements. `Core/Manifest.md:178` already states, for the key-word definition, that restating rather than citing "is a duplication to be corrected, not a second source"; no equivalent rule covers cross-record obligations, and `Architecture-Health.md` counts these clauses as normative content. The clauses do not contradict each other and none is wrong on its own.
+
+**Impact:** Normative weight is inflated, the same obligation can drift silently when one copy is edited, and a reviewer can show that record-level shall clauses were generated rather than derived from each concept. Consolidation would move obligations between tiers and is therefore not an editorial change.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either promote each template obligation to a single Core-tier clause (audit immutability under `Meta/Object.md` Auditability; semantic-change governance under `Core/Versioning.md`) with records citing it, or mark the template sections as non-normative structure per `Documentation-Standards.md`.
+
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Manifest.md`, `Core/Versioning.md`, `Meta/Object.md`, `Meta/Reference.md`, `Language/Schema.md`, `Governance/Documentation-Standards.md`, `Governance/Architecture-Health.md`, AO-022, AO-035
 
 ---
 
@@ -634,3 +894,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 4 September 2026 | Added AO-009 through AO-013 (identity scope, identity merge/split, policy exception precedence, temporal boundary semantics, event validity/trust), evidenced by an external adversarial review of the published site; all recorded, none escalated, per Standard Evolution Methodology Rules 1 and 2 |
 | 0.1 | 4 September 2026 | Added AO-014 through AO-022 (conformance scope, ownership modality, identity replacement clause, relationship arity/direction/cardinality, metadata categories, organization participation, participant lists, evidence pillar, object obligation modality), evidenced by an external pre-launch red-team review of the published site; all recorded, none escalated |
 | 0.1 | 5 September 2026 | Added AO-023 (Core definitions close on each other through the undefined word "governable"), surfaced independently by two external reviews of the published site; record only, not escalated, tracked with CAND-010 and AO-021. |
+| 0.1 | 5 September 2026 | Added AO-024 through AO-036 (Architectural Principles vocabulary, register Status, Constitution edit under the Freeze, no terminating rule for Object obligations on Lifecycle and Registry, Lifecycle cardinality, Entity versus Object characteristics, Domain and Entity bootstrap, identifier reuse, conformance aggregation, Owner typing, Reference versus Relationship, duplicated AI definitions, template shall clauses), surfaced by an external logic audit of commit 37c986a; all record only, not escalated. AO-015 and AO-018 marked independently corroborated; AO-016 and AO-022 Related extended; AO-023 corrected (no ADR Candidate records the Governance gap; CAND-010 is the Worked Example's publication authorization) and the third usage of Governance in `AI/` added. |

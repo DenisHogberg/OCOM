@@ -140,7 +140,7 @@ A team adopting OCOM can reuse this sequence directly: Identity, then Events, th
 
 # Appendix: The Result at a Glance
 
-After the rollout, every core OCOM concept has a concrete counterpart in the business.
+After the rollout, every term of the Core Vocabulary (13 terms) has a concrete counterpart in the business. Lifecycle, State and Domain, which are defined at the Models tier, are not mapped in this table.
 
 | OCOM concept | In this operator it is | Concrete example |
 |---|---|---|

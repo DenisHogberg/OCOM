@@ -26,7 +26,9 @@ This is a running log of periodic maturity snapshots of the OCOM Specification, 
 
 # Quality Metrics
 
-Current state, updated by the CDKO with every new snapshot.
+State at the 22 July 2026 snapshot, updated by the CDKO with every new snapshot.
+
+Counting basis: `Documents` counts `.md` files under `docs/` excluding `README.md` index files. The values below are as of 22 July 2026 (commit `38f235a`) and have not been refreshed since; the 22 July snapshot's figure of 341 counts every `.md` file including README indexes at the v0.1 release commit `5e2b7e6`. As of 5 September 2026 the repository holds 388 `.md` files under `docs/` (315 excluding README indexes) and 25 files in `Governance/`.
 
 | Metric | Value |
 |---|---|

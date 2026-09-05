@@ -17,7 +17,7 @@ Meta-model (`Meta/`), normative structural models (`Models/`), language and conf
 `docs/Adoption/`: a Getting Started guide, a First Pilot guide, an FAQ, and a Common Mistakes guide, restating the existing specification for a first-time reader.
 
 **Publication Node: ocom.uno.** 3 August 2026.
-Source-of-truth projections of this repository published as a machine-authoritative site: Vocabulary, Specification reading path, Comparisons, Knowledge API, Graph JSON-LD, Discovery, and llms.txt. The site is a rebuildable projection of the repository, never a second source of truth.
+Source-of-truth projections of this repository published as a machine-authoritative site: Vocabulary, Specification reading path, Comparisons, Knowledge API, Graph JSON-LD, Discovery, and llms.txt. Vocabulary, the Specification reading path and the Adoption pages are rebuildable projections of the repository; the site additionally holds its own informative records (the comparisons, the Evidence Register, the How to Review note, the release record, the Observatory reports and the Why essay), none of which defines a term or carries normative weight, and none of which is a second source of truth for anything the repository defines.
 
 **Implementation Reference Case (EXAMPLES-CASE-PERFMKT-01).** 12 August 2026.
 An anonymized end-to-end adoption narrative in `Examples/Implementation-Case/`: the sequence a real rollout follows (identity first, events and evidence second, the commercial layer last), including the mistakes. Distilled from real rollouts conducted under NDA; the organization, names, and details are fictionalized.
