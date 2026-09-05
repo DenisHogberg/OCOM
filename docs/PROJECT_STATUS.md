@@ -31,7 +31,7 @@ This is a snapshot, not a normative document. For the full history and forward-l
 | Meta-model | `Meta/` | Released in v0.1 |
 | Structural models | `Models/` | Released in v0.1 |
 | Language & Conformance | `Language/` | Released in v0.1 |
-| Domain profiles (12 domains) | `Domains/` | Released in v0.1 |
+| Domain profiles (13 domains) | `Domains/` | Released in v0.1 |
 | Entity catalog | `Entities/` | Released in v0.1 |
 | Reference Architecture | `Reference Architecture/` | Released, Informative |
 | Worked example (iGaming) | `Examples/` | Released, Informative |

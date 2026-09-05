@@ -32,7 +32,7 @@ Repository navigation (breadcrumbs, README indexes) shows folder structure. This
 docs/
 ├── AI/                      — AI agents, context, evaluation, knowledge, prompts, tools
 ├── Core/                    — Governance, manifest, modeling rules, naming, principles, terminology, versioning
-├── Domains/                 — 12 business domains + Common
+├── Domains/                 — 13 business domains + Common
 ├── Entities/                — Core business entities
 ├── Examples/                — Worked examples (iGaming)
 ├── Governance/               — This section
