@@ -77,7 +77,7 @@ The rollout followed the grain of the model's own design principles: Evidence Be
 
 **Problem.** The finance spreadsheet stored balances directly, so two copies always disagreed.
 
-**What was applied.** A single governed ledger of money events became the source of truth. **Balance was never stored, always computed** from the events.
+**What was applied.** A single governed ledger of money events became the source of truth. **Balance was never stored, always computed** from the events. That was this operator's design choice; the specification does not prescribe how, or whether, events are persisted.
 
 **The decision that mattered.** A derived number is never written back as if it were a fact. It is a projection of the events, so it cannot drift from them. This is the Constitution's Immutable Memory principle (memory is append-only; corrections are new entries) applied to money.
 
@@ -136,7 +136,7 @@ The order was not arbitrary, and it is the most transferable part of this case.
 3. **Evidence before state.** Record events, compute the current view. Never store a conclusion you cannot re-derive.
 4. **Govern the model last, and hard.** Freeze the core once it works, so it stays small.
 
-A team adopting OCOM can reuse this sequence directly: Identity, then Events, then a computed source of truth, then Registries, then the commercial and governance layers, then projections.
+A team adopting OCOM can reuse this sequence directly: Identity, then Events, then a computed source of truth, then Registries, then the commercial and governance layers, then projections. The sequence is an order, not a build list: none of the phases, storage choices or projections is required by the specification.
 
 ---
 
