@@ -94,7 +94,7 @@ Illustrative only. Conformance to OCOM is determined exclusively by the normativ
 
 ## Try This on Your Own Model
 
-**Try OCOM on your own model → [Shape Check](https://claude.ai/code/artifact/b331b03b-1f22-4796-a907-8df6f66bd126)**
+**Try OCOM on your own model → [Shape Check](https://ocom.uno/shape-check)**
 
 A separate, read-only tool: paste your own model's field names and see which of the Core Characteristics above it already has a name for. It is not part of this Specification and not a validator; it is authorized and governed as a Consumer Tool by ADR Candidate CAND-013 (Decided, 21 August 2026). See the tool's own page for exactly what it checks and doesn't.
 
@@ -102,7 +102,7 @@ See OCOM Shape Check in action
 
 ![Pasting a model's field names into OCOM Shape Check, running the coverage check, and reviewing the Required/Optional result with a link out to the OCOM vocabulary](assets/shape-check-demo.gif)
 
-Try it yourself → [Shape Check](https://claude.ai/code/artifact/b331b03b-1f22-4796-a907-8df6f66bd126)
+Try it yourself → [Shape Check](https://ocom.uno/shape-check)
 
 ## Run a First Pilot
 

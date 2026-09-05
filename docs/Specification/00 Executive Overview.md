@@ -10,7 +10,7 @@
 
 Most organizations describe themselves through the systems they happen to use — an ERP here, a CRM there, a spreadsheet no one remembers the origin of. When a platform changes, the description of the organization changes with it, even though the organization itself did not.
 
-OCOM (Object-Centric Operating Model) takes a different starting point. It describes an organization through the things it manages and the relationships between them — independently of the software used to run it. A customer, a payment, a campaign, a case: each is described once, consistently, in a way that stays valid whether it lives in one system today and a different one next year.
+OCOM (Object-Centric Operating Model) takes a different starting point. It describes an organization through the things it manages and the relationships between them — independently of the software used to run it. A customer, a payment, a campaign, a case: each is described once, consistently, in a way that stays valid whether it lives in one system today or a different one next year.
 
 The result is a shared operational language. The same description can be read by a person trying to understand how a business works, by a system that needs to exchange data reliably with another system, and by software that reasons about the organization's operations — without three different, drifting versions of "what a customer is" or "what happens when an order is cancelled."
 

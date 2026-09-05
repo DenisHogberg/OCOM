@@ -79,7 +79,7 @@ The rollout followed the grain of the model's own design principles: Evidence Be
 
 **What was applied.** A single governed ledger of money events became the source of truth. **Balance was never stored, always computed** from the events.
 
-**The decision that mattered.** A derived number is never written back as if it were a fact. It is a projection of the events, so it cannot drift from them. This is the memory-first architecture from the specification, applied to money.
+**The decision that mattered.** A derived number is never written back as if it were a fact. It is a projection of the events, so it cannot drift from them. This is the Constitution's Immutable Memory principle (memory is append-only; corrections are new entries) applied to money.
 
 **Outcome.** There was exactly one balance for a partner, and it always matched its own history.
 
