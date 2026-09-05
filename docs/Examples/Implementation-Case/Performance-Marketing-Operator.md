@@ -24,9 +24,7 @@ This document tells the story of *how* an organization adopted OCOM, in the orde
 
 It is a Reference Case. It demonstrates the model, it does not extend it. Every concept named here is defined normatively in the Core Vocabulary or at the Models tier of the specification and only referenced from this document.
 
-The organization is **fictional**. "Meridian" is a placeholder for any performance-marketing operator, used purely for illustration. No real company, brand, or person is named or implied.
-
-Distilled from real rollouts conducted under NDA; the organization, names, and details are fictionalized.
+The rollouts behind this case are **real** and were conducted under NDA; the organization, names, and details are fictionalized. "Meridian" is a placeholder for any performance-marketing operator, used purely for illustration. No real company, brand, or person is named or implied.
 
 ---
 

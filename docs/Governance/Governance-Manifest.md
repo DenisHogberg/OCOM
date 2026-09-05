@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 July 2026
+**Last Updated:** 5 September 2026
 
 ---
 
@@ -70,6 +70,18 @@ Governance is part of OCOM, not an external process applied to it.
 
 ---
 
+# Roles
+
+Three roles appear in the governance record. They denote responsibilities, not separate people.
+
+- **Chief Architect**: decides. Resolves Architecture Observations, accepts or rejects ADR Candidates, and owns the Architect Response field.
+- **CDKO** (Chief Documentation & Knowledge Officer): records. Maintains this section, logs observations and documentation debt, and does not resolve them.
+- **Architecture Committee**: reviews. The review role for the Specification reading path (`Specification/Committee Review Package.md`); its decisions appear as "Architecture Committee Approved" in provenance notes.
+
+At the current stage all three roles are held by the specification's author. Independent validation is counted as zero on the published Evidence Register until the roles are held by others.
+
+---
+
 # Relationship to OCOM Architecture
 
 These principles govern the Governance section itself and the process of maintaining the specification. They do not define, extend, or modify the architectural concepts described in Meta, Models, or Reference Architecture.
@@ -81,3 +93,4 @@ These principles govern the Governance section itself and the process of maintai
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 22 July 2026 | Initial draft |
+| 0.1 | 5 September 2026 | Added the Roles section (Chief Architect, CDKO, Architecture Committee), stating that at the current stage all three roles are held by the specification's author. Editorial; no principle changed. |
