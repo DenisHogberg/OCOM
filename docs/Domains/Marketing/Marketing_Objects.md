@@ -34,7 +34,7 @@ A Marketing Object is a business entity owned by the Marketing Domain.
 
 Marketing Objects describe campaigns, brands, audiences, marketing assets, communication channels, and promotional initiatives.
 
-Object semantics are defined by the Core Object specification.
+Object semantics are defined by the Object specification (`Meta/Object.md`).
 
 ---
 
@@ -218,7 +218,7 @@ Marketing Objects build upon:
 - Policy
 - Domain Governance
 
-Additional Marketing specifications define the behavior of individual Object categories.
+No further Marketing specifications in this version define the behavior of individual Object categories.
 
 ---
 

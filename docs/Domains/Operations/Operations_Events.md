@@ -34,7 +34,7 @@ An Operational Event is an immutable business fact representing a completed chan
 
 Operational Events communicate completed operational activities rather than commands, requests, or intentions.
 
-Event semantics are defined by the Core Event specification.
+Event semantics are defined by the Event specification (`Models/Event.md`).
 
 ---
 
@@ -240,7 +240,7 @@ Operational Events build upon:
 - Policy
 - Domain Governance
 
-Additional Operations specifications define which Events are emitted by individual Processes and Capabilities.
+No further Operations specifications in this version define which Events are emitted by individual Processes and Capabilities.
 
 ---
 

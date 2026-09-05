@@ -34,7 +34,7 @@ An HR Event is an immutable business fact representing a completed change affect
 
 HR Events communicate completed organizational activities rather than commands, requests, or intentions.
 
-Event semantics are defined by the Core Event specification.
+Event semantics are defined by the Event specification (`Models/Event.md`).
 
 ---
 
@@ -228,7 +228,7 @@ HR Events build upon:
 - Policy
 - Domain Governance
 
-Additional HR specifications define which Events are emitted by individual Processes and Capabilities.
+No further HR specifications in this version define which Events are emitted by individual Processes and Capabilities.
 
 ---
 

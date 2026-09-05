@@ -8,7 +8,7 @@
 
 # Marketing Domain
 
-**Document ID:** DOMAIN-MARKETING-README-01
+**Document ID:** DOMAIN-MARKETING-OVERVIEW-01
 
 **Status:** Draft
 
@@ -188,13 +188,13 @@ The Marketing Domain builds upon:
 - Relationship
 - Lifecycle
 - Event
-- Process
+- Domain Architecture (Processes)
 - Capability
 - Policy
 - AI
 - Governance
 
-Additional Marketing specifications define the detailed behavior of individual Marketing Objects.
+No further Marketing specifications in this version define the detailed behavior of individual Marketing Objects.
 
 ---
 

@@ -219,7 +219,7 @@ Financial KPIs build upon:
 - Policy
 - Governance
 
-Additional Finance specifications define the business context in which KPIs are evaluated.
+No further Finance specifications in this version define the business context in which KPIs are evaluated.
 
 ---
 

@@ -794,7 +794,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Architect Response:** *(pending)*
 
-**Related:** `Language/Conformance.md`, `Specification/08 Conformance.md`, `Specification/03 Core Concepts.md`, `Core/Manifest.md`, `Meta/Object.md`, `Master-Architecture-Backlog.md` EPIC-E, `ADR-Candidates.md#cand-002`, AO-014, FW-003, FW-004
+**Related:** `Language/Conformance.md`, `Specification/08 Conformance.md`, `Specification/03 Core Concepts.md`, `Core/Manifest.md`, `Meta/Object.md`, `Domains/` (70 profile Conformance sections carry no domain-specific obligation), `Entities/`, `Master-Architecture-Backlog.md` EPIC-E, `ADR-Candidates.md#cand-002`, AO-014, FW-003, FW-004
 
 ---
 
@@ -878,6 +878,166 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-037
+
+**Title:** Process Is a Normative Domain-Tier Construct With No Core, Meta or Models Definition and No Stated Relationship to Workflow
+
+**Date observed:** 5 September 2026
+
+**Description:** Numbering note: the brief said AO-024 onward, but Governance/Architecture-Observations.md already holds AO-024 to AO-036 (5 September 2026 external audits), so drafts here start at AO-037. Every Domain profile ships a *_Processes.md whose line 37 delegates Process semantics to a specification that does not exist, in three variants: Domains/AI/AI_Processes.md:37 "Process semantics are defined by the Core Process specification." (also Affiliate, HR, Legal, Marketing, Operations, Support); Domains/BI/BI_Processes.md:37 "Process semantics are defined by the Meta specification." (also Finance); Product and Compliance cite "the Core specification". Core/ has no Process document (its only Process heading is Core/Governance.md:48 "Proposal Process", about specification evolution); Meta/ and Models/ have none; Core/Terminology.md has no Process entry but defines Workflow at :49-51 as "A defined sequence of operational actions that transforms the state of one or more entities." Domains/CRM/CRM Processes.md:33 defines "A CRM Process is a coordinated sequence of business activities that operates on one or more CRM Objects", materially the Workflow definition, and :51 opens "CRM Processes shall:". The only Core-adjacent text is Domains/Common/Domain Architecture.md:116-120 "The Domain may define business Processes ... Processes coordinate work but do not replace Object Lifecycles.", which gives no semantics. No Domain *_Processes.md cites Models/Workflow.md; six files list a bare "- Process" among the specifications they build upon (e.g. AI_Processes.md:251, Affiliate_Processes.md:228-230).
+
+**Impact:** A reader following any Domain profile is sent to a specification that does not exist for its central construct, and the eleven profiles disagree on where it supposedly lives. Whether Process is a Domain-level synonym for Workflow, a composition of Workflows, or a distinct concept determines how Domain Processes relate to Lifecycles and State Transitions, and that determination is currently absent.
+
+**Recommendation:** Record only. If corroborated by a Reference Case, decide between (a) declaring Process the Domain-level term for Workflow with a one-line mapping in Domain Architecture.md, or (b) defining Process in Models/ with its relation to Workflow and Lifecycle. The editorial pointer fix to Domain Architecture § Processes does not pre-empt this decision.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** Domains/Common/Domain Architecture.md, Domains/*/*_Processes.md (11 files), Core/Terminology.md, Models/Workflow.md, Domains/Product/Product_Capabilities.md:211, AO-020, GAP-002, AO-032
+
+---
+
+## AO-038
+
+**Title:** KPI Is Owned and Governed by Shall-Clauses in Twelve Domain Documents but Defined Nowhere Above the Domain Tier, and Its Ownership Is Claimed Both by BI and by Each Domain
+
+**Date observed:** 5 September 2026
+
+**Description:** Seven Domain KPI documents delegate KPI semantics to a non-existent document: Domains/AI/AI_KPIs.md:37 "Metric definitions are governed by the Core KPI specification.", Domains/Affiliate/Affiliate_KPIs.md:37 "KPI semantics are defined by the Core KPI specification." (also HR, Legal, Marketing, Operations, Support); the other five (BI, Compliance, Finance, Payments, Product) carry no such sentence. No KPI concept exists in Core/, Meta/, Models/, Language/ or Domains/Common; Core/Terminology.md:25 "All terms defined here are authoritative." with no KPI entry. KPI is nonetheless the subject of Ownership rules: Affiliate_KPIs.md:184-186 "Every KPI shall have an owning Domain." / "The Affiliate Domain owns KPIs evaluating Affiliate Objects, Affiliate Processes, and Affiliate Capabilities." (the same clause recurs in nine KPI files), while Domains/BI/BI_Objects.md:33 defines an Analytical Object as "a business Object owned by the BI Domain", lists "- KPI" at :71 and states at :131 "The BI Domain owns Analytical Objects."; BI_KPIs.md:146 narrows this to "KPIs evaluating BI Capabilities and Analytical Objects". Meta/Ownership.md:33 scopes Ownership to managed Objects, and KPI is never declared an Object (Domains/Compliance/Compliance_KPIs.md:157, Domains/Payments/Payments_KPIs.md:131 assign Ownership to it regardless).
+
+**Impact:** A reader cannot determine whether a KPI is an Object, which Domain owns a KPI that evaluates another Domain's Objects, or what a KPI is outside the local Definition of each file. The gap sits beneath AO-005/CAND-008 (value representation), which assume a KPI construct exists to carry values.
+
+**Recommendation:** Record only. If corroborated, a Reference Case should decide whether KPI is a Domain-tier specialization of Object (and therefore Ownable) with a single home, and whether KPI ownership follows the evaluated Object's Domain or the BI Domain. The editorial removal of the phantom pointer and the BI_Objects.md qualification do not decide this.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** Domains/*/*_KPIs.md (12 files), Domains/BI/BI_Objects.md, Domains/Affiliate/Affiliate_Objects.md:185, Core/Terminology.md, Meta/Ownership.md, AO-005, CAND-008, GAP-002
+
+---
+
+## AO-039
+
+**Title:** Three Domains Require an Object to Participate in One or More Lifecycles While the Lifecycle Model Requires Exactly One
+
+**Date observed:** 5 September 2026
+
+**Description:** Domains/BI/BI_Lifecycles.md:64 "Every Analytical Object shall participate in one or more explicitly defined Lifecycles." recurs verbatim in Domains/BI/BI_Objects.md:157, Domains/Finance/Finance_Objects.md:157, Domains/Finance/Finance_Lifecycles.md:64 and Domains/Payments/Payments_Objects.md:144. Models/Lifecycle.md:33 "Every Entity shall have exactly one Lifecycle." and :97 "At any point in time an Entity shall occupy exactly one valid State defined by its Lifecycle."; Specification/06 Lifecycle Model.md:17 publishes the same rule. The BI document itself defers to the upstream model (BI_Lifecycles.md:37, :162 "build upon: Lifecycle"), so it cannot claim an independent cardinality. Other profiles already use the conforming wording: Domains/Product/Product_Lifecycles.md:191 "Each Product Object shall have one Lifecycle.", Domains/CRM/CRM Objects.md:143 "an explicitly defined Lifecycle". Multiple concurrent Lifecycles imply multiple concurrent States, which the Model forbids.
+
+**Impact:** Both sides use shall. An implementation conforming to the BI, Finance or Payments profile by giving an Object two Lifecycles is non-conformant to Model-05 Lifecycle Integrity, and vice versa. This is the inverse direction of AO-028 (one Lifecycle reused by many Entities) and the two together leave Lifecycle cardinality undecided in both directions.
+
+**Recommendation:** Record only. If corroborated, resolve together with AO-028 in one Reference Case; the most likely outcome is aligning the five Domain clauses to the Product wording, but that is a normative edit and is not proposed here.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** Models/Lifecycle.md, Specification/06 Lifecycle Model.md, Domains/BI/BI_Lifecycles.md, Domains/Finance/Finance_Lifecycles.md, Domains/Payments/Payments_Objects.md, Domains/Product/Product_Lifecycles.md, AO-028, AO-022
+
+---
+
+## AO-040
+
+**Title:** Domain Profiles Do Not Carry the Component Set Their Own Domain Architecture Imposes With Shall, and the Domain Concept Omits Three of Object's Core Characteristics
+
+**Date observed:** 5 September 2026
+
+**Description:** Domains/Common/Domain Architecture.md:60 "Every Domain shall define the following architectural components." followed by Identity (:64 "The Domain shall possess a unique Identity."), Constraints (:134 "The Domain shall define applicable Constraints."), Integration Points (:150) and Governance (:158 "The Domain shall define governance responsibilities including: - ownership; - change management; ..."), with Conformance at :240 "define all mandatory architectural components;". Domains/BI/Overview.md:89-103 lists Objects, Relationships, Events, Lifecycles, Processes, Capabilities, KPIs, Policies, AI and no Constraints or Governance component; no BI_*.md supplies them; the only Domain-level identifier is the document ID "DOMAIN-BI-README-01" (:11). Domains/CRM/Overview.md:86-99 has the same gaps and additionally omits Capabilities although CRM Capabilities.md exists. Domains/Affiliate/Overview.md:158 carries a "# Domain Governance" section, showing the component is expected in a profile. At the concept level, Domains/Common/Domain.md:64-75 "Every Domain has: Identity; Purpose; Scope; Ownership; Managed Objects; Business Capabilities; Policies; Constraints; Integration Points; Governance." omits Metadata, Classification and Relationships, which Meta/Object.md:65-73 lists as core characteristics of every Object and :224 requires specializations to preserve; Domain.md never states that Domain specializes Object, unlike Meta/Organization.md:63. Compliance is the only profile without a Lifecycles document while Compliance/Overview.md:38 and :96 claim one.
+
+**Impact:** The Specification's own Domain profiles are the first test case of Domain Architecture's shall-list and do not pass it; a critic can quote the tier failing the architecture it mandates. AO-001 freezes edits to the two Domain concept documents until their canonical source is decided, so the Domain.md gap cannot be patched now.
+
+**Recommendation:** Record only. Resolve after AO-001 settles which Domain definition is canonical; then either add the missing components to each profile (Constraints, Governance, Identity scheme) or relax Domain Architecture's list to what profiles actually carry. Do not invent a Domain identifier scheme editorially.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** Domains/Common/Domain Architecture.md, Domains/Common/Domain.md, Models/Domain.md, Meta/Object.md, Domains/BI/Overview.md, Domains/CRM/Overview.md, Domains/Affiliate/Overview.md, Domains/Compliance/Compliance_Objects.md:170-174, AO-001, AO-022, AO-029
+
+---
+
+## AO-041
+
+**Title:** Entity Profiles Reference Named Lifecycles That Do Not Exist and List States That Conflict With the Standard Lifecycle That Claims Them
+
+**Date observed:** 5 September 2026
+
+**Description:** Lifecycles/ contains Commercial, Content, Financial, Operational and Organizational Lifecycle only. Entities/Affiliate/Affiliate.md:118 "The Affiliate Lifecycle defines all valid state transitions." with states at :105-110 Registered, Pending Approval, Active, Suspended, Terminated, Archived, while Lifecycles/Commercial Lifecycle.md:33-40 names Affiliate among its applicable Entities with states Draft, Review, Approved, Active, Suspended, Retired, Archived and :143-144 requires a conforming Entity to implement "the defined States" and permit "only the defined State Transitions". The same pattern holds for Entities/Bonus/Bonus.md:121, Brand.md:115, Campaign.md:123, Offer.md:119, Transaction.md:118, Wallet.md:120 (each "The <X> Lifecycle defines all valid state transitions.", no such document), each followed by the template "Undefined transitions are prohibited." (11 files). Entities/Vendor/Vendor.md:96 names "**Procurement**" as governing Domain; no Domains/Procurement/ exists; Vendor.md:102 conforms to the Commercial Lifecycle whose applicable list names "Vendor Agreement", not Vendor. Affiliate.md:177 "Every Affiliate shall follow one defined Lifecycle." cannot be satisfied when the named Lifecycle is absent and the standard one lists different states.
+
+**Impact:** An implementer of these Entities has two incompatible state sets under a prohibition on undefined transitions and no document to resolve them. Combined with AO-028 and AO-039, Lifecycle binding is undecided at three tiers.
+
+**Recommendation:** Record only. A Reference Case should decide whether Entity profiles carry their own Lifecycle (then the named documents must be written) or reference a standard Lifecycle (then the state lists in the profiles must be dropped or mapped, as the Ticket profile would need for Resolved/Closed). Do not pick a state set editorially.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** Entities/Affiliate/Affiliate.md, Entities/Bonus/Bonus.md, Entities/Brand/Brand.md, Entities/Campaign/Campaign.md, Entities/Offer/Offer.md, Entities/Transaction/Transaction.md, Entities/Wallet/Wallet.md, Entities/Vendor/Vendor.md, Lifecycles/Commercial Lifecycle.md, Entities/Overview.md, AO-028, AO-039, AO-029, AO-033, FW-002
+
+---
+
+## AO-042
+
+**Title:** AI Knowledge Is Declared Independent of Memory Records and Sourced Directly From Enterprise Systems, Against Constitution Principles 5 and 6
+
+**Date observed:** 5 September 2026
+
+**Description:** Core/Constitution.md:35 "Memory Precedes Knowledge. Knowledge is always derived from Memory. World Models are always derived from Knowledge. Memory → Knowledge → World Model." and :36 "Reconstructability. Knowledge and World Models must always be reproducible from Memory without requiring access to the original external systems." AI/Knowledge/Knowledge.md:35 "Knowledge is independent of individual AI Agents, Context, and Memory Records." and :133 lists Memory Records only as something Knowledge "may reference". AI/Knowledge/Knowledge Sources.md:87-93 "Knowledge may originate from: - enterprise systems; - workflow platforms; - document repositories; - operational databases; - knowledge management systems." with :95 "System-generated Knowledge shall preserve system provenance." Neither document states that Knowledge is derived from Memory; Memory appears once in each as a build-upon item (Knowledge Sources.md:159, Overview.md:86). Both are Status Draft (normative under Documentation-Standards.md:48).
+
+**Impact:** A conforming Knowledge implementation may hold Knowledge that no Memory Record backs and that cannot be reconstructed without the source system, which is exactly what Principles 5 and 6 forbid. This is a principle-level tension, not a wording defect, and the only one of its kind found in these four tiers.
+
+**Recommendation:** Record only. Resolve through the same Reference Case pipeline that produced the Knowledge vs World Model concept paper; the likely outcome is restating Knowledge as a derivation over Memory Records with external systems admitted only as Memory sources, but that is a Core-adjacent decision under the Freeze and is not proposed editorially.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** Core/Constitution.md (Principles 5, 6), AI/Knowledge/Knowledge.md, AI/Knowledge/Knowledge Sources.md, AI/Knowledge/Knowledge Lifecycle.md, Memory/Memory Record.md, AO-003, CAND-003, Concept-Paper-Knowledge-vs-World-Model.md, AO-035
+
+---
+
+## AO-043
+
+**Title:** Reference Architecture Carries Ten Shall-Clauses Under a Status That Declares It Imposes No Requirement, and Promises Three Views That Do Not Exist
+
+**Date observed:** 5 September 2026
+
+**Description:** All eight Reference Architecture files are "**Status:** Informative" (line 13 of each). Governance/Documentation-Standards.md:49 defines Informative as "non-normative ... material that imposes no requirement of its own. Used for Examples/, Reference Architecture/ ...". The tier nonetheless contains ten shall-clauses: Reference Architecture/Object-Architecture.md:43 "Every Entity shall possess a unique and persistent identity."; Business-Event-Architecture.md:92 "Once recorded, a Business Event shall not be modified." and :94; Operational-Memory-Architecture.md:115 "Operational Memory shall remain subject to governance." and :126 "Every memory entry shall remain attributable to its origin."; Domain-Architecture.md:110; AI-Architecture.md:67, :106, :128, :149. Several restate Draft-tier rules in different words (memory entry vs Memory Record; "enriched" memory). Reference Architecture/Overview.md:77-113 lists nine views ending "Governance Architecture ↓ Integration Architecture ↓ Deployment Patterns", while README.md:17-22 lists six; the three are absent from the repository.
+
+**Impact:** A reader cannot tell whether the ten clauses bind (they read as requirements) or illustrate (the Status says so); where they diverge from Meta/Models wording, an Informative document becomes a second source of normative text. The same Status-versus-content mismatch is recorded for Governance registers in AO-025.
+
+**Recommendation:** Record only. If corroborated, either downgrade the ten clauses to descriptive wording in a future Reference Architecture revision or add a tier-level note that Informative text restates, and never extends, Draft-tier requirements. The editorial reconciliation of the six-versus-nine view lists does not touch the clauses.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** Reference Architecture/*.md (8 files), Governance/Documentation-Standards.md, Memory/Memory Record.md, Core/Constitution.md (Memory Entry vs Memory Record), OBS-002, AO-025, AO-032
+
+---
+
+## AO-044
+
+**Title:** A Deprecated Tool Remains Operational While Tool Execution Requires the Active State
+
+**Date observed:** 5 September 2026
+
+**Description:** AI/Tools/Tool Lifecycle.md:126-128 "## Deprecated / The Tool remains operational but is no longer recommended for new implementations." AI/Tools/Tool Execution.md:79-81 lists as a precondition of execution "- the Tool shall be Active;". Both are Status Draft. A Tool in the Deprecated state therefore both may execute (Lifecycle) and shall not execute (Execution). The Prompts and Tools sub-tier also defines Tool ownership twice with different responsibility lists (Tool Governance.md:81-87 vs Tool Lifecycle.md:182-188) and Tool Registry.md:84-88 carries Status and Lifecycle State as two unexplained items; those are duplicate-definition items already characterised by AO-035 and are listed here only as Related.
+
+**Impact:** An implementation cannot satisfy both documents for a Deprecated Tool; the state most likely to exist in a long-lived deployment is the one whose executability is undefined.
+
+**Recommendation:** Record only. If corroborated, decide whether Deprecated is an executable state (then amend the Execution precondition to Active or Deprecated) or not (then amend the Lifecycle text); either is a normative edit under the Freeze.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** AI/Tools/Tool Lifecycle.md, AI/Tools/Tool Execution.md, AI/Tools/Tool Governance.md, AI/Tools/Tool Registry.md, AI/Tools/Tool.md, AO-035, AO-036
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -895,3 +1055,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 4 September 2026 | Added AO-014 through AO-022 (conformance scope, ownership modality, identity replacement clause, relationship arity/direction/cardinality, metadata categories, organization participation, participant lists, evidence pillar, object obligation modality), evidenced by an external pre-launch red-team review of the published site; all recorded, none escalated |
 | 0.1 | 5 September 2026 | Added AO-023 (Core definitions close on each other through the undefined word "governable"), surfaced independently by two external reviews of the published site; record only, not escalated, tracked with CAND-010 and AO-021. |
 | 0.1 | 5 September 2026 | Added AO-024 through AO-036 (Architectural Principles vocabulary, register Status, Constitution edit under the Freeze, no terminating rule for Object obligations on Lifecycle and Registry, Lifecycle cardinality, Entity versus Object characteristics, Domain and Entity bootstrap, identifier reuse, conformance aggregation, Owner typing, Reference versus Relationship, duplicated AI definitions, template shall clauses), surfaced by an external logic audit of commit 37c986a; all record only, not escalated. AO-015 and AO-018 marked independently corroborated; AO-016 and AO-022 Related extended; AO-023 corrected (no ADR Candidate records the Governance gap; CAND-010 is the Worked Example's publication authorization) and the third usage of Governance in `AI/` added. |
+| 0.1 | 5 September 2026 | Added AO-037 through AO-044 (Process undefined above the Domain tier, KPI undefined and doubly owned, Lifecycle cardinality in three Domain profiles, profiles not carrying the components their Domain Architecture mandates, Entity profiles naming Lifecycles that do not exist, AI Knowledge declared independent of Memory against Constitution Principles 5 and 6, Reference Architecture carrying shall-clauses under an Informative Status, a Deprecated Tool remaining operational against the Active precondition), surfaced by a full read of the Domains, Entities, AI and Reference Architecture tiers; all record only, not escalated. |

@@ -8,7 +8,7 @@
 
 # Financial Lifecycles
 
-**Document ID:** DOMAIN-FINANCE-LIFECYCLE-01
+**Document ID:** DOMAIN-FINANCE-LIFECYCLES-01
 
 **Status:** Draft
 
@@ -34,7 +34,7 @@ A Financial Lifecycle is the ordered progression of business states for a Financ
 
 Lifecycle transitions represent changes in business status and shall not imply implementation-specific workflows.
 
-Lifecycle semantics are defined by the Meta specification.
+Lifecycle semantics are defined by the Lifecycle Model (`Models/Lifecycle.md`).
 
 ---
 
@@ -167,7 +167,7 @@ Financial Lifecycles build upon:
 - Constraint
 - Governance
 
-Additional Finance specifications define the Objects participating in these Lifecycles.
+No further Finance specifications in this version define the Objects participating in these Lifecycles.
 
 ---
 

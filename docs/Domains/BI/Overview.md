@@ -8,7 +8,7 @@
 
 # Business Intelligence Domain
 
-**Document ID:** DOMAIN-BI-README-01
+**Document ID:** DOMAIN-BI-OVERVIEW-01
 
 **Status:** Draft
 
@@ -42,7 +42,7 @@ The BI Domain defines:
 - BI Policies;
 - AI capabilities within the BI Domain.
 
-The Domain does not define data warehouses, reporting platforms, dashboards, databases, or implementation technologies.
+The Domain does not define data warehouses, reporting platforms, dashboard software, databases, or implementation technologies.
 
 ---
 
@@ -82,7 +82,7 @@ The BI Domain manages business Objects representing analytical information.
 
 The complete Object model is defined in:
 
-- Objects.md
+- BI_Objects.md
 
 ---
 

@@ -34,7 +34,7 @@ An Operational Policy is a governed business rule that constrains, permits, requ
 
 Operational Policies govern Entities, Processes, Capabilities, Relationships, Events, and Lifecycle transitions owned by the Operations Domain.
 
-Policy semantics are defined by the Core Policy specification.
+Policy semantics are defined by the Policy specification (`Meta/Policy.md`).
 
 ---
 
@@ -247,10 +247,10 @@ Operational Policies build upon:
 - Lifecycle
 - Event
 - Capability
-- Process
+- Domain Architecture (Processes)
 - Domain Governance
 
-Additional Operations specifications define Policies applicable to individual Operational Entities.
+No further Operations specifications in this version define Policies applicable to individual Operational Entities.
 
 ---
 

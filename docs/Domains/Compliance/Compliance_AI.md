@@ -134,7 +134,7 @@ Final governance authority remains outside AI unless organizational Policies exp
 Compliance AI shall operate under:
 
 - Domain Governance;
-- AI Governance;
+- the Governance requirements of the AI specification (AI/Overview.md, Governance section);
 - applicable Policies;
 - applicable Contracts;
 - applicable Constraints.
@@ -193,7 +193,7 @@ Breaking behavioral changes shall require explicit governance.
 Compliance AI builds upon:
 
 - AI
-- AI Governance
+- Domain Governance
 - Memory
 - Capability
 - Object
@@ -202,7 +202,7 @@ Compliance AI builds upon:
 - Contract
 - Domain Governance
 
-Additional Compliance specifications define the business context in which AI operates.
+No further Compliance specifications in this version define the business context in which AI operates.
 
 ---
 

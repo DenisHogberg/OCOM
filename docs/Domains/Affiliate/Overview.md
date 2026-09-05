@@ -8,7 +8,7 @@
 
 # Affiliate Domain
 
-**Document ID:** DOMAIN-AFFILIATE-README-01
+**Document ID:** DOMAIN-AFFILIATE-OVERVIEW-01
 
 **Status:** Draft
 
@@ -193,13 +193,13 @@ The Affiliate Domain builds upon:
 - Relationship
 - Lifecycle
 - Event
-- Process
+- Domain Architecture (Processes)
 - Capability
 - Policy
 - AI
 - Governance
 
-Additional Affiliate specifications define the detailed behavior of individual Affiliate Objects.
+No further Affiliate specifications in this version define the detailed behavior of individual Affiliate Objects.
 
 ---
 

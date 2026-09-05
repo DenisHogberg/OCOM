@@ -219,7 +219,7 @@ BI Policies build upon:
 - Contract
 - Constraint
 
-Additional BI specifications define where individual Policies apply.
+No further BI specifications in this version define where individual Policies apply.
 
 ---
 

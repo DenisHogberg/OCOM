@@ -169,9 +169,7 @@ Identity remains unchanged throughout the Object Lifecycle.
 
 Every Compliance Object shall possess a defined Lifecycle.
 
-Lifecycle definitions are specified in:
-
-- Lifecycles.md
+Lifecycle semantics are defined by the Lifecycle Model (`Models/Lifecycle.md`). A Compliance-specific Lifecycles document is not part of this profile in version 0.1; the gap is recorded in `Governance/Documentation-Debt.md` (GAP-005).
 
 ---
 
@@ -215,7 +213,7 @@ Compliance Objects build upon:
 - Contract
 - Domain
 
-Additional Compliance specifications define how these Objects interact.
+No further Compliance specifications in this version define how these Objects interact.
 
 ---
 

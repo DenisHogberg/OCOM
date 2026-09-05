@@ -8,7 +8,7 @@
 
 # Product Domain
 
-**Document ID:** DOMAIN-PRODUCT-README-01
+**Document ID:** DOMAIN-PRODUCT-OVERVIEW-01
 
 **Status:** Draft
 
@@ -82,7 +82,7 @@ The Product Domain manages business Objects representing commercial products and
 
 The complete Object model is defined in:
 
-- Objects.md
+- Product_Objects.md
 
 ---
 

@@ -34,7 +34,7 @@ An AI Policy is a governed business rule that constrains, permits, requires, or 
 
 AI Policies govern AI Entities, Processes, Capabilities, Relationships, Events, and Lifecycle transitions owned by the AI Domain.
 
-Policy semantics are defined by the Core Policy specification.
+Policy semantics are defined by the Policy specification (`Meta/Policy.md`).
 
 ---
 
@@ -246,8 +246,8 @@ AI Policies build upon:
 - Lifecycle
 - Event
 - Capability
-- Process
-- AI Governance
+- Domain Architecture (Processes)
+- Domain Governance
 
 Additional specifications define enterprise AI governance, memory, and reasoning.
 

@@ -68,7 +68,7 @@ Objects representing measurable business indicators.
 Examples include:
 
 - Business Metric
-- KPI
+- KPI (where the BI Domain is the owning Domain; a KPI evaluating another Domain's Objects is owned by that Domain, see `BI_KPIs.md`, KPI Ownership)
 - Ratio
 - Performance Indicator
 

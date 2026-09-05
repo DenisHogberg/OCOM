@@ -268,12 +268,12 @@ Operational Capabilities build upon:
 - Capability
 - Object
 - Lifecycle
-- Process
+- Domain Architecture (Processes)
 - Event
 - Policy
 - Domain Governance
 
-Additional Operations specifications define Processes that coordinate these Capabilities.
+No further Operations specifications in this version define Processes that coordinate these Capabilities.
 
 ---
 

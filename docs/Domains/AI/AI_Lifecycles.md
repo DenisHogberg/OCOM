@@ -34,7 +34,7 @@ An AI Lifecycle defines the permissible business states and transitions of an AI
 
 Every AI Entity participates in a governed Lifecycle throughout its existence.
 
-Lifecycle semantics are defined by the Core Lifecycle specification.
+Lifecycle semantics are defined by the Lifecycle Model (`Models/Lifecycle.md`).
 
 ---
 
@@ -248,8 +248,8 @@ AI Lifecycles build upon:
 - Object
 - Event
 - Policy
-- Process
-- AI Governance
+- Domain Architecture (Processes)
+- Domain Governance
 
 Additional specifications define Lifecycles for individual AI Entities.
 

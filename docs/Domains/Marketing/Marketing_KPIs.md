@@ -34,7 +34,7 @@ A Marketing KPI is a measurable business indicator used to evaluate the performa
 
 Marketing KPIs measure marketing activities and business outcomes owned by the Marketing Domain rather than customer relationships, financial performance, or implementation technologies.
 
-KPI semantics are defined by the Core KPI specification.
+No shared KPI specification exists in this version of the OCOM Specification; for the purposes of this document a KPI is as defined in the Definition section above. The absence of a shared definition is recorded as `Governance/Architecture-Observations.md#ao-038`.
 
 ---
 
@@ -259,7 +259,7 @@ Marketing KPIs build upon:
 - Policy
 - Governance
 
-Additional Marketing specifications define the business context in which KPIs are evaluated.
+No further Marketing specifications in this version define the business context in which KPIs are evaluated.
 
 ---
 

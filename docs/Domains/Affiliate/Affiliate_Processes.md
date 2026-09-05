@@ -34,7 +34,7 @@ An Affiliate Process is a coordinated sequence of business activities performed 
 
 Processes operate on Affiliate Objects according to applicable Policies and Lifecycles.
 
-Process semantics are defined by the Core Process specification.
+The OCOM Core, Meta and Models tiers do not define Process in this version. Domain Processes are described in `Domains/Common/Domain Architecture.md` (Processes); their relationship to Workflow (`Core/Terminology.md`, `Models/Workflow.md`) is an open item recorded as `Governance/Architecture-Observations.md#ao-037`.
 
 ---
 
@@ -227,7 +227,7 @@ Process evolution shall preserve Affiliate Object semantics.
 
 Affiliate Processes build upon:
 
-- Process
+- Domain Architecture (Processes)
 - Object
 - Lifecycle
 - Event
@@ -235,7 +235,7 @@ Affiliate Processes build upon:
 - Capability
 - Domain Governance
 
-Additional Affiliate specifications define which Objects and Events participate in individual Processes.
+No further Affiliate specifications in this version define which Objects and Events participate in individual Processes.
 
 ---
 

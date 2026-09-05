@@ -34,7 +34,7 @@ A Legal Policy is a business rule that constrains, authorizes, or guides behavio
 
 Policies govern Legal Entities, Processes, Capabilities, Relationships, and Events independently of implementation technologies.
 
-Policy semantics are defined by the Core Policy specification.
+Policy semantics are defined by the Policy specification (`Meta/Policy.md`).
 
 ---
 
@@ -279,7 +279,7 @@ Legal Policies build upon:
 - Contract
 - Constraint
 
-Additional Legal specifications define where individual Policies apply.
+No further Legal specifications in this version define where individual Policies apply.
 
 ---
 

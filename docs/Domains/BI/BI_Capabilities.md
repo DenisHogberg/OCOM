@@ -192,13 +192,13 @@ BI Capabilities build upon:
 - Capability
 - Object
 - Lifecycle
-- Process
+- Domain Architecture (Processes)
 - Event
 - Policy
 - Contract
 - Domain Governance
 
-Additional BI specifications define the business context in which these Capabilities operate.
+No further BI specifications in this version define the business context in which these Capabilities operate.
 
 ---
 

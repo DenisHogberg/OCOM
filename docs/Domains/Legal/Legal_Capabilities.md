@@ -250,12 +250,12 @@ Legal Capabilities build upon:
 - Capability
 - Object
 - Lifecycle
-- Process
+- Domain Architecture (Processes)
 - Event
 - Policy
 - Domain Governance
 
-Additional Legal specifications define Processes that coordinate these Capabilities.
+No further Legal specifications in this version define Processes that coordinate these Capabilities.
 
 ---
 

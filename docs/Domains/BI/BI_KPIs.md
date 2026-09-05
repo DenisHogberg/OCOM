@@ -219,7 +219,7 @@ BI KPIs build upon:
 - Policy
 - Governance
 
-Additional BI specifications define the business context in which KPIs are evaluated.
+No further BI specifications in this version define the business context in which KPIs are evaluated.
 
 ---
 

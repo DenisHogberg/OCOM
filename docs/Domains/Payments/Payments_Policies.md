@@ -206,7 +206,7 @@ Payment Policies build upon:
 - Contract
 - Constraint
 
-Additional Payments specifications define where individual Policies apply.
+No further Payments specifications in this version define where individual Policies apply.
 
 ---
 

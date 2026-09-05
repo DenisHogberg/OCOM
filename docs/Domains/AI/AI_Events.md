@@ -34,7 +34,7 @@ An AI Event is an immutable business fact representing a completed change affect
 
 AI Events describe completed AI activities, reasoning milestones, governance outcomes, and execution results.
 
-Event semantics are defined by the Core Event specification.
+Event semantics are defined by the Event specification (`Models/Event.md`).
 
 ---
 
@@ -215,7 +215,7 @@ AI Events build upon:
 - Object
 - Lifecycle
 - Policy
-- AI Governance
+- Domain Governance
 
 Additional specifications define AI Memory, Reasoning, and Operational Governance.
 

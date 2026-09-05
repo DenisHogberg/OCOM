@@ -34,7 +34,7 @@ A Support Lifecycle defines the permissible business states and transitions of a
 
 Every Support Object participates in a governed Lifecycle throughout its existence.
 
-Lifecycle semantics are defined by the Core Lifecycle specification.
+Lifecycle semantics are defined by the Lifecycle Model (`Models/Lifecycle.md`).
 
 ---
 
@@ -221,10 +221,10 @@ Support Lifecycles build upon:
 - Object
 - Event
 - Policy
-- Process
+- Domain Architecture (Processes)
 - Domain Governance
 
-Additional Support specifications define Lifecycles for individual Object categories.
+No further Support specifications in this version define Lifecycles for individual Object categories.
 
 ---
 

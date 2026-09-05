@@ -208,7 +208,7 @@ Compliance Events build upon:
 - Contract
 - Domain
 
-Additional Compliance specifications define the Objects producing these Events.
+No further Compliance specifications in this version define the Objects producing these Events.
 
 ---
 

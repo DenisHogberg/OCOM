@@ -32,7 +32,7 @@ An HR Object is an Entity owned by the Human Resources Domain.
 
 HR Objects describe the organization's workforce independently of implementation technologies.
 
-Object semantics are defined by the Core Object specification.
+Object semantics are defined by the Object specification (`Meta/Object.md`).
 
 ---
 
@@ -246,7 +246,7 @@ HR Objects build upon:
 - Policy
 - Domain
 
-Additional HR specifications define how these Objects interact.
+No further HR specifications in this version define how these Objects interact.
 
 ---
 

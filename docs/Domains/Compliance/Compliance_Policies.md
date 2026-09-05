@@ -240,7 +240,7 @@ Compliance Policies build upon:
 - Contract
 - Constraint
 
-Additional Compliance specifications define where individual Policies apply.
+No further Compliance specifications in this version define where individual Policies apply.
 
 ---
 

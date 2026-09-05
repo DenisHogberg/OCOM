@@ -8,7 +8,7 @@
 
 # Operations KPIs
 
-**Document ID:** DOMAIN-OPERATIONS-KPIS-01
+**Document ID:** DOMAIN-OPERATIONS-KPI-01
 
 **Status:** Draft
 
@@ -34,7 +34,7 @@ An Operational KPI is a measurable business indicator that evaluates the perform
 
 Operational KPIs support governance, planning, optimization, and decision-making.
 
-Metric definitions are governed by the Core KPI specification.
+No shared KPI specification exists in this version of the OCOM Specification; for the purposes of this document a KPI is as defined in the Definition section above. The absence of a shared definition is recorded as `Governance/Architecture-Observations.md#ao-038`.
 
 ---
 
@@ -240,7 +240,7 @@ Operational KPIs build upon:
 
 - KPI
 - Capability
-- Process
+- Domain Architecture (Processes)
 - Lifecycle
 - Event
 - Domain Governance

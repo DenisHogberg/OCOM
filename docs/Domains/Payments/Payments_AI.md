@@ -128,7 +128,7 @@ Final business authority remains outside AI unless organizational Policies expli
 Payment AI shall operate under:
 
 - Domain Governance;
-- AI Governance;
+- the Governance requirements of the AI specification (AI/Overview.md, Governance section);
 - applicable Policies;
 - applicable Contracts;
 - applicable Constraints.
@@ -186,7 +186,7 @@ Breaking behavioral changes shall require explicit governance.
 Payment AI builds upon:
 
 - AI
-- AI Governance
+- Domain Governance
 - Memory
 - Capability
 - Object
@@ -195,7 +195,7 @@ Payment AI builds upon:
 - Contract
 - Domain Governance
 
-Additional Payments specifications define the business context in which AI operates.
+No further Payments specifications in this version define the business context in which AI operates.
 
 ---
 

@@ -34,7 +34,7 @@ A Support Relationship is a governed business association between one or more Su
 
 Relationships express how Support Objects participate in enterprise service delivery without transferring Ownership.
 
-Relationship semantics are defined by the Core Relationship specification.
+Relationship semantics are defined by the Relationship specifications (`Meta/Relationship.md`, `Models/Relationship.md`).
 
 ---
 
@@ -228,7 +228,7 @@ Support Relationships build upon:
 - Event
 - Domain Governance
 
-Additional Support specifications define how Relationships participate in Support Processes.
+No further Support specifications in this version define how Relationships participate in Support Processes.
 
 ---
 

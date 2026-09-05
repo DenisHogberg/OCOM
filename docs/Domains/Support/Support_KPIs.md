@@ -34,7 +34,7 @@ A Support KPI is a measurable business indicator used to evaluate the performanc
 
 Support KPIs measure business outcomes owned by the Support Domain rather than customer relationships, financial performance, or technical infrastructure.
 
-KPI semantics are defined by the Core KPI specification.
+No shared KPI specification exists in this version of the OCOM Specification; for the purposes of this document a KPI is as defined in the Definition section above. The absence of a shared definition is recorded as `Governance/Architecture-Observations.md#ao-038`.
 
 ---
 
@@ -260,7 +260,7 @@ Support KPIs build upon:
 - Policy
 - Governance
 
-Additional Support specifications define the business context in which KPIs are evaluated.
+No further Support specifications in this version define the business context in which KPIs are evaluated.
 
 ---
 

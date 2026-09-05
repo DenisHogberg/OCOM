@@ -238,12 +238,12 @@ Support Capabilities build upon:
 - Capability
 - Object
 - Lifecycle
-- Process
+- Domain Architecture (Processes)
 - Event
 - Policy
 - Domain Governance
 
-Additional Support specifications define how individual Capabilities interact with Support Objects.
+No further Support specifications in this version define how individual Capabilities interact with Support Objects.
 
 ---
 

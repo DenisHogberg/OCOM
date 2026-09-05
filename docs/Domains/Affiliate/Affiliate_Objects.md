@@ -34,7 +34,7 @@ An Affiliate Object is a business entity owned by the Affiliate Domain.
 
 Affiliate Objects describe affiliate partners, referral mechanisms, commercial agreements, tracking assets, and performance records.
 
-Object semantics are defined by the Core Object specification.
+Object semantics are defined by the Object specification (`Meta/Object.md`).
 
 ---
 
@@ -226,7 +226,7 @@ Affiliate Objects build upon:
 - Policy
 - Domain Governance
 
-Additional Affiliate specifications define the behavior of individual Object categories.
+No further Affiliate specifications in this version define the behavior of individual Object categories.
 
 ---
 

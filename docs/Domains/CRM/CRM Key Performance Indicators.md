@@ -206,7 +206,7 @@ CRM KPIs build upon:
 - Policy
 - Governance
 
-Additional CRM specifications define the business context in which KPIs are evaluated.
+No further CRM specifications in this version define the business context in which KPIs are evaluated.
 
 ---
 

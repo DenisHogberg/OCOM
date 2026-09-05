@@ -246,7 +246,7 @@ Product Lifecycles build upon:
 - Relationship
 - Domain Governance
 
-Additional Product specifications define the Objects using these Lifecycles.
+No further Product specifications in this version define the Objects using these Lifecycles.
 
 ---
 

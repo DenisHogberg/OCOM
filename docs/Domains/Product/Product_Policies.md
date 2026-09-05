@@ -240,7 +240,7 @@ Product Policies build upon:
 - Contract
 - Constraint
 
-Additional Product specifications define where individual Policies apply.
+No further Product specifications in this version define where individual Policies apply.
 
 ---
 

@@ -206,7 +206,7 @@ Financial Policies build upon:
 - Contract
 - Constraint
 
-Additional Finance specifications define where individual Policies apply.
+No further Finance specifications in this version define where individual Policies apply.
 
 ---
 

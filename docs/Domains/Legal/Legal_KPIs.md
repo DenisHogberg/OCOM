@@ -8,7 +8,7 @@
 
 # Legal KPIs
 
-**Document ID:** DOMAIN-LEGAL-KPIS-01
+**Document ID:** DOMAIN-LEGAL-KPI-01
 
 **Status:** Draft
 
@@ -34,7 +34,7 @@ A Legal KPI is a measurable business indicator evaluating the performance of Leg
 
 Legal KPIs measure business outcomes rather than technical implementation.
 
-KPI semantics are defined by the Core KPI specification.
+No shared KPI specification exists in this version of the OCOM Specification; for the purposes of this document a KPI is as defined in the Definition section above. The absence of a shared definition is recorded as `Governance/Architecture-Observations.md#ao-038`.
 
 ---
 
@@ -225,7 +225,7 @@ Legal KPIs build upon:
 
 - KPI
 - Capability
-- Process
+- Domain Architecture (Processes)
 - Object
 - Event
 - Domain Governance

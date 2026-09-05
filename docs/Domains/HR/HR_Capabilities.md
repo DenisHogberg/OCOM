@@ -232,12 +232,12 @@ HR Capabilities build upon:
 - Capability
 - Object
 - Lifecycle
-- Process
+- Domain Architecture (Processes)
 - Event
 - Policy
 - Domain Governance
 
-Additional HR specifications define how individual Capabilities interact with HR Entities.
+No further HR specifications in this version define how individual Capabilities interact with HR Entities.
 
 ---
 

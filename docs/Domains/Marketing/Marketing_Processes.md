@@ -34,7 +34,7 @@ A Marketing Process is a governed sequence of business activities coordinating M
 
 Processes coordinate Marketing Objects but do not own their Lifecycles.
 
-Process semantics are defined by the Core Process specification.
+The OCOM Core, Meta and Models tiers do not define Process in this version. Domain Processes are described in `Domains/Common/Domain Architecture.md` (Processes); their relationship to Workflow (`Core/Terminology.md`, `Models/Workflow.md`) is an open item recorded as `Governance/Architecture-Observations.md#ao-037`.
 
 ---
 
@@ -248,7 +248,7 @@ Breaking Process changes shall require explicit governance.
 
 Marketing Processes build upon:
 
-- Process
+- Domain Architecture (Processes)
 - Object
 - Lifecycle
 - Event
@@ -256,7 +256,7 @@ Marketing Processes build upon:
 - Policy
 - Domain Governance
 
-Additional Marketing specifications define the Objects coordinated by these Processes.
+No further Marketing specifications in this version define the Objects coordinated by these Processes.
 
 ---
 

@@ -34,7 +34,7 @@ A Marketing Event is an immutable business fact representing a completed change 
 
 Marketing Events communicate business outcomes rather than commands, requests, or intentions.
 
-Event semantics are defined by the Core Event specification.
+Event semantics are defined by the Event specification (`Models/Event.md`).
 
 ---
 
@@ -232,7 +232,7 @@ Marketing Events build upon:
 - Policy
 - Domain Governance
 
-Additional Marketing specifications define which Events are emitted by individual Processes and Capabilities.
+No further Marketing specifications in this version define which Events are emitted by individual Processes and Capabilities.
 
 ---
 

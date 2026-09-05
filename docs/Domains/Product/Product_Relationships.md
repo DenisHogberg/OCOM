@@ -189,7 +189,7 @@ Product Relationships build upon:
 - Contract
 - Domain
 
-Additional Product specifications define the Objects participating in these Relationships.
+No further Product specifications in this version define the Objects participating in these Relationships.
 
 ---
 

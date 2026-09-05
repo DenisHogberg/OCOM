@@ -34,7 +34,7 @@ An HR Relationship is a governed business association between two or more Entiti
 
 Relationships define organizational structure, employment, responsibilities, competencies, development, and workforce collaboration.
 
-Relationship semantics are defined by the Core Relationship specification.
+Relationship semantics are defined by the Relationship specifications (`Meta/Relationship.md`, `Models/Relationship.md`).
 
 ---
 
@@ -241,7 +241,7 @@ HR Relationships build upon:
 - Policy
 - Domain Governance
 
-Additional HR specifications define how Relationships participate in Processes and Events.
+No further HR specifications in this version define how Relationships participate in Processes and Events.
 
 ---
 

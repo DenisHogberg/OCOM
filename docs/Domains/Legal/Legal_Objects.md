@@ -32,7 +32,7 @@ A Legal Object is an Entity owned by the Legal Domain.
 
 Legal Objects describe legal relationships and obligations independently of implementation technologies.
 
-Object semantics are defined by the Core Object specification.
+Object semantics are defined by the Object specification (`Meta/Object.md`).
 
 ---
 
@@ -253,7 +253,7 @@ Legal Objects build upon:
 - Policy
 - Domain
 
-Additional Legal specifications define how these Objects interact.
+No further Legal specifications in this version define how these Objects interact.
 
 ---
 

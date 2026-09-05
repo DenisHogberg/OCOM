@@ -192,13 +192,13 @@ Financial Capabilities build upon:
 - Capability
 - Object
 - Lifecycle
-- Process
+- Domain Architecture (Processes)
 - Event
 - Policy
 - Contract
 - Domain Governance
 
-Additional Finance specifications define the business context in which these Capabilities operate.
+No further Finance specifications in this version define the business context in which these Capabilities operate.
 
 ---
 

@@ -213,13 +213,13 @@ Compliance Capabilities build upon:
 - Capability
 - Object
 - Lifecycle
-- Process
+- Domain Architecture (Processes)
 - Event
 - Policy
 - Contract
 - Domain Governance
 
-Additional Compliance specifications define the business context in which these Capabilities operate.
+No further Compliance specifications in this version define the business context in which these Capabilities operate.
 
 ---
 

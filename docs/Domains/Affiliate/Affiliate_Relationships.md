@@ -34,7 +34,7 @@ An Affiliate Relationship is a governed business association between one or more
 
 Relationships express how Affiliate Objects participate in enterprise partner management and referral activities without transferring Ownership.
 
-Relationship semantics are defined by the Core Relationship specification.
+Relationship semantics are defined by the Relationship specifications (`Meta/Relationship.md`, `Models/Relationship.md`).
 
 ---
 
@@ -231,7 +231,7 @@ Affiliate Relationships build upon:
 - Event
 - Domain Governance
 
-Additional Affiliate specifications define how Relationships participate in Affiliate Processes.
+No further Affiliate specifications in this version define how Relationships participate in Affiliate Processes.
 
 ---
 

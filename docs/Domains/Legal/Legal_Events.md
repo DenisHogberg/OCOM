@@ -34,7 +34,7 @@ A Legal Event is an immutable business fact representing a completed change affe
 
 Legal Events communicate completed legal activities rather than commands, requests, or intentions.
 
-Event semantics are defined by the Core Event specification.
+Event semantics are defined by the Event specification (`Models/Event.md`).
 
 ---
 
@@ -230,7 +230,7 @@ Legal Events build upon:
 - Policy
 - Domain Governance
 
-Additional Legal specifications define which Events are emitted by individual Processes and Capabilities.
+No further Legal specifications in this version define which Events are emitted by individual Processes and Capabilities.
 
 ---
 

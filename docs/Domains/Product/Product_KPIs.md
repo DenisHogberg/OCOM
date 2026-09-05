@@ -232,7 +232,7 @@ Product KPIs build upon:
 - Policy
 - Governance
 
-Additional Product specifications define the business context in which KPIs are evaluated.
+No further Product specifications in this version define the business context in which KPIs are evaluated.
 
 ---
 

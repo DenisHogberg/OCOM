@@ -34,7 +34,7 @@ A Support Object is a business entity owned by the Support Domain.
 
 Support Objects describe service interactions, operational issues, resolution activities, support knowledge, and service coordination.
 
-Object semantics are defined by the Core Object specification.
+Object semantics are defined by the Object specification (`Meta/Object.md`).
 
 ---
 
@@ -220,7 +220,7 @@ Support Objects build upon:
 - Policy
 - Domain Governance
 
-Additional Support specifications define the behavior of individual Object categories.
+No further Support specifications in this version define the behavior of individual Object categories.
 
 ---
 

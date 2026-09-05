@@ -8,7 +8,7 @@
 
 # AI KPIs
 
-**Document ID:** DOMAIN-AI-KPIS-01
+**Document ID:** DOMAIN-AI-KPI-01
 
 **Status:** Draft
 
@@ -34,7 +34,7 @@ An AI KPI is a measurable business indicator that evaluates the performance of A
 
 AI KPIs support governance, optimization, risk management, and continuous improvement.
 
-Metric definitions are governed by the Core KPI specification.
+No shared KPI specification exists in this version of the OCOM Specification; for the purposes of this document a KPI is as defined in the Definition section above. The absence of a shared definition is recorded as `Governance/Architecture-Observations.md#ao-038`.
 
 ---
 
@@ -238,10 +238,10 @@ AI KPIs build upon:
 
 - KPI
 - Capability
-- Process
+- Domain Architecture (Processes)
 - Lifecycle
 - Event
-- AI Governance
+- Domain Governance
 
 Additional specifications define enterprise-wide AI measurement and reporting.
 

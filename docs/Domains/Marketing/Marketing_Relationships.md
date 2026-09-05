@@ -34,7 +34,7 @@ A Marketing Relationship is a governed business association between one or more 
 
 Relationships express how Marketing Objects participate in enterprise operations without transferring Ownership.
 
-Relationship semantics are defined by the Core Relationship specification.
+Relationship semantics are defined by the Relationship specifications (`Meta/Relationship.md`, `Models/Relationship.md`).
 
 ---
 
@@ -230,7 +230,7 @@ Marketing Relationships build upon:
 - Event
 - Domain Governance
 
-Additional Marketing specifications define how Relationships participate in Marketing Processes.
+No further Marketing specifications in this version define how Relationships participate in Marketing Processes.
 
 ---
 

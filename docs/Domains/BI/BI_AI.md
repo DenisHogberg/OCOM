@@ -128,7 +128,7 @@ Final business authority remains outside AI unless organizational Policies expli
 BI AI shall operate under:
 
 - Domain Governance;
-- AI Governance;
+- the Governance requirements of the AI specification (AI/Overview.md, Governance section);
 - applicable Policies;
 - applicable Contracts;
 - applicable Constraints.
@@ -186,7 +186,7 @@ Breaking behavioral changes shall require explicit governance.
 BI AI builds upon:
 
 - AI
-- AI Governance
+- Domain Governance
 - Memory
 - Capability
 - Object
@@ -195,7 +195,7 @@ BI AI builds upon:
 - Contract
 - Domain Governance
 
-Additional BI specifications define the business context in which AI operates.
+No further BI specifications in this version define the business context in which AI operates.
 
 ---
 

@@ -8,7 +8,7 @@
 
 # Finance Domain
 
-**Document ID:** DOMAIN-FINANCE-README-01
+**Document ID:** DOMAIN-FINANCE-OVERVIEW-01
 
 **Status:** Draft
 
@@ -82,7 +82,7 @@ The Finance Domain manages business Objects related to financial operations.
 
 The complete Object model is defined in:
 
-- Objects.md
+- Finance_Objects.md
 
 ---
 

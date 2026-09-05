@@ -34,7 +34,7 @@ A Marketing Lifecycle is a governed sequence of business states representing the
 
 Lifecycle transitions reflect changes in business status and shall occur only through governed business activities.
 
-Lifecycle semantics are defined by the Core Lifecycle specification.
+Lifecycle semantics are defined by the Lifecycle Model (`Models/Lifecycle.md`).
 
 ---
 
@@ -301,11 +301,11 @@ Marketing Lifecycles build upon:
 - Object
 - Event
 - Policy
-- Process
+- Domain Architecture (Processes)
 - Relationship
 - Domain Governance
 
-Additional Marketing specifications define the Lifecycles of specific Marketing Object categories.
+No further Marketing specifications in this version define the Lifecycles of specific Marketing Object categories.
 
 ---
 

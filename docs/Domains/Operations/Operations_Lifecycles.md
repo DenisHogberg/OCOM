@@ -34,7 +34,7 @@ An Operational Lifecycle defines the permissible business states and transitions
 
 Every Operational Entity participates in a governed Lifecycle throughout its existence.
 
-Lifecycle semantics are defined by the Core Lifecycle specification.
+Lifecycle semantics are defined by the Lifecycle Model (`Models/Lifecycle.md`).
 
 ---
 
@@ -253,10 +253,10 @@ Operational Lifecycles build upon:
 - Object
 - Event
 - Policy
-- Process
+- Domain Architecture (Processes)
 - Domain Governance
 
-Additional Operations specifications define Lifecycles for individual Operational Entities.
+No further Operations specifications in this version define Lifecycles for individual Operational Entities.
 
 ---
 

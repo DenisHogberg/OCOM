@@ -203,7 +203,7 @@ Compliance Relationships build upon:
 - Contract
 - Domain
 
-Additional Compliance specifications define the Objects participating in these Relationships.
+No further Compliance specifications in this version define the Objects participating in these Relationships.
 
 ---
 

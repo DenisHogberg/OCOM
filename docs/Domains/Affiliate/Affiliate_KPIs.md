@@ -34,7 +34,7 @@ An Affiliate KPI is a measurable business indicator used to evaluate the perform
 
 Affiliate KPIs measure business outcomes owned by the Affiliate Domain rather than customer relationships, financial accounting, or technical tracking infrastructure.
 
-KPI semantics are defined by the Core KPI specification.
+No shared KPI specification exists in this version of the OCOM Specification; for the purposes of this document a KPI is as defined in the Definition section above. The absence of a shared definition is recorded as `Governance/Architecture-Observations.md#ao-038`.
 
 ---
 
@@ -261,7 +261,7 @@ Affiliate KPIs build upon:
 - Policy
 - Governance
 
-Additional Affiliate specifications define the business context in which KPIs are evaluated.
+No further Affiliate specifications in this version define the business context in which KPIs are evaluated.
 
 ---
 

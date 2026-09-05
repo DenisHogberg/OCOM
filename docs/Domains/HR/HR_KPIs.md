@@ -34,7 +34,7 @@ An HR KPI is a measurable business indicator used to evaluate the performance of
 
 HR KPIs measure workforce outcomes rather than payroll processing, identity management, or technical HR systems.
 
-KPI semantics are defined by the Core KPI specification.
+No shared KPI specification exists in this version of the OCOM Specification; for the purposes of this document a KPI is as defined in the Definition section above. The absence of a shared definition is recorded as `Governance/Architecture-Observations.md#ao-038`.
 
 ---
 
@@ -259,7 +259,7 @@ HR KPIs build upon:
 - Policy
 - Governance
 
-Additional HR specifications define the business context in which KPIs are evaluated.
+No further HR specifications in this version define the business context in which KPIs are evaluated.
 
 ---
 

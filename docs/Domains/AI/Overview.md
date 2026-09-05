@@ -8,7 +8,7 @@
 
 # AI Domain
 
-**Document ID:** DOMAIN-AI-README-01
+**Document ID:** DOMAIN-AI-OVERVIEW-01
 
 **Status:** Draft
 
@@ -142,7 +142,7 @@ The AI Domain builds upon:
 - Core Capability
 - Core Policy
 
-Additional AI specifications define reasoning, memory, governance, and execution.
+No further AI specifications in this version define reasoning, memory, governance, and execution.
 
 ---
 

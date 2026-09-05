@@ -34,7 +34,7 @@ An Operational Process is a coordinated sequence of business activities involvin
 
 Processes manage operational work performed by people, AI, or systems while Entities remain the authoritative source of operational state.
 
-Process semantics are defined by the Core Process specification.
+The OCOM Core, Meta and Models tiers do not define Process in this version. Domain Processes are described in `Domains/Common/Domain Architecture.md` (Processes); their relationship to Workflow (`Core/Terminology.md`, `Models/Workflow.md`) is an open item recorded as `Governance/Architecture-Observations.md#ao-037`.
 
 ---
 
@@ -264,7 +264,7 @@ Process evolution shall not redefine Entity semantics.
 
 Operational Processes build upon:
 
-- Process
+- Domain Architecture (Processes)
 - Object
 - Lifecycle
 - Event
@@ -272,7 +272,7 @@ Operational Processes build upon:
 - Capability
 - Domain Governance
 
-Additional Operations specifications define Capabilities that implement these Processes.
+No further Operations specifications in this version define Capabilities that implement these Processes.
 
 ---
 

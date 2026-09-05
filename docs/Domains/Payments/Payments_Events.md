@@ -234,7 +234,7 @@ Payment Events build upon:
 - Domain Events
 - Domain Communication
 - Domain Integration
-- Meta/Event
+- Models/Event
 - Meta/Object
 - Policy
 - Contract

@@ -232,7 +232,7 @@ Compliance KPIs build upon:
 - Policy
 - Governance
 
-Additional Compliance specifications define the business context in which KPIs are evaluated.
+No further Compliance specifications in this version define the business context in which KPIs are evaluated.
 
 ---
 

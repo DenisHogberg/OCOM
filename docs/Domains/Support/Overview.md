@@ -8,7 +8,7 @@
 
 # Support Domain
 
-**Document ID:** DOMAIN-SUPPORT-README-01
+**Document ID:** DOMAIN-SUPPORT-OVERVIEW-01
 
 **Status:** Draft
 
@@ -189,13 +189,13 @@ The Support Domain builds upon:
 - Relationship
 - Lifecycle
 - Event
-- Process
+- Domain Architecture (Processes)
 - Capability
 - Policy
 - AI
 - Governance
 
-Additional Support specifications define the detailed behavior of individual Support Objects.
+No further Support specifications in this version define the detailed behavior of individual Support Objects.
 
 ---
 

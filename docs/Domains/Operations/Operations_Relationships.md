@@ -34,7 +34,7 @@ An Operational Relationship is a governed business association between two or mo
 
 Operational Relationships define execution, coordination, scheduling, assignment, dependency, and resource associations.
 
-Relationship semantics are defined by the Core Relationship specification.
+Relationship semantics are defined by the Relationship specifications (`Meta/Relationship.md`, `Models/Relationship.md`).
 
 ---
 
@@ -251,7 +251,7 @@ Operational Relationships build upon:
 - Policy
 - Domain Governance
 
-Additional Operations specifications define how Relationships participate in Processes and Events.
+No further Operations specifications in this version define how Relationships participate in Processes and Events.
 
 ---
 

@@ -171,7 +171,7 @@ Every Product Object shall possess a defined Lifecycle.
 
 Lifecycle definitions are specified in:
 
-- Lifecycles.md
+- Product_Lifecycles.md
 
 ---
 
@@ -216,7 +216,7 @@ Product Objects build upon:
 - Contract
 - Domain
 
-Additional Product specifications define how these Objects interact.
+No further Product specifications in this version define how these Objects interact.
 
 ---
 

@@ -8,7 +8,7 @@
 
 # Human Resources Domain
 
-**Document ID:** DOMAIN-HR-README-01
+**Document ID:** DOMAIN-HR-OVERVIEW-01
 
 **Status:** Draft
 
@@ -177,7 +177,7 @@ This specification builds upon:
 - Policy
 - AI
 
-Additional HR specifications define workforce behavior in greater detail.
+No further HR specifications in this version define workforce behavior in greater detail.
 
 ---
 

@@ -34,7 +34,7 @@ A Support Process is a coordinated sequence of business activities performed to 
 
 Processes operate on Support Objects according to applicable Policies and Lifecycles.
 
-Process semantics are defined by the Core Process specification.
+The OCOM Core, Meta and Models tiers do not define Process in this version. Domain Processes are described in `Domains/Common/Domain Architecture.md` (Processes); their relationship to Workflow (`Core/Terminology.md`, `Models/Workflow.md`) is an open item recorded as `Governance/Architecture-Observations.md#ao-037`.
 
 ---
 
@@ -225,7 +225,7 @@ Process evolution shall preserve Object semantics.
 
 Support Processes build upon:
 
-- Process
+- Domain Architecture (Processes)
 - Object
 - Lifecycle
 - Event
@@ -233,7 +233,7 @@ Support Processes build upon:
 - Capability
 - Domain Governance
 
-Additional Support specifications define which Objects and Events participate in individual Processes.
+No further Support specifications in this version define which Objects and Events participate in individual Processes.
 
 ---
 

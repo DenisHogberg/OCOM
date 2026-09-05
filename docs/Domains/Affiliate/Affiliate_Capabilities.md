@@ -238,12 +238,12 @@ Affiliate Capabilities build upon:
 - Capability
 - Object
 - Lifecycle
-- Process
+- Domain Architecture (Processes)
 - Event
 - Policy
 - Domain Governance
 
-Additional Affiliate specifications define how individual Capabilities interact with Affiliate Objects.
+No further Affiliate specifications in this version define how individual Capabilities interact with Affiliate Objects.
 
 ---
 

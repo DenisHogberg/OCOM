@@ -34,7 +34,7 @@ A Legal Process is a coordinated sequence of business activities involving one o
 
 Processes manage work performed by people, AI, or systems while Entities remain the authoritative source of legal state.
 
-Process semantics are defined by the Core Process specification.
+The OCOM Core, Meta and Models tiers do not define Process in this version. Domain Processes are described in `Domains/Common/Domain Architecture.md` (Processes); their relationship to Workflow (`Core/Terminology.md`, `Models/Workflow.md`) is an open item recorded as `Governance/Architecture-Observations.md#ao-037`.
 
 ---
 
@@ -249,7 +249,7 @@ Process evolution shall not redefine Entity semantics.
 
 Legal Processes build upon:
 
-- Process
+- Domain Architecture (Processes)
 - Object
 - Lifecycle
 - Event
@@ -257,7 +257,7 @@ Legal Processes build upon:
 - Capability
 - Domain Governance
 
-Additional Legal specifications define Capabilities that implement these Processes.
+No further Legal specifications in this version define Capabilities that implement these Processes.
 
 ---
 

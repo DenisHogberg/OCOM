@@ -206,7 +206,7 @@ CRM Policies build upon:
 - Contract
 - Constraint
 
-Additional CRM specifications define where individual Policies apply.
+No further CRM specifications in this version define where individual Policies apply.
 
 ---
 

@@ -34,7 +34,7 @@ An HR Lifecycle defines the permissible business states and transitions of an HR
 
 Every HR Entity participates in a governed Lifecycle throughout its existence.
 
-Lifecycle semantics are defined by the Core Lifecycle specification.
+Lifecycle semantics are defined by the Lifecycle Model (`Models/Lifecycle.md`).
 
 ---
 
@@ -250,10 +250,10 @@ HR Lifecycles build upon:
 - Object
 - Event
 - Policy
-- Process
+- Domain Architecture (Processes)
 - Domain Governance
 
-Additional HR specifications define Lifecycles for individual workforce Objects.
+No further HR specifications in this version define Lifecycles for individual workforce Objects.
 
 ---
 

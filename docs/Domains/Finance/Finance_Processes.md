@@ -34,7 +34,7 @@ A Financial Process is a coordinated sequence of business activities involving F
 
 Processes orchestrate business behavior without owning Object state or modifying Object Identity.
 
-Process semantics are defined by the Meta specification.
+The OCOM Core, Meta and Models tiers do not define Process in this version. Domain Processes are described in `Domains/Common/Domain Architecture.md` (Processes); their relationship to Workflow (`Core/Terminology.md`, `Models/Workflow.md`) is an open item recorded as `Governance/Architecture-Observations.md#ao-037`.
 
 ---
 
@@ -188,7 +188,7 @@ Process evolution shall not invalidate Object semantics.
 
 Financial Processes build upon:
 
-- Process
+- Domain Architecture (Processes)
 - Object
 - Lifecycle
 - Capability
@@ -197,7 +197,7 @@ Financial Processes build upon:
 - Contract
 - Domain Governance
 
-Additional Finance specifications define the Objects and Capabilities participating in these Processes.
+No further Finance specifications in this version define the Objects and Capabilities participating in these Processes.
 
 ---
 

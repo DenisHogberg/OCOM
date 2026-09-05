@@ -251,10 +251,10 @@ AI Capabilities build upon:
 - Capability
 - Object
 - Lifecycle
-- Process
+- Domain Architecture (Processes)
 - Event
 - Policy
-- AI Governance
+- Domain Governance
 
 Additional specifications define enterprise AI Memory, Reasoning, and Operational Intelligence.
 

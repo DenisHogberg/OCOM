@@ -206,7 +206,7 @@ Product Events build upon:
 - Contract
 - Domain
 
-Additional Product specifications define the Objects producing these Events.
+No further Product specifications in this version define the Objects producing these Events.
 
 ---
 

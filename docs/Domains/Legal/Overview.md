@@ -8,7 +8,7 @@
 
 # Legal Domain
 
-**Document ID:** DOMAIN-LEGAL-README-01
+**Document ID:** DOMAIN-LEGAL-OVERVIEW-01
 
 **Status:** Draft
 
@@ -180,7 +180,7 @@ This specification builds upon:
 - Policy
 - AI
 
-Additional Legal specifications define legal behavior in greater detail.
+No further Legal specifications in this version define legal behavior in greater detail.
 
 ---
 

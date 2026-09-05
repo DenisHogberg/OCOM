@@ -34,7 +34,7 @@ An AI Process is a coordinated sequence of business activities involving one or 
 
 AI Processes organize reasoning, interaction, execution, evaluation, and governance while Entities remain the authoritative representation of AI state.
 
-Process semantics are defined by the Core Process specification.
+The OCOM Core, Meta and Models tiers do not define Process in this version. Domain Processes are described in `Domains/Common/Domain Architecture.md` (Processes); their relationship to Workflow (`Core/Terminology.md`, `Models/Workflow.md`) is an open item recorded as `Governance/Architecture-Observations.md#ao-037`.
 
 ---
 
@@ -248,15 +248,15 @@ Process evolution shall not redefine Entity semantics.
 
 AI Processes build upon:
 
-- Process
+- Domain Architecture (Processes)
 - Object
 - Lifecycle
 - Event
 - Capability
 - Policy
-- AI Governance
+- Domain Governance
 
-Additional AI specifications define Capabilities implementing these Processes.
+No further AI specifications in this version define Capabilities implementing these Processes.
 
 ---
 

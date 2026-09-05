@@ -206,7 +206,7 @@ Payment KPIs build upon:
 - Policy
 - Governance
 
-Additional Payments specifications define the business context in which KPIs are evaluated.
+No further Payments specifications in this version define the business context in which KPIs are evaluated.
 
 ---
 

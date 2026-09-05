@@ -100,21 +100,11 @@ Operational Memory Architecture
 
 AI Architecture
 
-↓
-
-Governance Architecture
-
-↓
-
-Integration Architecture
-
-↓
-
-Deployment Patterns
-
 ```
 
 Each view focuses on one architectural concern while remaining consistent with the overall object-centric operating model.
+
+Governance Architecture, Integration Architecture and Deployment Patterns are not part of this version; the six views listed in `README.md` are the complete set for v0.1.
 
 ---
 

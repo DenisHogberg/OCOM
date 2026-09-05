@@ -34,7 +34,7 @@ A Product Process is a governed sequence of business activities coordinating Pro
 
 Processes coordinate Product Objects but do not own their Lifecycles.
 
-Process semantics are defined by the Core specification.
+The OCOM Core, Meta and Models tiers do not define Process in this version. Domain Processes are described in `Domains/Common/Domain Architecture.md` (Processes); their relationship to Workflow (`Core/Terminology.md`, `Models/Workflow.md`) is an open item recorded as `Governance/Architecture-Observations.md#ao-037`.
 
 ---
 
@@ -218,7 +218,7 @@ Breaking Process changes shall require explicit governance.
 
 Product Processes build upon:
 
-- Process
+- Domain Architecture (Processes)
 - Object
 - Lifecycle
 - Event
@@ -226,7 +226,7 @@ Product Processes build upon:
 - Policy
 - Domain Governance
 
-Additional Product specifications define the Objects coordinated by these Processes.
+No further Product specifications in this version define the Objects coordinated by these Processes.
 
 ---
 

@@ -256,7 +256,7 @@ Product AI builds upon:
 - Capability
 - Domain Governance
 
-Additional AI specifications define enterprise-wide AI behavior.
+No further AI specifications in this version define enterprise-wide AI behavior.
 
 ---
 

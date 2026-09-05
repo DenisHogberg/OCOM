@@ -32,7 +32,7 @@ An Operational Object is an Entity owned by the Operations Domain.
 
 Operational Objects describe work execution independently of implementation technologies.
 
-Object semantics are defined by the Core Object specification.
+Object semantics are defined by the Object specification (`Meta/Object.md`).
 
 ---
 
@@ -268,7 +268,7 @@ Operational Objects build upon:
 - Policy
 - Domain
 
-Additional Operations specifications define how these Objects interact.
+No further Operations specifications in this version define how these Objects interact.
 
 ---
 

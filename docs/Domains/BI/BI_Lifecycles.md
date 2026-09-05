@@ -8,7 +8,7 @@
 
 # Business Intelligence Lifecycles
 
-**Document ID:** DOMAIN-BI-LIFECYCLE-01
+**Document ID:** DOMAIN-BI-LIFECYCLES-01
 
 **Status:** Draft
 
@@ -34,7 +34,7 @@ An Analytical Lifecycle is the ordered progression of business states for an Ana
 
 Lifecycle transitions represent changes in analytical status and shall not imply implementation-specific workflows.
 
-Lifecycle semantics are defined by the Meta specification.
+Lifecycle semantics are defined by the Lifecycle Model (`Models/Lifecycle.md`).
 
 ---
 
@@ -166,7 +166,7 @@ Analytical Lifecycles build upon:
 - Constraint
 - Governance
 
-Additional BI specifications define the Objects participating in these Lifecycles.
+No further BI specifications in this version define the Objects participating in these Lifecycles.
 
 ---
 

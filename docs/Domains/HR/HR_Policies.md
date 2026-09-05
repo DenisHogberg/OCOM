@@ -34,7 +34,7 @@ An HR Policy is a business rule that constrains, authorizes, or guides behavior 
 
 Policies govern HR Entities, Processes, Capabilities, Relationships, and Events independently of implementation technologies.
 
-Policy semantics are defined by the Core Policy specification.
+Policy semantics are defined by the Policy specification (`Meta/Policy.md`).
 
 ---
 
@@ -264,7 +264,7 @@ HR Policies build upon:
 - Contract
 - Constraint
 
-Additional HR specifications define where individual Policies apply.
+No further HR specifications in this version define where individual Policies apply.
 
 ---
 

@@ -8,7 +8,7 @@
 
 # Operations Domain
 
-**Document ID:** DOMAIN-OPERATIONS-README-01
+**Document ID:** DOMAIN-OPERATIONS-OVERVIEW-01
 
 **Status:** Draft
 
@@ -182,7 +182,7 @@ This specification builds upon:
 - Policy
 - AI
 
-Additional Operations specifications define operational behavior in greater detail.
+No further Operations specifications in this version define operational behavior in greater detail.
 
 ---
 

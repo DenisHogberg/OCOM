@@ -182,7 +182,7 @@ Payment Lifecycles build upon:
 
 - Lifecycle
 - State
-- Transition
+- State (`Models/State.md`, State Transitions)
 - Domain
 - Domain Events
 - Meta/Object

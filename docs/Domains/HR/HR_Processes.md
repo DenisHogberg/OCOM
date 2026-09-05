@@ -34,7 +34,7 @@ An HR Process is a coordinated sequence of business activities performed to achi
 
 Processes operate on HR Entities according to applicable Policies and Lifecycles.
 
-Process semantics are defined by the Core Process specification.
+The OCOM Core, Meta and Models tiers do not define Process in this version. Domain Processes are described in `Domains/Common/Domain Architecture.md` (Processes); their relationship to Workflow (`Core/Terminology.md`, `Models/Workflow.md`) is an open item recorded as `Governance/Architecture-Observations.md#ao-037`.
 
 ---
 
@@ -223,7 +223,7 @@ Process evolution shall preserve HR Object semantics.
 
 HR Processes build upon:
 
-- Process
+- Domain Architecture (Processes)
 - Object
 - Lifecycle
 - Event
@@ -231,7 +231,7 @@ HR Processes build upon:
 - Capability
 - Domain Governance
 
-Additional HR specifications define which Objects and Events participate in individual Processes.
+No further HR specifications in this version define which Objects and Events participate in individual Processes.
 
 ---
 

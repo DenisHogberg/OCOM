@@ -34,7 +34,7 @@ A Legal Relationship is a governed business association between two or more Enti
 
 Legal Relationships define contractual, regulatory, intellectual property, and legal governance connections.
 
-Relationship semantics are defined by the Core Relationship specification.
+Relationship semantics are defined by the Relationship specifications (`Meta/Relationship.md`, `Models/Relationship.md`).
 
 ---
 
@@ -242,7 +242,7 @@ Legal Relationships build upon:
 - Policy
 - Domain Governance
 
-Additional Legal specifications define how Relationships participate in Processes and Events.
+No further Legal specifications in this version define how Relationships participate in Processes and Events.
 
 ---
 

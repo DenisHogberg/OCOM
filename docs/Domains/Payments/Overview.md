@@ -8,7 +8,7 @@
 
 # Payments Domain
 
-**Document ID:** DOMAIN-PAYMENTS-README-01
+**Document ID:** DOMAIN-PAYMENTS-OVERVIEW-01
 
 **Status:** Draft
 
@@ -80,7 +80,7 @@ The Payments Domain manages business Objects related to payment operations.
 
 The complete Object model is defined in:
 
-- Objects.md
+- Payments_Objects.md
 
 ---
 

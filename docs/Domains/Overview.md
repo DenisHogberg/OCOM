@@ -166,6 +166,7 @@ The Domains package consists of:
 - HR
 - Legal
 - Marketing
+- Operations
 - Payments
 - Product
 - Support

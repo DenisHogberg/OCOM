@@ -106,7 +106,7 @@ Objects representing long-term customer relationships.
 
 Examples include:
 
-- Relationship
+- Customer Relationship
 - Loyalty Membership
 - Customer Status
 - Customer Portfolio

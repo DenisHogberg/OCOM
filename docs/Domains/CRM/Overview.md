@@ -8,7 +8,7 @@
 
 # CRM Domain
 
-**Document ID:** DOMAIN-CRM-README-01
+**Document ID:** DOMAIN-CRM-OVERVIEW-01
 
 **Status:** Draft
 
@@ -37,6 +37,7 @@ The CRM Domain defines:
 - CRM Events;
 - customer lifecycle interactions;
 - CRM Processes;
+- CRM Capabilities;
 - CRM Policies;
 - CRM KPIs;
 - AI capabilities within CRM.
@@ -79,7 +80,7 @@ The CRM Domain manages business Objects related to customer relationships.
 
 The complete Object model is defined in:
 
-- Objects.md
+- CRM Objects.md
 
 ---
 
@@ -92,6 +93,7 @@ The CRM Domain consists of:
 - Events
 - Lifecycles
 - Processes
+- Capabilities
 - KPIs
 - Policies
 - AI

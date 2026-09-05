@@ -34,7 +34,7 @@ An AI Relationship is a governed business association involving one or more AI E
 
 AI Relationships represent logical business semantics rather than implementation-specific references.
 
-Relationship semantics are defined by the Core Relationship specification.
+Relationship semantics are defined by the Relationship specifications (`Meta/Relationship.md`, `Models/Relationship.md`).
 
 ---
 
@@ -199,7 +199,7 @@ AI Relationships build upon:
 - Object
 - Lifecycle
 - Policy
-- AI Governance
+- Domain Governance
 
 Additional specifications define AI Memory, Reasoning, and Context Management.
 

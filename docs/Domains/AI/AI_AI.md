@@ -20,7 +20,7 @@
 
 # Purpose
 
-This document defines how Artificial Intelligence governs and improves itself within the AI Domain.
+This document defines how Artificial Intelligence observes, evaluates, and improves itself within the AI Domain, under governance authority that remains external to AI.
 
 The AI Domain is unique among OCOM Domains because its Entities, Processes, Capabilities, and Policies are themselves consumed and coordinated by AI.
 

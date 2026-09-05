@@ -8,7 +8,7 @@
 
 # Compliance Domain
 
-**Document ID:** DOMAIN-COMPLIANCE-README-01
+**Document ID:** DOMAIN-COMPLIANCE-OVERVIEW-01
 
 **Status:** Draft
 
@@ -35,7 +35,7 @@ The Compliance Domain defines:
 - managed Compliance Objects;
 - compliance Relationships;
 - Compliance Events;
-- compliance Lifecycles;
+- compliance Lifecycles (defined by `Models/Lifecycle.md`; no Compliance-specific Lifecycles document in version 0.1);
 - compliance Processes;
 - Compliance Capabilities;
 - Compliance KPIs;
@@ -82,7 +82,7 @@ The Compliance Domain manages business Objects representing enterprise complianc
 
 The complete Object model is defined in:
 
-- Objects.md
+- Compliance_Objects.md
 
 ---
 
@@ -93,7 +93,7 @@ The Compliance Domain consists of:
 - Objects
 - Relationships
 - Events
-- Lifecycles
+- Lifecycles (via `Models/Lifecycle.md`; no profile-specific document in version 0.1)
 - Processes
 - Capabilities
 - KPIs

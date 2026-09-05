@@ -34,7 +34,7 @@ A Marketing Policy is a business rule that constrains, authorizes, or guides beh
 
 Policies define expected marketing behavior independently of marketing automation platforms, advertising systems, or implementation technologies.
 
-Policy semantics are defined by the Core Policy specification.
+Policy semantics are defined by the Policy specification (`Meta/Policy.md`).
 
 ---
 
@@ -263,7 +263,7 @@ Marketing Policies build upon:
 - Contract
 - Constraint
 
-Additional Marketing specifications define where individual Policies apply.
+No further Marketing specifications in this version define where individual Policies apply.
 
 ---
 
