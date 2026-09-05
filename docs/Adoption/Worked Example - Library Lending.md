@@ -37,7 +37,7 @@ Every Object requires Identity (`Meta/Identity.md`) — something that uniquely 
 
 ## Ownership
 
-Every Object requires Ownership (`Meta/Ownership.md`), which itself requires an Identifier, an Owner, an Owned Object, a Responsibility Scope, and an Effective Date.
+Every Object supports Ownership (`Meta/Object.md` lists Ownership among an Object's Core Characteristics but states it as should, not shall; `Meta/Ownership.md` says where applicable; the divergence is open as AO-015), which itself requires an Identifier, an Owner, an Owned Object, a Responsibility Scope, and an Effective Date.
 
 - Identifier: `OWN-LIB-000198`.
 - Owner: the library's Riverside Branch.
@@ -49,7 +49,7 @@ Ownership answers *who is accountable for this Object*. It does not answer who c
 
 ## Relationship
 
-Every Object requires Relationships (`Meta/Relationship.md`), each of which requires an Identifier, a Source Object, a Target Object, and a Relationship Type.
+Every Object supports Relationships (`Meta/Object.md`, "support relationships"), each of which requires an Identifier, a Source Object, a Target Object, and a Relationship Type.
 
 - Identifier: `LOAN-2026-08-0431`.
 - Source Object: Patron `P-10432`.
@@ -65,15 +65,16 @@ This is the entire structural shape of a loan: one Relationship record connectin
 Item `LIB-000198`'s Lifecycle, illustrated:
 
 ```text
-Available → On Loan → Overdue → Returned → Available
-                    ↘ Lost / Withdrawn
+Available → On Loan → Returned → Available
+                 ↘ Overdue → Returned → Available
+                 ↘ Lost / Withdrawn
 ```
 
 These state names are illustrative, not a normative enumeration — `Models/Lifecycle.md` defines the structural rules a Lifecycle must satisfy (an initial State, permitted Transitions, optional terminal States), not a fixed list of state names for any particular kind of thing, and this example does not invent one on the specification's behalf.
 
 ## Metadata and Classification
 
-Every Object requires Metadata and Classification (`Meta/Metadata.md`, `Meta/Classification.md`).
+Every Object contains Metadata (`Meta/Object.md` says shall, `Meta/Metadata.md` says may; the divergence is open as AO-022). Every Object may be classified (`Meta/Object.md` lists Classification among an Object's Core Characteristics and states it as may).
 
 - Item Metadata (descriptive): title, author, edition.
 - Item Classification: `Book` — distinguishing it from `Journal` or `Media`, the library's other Item types.
@@ -82,7 +83,7 @@ Every Object requires Metadata and Classification (`Meta/Metadata.md`, `Meta/Cla
 
 Two concepts are absent from this example, deliberately, and for two different reasons:
 
-**Governance** is one of Object's seven Core Characteristics (`Meta/Object.md`) — required, not optional. It is not demonstrated here because no OCOM document defines what Governance means as a per-Object characteristic (distinct from `docs/Governance/`, which governs the specification itself). This is a real, open gap in OCOM, not something this example can honestly fill in. See `Governance/ADR-Candidates.md#cand-010`.
+**Governance** is one of Object's seven Core Characteristics (`Meta/Object.md`) — required, not optional. It is not demonstrated here because no OCOM document defines what Governance means as a per-Object characteristic (distinct from `docs/Governance/`, which governs the specification itself). This is a real, open gap in OCOM, not something this example can honestly fill in. It is recorded as `Governance/Architecture-Observations.md`, AO-023; no ADR Candidate records it.
 
 **Evidence** is not one of Object's Core Characteristics at all, and its absence here is a different kind of fact than Governance's. It is a Constitution-level principle (`Core/Constitution.md`, Principle 3) and a Memory-tier concept (`Memory/Evidence Overlay.md`), a different document layer than the one this example illustrates — there is nothing missing here to fill in.
 
