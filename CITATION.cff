@@ -11,7 +11,8 @@ type: software
 authors:
   - family-names: Petrenko
     given-names: Denis
-    affiliation: Independent
+    affiliation: Independent Researcher
+    orcid: "https://orcid.org/0009-0001-3381-5957"
 repository-code: "https://github.com/DenisHogberg/OCOM"
 url: "https://ocom.uno"
 license:
@@ -36,6 +37,7 @@ preferred-citation:
   authors:
     - family-names: Petrenko
       given-names: Denis
+      orcid: "https://orcid.org/0009-0001-3381-5957"
   year: 2026
   url: "https://ocom.uno"
   doi: 10.5281/zenodo.21510450
