@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you reference OCOM, please cite it as below."
+title: "OCOM: the Object-Centric Operating Model"
+abstract: >-
+  An open, technology-independent specification that describes an organization
+  as a system of governed objects with identity, ownership, lifecycle, and
+  evidence, where dashboards, documents, graphs, indexes and agent context are
+  rebuildable projections of that governed source rather than second sources of
+  truth.
+type: software
+authors:
+  - family-names: Petrenko
+    given-names: Denis
+    affiliation: Independent
+repository-code: "https://github.com/DenisHogberg/OCOM"
+url: "https://ocom.uno"
+license:
+  - Apache-2.0
+  - CC-BY-4.0
+keywords:
+  - operating model
+  - enterprise architecture
+  - governance
+  - knowledge representation
+  - provenance
+  - AI agents
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.21510450
+    description: >-
+      Concept DOI. Always resolves to the most recent published version of the
+      specification.
+preferred-citation:
+  type: standard
+  title: "OCOM: the Object-Centric Operating Model specification"
+  authors:
+    - family-names: Petrenko
+      given-names: Denis
+  year: 2026
+  url: "https://ocom.uno"
+  doi: 10.5281/zenodo.21510450
