@@ -162,15 +162,9 @@ An AI Agent may perform multiple roles simultaneously.
 
 Example:
 
-Coordinator
-
-+
-
-Planner
-
-+
-
-Reviewer
+```
+Coordinator + Planner + Reviewer
+```
 
 Organizations may define additional composite roles.
 

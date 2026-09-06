@@ -40,6 +40,14 @@
 //   local when it is repository-wide. Reformatting every delimiter row is
 //   a whole-repository whitespace rewrite with no reader-visible effect.
 //
+// - MD036 (no emphasis as heading): 113 lines across 40 documents are a
+//   single emphasized sentence on its own line. Most are editorial notes
+//   ("*Note on this revision: ...*") rather than headings, and the rest
+//   are short bold labels inside domain overviews where a real heading
+//   would break the document's flat "#"-per-section structure described
+//   above. Verified directly across the repository; this is the same
+//   class of decision as MD025 and MD041.
+//
 // Left enabled (default) because the repository was checked directly
 // and found already clean against them: no hard tabs, no trailing
 // whitespace, every file ends with a single final newline.
@@ -52,6 +60,7 @@
     "MD033": false,
     "MD040": false,
     "MD041": false,
+    "MD036": false,
     "MD060": false
   },
   // "globs" here is the single source of truth for which files get
