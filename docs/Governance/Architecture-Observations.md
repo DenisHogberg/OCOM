@@ -1218,6 +1218,106 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-054
+
+**Title:** The Publication Applies None of Object's Core Characteristics to Its Own Records, and Nothing Records That It Does Not
+
+**Date observed:** 6 September 2026
+
+**Description:** Surfaced by a self-application review of the published site (6 September 2026), which asked whether ocom.uno models itself the way the specification tells an organization to model itself. Measured over the 185 published JSON and JSON-LD records and the 65 content pages: zero records carry a field naming an owner, a classification, a lifecycle or a governance characteristic; 35 of 65 pages carry no identifier in their masthead; the site's own Consumer Tool, /shape-check, scores every one of the 185 records at 0 or 1 of the seven required Core Characteristics it checks a visitor's model against. The thirteen Core Vocabulary term records are the exception and satisfy every non-ownership clause of Meta/Object.md's Conformance list. Neither this repository nor the site contains any record of the self-application question: a search of docs/ for dogfood, self-application, "applies to itself" and "models itself" returns nothing.
+
+**Impact:** The publication is the first worked example a reader meets, and it demonstrates the model on a hypothetical library while applying almost none of it to itself. A reviewer can reach this with the site's own tool and the site's own data, and the project's own definition of disclosure means no gap here is disclosed.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should decide which classes of published artefact are Objects of the publication's own model and which are outside it, and state the answer once.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Object.md`, `Meta/Ownership.md`, `Governance/Publication-Model.md`, `AO-050`, `AO-053`
+
+---
+
+## AO-055
+
+**Title:** The Site Publishes Ownership as a Pillar and Republishes "Ownership shall never be implicit" While Assigning No Owner to Anything It Publishes
+
+**Date observed:** 6 September 2026
+
+**Description:** Surfaced by a self-application review of the published site (6 September 2026). Core/Principles.md:53 states "Ownership shall never be implicit", Meta/Ownership.md:64 lists the five properties every Ownership assignment shall define, and the site republishes both, in specification.md and on /specification/normative. The site's own strapline, on the home page and in .well-known/ocom.json, names ownership as one of four pillars. A field census across all 185 published JSON and JSON-LD records found no key named owner, ownership, steward, maintainer, custodian, accountable or responsible; the only ownership-adjacent field was release.json's "author", which Meta/Ownership.md:37 expressly separates from ownership.
+
+**Impact:** This is the cheapest and most damaging contradiction available to a reviewer: two sentences from the site and one count. It also removes the accountable party from every record a consumer of the API or the registries reads.
+
+**Recommendation:** Record only; the publication has since published one Ownership assignment (OWN-OCOM-UNO-01) and referenced it from its records, which addresses the publication side. The observation stands for the repository: none of its 388 documents names an owner either.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Principles.md`, `Meta/Ownership.md`, `Meta/Registry.md`, `AO-054`
+
+---
+
+## AO-056
+
+**Title:** The Site's Own Version Labels Follow No Semantic Versioning Rule, Which Core/Versioning.md Requires
+
+**Date observed:** 6 September 2026
+
+**Description:** Surfaced by a self-application review of the published site (6 September 2026). Core/Versioning.md:29 states "The specification follows semantic versioning" in the form MAJOR.MINOR.PATCH. Across the 185 published JSON and JSON-LD records there are 178 occurrences of the value "0.1", 14 of "0.2" and one of "v1", and no three-part version anywhere; release.json carries eight dated releases from 21 July to 5 September 2026, every one labelled version 0.1, including the release that added a Core Vocabulary term, which Versioning.md:51 says requires a minor increment, and five documentation-only releases, which :57 says require a patch increment. The strings "Versioning.md" and "semantic version" appear in none of the site's published files.
+
+**Impact:** Conformance is claimed against a version (Specification/08), and the version label the site publishes does not move when its content does, so a conformance claim cannot be pinned to a state of the specification.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either adopt three-part versions for the published tracks or state, canonically, that the published labels are track names rather than semantic versions.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Versioning.md`, `Governance/Publication-Manifest.md`, `Specification/08 Conformance.md`, `AO-051`
+
+---
+
+## AO-057
+
+**Title:** 83 Published Edges Are Named Relationships and Carry Neither an Identifier nor a Relationship Type
+
+**Date observed:** 6 September 2026
+
+**Description:** Surfaced by a self-application review of the published site (6 September 2026). Meta/Relationship.md:64 requires that every Relationship define an Identifier, a Source Object, a Target Object and a Relationship Type. The site publishes its own knowledge graph as 83 edges of the shape {"from", "to", "aspect"} in graph.json and graph.jsonld, exposes the same set under the field name "relationships" in all thirteen term records, and reports it on the Observatory as the metric "Relationships 83". No edge carries an identifier, and "aspect" is not stated anywhere to be the Relationship Type.
+
+**Impact:** The one place the specification's own structure is published as data uses the name of a governed concept for a structure that does not satisfy it, on the site that defines the concept.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either give the published edges the four required properties or rename the field and the metric to references, which is what they are.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Relationship.md`, `Meta/Reference.md`, `AO-002`, `AO-017`, `AO-052`
+
+---
+
+## AO-058
+
+**Title:** The Status Taxonomy Defines Four States and No Transitions, So the Repository's Own Documents Have No Lifecycle
+
+**Date observed:** 6 September 2026
+
+**Description:** Surfaced by a self-application review of the published site (6 September 2026). Models/Lifecycle.md requires a Lifecycle to define an initial State, permitted Transitions and optional terminal States. Governance/Documentation-Standards.md's Status Taxonomy defines Draft, Informative, Reserved and Planned precisely and defines no transition between them; the word transition does not appear in the document. 315 of the repository's 388 documents carry a Status, and no document states what moves one from Draft to any other value, or whether any terminal state exists.
+
+**Impact:** Lifecycle is one of Object's seven Core Characteristics and one of the four pillars the site publishes. The documents that carry the specification are the one population where the project could demonstrate a Lifecycle, and they have states without a lifecycle.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should add a transition set to the Status Taxonomy, naming the initial state and what authorizes each move.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Models/Lifecycle.md`, `Models/State.md`, `Governance/Documentation-Standards.md`, `AO-054`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1238,3 +1338,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 5 September 2026 | Added AO-037 through AO-044 (Process undefined above the Domain tier, KPI undefined and doubly owned, Lifecycle cardinality in three Domain profiles, profiles not carrying the components their Domain Architecture mandates, Entity profiles naming Lifecycles that do not exist, AI Knowledge declared independent of Memory against Constitution Principles 5 and 6, Reference Architecture carrying shall-clauses under an Informative Status, a Deprecated Tool remaining operational against the Active precondition), surfaced by a full read of the Domains, Entities, AI and Reference Architecture tiers; all record only, not escalated. |
 | 0.1 | 5 September 2026 | Added AO-045 through AO-049 (the Projection tier recognizing two instances while the site publishes four and labelling Convenience Representations canonical, no canonical statement of which tier defines which term, Reference Case naming two different things, AI retrieval presented as a defined capability, Notation absent from both Scope lists), surfaced by a claim-provenance red-team of the published site; all record only, not escalated. AO-022 Related extended with `Meta/Ownership.md` and `AO-018`. |
 | 0.1 | 6 September 2026 | Added AO-050 through AO-053 (two conformance clauses binding an undefined Governance characteristic, the reading path published as normative while disclaiming it, Chapters 4 and 5 disagreeing on Relationship cardinality modality and arity, Evidence published as a pillar while its Definition is reserved), surfaced by an external logic audit of the published site; all record only, not escalated. |
+| 0.1 | 6 September 2026 | Added AO-054 through AO-058, surfaced by a self-application review asking whether the published site models itself the way the specification requires: Object's characteristics absent from the publication's own records, Ownership published as a pillar and assigned nowhere, version labels that follow no semantic versioning rule, 83 edges named Relationships without the required properties, and a Status Taxonomy with four states and no transitions. All record only, not escalated. |
