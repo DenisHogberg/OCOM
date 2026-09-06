@@ -41,8 +41,9 @@ Neither of these is a missing Backlog item. Both are honest limits of what a bac
 Three findings. Ranked by how genuinely new each one is.
 
 **1. AO-003's true blast radius was never assessed — and it is larger than previously recorded.** Direct re-inspection of `Memory/Layered Memory.md` and `Memory/Retention.md` — both explicitly out of scope for the Stage 2 migration and never covered by any Explore pass in `Architecture-Audit-Current-State.md` — found the same unresolved question `AO-003` names for Memory Record's `Status` field, recurring twice more:
- - `Layered Memory.md`: *"Memory may move to a lower layer when confidence decreases, evidence becomes invalid, retention expires..."* — layer promotion/demotion described as in-place mutation of an existing record.
- - `Retention.md`: a `Deleted` retention state, *"The record has been permanently removed... Deletion shall be auditable,"* listed as a Conformance requirement (*"support controlled deletion"*) — direct tension with Constitution §4's *"immutable after creation... never by modifying historical records."* This one is sharper than `Status` or `Layer`: it encodes a real-world legal requirement (retention/erasure obligations) directly against an architectural invariant, not just an ambiguity.
+
+- `Layered Memory.md`: *"Memory may move to a lower layer when confidence decreases, evidence becomes invalid, retention expires..."* — layer promotion/demotion described as in-place mutation of an existing record.
+- `Retention.md`: a `Deleted` retention state, *"The record has been permanently removed... Deletion shall be auditable,"* listed as a Conformance requirement (*"support controlled deletion"*) — direct tension with Constitution §4's *"immutable after creation... never by modifying historical records."* This one is sharper than `Status` or `Layer`: it encodes a real-world legal requirement (retention/erasure obligations) directly against an architectural invariant, not just an ambiguity.
 
  This is not a new Epic. It is a scope correction to **EPIC-A**: the Knowledge/World Model decision already pending there needs to resolve all three manifestations (Status, Layer, Retention) of the same underlying question — is a non-identity attribute of a Memory Record a mutable field or a derived projection — not just the one (`Status`) currently named. `Layered Memory.md` and `Retention.md` should be added to EPIC-A's affected-documents list.
 
@@ -106,7 +107,7 @@ The evidentiary-bar inconsistency is real, and it is disclosed every single time
 
 # Part 8 — Freeze Recommendation
 
-## B — Freeze the architecture and execute the Backlog.
+## B — Freeze the architecture and execute the Backlog
 
 Not A: nothing found in this review — not Part 1's residual conditions, not Part 2's three findings, not Part 3's remaining open terms — is an unresolved *question about the shape of the answer*. Each fits cleanly as an execution item inside the existing Backlog structure (the Layered Memory/Retention finding is a scope correction to EPIC-A's Definition of Done, not a new unknown). Continued exploration would be searching for problems the process is no longer finding new categories of.
 

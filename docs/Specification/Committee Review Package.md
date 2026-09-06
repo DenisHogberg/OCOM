@@ -40,11 +40,13 @@ Nothing in the underlying architecture — Object, Entity, Domain, Relationship,
 # 3. Scope of Review
 
 **In scope:**
+
 - Whether the nine chapters accurately and faithfully compile the v0.1 normative documents they cite.
 - Whether the editorial choices made (see Section 4) are acceptable.
 - Whether the reading path is ready to be committed to the repository as Baseline Specification v0.2.
 
 **Out of scope:**
+
 - The OCOM architecture itself (Object, Entity, Domain, etc.) — unchanged, already released as v0.1, not reopened by this review.
 - The Governance framework — already reviewed separately and frozen as Baseline.
 - The two open ADR Candidates (Section 5) — flagged for future decision, not blocking this review, since neither requires a Core change to approve this reading path.

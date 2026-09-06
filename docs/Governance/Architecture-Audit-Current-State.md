@@ -102,6 +102,7 @@ Scale: **Draft** (exists, not yet verified for internal or Constitution consiste
 **Above the graph, re-narrating it:** `Specification/` (v0.2) and `Adoption/` are presentation layers that do not add new dependencies — they restate existing ones. Because `Specification/` was frozen before Constitution existed, it currently re-narrates a version of the graph one generation out of date. `Reference Architecture/` and `Examples/` are the same kind of layer, correctly marked non-normative.
 
 **Cannot be considered complete until lower layers are complete, by direct consequence of the above:**
+
 - `AI/Knowledge/` cannot be resolved without resolving its relationship to Memory (already known — Concept Paper).
 - Any Conformance Test Suite for guarantees above the Memory/Evidence layer cannot be meaningfully designed while Knowledge/World Model remain unresolved — there is nothing stable yet to test.
 - `AI/Agents/`'s Explainability and Relationships sections, and all four of `AI/Context/`, `Prompts/`, `Tools/`, `Evaluation/`, cannot be verified as Constitution-consistent until the fourth/fifth layers they lean on are settled.
@@ -171,11 +172,13 @@ Applying the Constitution's own test directly (a term used but nowhere defined c
 # Part 7 — Technical Debt by Category
 
 **Critical**
+
 - C1/C7 — Knowledge contradicts Constitution §3/§5/§6 in its own text.
 - C2 — World Model does not exist.
 - No Conformance Test Suite exists (Part 6) — nothing above Memory/Evidence can be verified as compatible by anyone, for any implementation, today.
 
 **High**
+
 - C3 — Domain defined twice, differently, unreconciled.
 - C4 — Relationship model cannot accommodate Organization, a first-class Object.
 - C8 — `Specification/` v0.2 is stale relative to Constitution and is the documented onboarding entry point.
@@ -183,12 +186,14 @@ Applying the Constitution's own test directly (a term used but nowhere defined c
 - C12 — "Autonomy level" (§14) is undefined anywhere.
 
 **Medium**
+
 - C5 — OBS-001 live duplication risk (Context.md).
 - C6 — AO-003, Memory Record Status semantics.
 - C9 — Domains/ Memory-linkage executed in 8/14 subdomains only.
 - Constitution §9/§11 wording not yet updated to reflect already-decided Step-0 interpretations.
 
 **Low**
+
 - C11 — 5/6 Examples/ industry collections missing, silently.
 - Models/ generic unelaborated "future versions" boilerplate; Entity.md-only cross-reference section (structural asymmetry, not a logical error).
 - `Workflows/` fully empty (self-admitted; more accurately "not started" than "debt").
