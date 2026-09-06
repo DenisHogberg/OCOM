@@ -30,6 +30,16 @@
 //   examples — have no language tag. Retrofitting 62 blocks across
 //   many files is a content rewrite, out of scope for a CI-only task.
 //
+// - MD060 (table column style): all 385 tables in this repository write
+//   the delimiter row compactly ("|---|---|") while the header and body
+//   rows are spaced ("| Field | Example value |"). MD060 reads the spaced
+//   rows as the table's style and then reports every pipe in every
+//   delimiter row. Verified directly: 385 of 385 tables share this exact
+//   shape, so this is the repository's convention, not a defect in two
+//   files. GitHub caps annotations at ten, which makes the failure look
+//   local when it is repository-wide. Reformatting every delimiter row is
+//   a whole-repository whitespace rewrite with no reader-visible effect.
+//
 // Left enabled (default) because the repository was checked directly
 // and found already clean against them: no hard tabs, no trailing
 // whitespace, every file ends with a single final newline.
@@ -41,7 +51,8 @@
     "MD025": false,
     "MD033": false,
     "MD040": false,
-    "MD041": false
+    "MD041": false,
+    "MD060": false
   },
   // "globs" here is the single source of truth for which files get
   // linted — deliberately not repeated as a `with:` input in ci.yml.
