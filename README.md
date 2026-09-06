@@ -1,5 +1,7 @@
 # OCOM
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21510450.svg)](https://doi.org/10.5281/zenodo.21510450)
+
 OCOM (Object-Centric Operating Model) is an open, technology-independent operating model for organizations that describes an organization as a system of governed, interconnected objects with identity, ownership, lifecycle, and evidence.
 
 **Website / specification:** [OCOM — the Object-Centric Operating Model specification](https://ocom.uno) · [ocom.uno](https://ocom.uno)
