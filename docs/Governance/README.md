@@ -21,7 +21,7 @@ This section describes how the OCOM Specification itself is maintained, reviewed
 - [Release Readiness](Release-Readiness.md) — documentation-readiness assessment before each release
 - [Architecture Health](Architecture-Health.md) — periodic maturity snapshots of the specification
 
-### Added after the 22 July 2026 baseline
+## Added after the 22 July 2026 baseline
 
 The ten documents above form the 22 July 2026 baseline. The following were added later through the same process (14 documents as of 5 September 2026):
 
