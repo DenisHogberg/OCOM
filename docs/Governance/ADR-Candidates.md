@@ -54,6 +54,7 @@ Every candidate uses the same template, so every candidate follows the same life
 **Discussion:** Should `AI/Agents/Context.md` remain a full duplicate of `AI/Context/Overview.md`, be replaced with an explicit reference, or be given distinct Agent-specific content? This cannot be resolved editorially — it requires a decision about whether the Agents section should own a description of Context distinct from the dedicated Context section, which is a question about section boundaries.
 
 Consequences by outcome:
+
 - *Keep as duplicate:* no immediate harm, but risk of future divergence if one copy is edited without the other.
 - *Replace with reference:* removes duplication, but changes how a reader navigates the Agents section.
 - *Give distinct content:* requires new normative text describing Context specifically from an Agent's perspective — new authoring work.
@@ -77,6 +78,7 @@ Consequences by outcome:
 **Discussion:** `Language/Conformance.md` already names "Profile Conformance" as a category, but does not define the mechanics of a profile — how it is declared, bounded, and validated against the Core. The author has explicitly stated this is a separate topic from the Core specification and should not be folded into it; the mechanism itself still needs to be decided.
 
 Consequences by outcome:
+
 - *Define now:* clarifies Conformance fully, but risks coupling the Core specification to a mechanism that may need to change independently.
 - *Leave open, reference from the Conformance chapter:* keeps Core minimal, but leaves implementers without profile guidance until resolved.
 
@@ -294,6 +296,7 @@ The system's top-level architectural boundary must be determined. Two directions
 ### Option A — Domain remains the top-level boundary
 
 Domain stays where it is; no new layer is introduced. This requires determining:
+
 - how a Domain acquires organizational ownership;
 - whether the existing `Relationship` model is sufficient to express that ownership;
 - whether a new architectural entity, Organization, is needed at all.
@@ -314,6 +317,7 @@ Object
 ```
 
 This requires determining:
+
 - the relationship between Organization and Domain;
 - Organization's lifecycle;
 - Organization's ownership model;
@@ -515,6 +519,7 @@ Rather than adopting the narrower Measurement concept the original submission pr
 The full design — Value's Core Characteristics; Measurement's six kinds (Money, Percentage, Duration, Quantity, PhysicalUnit, Rate); `ExchangeRateObservation`; the unit-normalization comparison procedure; a conceptual diagram; worked examples; edge cases; integration with Objects/Attributes, Evidence, Lifecycle, Relationships, and Governance; and a migration strategy — is attached as `Concept-Paper-Value-Model.md`, Status: Informative, following the same non-normative pattern `Concept-Paper-Knowledge-vs-World-Model.md` used ahead of `AO-003`'s resolution. Nothing in `Meta/`, `Models/`, `Core/`, or `Domains/` is changed by this candidate.
 
 Consequences by outcome:
+
 - *Promote to ADR:* `Meta/Value.md` is authored (by the Chief Architect, per this document's own §6 / `CAND-004` precedent — "the CDKO proposes candidates... the Chief Architect authors the actual ADR"), Measurement is integrated as its first Value Kind, and a follow-up item is opened to eventually retype the bare Rate/Duration KPI names already in `Finance_KPIs.md`/`Operations_KPIs.md` — not required for this Decision, named so it isn't concealed.
 - *Merged into an existing item:* if the Chief Architect judges this fits inside an Epic not surfaced during evaluation, or is better sequenced as part of one, `AO-005` and this candidate are re-pointed there rather than tracked separately.
 - *Closed without ADR:* if the Chief Architect judges the two Reference Cases insufficient, or the boundary better left to Reader/Vector as implementation-specific accommodation (Principle 8's sufficiency test resolved the other way), both `AO-005` and this candidate close with that reasoning recorded in `AO-005`'s Architect Response.
@@ -628,6 +633,7 @@ These two independent sources are offered as the basis for satisfying the indepe
 **Layer 3 — Commit Authorization (not asked for here, and cannot occur before Layer 2 is separately closed):** no part of the underlying changeset may be committed on the strength of a Promote decision on this filing alone. A separate, explicit confirmation that Layer 2's defect list has been closed is required first.
 
 Consequences by outcome (available only once Section 6's Path A is complete):
+
 - *Promote:* Layer 1 only is granted, for the items in Section 2 (with the `Entities/Overview.md` qualification from Section 5 in force), as a **standing Freeze exception under `CAND-007` §5/§6, filed and tracked separately from `EPIC-F`**. `Master-Architecture-Backlog.md`'s `EPIC-F` entry is *not* widened: its `Documents affected` and `Definition of Done` fields remain exactly as recorded before this filing. The current `EPIC-F` "Execution note" is **not edited in place — it is removed and replaced**, specifically:
   (i) the phrase *"the publication-governance slice of this Epic"* is deleted, not reworded;
   (ii) any framing that this work *"closes... a portion of `EPIC-F`'s own goal"* is deleted, not reworded;
@@ -712,6 +718,7 @@ as a separate, checkable item before requesting Layer 3 authorization.
 Authorize the addition of exactly one file, `docs/Adoption/Worked Example - Library Lending.md`, as a new `EPIC-F` work item.
 
 Scope:
+
 - one static worked example;
 - Status: Informative;
 - domain-neutral (no industry, no company, no real data);
@@ -721,6 +728,7 @@ Scope:
 - no Conformance claims.
 
 This decision does not:
+
 - modify Core/Meta/Models;
 - modify `CAND-008`;
 - create new types, enums, cardinalities, or schema rules;
@@ -728,12 +736,14 @@ This decision does not:
 - authorize additional Adoption artifacts beyond this one example.
 
 **Scope authorization only — explicitly not asserted by this Decision:**
+
 - that the content of the Worked Example is already correct;
 - that the chosen Library Lending domain is the only valid choice;
 - that Shape Check has received any authorization of any kind;
 - that `EPIC-F` is automatically extended to any other Adoption artifact beyond this one file.
 
 **Governance implication of this Decision:**
+
 - A second or future worked example is a new `EPIC-F` work item requiring its own amendment and, if precedent is by then established, may not need a new CAND entry at all — that is a future question, not decided here.
 - This Decision does not touch `Examples/Overview.md`'s industry-collection scope, `CAND-009`, or any Shape Check design work.
 
@@ -762,6 +772,7 @@ This decision does not:
 Authorize `docs/Adoption/First Pilot.md` as an Adoption Projection under `CAND-012`.
 
 Base grant (mirroring `CAND-010`'s structure for the one prior instance):
+
 - Scope: exactly one file, `docs/Adoption/First Pilot.md`;
 - Status: Informative (confirmed in the file's own header);
 - Version: 0.1 (confirmed in the file's own header);
@@ -769,10 +780,12 @@ Base grant (mirroring `CAND-010`'s structure for the one prior instance):
 - canonical source remains GitHub; the compiled page is a projection, never edited directly.
 
 Presentation-level adaptation, authorized for the compiled /adoption/first-pilot page only:
+
 - omission of Back/Next navigation controls (Getting Started.md, FAQ.md are not being published);
 - de-linkification of the "Getting Started.md §4" citation in Suggested Steps, step 3, to a plain, non-clickable parenthetical note.
 
 This decision does not:
+
 - modify `docs/Adoption/First Pilot.md` itself (canonical text unchanged);
 - authorize `Getting Started.md`, `FAQ.md`, `Common Mistakes.md`, or `Adoption/README.md`;
 - authorize navigation adaptation for any other Adoption file;
@@ -890,6 +903,7 @@ No other Adoption file is authorized or published by this Decision.
 **Why this may NOT simply extend an existing authorization (stated honestly, not assumed away):** Unlike `CAND-010`/`CAND-011` (individual Adoption files) and `CAND-012` (a second instance of the already-existing Projection tier), Shape Check does not fit any of `Publication-Model.md`'s four existing tiers. It has no canonical source document at all — ruling out Canonical Source, Compiled Publication, and Projection (Projection always renders one canonical document 1:1; Shape Check's `CONCEPTS` list and matching logic are hand-maintained code, not a rendering of any `docs/` file). It also arguably exceeds Convenience Representation, which `Publication-Model.md` defines as informative/illustrative and static — Shape Check is interactive. This is a genuinely new category question, not an instance of one already answered.
 
 **`CAND-007` §6 test, applied honestly, not assumed:**
+
 - (a) *Does it fit an existing Epic?* `EPIC-F`'s literal scope (re-pointing Adoption, closing four named debt items) does not mention tools. `CAND-010`/`011`/`012`'s "kind of work" reasoning (small-scope, non-normative content added to the ocom.uno surface) arguably extends, but Shape Check is categorically different — a tool, not documentation. This filing does not assume (a) is satisfied.
 - (b) *Product-shaped or contract-shaped?* Checked directly against both principles' primary text (`Architecture-Principles.md`, not just their titles), across two rounds of independent adversarial review. **Principle 1 — PASS:** no Specification requirement is added and no product is privileged in Specification text; the principle's own forbidden pattern (a Spec requirement justified only by "product X needs it") is not present, since nothing about the Specification changes. **Principle 5 — PASS, by analogy:** Shape Check isn't Reader-shaped in the sense the principle addresses (it implements nothing normative), but its three named drift mechanisms were checked regardless — documentation gravity and governance capture are structurally low risk given the tool's narrow, disclosed, read-only scope; terminology drift is real and is carried forward as a **named residual risk**, not an unresolved compliance question, in this filing's own Governance implication below.
 
@@ -904,6 +918,7 @@ No other Adoption file is authorized or published by this Decision.
 3. `/shape-check` intentionally sits outside `/adoption/` because Shape Check is a consumer tool, not an Adoption document or Adoption Projection. This is a statement about this one artifact's placement, not a new taxonomy rule for where future tools must live.
 
 This decision does not authorize, and does not create a precedent for:
+
 - any other Consumer Tool;
 - any other interactive page;
 - creation or authorization of a `/tools/` directory of any kind;
@@ -914,6 +929,7 @@ This decision does not authorize, and does not create a precedent for:
 - any loosening of `CAND-012`'s own blanket-authorization prohibition on `docs/Adoption/` — that prohibition is unrelated to and unaffected by this filing.
 
 This decision also does not:
+
 - change Core/Meta/Models/Specification/Governance;
 - change First Pilot's or Worked Example's canonical Markdown source;
 - remove the existing Claude-artifact Shape Check (retained as historical/prototype reference, linked from the native page's own footer);
