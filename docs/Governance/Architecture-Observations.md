@@ -1138,6 +1138,86 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-050
+
+**Title:** Two Conformance Clauses Bind Governance, a Core Characteristic No Tier Defines
+
+**Date observed:** 6 September 2026
+
+**Description:** Surfaced by an external logic audit of the published site (6 September 2026), which reached the same gap AO-023 records from the conformance side rather than the definition side. `Meta/Object.md`:63 lists Governance as the seventh Core Characteristic of every Object. `Specification/04 Meta Model.md` restates it, and `Specification/08 Conformance.md` requires that "a compliant implementation shall ensure that every managed Object ... supports governance"; `Specification/04` additionally requires that specifications extending Object "shall preserve its core characteristics". No document at any tier defines Governance as a per-Object characteristic. `docs/Governance/` and `Specification/07 Governance.md` use the word in an unrelated sense, how the Specification itself evolves, which the terminology notes in chapters 4 and 7 acknowledge.
+
+**Impact:** Two normative clauses cannot be checked, so a conformance claim that cites them cannot be evaluated. `Language/Conformance.md`:49 requires conformance criteria to be "objective, measurable, verifiable"; these two are none of the three. The specification's own review question 4, published at /specification/how-to-review, asks exactly this and fails on it.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either give Governance a Meta tier term record or remove it from the Core Characteristics list until one exists, and state which of the two senses the conformance clause means.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Object.md`, `Specification/04 Meta Model.md`, `Specification/08 Conformance.md`, `Language/Conformance.md`, `AO-023`
+
+---
+
+## AO-051
+
+**Title:** The Compiled Reading Path Is Published as Normative and Simultaneously Disclaims Being the Normative Text
+
+**Date observed:** 6 September 2026
+
+**Description:** Surfaced by an external logic audit of the published site (6 September 2026). The compiled reading path is titled Normative Specification and carries Status Draft, which `Governance/Documentation-Standards.md` defines as "normative and currently in force". Chapter 1 of the same document states that it "is a compilation and editorial layer over that material, not a replacement for it" and that "the granular documents remain the normative source of truth and continue to evolve independently of this reading path". Chapter 2 asserts that "these eleven principles are normative and apply to every model created using this specification", and the compiled path carries 37 shall clauses of its own.
+
+**Impact:** A reader satisfying a shall cannot establish whether the obligation binds as written or is a restatement of a source document that has since moved. Conformance is claimed against a version, and the two candidate texts carry different version numbers, 0.2 for the reading path and 0.1 for the granular documents.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either declare the reading path Informative and remove its shall clauses, or declare it normative for a stated version and pin the granular documents it was compiled from.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Specification/01 Introduction.md`, `Specification/02 Design Principles.md`, `Governance/Documentation-Standards.md`, `Governance/Publication-Model.md`, `AO-049`
+
+---
+
+## AO-052
+
+**Title:** Chapters 4 and 5 Give Relationship Different Cardinality Modality and Different Arity
+
+**Date observed:** 6 September 2026
+
+**Description:** Surfaced by an external logic audit of the published site (6 September 2026), which found two conflicts the existing editorial note in chapter 5 does not cover. Modality: `Specification/04 Meta Model.md` states that a Relationship "may additionally define direction, cardinality, status, and constraints", while `Specification/05 Object Model.md` states that "every Relationship shall connect identifiable Entities, have a defined type, and define cardinality". Arity: chapter 4 defines the required fields as one Source Object and one Target Object, a binary association, while chapter 5 defines a Relationship as "an explicit operational association between two or more Entities", an n-ary one. `Meta/Relationship.md` itself also states the association is "between two or more Objects" in its Purpose while requiring exactly one Source and one Target.
+
+**Impact:** Cardinality is optional and mandatory at once, and an implementation cannot tell whether a three-participant association is expressible. This sits on the term the specification uses second most often, and it is a second instance of the Design Principle 7 exception already recorded as AO-002 and AO-017.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should settle the modality of cardinality once and state whether Relationship is binary or n-ary in the Meta tier document, with the Models tier following it.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Relationship.md`, `Models/Relationship.md`, `Specification/04 Meta Model.md`, `Specification/05 Object Model.md`, `AO-002`, `AO-017`
+
+---
+
+## AO-053
+
+**Title:** Evidence Is Published as One of Four Pillars While Its Definition Is Reserved and It Is Not a Core Characteristic
+
+**Date observed:** 6 September 2026
+
+**Description:** Surfaced by an external logic audit of the published site (6 September 2026). The one-sentence formulation of OCOM used on the site and in `ROADMAP.md` names identity, ownership, lifecycle and evidence. Of the four, Identity and Ownership are Meta tier term records, Lifecycle is defined at the Models tier, and Evidence is specified at the Memory tier with `Memory/Evidence Overlay.md`:33 stating that its Definition is "reserved for a future version". Evidence does not appear in `Meta/Object.md`:63's list of an Object's Core Characteristics at all, so the four pillars are not a subset of any single canonical list.
+
+**Impact:** The sentence a reader meets first rests on a term the specification has not defined, and pairs it with three terms defined at three different tiers. A reviewer checking the pillars against the Core Characteristics finds neither list contains the other.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either define Evidence or state, once and canonically, that the four pillar formulation is an informative summary and not a list of Core Characteristics.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Memory/Evidence Overlay.md`, `Meta/Object.md`, `Core/Constitution.md`, `ROADMAP.md`, `AO-021`, `FW-001`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1157,3 +1237,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 5 September 2026 | Added AO-024 through AO-036 (Architectural Principles vocabulary, register Status, Constitution edit under the Freeze, no terminating rule for Object obligations on Lifecycle and Registry, Lifecycle cardinality, Entity versus Object characteristics, Domain and Entity bootstrap, identifier reuse, conformance aggregation, Owner typing, Reference versus Relationship, duplicated AI definitions, template shall clauses), surfaced by an external logic audit of commit 37c986a; all record only, not escalated. AO-015 and AO-018 marked independently corroborated; AO-016 and AO-022 Related extended; AO-023 corrected (no ADR Candidate records the Governance gap; CAND-010 is the Worked Example's publication authorization) and the third usage of Governance in `AI/` added. |
 | 0.1 | 5 September 2026 | Added AO-037 through AO-044 (Process undefined above the Domain tier, KPI undefined and doubly owned, Lifecycle cardinality in three Domain profiles, profiles not carrying the components their Domain Architecture mandates, Entity profiles naming Lifecycles that do not exist, AI Knowledge declared independent of Memory against Constitution Principles 5 and 6, Reference Architecture carrying shall-clauses under an Informative Status, a Deprecated Tool remaining operational against the Active precondition), surfaced by a full read of the Domains, Entities, AI and Reference Architecture tiers; all record only, not escalated. |
 | 0.1 | 5 September 2026 | Added AO-045 through AO-049 (the Projection tier recognizing two instances while the site publishes four and labelling Convenience Representations canonical, no canonical statement of which tier defines which term, Reference Case naming two different things, AI retrieval presented as a defined capability, Notation absent from both Scope lists), surfaced by a claim-provenance red-team of the published site; all record only, not escalated. AO-022 Related extended with `Meta/Ownership.md` and `AO-018`. |
+| 0.1 | 6 September 2026 | Added AO-050 through AO-053 (two conformance clauses binding an undefined Governance characteristic, the reading path published as normative while disclaiming it, Chapters 4 and 5 disagreeing on Relationship cardinality modality and arity, Evidence published as a pillar while its Definition is reserved), surfaced by an external logic audit of the published site; all record only, not escalated. |
