@@ -16,7 +16,7 @@ The result is a shared operational language. The same description can be read by
 
 This is not a product, a database schema, or a piece of software. It is a specification: a set of concepts and rules for describing operational reality, meant to remain stable while the technology underneath changes.
 
-If that idea is useful to you — as an architect trying to bring order to a fragmented landscape, an engineer building something that needs to interoperate, or someone simply trying to understand how a business is put together — the rest of this document walks through it in order: what the specification actually requires (Chapter 1), the principles it is built on (Chapter 2), its core vocabulary (Chapter 3), and the detailed models that follow from it (Chapters 4–8).
+If that idea is useful to you — as an architect trying to bring order to a fragmented landscape, an engineer building something that needs to interoperate, or someone simply trying to understand how a business is put together — the rest of the reading path walks through it in order: what the specification is and why it exists (Chapter 1, Introduction), the principles it is built on (Chapter 2), its core concepts (Chapter 3), the detailed models that follow from them (Chapters 4 to 6: Meta Model, Object Model, Lifecycle Model), how the model is governed (Chapter 7) and how conformance is claimed (Chapter 8).
 
 ---
 

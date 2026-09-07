@@ -20,7 +20,7 @@ Meta-model (`Meta/`), normative structural models (`Models/`), language and conf
 Source-of-truth projections of this repository published as a machine-authoritative site: Vocabulary, Specification reading path, Comparisons, Knowledge API, Graph JSON-LD, Discovery, and llms.txt. Vocabulary, the Specification reading path and the Adoption pages are rebuildable projections of the repository; the site additionally holds its own informative records (the comparisons, the Evidence Register, the How to Review note, the release record, the Observatory reports, the governance-candidates record, the Knowledge API records and the Why essay) and one Consumer Tool (Shape Check, authorized by `CAND-013`), none of which defines a term or carries normative weight, and none of which is a second source of truth for anything the repository defines.
 
 **Implementation Reference Case (EXAMPLES-CASE-PERFMKT-01).** 12 August 2026.
-An anonymized end-to-end adoption narrative in `Examples/Implementation-Case/`: the sequence a real rollout follows (identity first, events and evidence second, the commercial layer last), including the mistakes. Distilled from real rollouts conducted under NDA; the organization, names, and details are fictionalized.
+An anonymized end-to-end adoption narrative in `Examples/Implementation-Case/`: the sequence the rollouts converged on (identity first, events and evidence second, the commercial and governance layers, then projections). Distilled from real rollouts conducted under NDA; the organization, names and details are changed.
 
 **Public Essay: "Your organization is not your software".** September 2026.
 Published at ocom.uno/why: the motivation, origin, honest boundaries of applicability, and an open invitation to break the model.

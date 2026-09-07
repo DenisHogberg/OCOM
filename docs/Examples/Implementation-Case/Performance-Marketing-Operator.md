@@ -14,17 +14,17 @@
 
 **Version:** 0.2
 
-**Last Updated:** 12 August 2026
+**Last Updated:** 7 September 2026
 
 ---
 
 # Purpose
 
-This document tells the story of *how* an organization adopted OCOM, in the order it actually happened. It is not a feature tour and it is not a mapping table. It follows the sequence of decisions a real rollout goes through, the problem that forced each step, and what changed once the step landed.
+This document tells the story of *how* an organization adopts OCOM, in the order these rollouts converged on. It is not a feature tour and it is not a mapping table. It follows the sequence of decisions a real rollout goes through, the problem that forced each step, and what changed once the step landed.
 
 It is a Reference Case. It demonstrates the model, it does not extend it. Every concept named here is defined normatively in the Core Vocabulary or at the Models tier of the specification and only referenced from this document.
 
-The rollouts behind this case are **real** and were conducted under NDA; the organization, names, and details are fictionalized. "Meridian" is a placeholder for any performance-marketing operator, used purely for illustration. No real company, brand, or person is named or implied.
+The rollouts behind this case are **real** and were conducted under NDA; the organization, names and details are changed. "Meridian" is a placeholder for any performance-marketing operator, used purely for illustration. No real company, brand, or person is named or implied.
 
 ---
 
@@ -55,7 +55,7 @@ The rollout followed the grain of the model's own design principles: Evidence Be
 
 **Problem.** Nothing could be reconciled because nothing had a single name.
 
-**What was applied.** The very first OCOM Object introduced was **Identity**. Every partner, advertiser, and offer was given one canonical identifier (a partner became `PRT-00417`) and the four system-specific names became aliases that resolve to it.
+**What was applied.** The very first OCOM concept introduced was **Identity**. Every partner, advertiser, and offer was given one canonical identifier (a partner became `PRT-00417`) and the four system-specific names became aliases that resolve to it.
 
 **The decision that mattered.** Resolution was made **deterministic and evidence-based, never automatic**. A new alias is linked to an existing Identity only on evidence. When there is no confident match, the system does not invent a merge and does not silently create a duplicate: it surfaces the ambiguity for a human. This one rule is what stopped the old chaos from re-entering through the new model.
 
@@ -174,3 +174,4 @@ After the rollout, every term of the Core Vocabulary (13 terms) has a concrete c
 |---|---|---|
 | 0.1 | 12 August 2026 | Initial structural mapping. |
 | 0.2 | 12 August 2026 | Reframed as a phased adoption journey. |
+| 0.2 | 7 September 2026 | Editorial, no version change: provenance wording aligned with the published rendering. The rollouts are real and under NDA; the organization, names and details are changed; the order is the one the rollouts converged on; Identity was the first concept introduced. |
