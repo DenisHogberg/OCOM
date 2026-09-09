@@ -8,7 +8,7 @@
 An open, technology-independent specification that describes an organization as a system of governed objects with identity, ownership, lifecycle and evidence.</p>
 
 <p align="center">
-  <a href="https://doi.org/10.5281/zenodo.21510450"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.21510450.svg" alt="DOI 10.5281/zenodo.21510450"></a>
+  <a href="https://doi.org/10.5281/zenodo.21510450"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21510450-1682D4" alt="DOI 10.5281/zenodo.21510450"></a>
   <a href="https://ocom.uno"><img src="https://img.shields.io/badge/read%20online-ocom.uno-0f172a" alt="Read online at ocom.uno"></a>
   <a href="https://github.com/DenisHogberg/OCOM/actions/workflows/ci.yml"><img src="https://github.com/DenisHogberg/OCOM/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
   <a href="docs/Meta/README.md"><img src="https://img.shields.io/badge/Core%20Vocabulary-0.1-0f766e" alt="Core Vocabulary 0.1"></a>
