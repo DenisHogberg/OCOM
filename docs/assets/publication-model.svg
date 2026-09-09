@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380" width="1200" height="380" role="img" aria-label="The five publication tiers of OCOM, from the canonical Markdown source in this repository to the consumer tool on ocom.uno">
+<rect width="1200" height="380" fill="#ffffff"/>
+<style>text{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}</style>
+<text x="20" y="40" font-size="21" font-weight="700" fill="#0f172a">Publication Model: five tiers, one source</text>
+<text x="20" y="64" font-size="13" fill="#556174">Nothing downstream of tier 1 introduces a requirement; everything downstream restates or renders it (docs/Governance/Publication-Model.md).</text>
+<rect x="20" y="92" width="208" height="172" rx="12" fill="#ccfbf1" stroke="#2dd4bf" stroke-width="2"/>
+<circle cx="44" cy="119" r="12" fill="#0f766e"/><text x="44" y="123.5" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="64" y="124" font-size="15" font-weight="700" fill="#0f172a">Canonical Source</text>
+<text x="36" y="154" font-size="12" fill="#334155">Markdown under docs/ in this</text>
+<text x="36" y="173" font-size="12" fill="#334155">repository. The normative</text>
+<text x="36" y="192" font-size="12" fill="#334155">text. Git-tracked, reviewed,</text>
+<text x="36" y="211" font-size="12" fill="#334155">versioned.</text>
+<line x1="232" y1="186" x2="250" y2="186" stroke="#94a3b8" stroke-width="2"/><polygon points="250,180 260,186 250,192" fill="#94a3b8"/>
+<rect x="258" y="92" width="208" height="172" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+<circle cx="282" cy="119" r="12" fill="#0f766e"/><text x="282" y="123.5" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="302" y="124" font-size="15" font-weight="700" fill="#0f172a">Compiled</text>
+<text x="302" y="142" font-size="15" font-weight="700" fill="#0f172a">Publication</text>
+<text x="274" y="172" font-size="12" fill="#334155">docs/Specification/: the</text>
+<text x="274" y="191" font-size="12" fill="#334155">reading path. Restates the</text>
+<text x="274" y="210" font-size="12" fill="#334155">canonical sources and cites</text>
+<text x="274" y="229" font-size="12" fill="#334155">them per chapter.</text>
+<line x1="470" y1="186" x2="488" y2="186" stroke="#94a3b8" stroke-width="2"/><polygon points="488,180 498,186 488,192" fill="#94a3b8"/>
+<rect x="496" y="92" width="208" height="172" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+<circle cx="520" cy="119" r="12" fill="#0f766e"/><text x="520" y="123.5" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+<text x="540" y="124" font-size="15" font-weight="700" fill="#0f172a">Projection</text>
+<text x="512" y="154" font-size="12" fill="#334155">ocom.uno term cards and</text>
+<text x="512" y="173" font-size="12" fill="#334155">machine records: HTML, JSON,</text>
+<text x="512" y="192" font-size="12" fill="#334155">JSON-LD and Markdown,</text>
+<text x="512" y="211" font-size="12" fill="#334155">generated per term.</text>
+<line x1="708" y1="186" x2="726" y2="186" stroke="#94a3b8" stroke-width="2"/><polygon points="726,180 736,186 726,192" fill="#94a3b8"/>
+<rect x="734" y="92" width="208" height="172" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+<circle cx="758" cy="119" r="12" fill="#0f766e"/><text x="758" y="123.5" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">4</text>
+<text x="778" y="124" font-size="15" font-weight="700" fill="#0f172a">Convenience</text>
+<text x="778" y="142" font-size="15" font-weight="700" fill="#0f172a">Representation</text>
+<text x="750" y="172" font-size="12" fill="#334155">Homepage, comparisons,</text>
+<text x="750" y="191" font-size="12" fill="#334155">changelog, this README.</text>
+<text x="750" y="210" font-size="12" fill="#334155">Informative, defines nothing</text>
+<text x="750" y="229" font-size="12" fill="#334155">of its own.</text>
+<line x1="946" y1="186" x2="964" y2="186" stroke="#94a3b8" stroke-width="2"/><polygon points="964,180 974,186 964,192" fill="#94a3b8"/>
+<rect x="972" y="92" width="208" height="172" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+<circle cx="996" cy="119" r="12" fill="#0f766e"/><text x="996" y="123.5" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">5</text>
+<text x="1016" y="124" font-size="15" font-weight="700" fill="#0f172a">Consumer Tool</text>
+<text x="988" y="154" font-size="12" fill="#334155">Shape Check on ocom.uno.</text>
+<text x="988" y="173" font-size="12" fill="#334155">Read-only, not a validator,</text>
+<text x="988" y="192" font-size="12" fill="#334155">authorized by ADR CAND-013.</text>
+<text x="20" y="298" font-size="12" fill="#556174">Tier 1 lives in this repository. Tiers 2 to 5 are published at https://ocom.uno by the Publication Engine, which is not part of this repository.</text>
+<text x="20" y="318" font-size="12" fill="#556174">Two Projection instances are recognized today: the Core Vocabulary term cards and the individually authorized Adoption pages.</text>
+</svg>
