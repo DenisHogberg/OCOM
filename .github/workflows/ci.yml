@@ -81,6 +81,10 @@ jobs:
         uses: DavidAnson/markdownlint-cli2-action@6bf21b07787794f89a243495939cd651942aeabe # v24.1.0
 
   link-check:
+    # External hosts are checked too. Badge and archive servers (zenodo.org)
+    # sometimes answer in more than lychee's default 20 s; a longer timeout and
+    # retries keep a slow host from failing a build whose links are all valid.
+    # .lycheeignore lists the one badge image whose DOI is verified via doi.org.
     name: Internal link integrity
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -114,6 +118,8 @@ jobs:
           # paths.
           args: >-
             --no-progress
+            --timeout 45
+            --max-retries 3
             --exclude-path '\.github'
             '**/*.md'
           fail: true
