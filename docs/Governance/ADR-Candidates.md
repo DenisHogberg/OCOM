@@ -991,9 +991,6 @@ It changes no document outside this register and `Architecture-Observations.md`.
 
 ---
 
-
----
-
 # Revision History
 
 | Version | Date | Description |
