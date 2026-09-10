@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 26 July 2026
+**Last Updated:** 10 September 2026
 
 ---
 
@@ -942,6 +942,56 @@ This decision also does not:
 
 **Next Action:** None: decided on 21 August 2026 and executed. `/shape-check` is published; `Publication-Model.md` records the Consumer Tool tier (revision of 4 September 2026); Worked Example's CTAs and the discovery pointers were switched to `/shape-check`. *Postscript (5 September 2026): the link to the historical prototype was removed from the published page on 4 September 2026 by owner decision; the prototype is no longer referenced from the site.* *Original text of this field, superseded:* Awaiting Chief Architect Decision. On Decision, the already-prepared `/shape-check` page (algorithm unchanged; version banner and First Pilot forward link added) is published, Worked Example's CTAs and the homepage/discovery pointers are switched to `/shape-check`, and the existing Claude artifact is kept live as a labeled historical/prototype reference, not removed.
 
+## CAND-014 — ✅ Decided (Layer 1)
+
+**Title:** Knowledge, World Model, and the Location of Current State (three-layer split by time horizon)
+
+**Status:** Decided — Option 4, Layer 1 (derivation semantics). Layer 2 (Core authoring) explicitly not decided, gated; see Scope below.
+
+**Decision:** **Option 4 — the three responsibilities are split by the horizon of the question each answers. Memory records what happened; Knowledge holds why it matters (stable rules and meaning, changed only through a rule-change process that is itself logged in Memory, never edited directly); World Model holds what is true right now for a given subject (current state, the version currently in force, point-in-time indicators), computed only from Memory and Knowledge, with no independent authorship or approval workflow of its own.** Recorded 10 September 2026.
+
+**Owner:** Chief Architect (Decision recorded)
+
+**Created:** 10 September 2026 · **Decided:** 10 September 2026 · **Decided by:** Chief Architect
+
+**Grounding:** `Governance/Concept-Paper-Knowledge-vs-World-Model.md` (Option 4), `Governance/Architecture-Discussion-Knowledge-vs-World-Model.md` (Decision Readiness: Yes), `AO-003` (Mutable Status in an Immutable Memory Model), `Core/Constitution.md` §4 (Immutable Memory), §5 (Memory Precedes Knowledge), §6 (Reconstructability). Resolution vehicle for `Master-Architecture-Backlog.md` EPIC-A and the Architect Response to `AO-003`.
+
+### The question
+
+Constitution §5 states one chain: Memory produces Knowledge, Knowledge produces World Model. Three things in the current text contradict that chain, and `AO-003` is the narrowest of them:
+
+1. `AI/Knowledge/Knowledge.md` defines Knowledge as "independent of ... Memory Records", the literal opposite of §5.
+2. A single layer (Knowledge) is asked to hold both stable reusable understanding (what "Gold Tier" means, changes only when the rule changes) and instance current state (the tier of Customer #123, changes on every new Memory), which have different update cadences and scopes.
+3. `AO-003`: the `Status` of a Memory Record has undefined semantics against the append-only model, readable either as a stored field (conflicts with §4) or as a derived projection.
+
+World Model, the third named stage of the chain, is defined by no document.
+
+### Rationale
+
+Option 4 resolves all three contradictions with one structure. §5 holds because every change to Knowledge is preceded by a Memory entry, so Knowledge is derived from Memory in the strict sense. Contradiction 2 is removed because instance current-state leaves Knowledge for World Model. `AO-003` is answered with its own Option B: Status is a derived projection, computed in World Model, so no Memory Record is ever mutated and §4 is untouched. §6 holds because World Model is computed only, reconstructable from Memory without the original systems.
+
+The line in `Knowledge.md` that reads "independent of ... Memory Records" is recorded as an inaccuracy to be corrected on integration: what was meant is independence from any single record or execution instance, not independence from Memory as the append-only log.
+
+Options 1 to 3 were considered and not adopted: Option 1 is Option 4 without the explicit rule that Knowledge is never edited directly; Option 2 keeps two meanings of the word Knowledge and sits worst against `CAND-007`; Option 3 is a mechanism choice that Option 4 already subsumes (the rule-change process is Memory-logged).
+
+### Scope of this decision, and the Architecture Freeze
+
+Filed under `CAND-007`. This decision is deliberately split into two layers, following the precedent `CAND-009` set:
+
+- **Layer 1, decided by this candidate.** The derivation semantics above: current state and Status are derived (World Model), not stored; Knowledge is Memory-logged and never edited directly; the derivation direction Memory to Knowledge to World Model is affirmed as §5 already states it. Layer 1 stays within `AO-003`'s recorded scope (the Status question) and within the completeness of a term the adopted Constitution already names (World Model, §5/§6). It introduces no new Canonical Principle and, at this layer, no new Meta Object; `CAND-007` §4 is not engaged, and `CAND-007` §3 permits a decision on `AO-003` within its recorded scope.
+- **Layer 2, explicitly not decided here, gated.** Authoring the normative `Meta/World-Model.md` with its own Core Characteristics, and rewriting the `AI/Knowledge/*` governance, lifecycle and quality model to match Layer 1, are Core-shaping and are left open. Where Layer 2 adds genuinely new structure beyond completing §5/§6, it routes through the freeze-exception pipeline (`Standard Evolution Methodology.md`: Reference Case, Repeated Pattern, ADR Candidate, Decision), and per Rule 2 that pipeline needs independent Reference Cases, which do not yet exist. Layer 2 is therefore named, not scheduled.
+
+### What this decision does not do
+
+It changes no document outside this register and `Architecture-Observations.md`. `Core/`, `Meta/`, `Models/`, `AI/` and `Memory/` are untouched. It does not author `Meta/World-Model.md`. It does not rewrite the Knowledge governance model. It does not certify the current `AI/Knowledge/*` text correct; it records the direction its eventual rewrite must follow.
+
+**Next Action:** Two-step discipline, as used for `CAND-003`, `CAND-005`, `CAND-006`, `CAND-009`. Step 1 is done by this record: the Decision is recorded here and `AO-003` is marked Closed with its Architect Response pointing to this candidate; nothing in Core is edited by that step. Step 2, Core integration of Layer 1 (the correction to `Knowledge.md`'s "independent of Memory Records" line, and a short statement of the three-layer derivation in the appropriate Core or Meta location, plus the corresponding note in `Memory/Memory Record.md` that Status is derived), is a separate, separately-authorized task, not performed by this candidate. Step 3, Layer 2 (authoring `Meta/World-Model.md`, rewriting `AI/Knowledge/*`), remains open, gated as above.
+
+**Related Documents:** `AO-003`, `Core/Constitution.md` (§4, §5, §6), `AI/Knowledge/Knowledge.md`, `AI/Knowledge/Knowledge Lifecycle.md`, `AI/Knowledge/Knowledge Governance.md`, `AI/Knowledge/Knowledge Quality.md`, `Memory/Memory Record.md`, `Governance/Concept-Paper-Knowledge-vs-World-Model.md`, `Governance/Architecture-Discussion-Knowledge-vs-World-Model.md`, `Governance/Master-Architecture-Backlog.md` (EPIC-A), `Governance/ADR-Candidates.md#cand-009` (two-layer precedent).
+
+---
+
+
 ---
 
 # Revision History
@@ -976,3 +1026,4 @@ This decision also does not:
 | 0.1 | 21 August 2026 | Revised CAND-013 after a focused adversarial review: added two explicit page-level normative-boundary statements ("creates no normative requirements," "not a source of truth"), itemized non-assertions to name each excluded category individually (other tools, other interactive pages, /tools/, arbitrary JavaScript, other top-level interactive routes, automatic future publication, and preserved CAND-012's docs/Adoption/ blanket-authorization prohibition), added a named terminology-drift residual risk to the Governance implication, and added one sentence explaining why /shape-check sits outside /adoption/ without creating a general taxonomy rule. Algorithm/CONCEPTS list confirmed unchanged |
 | 0.1 | 21 August 2026 | CAND-013: a second focused adversarial review confirmed all four fixes correctly applied and the algorithm still unchanged, verdict READY FOR DECISION. Synchronized the "why this may not simply extend an existing authorization" section's Principle 1/5 discussion with that review's findings (Principle 1 PASS, Principle 5 PASS by analogy, terminology drift reframed from open tension to named residual risk) without touching scope or decision architecture, then recorded as Decided — Promote: Publication-Model.md gains a fifth category (Consumer Tool), Shape Check authorized as its one instance at /shape-check, all non-assertions and the Decision Boundary binding as drafted |
 | 0.1 | 5 September 2026 | CAND-009: recorded the Decided field (20 August 2026, Reference Cases `AO-008`) that the Status asserted but the entry never carried; Path A, Consequence, template and Next Action marked superseded with dated postscripts. CAND-013: removed the pre-Decision hedge from the Decision Boundary and replaced the stale "Awaiting Decision" Next Action; noted the removal of the prototype link. No decision changed. |
+| 0.1 | 10 September 2026 | Added CAND-014 (Knowledge, World Model, and the Location of Current State) — Decision recorded, Option 4 (three-layer split by time horizon), Layer 1 only: derivation semantics decided, `AO-003` answered with its Option B (Status is a derived projection in World Model), the `Knowledge.md` "independent of Memory Records" line recorded as an inaccuracy for correction on integration. Layer 2 (authoring `Meta/World-Model.md`, rewriting `AI/Knowledge/*`) explicitly not decided and gated behind the `CAND-007` freeze-exception pipeline. Two-layer structure follows the `CAND-009` precedent. No document outside the two governance registers changed. Resolves `Master-Architecture-Backlog.md` EPIC-A's decision step; Core integration remains a separately authorized task. |

@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 6 September 2026
+**Last Updated:** 10 September 2026
 
 ---
 
@@ -158,9 +158,9 @@ Following the adoption of the Organization model (ADR CAND-005, Option C — Org
 
 **Recommendation:** The Chief Architect should determine whether Status is a Memory Record attribute (with transition semantics to be defined) or a Knowledge-layer derived projection. This is a new architectural question, not a migration of an already-decided principle, and should be evaluated on its own via the standard evolution process before any document is changed.
 
-**Status:** Open
+**Status:** Closed
 
-**Architect Response:** *(pending)*
+**Architect Response:** Option B. Status is not a Memory Record field but a derived projection, computed at read time from the append-only sequence of Memory Records for a subject; it lives in the World Model layer. Decided through `CAND-014` (Option 4, three-layer split by time horizon, Layer 1), Chief Architect decision, 10 September 2026. Consistent with §4, §5 and §6. `Memory/Memory Record.md` is not changed by this response; the corresponding integration (Status noted as derived, not a Mandatory stored Attribute) is the separately authorized Core-integration step named in `CAND-014`'s Next Action.
 
 **Related:** `Memory/Memory Record.md`, `Governance/Constitution-Step0-Summary.md`, `Core/Constitution.md` (§4, §5, §6)
 
@@ -1339,3 +1339,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 5 September 2026 | Added AO-045 through AO-049 (the Projection tier recognizing two instances while the site publishes four and labelling Convenience Representations canonical, no canonical statement of which tier defines which term, Reference Case naming two different things, AI retrieval presented as a defined capability, Notation absent from both Scope lists), surfaced by a claim-provenance red-team of the published site; all record only, not escalated. AO-022 Related extended with `Meta/Ownership.md` and `AO-018`. |
 | 0.1 | 6 September 2026 | Added AO-050 through AO-053 (two conformance clauses binding an undefined Governance characteristic, the reading path published as normative while disclaiming it, Chapters 4 and 5 disagreeing on Relationship cardinality modality and arity, Evidence published as a pillar while its Definition is reserved), surfaced by an external logic audit of the published site; all record only, not escalated. |
 | 0.1 | 6 September 2026 | Added AO-054 through AO-058, surfaced by a self-application review asking whether the published site models itself the way the specification requires: Object's characteristics absent from the publication's own records, Ownership published as a pillar and assigned nowhere, version labels that follow no semantic versioning rule, 83 edges named Relationships without the required properties, and a Status Taxonomy with four states and no transitions. All record only, not escalated. |
+| 0.1 | 10 September 2026 | AO-003 (Mutable Status in an Immutable Memory Model): Architect Response recorded and Status set to Closed. Resolved as Option B (Status is a derived projection in the World Model layer) through `CAND-014`, Layer 1. `Memory/Memory Record.md` unchanged pending the separately authorized integration step. |
