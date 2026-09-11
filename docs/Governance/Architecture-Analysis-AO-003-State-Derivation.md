@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 28 July 2026
+**Last Updated:** 11 September 2026
 
 **Parent:** `Architecture-Observations.md#ao-003` ("Mutable Status in an Immutable Memory Model")
 
@@ -121,6 +121,8 @@ Model B is the constitutionally minimal answer. Model C is an implementation str
 
 This document records an analysis, not a decision. No specification document has been changed by it. Resolution — if pursued — belongs to the standard evolution process (`Standard Evolution Methodology.md`): this analysis as input to a Chief Architect Decision on `AO-003`, recorded in `ADR-Candidates.md`, exactly as `CAND-006` and `CAND-007` were.
 
+**Postscript (11 September 2026):** resolved. `AO-003` was decided as Option B through `CAND-014` on 10 September 2026, and the Layer 1 Core integration was performed on 11 September 2026. Both parts of the Recommendation above were followed: the Chief Architect Decision was recorded through the ADR Candidate process, and `Memory/Memory Record.md`'s Status section now states that Status is computed from the append-only sequence rather than stored and edited. One step was taken beyond the literal Recommendation, which spoke of clarifying an already-Mandatory field: Status was also removed from that document's Mandatory Attributes list, because a field a record shall define cannot at the same time be a projection the record does not store. The Background section's statement that Status is currently a Mandatory Attribute describes the document set as of 28 July 2026 and is left as written.
+
 ---
 
 # Revision History
@@ -128,3 +130,4 @@ This document records an analysis, not a decision. No specification document has
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 28 July 2026 | Initial analysis, prepared as architectural input to `AO-003` |
+| 0.1 | 11 September 2026 | Postscript: `AO-003` resolved as Option B through `CAND-014`, Layer 1 integration performed. Both Recommendation items followed; Status additionally removed from `Memory Record.md`'s Mandatory Attributes, with the reason recorded. Analysis text unchanged. |

@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 11 September 2026
 
 ---
 
@@ -32,7 +32,7 @@ Knowledge is governed, persistent, and reusable organizational understanding.
 
 Knowledge represents what an organization knows rather than what happened during a particular execution.
 
-Knowledge is independent of individual AI Agents, Context, and Memory Records.
+Knowledge is independent of any individual AI Agent, Context, or Memory Record: no single one of them owns it, and no single one of them invalidates it. Knowledge is not independent of Memory. Per Constitution Principle 5, Knowledge is always derived from Memory, and per Principle 6 it must be reproducible from Memory without requiring access to the original external systems.
 
 ---
 
@@ -214,3 +214,4 @@ A compliant implementation shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 11 September 2026 | Definition corrected: Knowledge is independent of any individual AI Agent, Context or Memory Record, but is not independent of Memory. The previous wording read as independence from Memory itself, the opposite of Constitution Principle 5, and is recorded as such in `AO-042`. Corrected per `CAND-014` (Option 4, Layer 1). No new requirement introduced; Principles 5 and 6 are cited as they already stand. |

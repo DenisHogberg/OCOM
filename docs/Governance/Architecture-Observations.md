@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 10 September 2026
+**Last Updated:** 11 September 2026
 
 ---
 
@@ -990,9 +990,9 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. Resolve through the same Reference Case pipeline that produced the Knowledge vs World Model concept paper; the likely outcome is restating Knowledge as a derivation over Memory Records with external systems admitted only as Memory sources, but that is a Core-adjacent decision under the Freeze and is not proposed editorially.
 
-**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+**Status:** Open in part. The derivation contradiction is resolved by `CAND-014` Layer 1; the `Knowledge Sources` provenance question remains open, gated as Layer 2.
 
-**Architect Response:** *(pending)*
+**Architect Response:** Resolved in part. The derivation contradiction, `AI/Knowledge/Knowledge.md` reading as independence from Memory itself, is resolved by `CAND-014` (Option 4, Layer 1) and corrected in the text on 11 September 2026: Knowledge is independent of any individual Agent, Context or Memory Record and is derived from Memory per Principles 5 and 6. The second half of this observation, that `Knowledge Sources.md` lists business-level origins alongside Memory Records rather than admitting external systems only as Memory sources, is Layer 2 of `CAND-014` and remains gated behind the `CAND-007` freeze-exception pipeline. Chief Architect decision, 11 September 2026.
 
 **Related:** Core/Constitution.md (Principles 5, 6), AI/Knowledge/Knowledge.md, AI/Knowledge/Knowledge Sources.md, AI/Knowledge/Knowledge Lifecycle.md, Memory/Memory Record.md, AO-003, CAND-003, Concept-Paper-Knowledge-vs-World-Model.md, AO-035
 
@@ -1340,3 +1340,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 6 September 2026 | Added AO-050 through AO-053 (two conformance clauses binding an undefined Governance characteristic, the reading path published as normative while disclaiming it, Chapters 4 and 5 disagreeing on Relationship cardinality modality and arity, Evidence published as a pillar while its Definition is reserved), surfaced by an external logic audit of the published site; all record only, not escalated. |
 | 0.1 | 6 September 2026 | Added AO-054 through AO-058, surfaced by a self-application review asking whether the published site models itself the way the specification requires: Object's characteristics absent from the publication's own records, Ownership published as a pillar and assigned nowhere, version labels that follow no semantic versioning rule, 83 edges named Relationships without the required properties, and a Status Taxonomy with four states and no transitions. All record only, not escalated. |
 | 0.1 | 10 September 2026 | AO-003 (Mutable Status in an Immutable Memory Model): Architect Response recorded and Status set to Closed. Resolved as Option B (Status is a derived projection in the World Model layer) through `CAND-014`, Layer 1. `Memory/Memory Record.md` unchanged pending the separately authorized integration step. |
+| 0.1 | 11 September 2026 | AO-042: Architect Response recorded and Status set to Open in part. The derivation contradiction is resolved by `CAND-014` Layer 1 and corrected in `AI/Knowledge/Knowledge.md`; the `Knowledge Sources.md` provenance half remains open as Layer 2. |

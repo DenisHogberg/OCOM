@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 11 September 2026
 
 ---
 
@@ -62,8 +62,9 @@ Every Memory Record shall define:
 - Memory Type
 - Value
 - Layer
-- Status
 - Created Date
+
+Status is deliberately not in this list. It is a derived projection rather than a stored attribute; see the Status section below.
 
 ---
 
@@ -156,7 +157,9 @@ Layer transitions are governed by the Layered Memory specification.
 
 # Status
 
-Typical statuses include:
+Status is a derived projection, not a stored attribute of a Memory Record. It is computed at read time from the full append-only sequence of Memory Records for a subject, so a change of status is recorded by adding a new Memory Record and never by modifying an existing one, per Constitution Principle 4. This resolves `AO-003` as its Option B, decided in `Governance/ADR-Candidates.md` `CAND-014`.
+
+Statuses typically computed include:
 
 - Active
 - Pending Verification
@@ -262,3 +265,4 @@ A compliant implementation shall:
 | 0.1 | 27 July 2026 | Removed "may evolve through controlled updates" from Definition; added immutability to Design Principles and Conformance; rewrote Auditability to remove modification/modifier/modification-reason language; replaced "update permissions" with "correction permissions" in Governance — per Constitution §4 and ARCH-001 (Step 0, Decision 1) |
 | 0.1 | 27 July 2026 | Changed Evidence section from "may reference" to "shall reference at least one Evidence Record" — per Constitution §3 and ARCH-002 (Step 0, Decision 2) |
 | 0.1 | 5 September 2026 | Added a terminology note: Memory Entry (Constitution paragraph 4) and Memory Record are one concept per Step 0 Decision 1; rename pending, tracked as GAP-004. No requirement changed. |
+| 0.1 | 11 September 2026 | Status moved out of Mandatory Attributes and restated as a derived projection computed from the append-only sequence for a subject, per the resolution of `AO-003` as its Option B, decided in `CAND-014`. Integration of that decision's Layer 1 only; no other attribute, section or requirement changed. |
