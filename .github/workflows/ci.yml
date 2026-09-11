@@ -223,3 +223,20 @@ jobs:
             fi
           done
           exit 0
+
+  reuse-compliance:
+    name: Licensing is machine-readable (REUSE 3.3)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: reuse lint
+        # Every file in this repository must resolve to a copyright holder
+        # and an SPDX licence identifier. The map is REUSE.toml (docs/ is
+        # CC-BY-4.0, everything else Apache-2.0); the licence texts live in
+        # LICENSES/. Third-party action, so pinned to the commit behind the
+        # v5.0.0 tag, resolved with `git ls-remote --tags` and dereferenced
+        # through the annotated tag before pinning. Dependabot proposes
+        # bumps as reviewable PRs, same as the other pinned actions here.
+        uses: fsfe/reuse-action@bb774aa972c2a89ff34781233d275075cbddf542 # v5.0.0

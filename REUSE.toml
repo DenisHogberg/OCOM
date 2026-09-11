@@ -1,0 +1,23 @@
+version = 1
+SPDX-PackageName = "OCOM"
+SPDX-PackageSupplier = "Denis Petrenko"
+SPDX-PackageDownloadLocation = "https://github.com/DenisHogberg/OCOM"
+
+# Default for the repository: Apache-2.0. A later table that also matches a
+# file wins, so the specification text below overrides this one for docs/.
+[[annotations]]
+path = "**"
+SPDX-FileCopyrightText = "2026 Denis Petrenko"
+SPDX-License-Identifier = "Apache-2.0"
+
+# The specification text and its assets, everything under docs/: CC BY 4.0.
+[[annotations]]
+path = "docs/**"
+SPDX-FileCopyrightText = "2026 Denis Petrenko"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+# Adapted from the Contributor Covenant, which is itself CC BY 4.0.
+[[annotations]]
+path = "CODE_OF_CONDUCT.md"
+SPDX-FileCopyrightText = ["Contributor Covenant authors (https://www.contributor-covenant.org)", "2026 Denis Petrenko"]
+SPDX-License-Identifier = "CC-BY-4.0"

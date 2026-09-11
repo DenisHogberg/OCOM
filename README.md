@@ -1,5 +1,6 @@
 <p align="center">
   <a href="https://ocom.uno"><img src="docs/assets/logo-180.png" width="96" height="96" alt="OCOM logo: two interlocking loops"></a>
+  <a href="https://api.reuse.software/info/github.com/DenisHogberg/OCOM"><img src="https://api.reuse.software/badge/github.com/DenisHogberg/OCOM" alt="REUSE status"></a>
 </p>
 
 <h1 align="center">OCOM</h1>

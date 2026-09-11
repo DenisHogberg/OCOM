@@ -89,3 +89,16 @@ clean run was observed. The first real CI run against this workflow
 is the actual verification; if a rule not covered here turns out to
 false-positive, disable it the same way, with the same evidence-first
 reasoning, not by disabling `default: true` wholesale.
+
+## Licensing check (added 11 September 2026)
+
+`reuse-compliance` runs `reuse lint` (fsfe/reuse-action, pinned to the
+commit behind v5.0.0: `bb774aa9`). The repository carries two licences
+and the split was previously stated only in prose in README.md.
+`REUSE.toml` states it as data: everything is Apache-2.0, everything
+under `docs/` is CC-BY-4.0, and `CODE_OF_CONDUCT.md` is credited to the
+Contributor Covenant authors as well. Full licence texts live in
+`LICENSES/` under their SPDX identifiers. The job fails if any file
+stops resolving to a holder and a licence. This is the same discipline
+the specification asks of an operating record, applied to the
+repository's own licensing.
