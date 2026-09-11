@@ -11,12 +11,28 @@ external links (all verified directly, not assumed). Every check
 below exists because it checks something this repository actually
 contains — none were copied from a generic template.
 
-## The three jobs
+The counts in this section are from the July 2026 design pass. The
+repository has since grown to about 400 Markdown files, gained a
+licensing map and picked up external links in README and the
+governance records, which the link check covers too. The shape has not
+changed: Markdown and its metadata, no code.
+
+Two rules follow, and together they are the repository's test policy.
+First, a check is added only when it verifies something that actually
+exists here. Second, when a change introduces a rule that can be
+checked mechanically, the check lands in the same change: the
+`publication-metadata` job arrived in the commit that finalized the
+publication controls it verifies (b564bf5, 21 August 2026), and
+`reuse-compliance` arrived together with `REUSE.toml` (cebd793,
+11 September 2026). CONTRIBUTING.md states both rules for
+contributors.
+
+## The five jobs
 
 **`required-documents`** — confirms LICENSE, README, CONTRIBUTING,
 CHANGELOG, ROADMAP, this file, and `docs/README.md` /
 `docs/PROJECT_STATUS.md` still exist. Cheap, and the only one of the
-three that would catch an accidental deletion — nothing else would.
+five that would catch an accidental deletion — nothing else would.
 
 **`markdown-lint`** — structural Markdown checks via markdownlint,
 using `.markdownlint-cli2.jsonc`. Several default rules are disabled
@@ -39,6 +55,27 @@ shape are written as backtick-quoted text, which isn't a Markdown link
 and isn't something lychee — or any link checker — can see), so the
 flag would add a real risk (GitHub's and lychee's anchor-slug rules
 can diverge) for zero current benefit.
+
+**`publication-metadata`** (added 21 August 2026) keeps the
+repository's own publication metadata consistent with itself, per
+`docs/Governance/Publication-Model.md` and `Release-Workflow.md`.
+Three blocking steps and one advisory. Every commit named in
+`docs/Governance/Publication-Manifest.md` must exist in this
+repository's history. The manifest's current Specification Version
+must match the `**Version:**` field of every file in
+`docs/Specification/`. `docs/Entities/Overview.md` must keep Status
+Draft, because its content stayed normative after Constitution
+Decision 4 moved Entities out of Core scope. The advisory step is a
+grep heuristic that warns about SHALL sentences naming a capitalized
+term with no matching file under Meta, Models, AI, Core, Memory or
+Lifecycles; it never fails the build, because it cannot tell a
+dangling reference from an ordinary capitalized word. The job checks
+this repository only. It cannot see whether ocom.uno matches the
+repository, because the publication engine that renders the site lives
+outside it.
+
+**`reuse-compliance`** (added 11 September 2026) is described in its
+own section below.
 
 ## Deliberately not included, and why
 
@@ -64,7 +101,7 @@ can diverge) for zero current benefit.
 
 Risk-tiered, not blanket. `actions/checkout` is official, GitHub-owned,
 and among the most-scrutinized actions in the entire ecosystem — kept
-on its major-version tag (`@v4`). `DavidAnson/markdownlint-cli2-action`
+on its major-version tag (`@v7` today; Dependabot moves it). `DavidAnson/markdownlint-cli2-action`
 and `lycheeverse/lychee-action` are third-party, single-maintainer
 projects — each pinned to the exact commit SHA behind its tag at the
 time it was added, verified directly against the GitHub API
@@ -89,6 +126,25 @@ clean run was observed. The first real CI run against this workflow
 is the actual verification; if a rule not covered here turns out to
 false-positive, disable it the same way, with the same evidence-first
 reasoning, not by disabling `default: true` wholesale.
+
+That first run and every run since have passed, so the configuration
+is now verified by use, not only by inspection.
+
+## Running the checks locally
+
+The same tools, the same arguments, from the repository root:
+
+```
+npx markdownlint-cli2
+lychee --no-progress --timeout 45 --max-retries 3 --exclude-path '\.github' '**/*.md'
+python3 -m reuse lint
+```
+
+markdownlint-cli2 finds `.markdownlint-cli2.jsonc` on its own; the
+globs in that file decide what is linted. The `publication-metadata`
+steps are plain shell in `ci.yml`; copy a step's `run:` block into a
+terminal at the repository root and it behaves the same, given a full
+clone (the commit check needs history, hence `fetch-depth: 0` in CI).
 
 ## Licensing check (added 11 September 2026)
 
