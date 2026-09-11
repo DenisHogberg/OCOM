@@ -12,9 +12,9 @@
 
 **Status:** Draft
 
-**Version:** 1.0
+**Version:** 1.0.1
 
-**Last Updated:** 21 August 2026
+**Last Updated:** 11 September 2026
 
 **Adopted via:** `Governance/ADR-Candidates.md#cand-006`
 
@@ -36,9 +36,9 @@ OCOM (Object-Centric Operating Model) is an open, technology-independent operati
 6. **Reconstructability.** Knowledge and World Models must always be reproducible from Memory without requiring access to the original external systems.
 7. **Separation of Dimensions.** Architecture, Capability and Autonomy are independent dimensions. Progress in one dimension never implies progress in another.
 8. **Static Before Dynamic.** Static World Modelling precedes Dynamic World Modelling.
-9. **Domain-Neutral Core.** The OCOM Core must never contain domain-specific knowledge. The Core must never branch on organization-specific concepts or business entities. Domain knowledge belongs only to configuration, data and adapters.
+9. **Domain-Neutral Core.** The OCOM Core must never contain domain-specific knowledge. The Core must never branch on organization-specific concepts or business entities. Domain knowledge belongs only to configuration, data and adapters. For the purposes of this principle, the Core is determined by semantic invariance across industries rather than by directory location: it is whatever would remain unchanged if OCOM were adopted by an organization in a completely different industry.
 10. **Extensibility Over Enumeration.** Business vocabularies are extensible. Organizations extend OCOM through specialization rather than modification of the Core.
-11. **Structural Isolation.** Every architectural layer must be structurally incapable of exceeding its defined responsibilities. Boundaries are enforced by architecture rather than convention.
+11. **Structural Isolation.** A component's actual capability must never exceed its defined responsibility. The excess capability must be verifiably absent rather than merely unused by convention. This principle states a property that must hold and can be checked; it does not prescribe an implementation architecture, and it holds regardless of the technology used to achieve it.
 12. **Grounded Reasoning.** Statements derived from Memory and Knowledge must remain distinguishable from interpretation, inference or expert opinion. The system must communicate provenance and confidence appropriately.
 13. **Adaptation Flows Toward the Model.** Implementations adapt to OCOM. OCOM never adapts to implementation-specific constraints.
 14. **Professional Responsibility.** OCOM augments professional decision-making. Responsibility remains with the designated human role unless a higher Autonomy level has been explicitly delegated.
@@ -73,3 +73,4 @@ When a conflict exists between an implementation, an architectural decision and 
 |----------|------|-------------|
 | 1.0 | 27 July 2026 | Adopted as Core-00, per `CAND-006` (`Governance/ADR-Candidates.md`). Verbatim transcription of the Decision text — no wording changes. |
 | 1.0 | 21 August 2026 | Added one identity sentence to Purpose ("OCOM is an open, technology-independent operating model for organizations"), aligning with the canonical identity used across `ocom.uno`, `llms.txt`, and `Core/Manifest.md`. Semantic positioning only — no Canonical Principle added, removed, or reworded; no constitutional meaning changed. |
+| 1.0.1 | 11 September 2026 | Transcribed Decisions 4 and 5 of `Governance/Constitution-Step0-Summary.md` into the text of Canonical Principles 9 and 11, the integration those Decisions themselves recorded as not yet performed, and the one Constitution change `CAND-007` §4 names as permitted under the Architecture Freeze. Principle 9 now carries its own scope test: the Core is determined by semantic invariance across industries rather than by directory location. The application of that test to the present document set stays in Decision 4, which also records that borderline cases are judged per document rather than by a blanket ruling. Principle 11 now states a verifiable capability requirement instead of prescribing implementation architecture, per Decision 5. No Canonical Principle was added or removed and no constitutional meaning changed. Version raised to 1.0.1 per `Core/Versioning.md` so that the label distinguishes this text from the 27 July and 21 August 2026 texts. This raise does not ratify the 21 August Purpose sentence; `AO-026`, which records that edit as made without a Decision, remains open. The principle list quoted inside `CAND-006` is deliberately left at its 26 July adoption wording. |
