@@ -102,3 +102,14 @@ Contributor Covenant authors as well. Full licence texts live in
 stops resolving to a holder and a licence. This is the same discipline
 the specification asks of an operating record, applied to the
 repository's own licensing.
+
+## Scorecard (added 11 September 2026)
+
+`.github/workflows/scorecard.yml` runs OpenSSF Scorecard
+(ossf/scorecard-action, pinned to the commit behind v2.4.4: `2d114668`)
+on every push to `main` and weekly, and publishes the result so the
+README badge shows a real number. It is a separate workflow because
+publishing needs `id-token: write`, which CI deliberately does not
+have. Checks about binaries, fuzzing, SAST, packaging and signed
+releases do not apply to a Markdown repository and will score N/A or
+low; the number is reported as it is.

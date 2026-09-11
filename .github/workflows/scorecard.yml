@@ -1,0 +1,40 @@
+name: Scorecard
+
+# OpenSSF Scorecard: an automated read of this repository's security and
+# maintenance practices, published to the public Scorecard API so the badge
+# in README.md reflects a real score. Separate from CI on purpose: it needs
+# id-token: write to publish, and CI keeps contents: read only. Several
+# checks (binary artifacts, fuzzing, SAST, packaging, signed releases) do not
+# apply to a Markdown-only specification and will read as N/A or low; that
+# is the honest result, not something to game. See CI-DESIGN.md.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '30 6 * * 1'
+
+permissions: read-all
+
+jobs:
+  analysis:
+    name: OpenSSF Scorecard analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Run Scorecard
+        # Third-party action, pinned to the commit behind the v2.4.4 tag,
+        # resolved with `git ls-remote --tags` and dereferenced through the
+        # annotated tag. Dependabot proposes bumps as reviewable PRs.
+        uses: ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc # v2.4.4
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: true
