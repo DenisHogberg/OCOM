@@ -3,6 +3,7 @@
   <a href="https://api.reuse.software/info/github.com/DenisHogberg/OCOM"><img src="https://api.reuse.software/badge/github.com/DenisHogberg/OCOM" alt="REUSE status"></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/DenisHogberg/OCOM"><img src="https://api.scorecard.dev/projects/github.com/DenisHogberg/OCOM/badge" alt="OpenSSF Scorecard"></a>
   <a href="CODE_OF_CONDUCT.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa" alt="Contributor Covenant 2.1"></a>
+  <a href="https://www.bestpractices.dev/projects/14573"><img src="https://www.bestpractices.dev/projects/14573/badge" alt="OpenSSF Best Practices: passing"></a>
 </p>
 
 <h1 align="center">OCOM</h1>
