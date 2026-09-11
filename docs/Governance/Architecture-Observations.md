@@ -1318,6 +1318,66 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-059
+
+**Title:** Ownership Requires an Accountable Party but Does Not Require That Party to Be Able to Act on the Object
+
+**Date observed:** 10 September 2026
+
+**Description:** Surfaced by an external practitioner review of the published model in a public architecture discussion (r/softwarearchitecture, 10 September 2026, comments by u/srikanth_builds on the post "Inside a service we separate source from projection. Outside it, everything is a source"). Meta/Ownership.md:43 requires that "every managed Object has a clearly identified accountable party", and Meta/Ownership.md:213 states that "Ownership establishes accountability without changing Object behavior". Neither the document nor the Core Terminology requires the accountable party to hold the authority to change the Object. The reviewer reported the failure in production: a person named as owner of a record they had no ability to change could not in fact answer for it being true, and the populated field caused everyone to stop looking for a real owner. The reviewer's formulation: "Ownership without write authority is decoration."
+
+**Impact:** Ownership is one of the four pillars the site publishes. A record can satisfy the text of the Ownership rule while delivering none of the accountability the rule exists to establish, and the satisfied field actively suppresses the search for the accountability that is missing.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should consider whether Ownership must be stated as a capability check rather than a field: can the named owner change the Object without asking anyone. If not, the Ownership is nominal.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Ownership.md`, `AO-033`, `AO-055`
+
+---
+
+## AO-060
+
+**Title:** Lifecycle Defines States and Transitions but No Default Read Semantics, so Superseded Records Are Returned as Live Unless Every Consumer Remembers to Filter
+
+**Date observed:** 10 September 2026
+
+**Description:** Surfaced by an external practitioner review of the published model in a public architecture discussion (r/softwarearchitecture, 10 September 2026, comments by u/srikanth_builds). Models/Lifecycle.md requires a Lifecycle to define an initial State, permitted Transitions and optional terminal States, and says nothing about what a consumer receives by default when reading an Object that carries a Lifecycle. The reviewer reported an API that kept handing out superseded rules indistinguishable from live ones, with nothing erroring, because filtering on the state was a predicate every caller had to remember. The observation is corroborated by an implementation incident reported by the specification's author: one meeting reprocessed five times produced five live records under one source identifier and inflated a derived count six times over; the fix required no new concept, only reading the current record by default and the superseded chain on request.
+
+**Impact:** A Lifecycle state on the record does not protect the reader if the obligation to honour it lies with every read. The specification places the state on the Object and is silent on the read boundary, which is where both the reviewer and the implementation failed.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should consider a rule that the current State is the default read and superseded States must be requested explicitly, rather than leaving the filter as a predicate consumers must remember.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Models/Lifecycle.md`, `Models/State.md`, `AO-058`
+
+---
+
+## AO-061
+
+**Title:** The Specification Declares Projections Non-Authoritative but Does Not Require the Source to Answer the Questions the Projection Answers, so a Projection Becomes a Source in Practice Whatever It Is Labelled
+
+**Date observed:** 10 September 2026
+
+**Description:** Surfaced by an external practitioner review of the published model in a public architecture discussion (r/softwarearchitecture, 10 September 2026, comments by u/srikanth_builds). The position that everything downstream of the canonical source restates or renders it rather than adding to it is stated in Governance/Publication-Model.md:61 ("This is the normative text. Nothing downstream of this tier introduces new requirements; everything downstream either restates or renders it") and in Governance/Governance-Manifest.md:33 ("The specification is the single source of truth. Code, documentation, and examples derive from it, not the other way around"), and is demonstrated in Examples/Implementation-Case/Performance-Marketing-Operator.md:122 ("rebuilt as projections of the same governed Objects, never as parallel stores"). The explicit wording "is not a source of truth" occurs once in the repository, at Governance/Publication-Model.md:80, where it is scoped to the Consumer Tool tier rather than to projections generally. The word query does not occur in docs/Meta or docs/Models. The reviewer observed that people cite a dashboard because the dashboard is the only thing with a usable query interface, and that marking the projection non-authoritative does not change what anyone does if the source cannot be asked the same question. The reviewer's formulation: a projection whose questions cannot be asked of the source is "a source in waiting", whatever it is labelled. The reviewer's proposed check: can the questions people actually ask of the projection be asked of the source.
+
+**Impact:** The projection-versus-source distinction is the central claim of the specification, and it is stated as a property of the projection (non-authoritative) with no corresponding obligation on the source (answerable). Without the second half, the first is a label.
+
+**Recommendation:** Record only. Whether queryability of the source belongs in the Core as a property, in conformance as a check, or in the Projection tier as a precondition is a question for the process, not for this record. If corroborated, a future Reference Case should carry the reviewer's check as its test.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Governance/Publication-Model.md`, `Examples/Implementation-Case/Performance-Marketing-Operator.md`, `AO-045`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1341,3 +1401,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 6 September 2026 | Added AO-054 through AO-058, surfaced by a self-application review asking whether the published site models itself the way the specification requires: Object's characteristics absent from the publication's own records, Ownership published as a pillar and assigned nowhere, version labels that follow no semantic versioning rule, 83 edges named Relationships without the required properties, and a Status Taxonomy with four states and no transitions. All record only, not escalated. |
 | 0.1 | 10 September 2026 | AO-003 (Mutable Status in an Immutable Memory Model): Architect Response recorded and Status set to Closed. Resolved as Option B (Status is a derived projection in the World Model layer) through `CAND-014`, Layer 1. `Memory/Memory Record.md` unchanged pending the separately authorized integration step. |
 | 0.1 | 11 September 2026 | AO-042: Architect Response recorded and Status set to Open in part. The derivation contradiction is resolved by `CAND-014` Layer 1 and corrected in `AI/Knowledge/Knowledge.md`; the `Knowledge Sources.md` provenance half remains open as Layer 2. |
+| 0.1 | 11 September 2026 | Added AO-059 through AO-061 (Ownership without authority to act, Lifecycle without default read semantics, projections declared non-authoritative without a queryability obligation on the source), surfaced by an external practitioner review in a public architecture discussion (r/softwarearchitecture, u/srikanth_builds, 10 September 2026); all record only, not escalated. AO-061's citation was corrected against the canon before recording: the phrase "is not a source of truth" occurs once in this repository, at `Publication-Model.md:80`, scoped to the Consumer Tool tier, so the entry now cites `Publication-Model.md:61` and `Governance-Manifest.md:33` for the general position. |
