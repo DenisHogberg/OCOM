@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 27 July 2026
+**Last Updated:** 11 September 2026
 
 ---
 
@@ -84,9 +84,13 @@ This does not match the example structure given in the task ("Entry Point, Knowl
 
 **Documents affected:** `AI/Knowledge/*` (5 docs), a new World Model document (does not yet exist), `Memory/Memory Record.md` (`AO-003` clause), `Memory/Evidence Overlay.md` (`FW-001` reserved sections).
 
-**Related AO/ADR:** `AO-003`; analysis already complete in `Concept-Paper-Knowledge-vs-World-Model.md` and `Architecture-Discussion-Knowledge-vs-World-Model.md` (Decision Readiness: **Yes**, per that document's own Part 8) — no ADR Candidate has been filed yet for the actual choice among its four options.
+**Related AO/ADR:** `AO-003`; analysis already complete in `Concept-Paper-Knowledge-vs-World-Model.md` and `Architecture-Discussion-Knowledge-vs-World-Model.md` (Decision Readiness: **Yes**, per that document's own Part 8) — no ADR Candidate had been filed for the actual choice among its four options as of 27 July 2026; `CAND-014` was filed and decided on 10 September 2026, see Execution status below.
 
 **Definition of Done:** an ADR Candidate is filed and decided for the Knowledge/World Model split; `AI/Knowledge/*` no longer contradicts §5/§6/§3; a World Model document exists with at least a Definition and a stated relationship to Knowledge and Memory; `AO-003` is resolved as part of the same decision (the Discussion document already frames it as the same question at a smaller scale); `FW-001`'s reserved sections are written only as needed to support the decision, not before.
+
+**Execution status (11 September 2026):** the decision step of this Epic is complete. `CAND-014` was filed and decided on 10 September 2026, adopting Option 4: three layers by time horizon, where Memory records what happened, Knowledge holds stable rules and meaning and is changed only through a rule-change process that is itself logged in Memory, and World Model holds a subject's current state, computed only. `AO-003` is closed by the same decision, resolved as its own Option B: Status is a derived projection, not a stored Memory Record field.
+
+Two items in the Definition of Done above remain open and are deliberately gated. Authoring the World Model document and rewriting `AI/Knowledge/*` are Layer 2 of `CAND-014`, routed through the `CAND-007` freeze-exception pipeline, which per `Standard Evolution Methodology.md` Rule 2 requires independent Reference Cases that do not yet exist. The Layer 1 Core integration, correcting `Knowledge.md`'s "independent of Memory Records" line and noting in `Memory/Memory Record.md` that Status is derived, is authorized separately and has not been performed. `FW-001` is untouched.
 
 ## EPIC-B — Object Model & Cross-Organization Consolidation
 
@@ -158,9 +162,9 @@ This does not match the example structure given in the task ("Entry Point, Knowl
 
 | Work item | Epic | Priority | Effort | Risk | Dependencies |
 |---|---|---|---|---|---|
-| Decide Knowledge/World Model split (file + resolve ADR) | A | Critical | L | High — the largest single architectural decision left | None (already decision-ready) |
-| Write World Model document | A | Critical | M | Medium — first-ever document for this concept | Knowledge/World Model decision |
-| Resolve `AO-003` (Memory Record Status) | A | High | S | Low — narrow, well-scoped | Knowledge/World Model decision (same underlying question) |
+| ✅ Decide Knowledge/World Model split (file + resolve ADR). Done 10 September 2026, `CAND-014` Option 4 Layer 1 | A | Critical | L | High — the largest single architectural decision left | None (already decision-ready) |
+| Write World Model document | A | Critical | M | Medium — first-ever document for this concept | Knowledge/World Model decision (landed, `CAND-014`); now gated as Layer 2 behind the `CAND-007` freeze-exception pipeline |
+| ✅ Resolve `AO-003` (Memory Record Status). Done 10 September 2026, closed by `CAND-014` as Option B | A | High | S | Low — narrow, well-scoped | Knowledge/World Model decision (same underlying question) |
 | Complete `FW-001` (Evidence Overlay reserved sections) | A | Medium | S | Low | Knowledge/World Model decision (only what it needs) |
 | Resolve `AO-001` (Domain vs Domain) | B | High | S | Medium — touches a widely-referenced term | None |
 | Resolve `AO-002` (Relationship/Organization) | B | High | S | Medium | None |
@@ -224,6 +228,8 @@ EPIC-F — Specification currency
 
 **Must happen before anything else:** the EPIC-A Knowledge/World Model decision. It is the single most-referenced dependency in the graph — EPIC-C's Entities bridge, EPIC-E's Test Suite, and (indirectly, through terminology completeness) EPIC-D's Autonomy definition all either need it directly or benefit from it being settled first.
 
+**Execution note (11 September 2026):** the EPIC-A decision named above as the thing that must happen before anything else landed on 10 September 2026 as `CAND-014`. What it unblocks is the semantic direction, not yet the artifact: the World Model document that EPIC-C's Entities bridge and EPIC-E's Test Suite need as a stable target is Layer 2 of that decision and remains gated behind the `CAND-007` freeze-exception pipeline. Read the downstream items below as decided in direction and still waiting on that document.
+
 **Can run in parallel, starting immediately:** EPIC-B's `AO-001`/`AO-002` (self-contained, no dependency on Knowledge/World Model), EPIC-D's §9/§11 wording update (pure transcription), EPIC-F (no architectural dependency at all).
 
 **Does not make sense to start before its dependency lands:** `CAND-004` before `AO-001`/`AO-002` (it explicitly says so itself); the Conformance Test Suite before EPIC-A and EPIC-D are stable (nothing stable to test); a Reference Implementation before the Test Suite exists (nothing to prove compliance against — and per Architecture Principle 1/5, building it before the contract itself is settled risks the implementation silently becoming the de facto contract).
@@ -278,7 +284,9 @@ Only items architecturally blocked by the backlog above, per the instruction to 
 
 If leading OCOM's development starting tomorrow morning, the first three items, in this order:
 
-**1. File and decide the ADR Candidate for Knowledge vs. World Model (EPIC-A).** This is the single highest-leverage item in the entire backlog: it is already fully analyzed (`Concept-Paper-Knowledge-vs-World-Model.md`, `Architecture-Discussion-Knowledge-vs-World-Model.md`, explicitly rated "Decision Readiness: Yes"), so no new research is needed — only the decision itself — and it unblocks more downstream work (EPIC-C's Entities bridge, EPIC-E's Test Suite, part of EPIC-D) than any other single item in the graph.
+**Execution note (11 September 2026):** item 1 below is complete. The ADR Candidate was filed and decided on 10 September 2026 as `CAND-014` (Option 4, Layer 1), and `AO-003` was closed by the same decision. Read the list as starting at item 2. The reasoning below is left as written on 27 July 2026 and is not revised.
+
+**1. File and decide the ADR Candidate for Knowledge vs. World Model (EPIC-A).** ✅ Done 10 September 2026, `CAND-014`. This is the single highest-leverage item in the entire backlog: it is already fully analyzed (`Concept-Paper-Knowledge-vs-World-Model.md`, `Architecture-Discussion-Knowledge-vs-World-Model.md`, explicitly rated "Decision Readiness: Yes"), so no new research is needed — only the decision itself — and it unblocks more downstream work (EPIC-C's Entities bridge, EPIC-E's Test Suite, part of EPIC-D) than any other single item in the graph.
 
 **2. Update Constitution §9 and §11's own wording (EPIC-D).** The lowest-cost item in the entire backlog — pure transcription of decisions already made (`Constitution-Step0-Summary.md`, Decisions 4 and 5) — and it closes a standing inconsistency in the single most authoritative document in the Specification. Near-zero risk, immediate credibility gain, and it can proceed in full parallel with item 1.
 
@@ -292,6 +300,8 @@ These three share the same property: each is either already decision-ready or tr
 
 This is a backlog, not a decision. No specification document has been changed. No new ADR Candidate has been created — every item above already exists as an AO, ADR Candidate, or Documentation Debt entry, or is transcribed directly from the Audit. Executing any item in this backlog requires its own separate, explicit authorization, per the two-step discipline already used throughout this Specification's governance.
 
+**Execution has since begun (11 September 2026).** The statements above describe this document as authored on 27 July 2026. Since then item 1 of Part 10 has been executed under its own authorization: `CAND-014` was filed and decided on 10 September 2026 and `AO-003` was closed. Both are recorded in `ADR-Candidates.md` and `Architecture-Observations.md`; this document tracks them, it does not own them. No Core, Meta, Models, AI or Memory document has been changed.
+
 ---
 
 # Revision History
@@ -299,3 +309,4 @@ This is a backlog, not a decision. No specification document has been changed. N
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 27 July 2026 | Initial backlog, six Epics, normalized from the Architecture Audit plus the full open-item register in `ADR-Candidates.md`, `Architecture-Observations.md`, and `Documentation-Debt.md` |
+| 0.1 | 11 September 2026 | Recorded execution of Part 10 item 1: the EPIC-A Knowledge/World Model decision was filed and decided as `CAND-014` on 10 September 2026 (Option 4, three-layer split by time horizon, Layer 1), and `AO-003` was closed by the same decision as its own Option B. Corrected EPIC-A's "Related AO/ADR" clause, which still said no ADR Candidate had been filed; added an Execution status block to EPIC-A; marked the two completed rows in Part 5 and re-scoped the World Model document row; added dated execution notes to Parts 6, 10 and Status. EPIC-A is not fully closed: authoring the World Model document and rewriting `AI/Knowledge/*` are Layer 2, gated behind the `CAND-007` freeze-exception pipeline, and the Layer 1 Core integration is separately authorized and not yet performed. No Core document changed. |
