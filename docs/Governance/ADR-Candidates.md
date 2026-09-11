@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 10 September 2026
+**Last Updated:** 11 September 2026
 
 ---
 
@@ -993,6 +993,51 @@ It changes no document outside this register and `Architecture-Observations.md`.
 
 **Postscript (11 September 2026):** Step 2 of the Next Action above is done. The Layer 1 Core integration was performed under separate authorization from the Chief Architect: `AI/Knowledge/Knowledge.md`'s Definition now states that Knowledge is independent of any individual Agent, Context or Memory Record but not of Memory, and `Memory/Memory Record.md` moves Status out of Mandatory Attributes and restates it as a derived projection. `AO-042` is resolved in part by the same integration. Step 3, Layer 2, remains open and gated.
 
+## CAND-015 — ✅ Decided
+
+**Title:** Domain Definition Divergence: which of the two Domain documents is canonical
+
+**Status:** Decided — `Models/Domain.md` is canonical; `Domains/Common/Domain.md` is informative and restates rather than extends.
+
+**Decision:** **`Models/Domain.md` (`Model-02`) is the canonical normative definition of Domain. `Domains/Common/Domain.md` (`DOM-DOMAIN-01`) is not a second normative model and is not a specialization of the first. It is an informative description of how the Domain concept is applied within the `Domains/` tier: it restates the canonical definition, it does not extend it, it shall cross-reference `Model-02` as the definition, and the four characteristics it carries beyond `Model-02` (Capabilities, Policies, Constraints, Integration Points) carry no normative force unless and until they pass through the change process.** Recorded 11 September 2026.
+
+**Owner:** Chief Architect (Decision recorded)
+
+**Created:** 11 September 2026 · **Decided:** 11 September 2026 · **Decided by:** Chief Architect
+
+**Grounding:** `AO-001` (Domain Definition Divergence, logged 25 July 2026, the oldest unresolved observation in the register), `Models/Domain.md`, `Domains/Common/Domain.md`, `CAND-005`, `Governance/Knowledge-Map.md`, `Master-Architecture-Backlog.md` EPIC-B.
+
+### The question
+
+`AO-001` asked the Chief Architect to determine which of two independently written normative models of Domain is canonical, whether one is a specialization of the other, or whether consolidation is required. `Models/Domain.md` was written 20 July 2026 and defines a Domain as an operational boundary governing one or more Entities, with seven characteristics. `Domains/Common/Domain.md` was written 21 July 2026 and defines a Domain as a logical business boundary managing a coherent set of Objects, capabilities, policies, processes and operational outcomes, with ten characteristics. Neither cross-references the other as authoritative.
+
+### Rationale
+
+Six independent pieces of evidence point the same way, and none points the other way.
+
+1. `Governance/Knowledge-Map.md` already names the source when it states the Domain rule: "**Domain** (`Models/Domain.md`) governs one or more Entities; every Entity belongs to exactly one primary Domain."
+2. The compiled reading path cites `Models/Domain.md` in `Specification/03 Core Concepts.md` and `Specification/05 Object Model.md`.
+3. The Adoption layer cites `Models/Domain.md` in `Getting Started.md`, `First Pilot.md` and `Common Mistakes.md`.
+4. `CAND-005`, already decided, restates Domain in `Models/Domain.md`'s own terms: "Domain keeps its existing, unchanged semantics, an operational boundary describing an area of responsibility."
+5. `Domains/Common/Domain.md` places itself downstream in its own Relationship to Other Specifications section, which lists Models among the specifications it builds upon.
+6. No normative document and none of the thirteen domain profiles cites `Domains/Common/Domain.md`. Its only citations in the repository are the governance records that log it as a problem.
+
+### Why consolidation was not chosen
+
+Folding `DOM-DOMAIN-01`'s four additional characteristics into `Model-02` would add requirements to Domain, which is a change to the model rather than a resolution of an ambiguity. Under `CAND-007` that is a Freeze exception requiring the pipeline in `Standard Evolution Methodology.md`, and per Rule 2 that pipeline needs independent Reference Cases, of which none exist today. Consolidation therefore remains available as a future path and is not taken here. This Decision removes the divergence without changing what Domain requires.
+
+### Scope, and the Architecture Freeze
+
+Filed under `CAND-007`. `CAND-007` §3 names `AO-001` among the observations on which a decision may be taken during the Freeze, provided the decision stays within the observation's recorded scope. This Decision answers exactly the three questions `AO-001` records and no others. It introduces no new Meta Object, no new Canonical Principle and no new Domains subdomain, so `CAND-007` §4 is not engaged. No requirement anywhere is added, removed or reworded by this Decision.
+
+### What this decision does not do
+
+It changes no document. `Models/Domain.md` and `Domains/Common/Domain.md` are both untouched by this record. It does not resolve `AO-002`. It does not unblock `CAND-004` by itself: `CAND-004` depends on `AO-001` and `AO-002` together, and `AO-002` remains open.
+
+**Next Action:** Two-step discipline, as used for `CAND-003`, `CAND-005`, `CAND-006`, `CAND-009` and `CAND-014`. Step 1 is done by this record: the Decision is recorded here and `AO-001` is marked Closed with its Architect Response pointing to this candidate. Step 2, the integration, is a separate and separately authorized task: `Domains/Common/Domain.md`'s Status becomes Informative, its Definition section gains a cross-reference naming `Models/Domain.md` as the canonical definition, and its Core Characteristics section states that the four characteristics beyond `Model-02` are descriptive of the `Domains/` tier and carry no normative force. `Models/Domain.md` is not edited by that step.
+
+**Related Documents:** `AO-001`, `AO-002`, `Models/Domain.md`, `Domains/Common/Domain.md`, `Governance/Knowledge-Map.md`, `Governance/ADR-Candidates.md#cand-004`, `Governance/ADR-Candidates.md#cand-005`, `Governance/Master-Architecture-Backlog.md` (EPIC-B).
+
 ---
 
 # Revision History
@@ -1030,3 +1075,4 @@ It changes no document outside this register and `Architecture-Observations.md`.
 | 0.1 | 10 September 2026 | Added CAND-014 (Knowledge, World Model, and the Location of Current State) — Decision recorded, Option 4 (three-layer split by time horizon), Layer 1 only: derivation semantics decided, `AO-003` answered with its Option B (Status is a derived projection in World Model), the `Knowledge.md` "independent of Memory Records" line recorded as an inaccuracy for correction on integration. Layer 2 (authoring `Meta/World-Model.md`, rewriting `AI/Knowledge/*`) explicitly not decided and gated behind the `CAND-007` freeze-exception pipeline. Two-layer structure follows the `CAND-009` precedent. No document outside the two governance registers changed. Resolves `Master-Architecture-Backlog.md` EPIC-A's decision step; Core integration remains a separately authorized task. |
 | 0.1 | 11 September 2026 | CAND-006: added a dated postscript recording that its quoted Canonical Principle list stays at the 26 July 2026 adoption wording, and that Principles 9 and 11 were transcribed into `Core/Constitution.md` (1.0.1) on 11 September 2026 per Decisions 4 and 5, the integration `CAND-007` §4 names as permitted. No Decision changed. |
 | 0.1 | 11 September 2026 | CAND-014: postscript recording that Step 2, the Layer 1 Core integration, was performed (`Knowledge.md` Definition corrected, `Memory Record.md` Status restated as derived) and that `AO-042` is resolved in part by it. Step 3, Layer 2, unchanged and still gated. No Decision changed. |
+| 0.1 | 11 September 2026 | Added CAND-015 (Domain Definition Divergence) — Decision recorded: `Models/Domain.md` is the canonical normative definition of Domain; `Domains/Common/Domain.md` is informative, restates rather than extends, and its four extra characteristics carry no normative force. Consolidation was considered and not taken, because folding those characteristics into `Model-02` would add requirements and needs the `CAND-007` freeze-exception pipeline, which has no independent Reference Cases today. Resolves `AO-001`, the oldest open observation. No document changed; integration is a separately authorized step. |

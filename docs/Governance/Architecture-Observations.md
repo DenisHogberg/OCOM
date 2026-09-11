@@ -113,9 +113,9 @@ The two documents use separate Document ID schemes, define different Core Charac
 
 **Recommendation:** The Chief Architect should determine: (1) which of the two is canonical; (2) whether one is a specialization of the other; (3) or whether consolidation is required. No changes to be made to either document until this is decided.
 
-**Status:** Open
+**Status:** Closed
 
-**Architect Response:** *(pending)*
+**Architect Response:** `Models/Domain.md` (`Model-02`) is canonical. `Domains/Common/Domain.md` (`DOM-DOMAIN-01`) is not a second normative model and not a specialization; it is informative, restates rather than extends, shall cross-reference `Model-02` as the definition, and its four additional characteristics carry no normative force. Consolidation was considered and not taken, because it would add requirements to Domain and needs the `CAND-007` freeze-exception pipeline. Decided through `CAND-015`, Chief Architect decision, 11 September 2026. Neither document is changed by this response; the integration is the separately authorized step named in `CAND-015`'s Next Action.
 
 **Related:** `Models/Domain.md`, `Domains/Common/Domain.md`
 
@@ -1402,3 +1402,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 10 September 2026 | AO-003 (Mutable Status in an Immutable Memory Model): Architect Response recorded and Status set to Closed. Resolved as Option B (Status is a derived projection in the World Model layer) through `CAND-014`, Layer 1. `Memory/Memory Record.md` unchanged pending the separately authorized integration step. |
 | 0.1 | 11 September 2026 | AO-042: Architect Response recorded and Status set to Open in part. The derivation contradiction is resolved by `CAND-014` Layer 1 and corrected in `AI/Knowledge/Knowledge.md`; the `Knowledge Sources.md` provenance half remains open as Layer 2. |
 | 0.1 | 11 September 2026 | Added AO-059 through AO-061 (Ownership without authority to act, Lifecycle without default read semantics, projections declared non-authoritative without a queryability obligation on the source), surfaced by an external practitioner review in a public architecture discussion (r/softwarearchitecture, u/srikanth_builds, 10 September 2026); all record only, not escalated. AO-061's citation was corrected against the canon before recording: the phrase "is not a source of truth" occurs once in this repository, at `Publication-Model.md:80`, scoped to the Consumer Tool tier, so the entry now cites `Publication-Model.md:61` and `Governance-Manifest.md:33` for the general position. |
+| 0.1 | 11 September 2026 | AO-001 (Domain Definition Divergence): Architect Response recorded and Status set to Closed. `Models/Domain.md` is canonical; `Domains/Common/Domain.md` is informative and restates rather than extends. Decided through `CAND-015`. Neither document changed pending the separately authorized integration. |
