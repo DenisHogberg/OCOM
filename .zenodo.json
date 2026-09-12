@@ -1,0 +1,31 @@
+{
+  "upload_type": "publication",
+  "publication_type": "standard",
+  "title": "OCOM, the Object-Centric Operating Model: an open specification for a machine-readable description of an organization",
+  "creators": [
+    {
+      "name": "Petrenko, Denis",
+      "affiliation": "Independent Researcher",
+      "orcid": "0009-0001-3381-5957"
+    }
+  ],
+  "license": "CC-BY-4.0",
+  "language": "eng",
+  "access_right": "open",
+  "keywords": [
+    "operating model",
+    "object-centric operating model",
+    "enterprise architecture",
+    "enterprise modelling",
+    "conceptual modelling",
+    "governance",
+    "governed objects",
+    "provenance",
+    "lifecycle semantics",
+    "organizational memory",
+    "knowledge representation",
+    "entity resolution",
+    "AI agents",
+    "specification"
+  ]
+}

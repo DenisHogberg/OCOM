@@ -15,9 +15,7 @@ authors:
     orcid: "https://orcid.org/0009-0001-3381-5957"
 repository-code: "https://github.com/DenisHogberg/OCOM"
 url: "https://ocom.uno"
-license:
-  - Apache-2.0
-  - CC-BY-4.0
+license: CC-BY-4.0
 keywords:
   - operating model
   - enterprise architecture
@@ -33,7 +31,7 @@ identifiers:
       specification.
 preferred-citation:
   type: standard
-  title: "OCOM: the Object-Centric Operating Model specification"
+  title: "OCOM, the Object-Centric Operating Model: an open specification for a machine-readable description of an organization"
   authors:
     - family-names: Petrenko
       given-names: Denis
