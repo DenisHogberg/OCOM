@@ -6,10 +6,17 @@ scratch or, worse, guessed.
 
 ## What this repository actually is
 
-373 Markdown files, zero code, zero JSON/YAML, zero Mermaid, zero
-external links (all verified directly, not assumed). Every check
-below exists because it checks something this repository actually
-contains — none were copied from a generic template.
+401 Markdown files and zero code (September 2026). Outside Markdown
+the repository holds only its own configuration and metadata, each
+validated by the tool that consumes it: the workflows and Dependabot
+file under `.github/`, `.markdownlint-cli2.jsonc`, `REUSE.toml`,
+`CITATION.cff`, `.zenodo.json` (the deposit metadata Zenodo reads on
+every Release), the licence texts and a few images. One Mermaid block
+(`docs/Governance/Concept-Paper-Value-Model.md`) and external links in
+eight documents, mostly the entry pages (all verified directly, not
+assumed). Every check below exists because it checks something this
+repository actually contains — none were copied from a generic
+template.
 
 The counts in this section are from the July 2026 design pass. The
 repository has since grown to about 400 Markdown files, gained a
@@ -79,9 +86,14 @@ own section below.
 
 ## Deliberately not included, and why
 
-- **YAML / JSON / Mermaid validation** — none of these exist anywhere
-  in the repository. A check with nothing to check is dead weight, not
-  safety margin.
+- **YAML / JSON / Mermaid validation** — the YAML and JSON that exist
+  are configuration and metadata whose consumers already validate them:
+  GitHub parses the workflows and `dependabot.yml` on every run and
+  reads `CITATION.cff` for its citation widget; Zenodo validates
+  `.zenodo.json` on every Release and fails the deposit visibly when a
+  file is wrong, as `v1.1.0` showed for `CITATION.cff`. The one Mermaid
+  block is illustrative. A second check here would duplicate those, not
+  add safety margin.
 - **A hard requirement that every document carry `**Document ID:**`**
   — not a universal convention: only 25 of 51 files in `Entities/`
   have it. Enforcing it today would fail on legitimate, existing
