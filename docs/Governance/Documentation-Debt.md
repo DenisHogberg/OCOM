@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 July 2026
+**Last Updated:** 12 September 2026
 
 ---
 
@@ -78,7 +78,7 @@ Consciously deferred decisions. Not documentation debt.
 | FW-004 | Reference Implementation does not exist anywhere in the repository | Next stage of OCOM | Repository-wide | CDKO role charter, "Дополнительная задача" | Planned |
 | FW-005 | Extend `Knowledge-Map.md` traceability and `docs/README.md` visibility to fully reflect Governance as a peer section of OCOM | Undetermined | `Governance/Knowledge-Map.md`, `docs/README.md` | CDKO proposal, pending Architect confirmation | Open |
 | FW-006 | The external Publication Engine that builds ocom.uno exposes no commit or version marker this repository can check its output against — `Publication-Model.md`'s six authoritative-version questions can be answered from inside this repository, but "does the live site match the repository" cannot be verified without cooperation from that external system | Undetermined | `Governance/Publication-Model.md`, `Governance/Release-Workflow.md` (Steps 8–9) | Publication Governance work, 20 August 2026 | Open |
-| FW-007 | A correctly-scoped next Release (containing Constitution v1.0, matching `CAND-007`'s Architecture Freeze) has not been cut — `Publication-Manifest.md`'s placeholder entry is structural only, all fields `TBD` | Next release, criteria TBD | `Governance/Publication-Manifest.md`, `Governance/Master-Architecture-Backlog.md` Part 8 (Release Readiness) | Publication Governance work, 20 August 2026 — explicitly deferred, not this plan's scope | Planned |
+| FW-007 | A correctly-scoped next Release (containing Constitution v1.0, matching `CAND-007`'s Architecture Freeze) has not been cut — `Publication-Manifest.md`'s placeholder entry is structural only, all fields `TBD` | Next release, criteria TBD | `Governance/Publication-Manifest.md`, `Governance/Master-Architecture-Backlog.md` Part 8 (Release Readiness) | Publication Governance work, 20 August 2026 — explicitly deferred, not this plan's scope. Discharged by Release `v1.1.1` (12 September 2026: Constitution 1.0.1, Manifest entry recorded before tagging, annotated tag, Zenodo version DOI `10.5281/zenodo.22724309`). | Closed |
 | FW-008 | World Model (`Core/Constitution.md` paragraphs 5, 6 and 8) and Autonomy level (paragraphs 7 and 14) are named in the Constitution and defined in no document; `Workflows/` holds ten planned workflow stubs with no content | Undetermined | `Core/Constitution.md`, `Workflows/` | Tracked as `Master-Architecture-Backlog.md` EPIC-A (Concept Paper written; an ADR Candidate is the Definition of Done) and EPIC-D; named as open exceptions in `ADR-Candidates.md` CAND-007 §1; pointer row added 5 September 2026 so that the three registers name the gap | Open |
 
 ---
@@ -94,3 +94,4 @@ Consciously deferred decisions. Not documentation debt.
 | 0.1 | 20 August 2026 | Added FW-006 (external Publication Engine exposes no commit/version marker) and FW-007 (next correctly-scoped Release not yet cut), per `Governance/Publication-Model.md` and `Governance/Publication-Manifest.md` |
 | 0.1 | 5 September 2026 | Added GAP-004 (Memory Entry / Memory Record rename pending) and FW-008 (World Model, Autonomy level and the Workflows/ stubs), so that gaps tracked only in the Backlog and CAND-007 are visible from this register. |
 | 0.1 | 5 September 2026 | Added GAP-005 (no Compliance Lifecycles document) and GAP-006 (Process and KPI undefined above the Domain tier), both surfaced by a full read of the Domains, Entities, AI and Reference Architecture tiers. |
+| 0.1 | 12 September 2026 | FW-007 closed: Release `v1.1.1` cut per `Governance/Release-Workflow.md` (Manifest entry before tagging, annotated tag) with Zenodo version DOI `10.5281/zenodo.22724309`; the same-day `v1.1.0` is recorded as Superseded in `Governance/Publication-Manifest.md`. |

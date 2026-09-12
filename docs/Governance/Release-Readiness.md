@@ -66,7 +66,7 @@ Every release entry from this point forward **shall** confirm the following:
 
 **Unresolved ADR Candidates:** CAND-001, CAND-002, CAND-004 and CAND-008 Open; 9 Decided; CAND-009 Promoted to ADR; one Informative. Non-blocking: no open Candidate proposes a Core change this Release would pre-empt.
 
-**Critical Documentation Debt:** None critical. FW-007 (a correctly-scoped next Release not yet cut) is discharged by this Release and is closed by the follow-up revision that records the published artifacts. FW-006 (the external Publication Engine exposes no commit marker) stays open and is disclosed in the Manifest entry.
+**Critical Documentation Debt:** None critical. FW-007 (a correctly-scoped next Release not yet cut) is discharged by this Release and closed on 12 September 2026. FW-006 (the external Publication Engine exposes no commit marker) stays open and is disclosed in the Manifest entry.
 
 **Known Deferred Content:** `v1.1.0`, cut the same day from the same `docs/` tree, was tagged through the GitHub Release form outside this process: lightweight tag, no Manifest entry before tagging, Zenodo deposit rejected on the `CITATION.cff` license field. Recorded in the Manifest as Superseded; left in git history unmodified. This Release is a metadata-only patch over it: `.zenodo.json` added, `CITATION.cff` license narrowed to the specification text's `CC-BY-4.0`, annotated tag.
 
@@ -74,7 +74,7 @@ Every release entry from this point forward **shall** confirm the following:
 
 **Recommendation:** Approved for release.
 
-**Status:** Prepared. Annotated tag and GitHub Release follow from this entry; the follow-up revision records the published timestamp and the Zenodo version DOI.
+**Status:** Released. GitHub Release `v1.1.1` published 2026-09-12T10:47:22Z; Zenodo version DOI `10.5281/zenodo.22724309`.
 
 ---
 
@@ -85,3 +85,4 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 22 July 2026 | Log initialized with the v0.1 release entry |
 | 0.1 | 22 July 2026 | Added Pre-Release Checklist, including Standard Evolution Methodology review |
 | 0.1 | 12 September 2026 | Added the v1.1.1 release entry (first entry to run the Pre-Release Checklist), with the same-day v1.1.0 recorded under Known Deferred Content. |
+| 0.1 | 12 September 2026 | v1.1.1 entry: Status Prepared to Released, with the GitHub Release timestamp and the Zenodo version DOI. |
