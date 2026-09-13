@@ -63,6 +63,15 @@ and isn't something lychee — or any link checker — can see), so the
 flag would add a real risk (GitHub's and lychee's anchor-slug rules
 can diverge) for zero current benefit.
 
+One host is excluded from the link check: `doi.org`. It is a resolver
+this project does not control, and it fails in bursts (13 September
+2026: six consecutive probes, 30 s each, all 504, while the Zenodo
+record behind the DOI was reachable). The DOI value is checked where it
+can be checked deterministically, by keeping `.zenodo.json`,
+`CITATION.cff` and the Publication Manifest in agreement, and its
+resolution is confirmed by hand at each release. Excluding it keeps a
+third-party outage from turning `main` red; no other host is excluded.
+
 **`publication-metadata`** (added 21 August 2026) keeps the
 repository's own publication metadata consistent with itself, per
 `docs/Governance/Publication-Model.md` and `Release-Workflow.md`.

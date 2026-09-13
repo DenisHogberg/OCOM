@@ -115,11 +115,20 @@ jobs:
           # not "any character", even though the unescaped form would
           # have worked by coincidence against this repository's actual
           # paths.
+          # doi.org is excluded: it is a third-party resolver that this
+          # repository does not control and that has repeatedly returned
+          # 504 for minutes at a time (13 September 2026: six consecutive
+          # probes, 30 s each, all 504, while the Zenodo record itself was
+          # fine). The DOI *value* is guarded elsewhere: .zenodo.json,
+          # CITATION.cff and docs/Governance/Publication-Manifest.md must
+          # agree, and resolution is checked by hand at each release. A
+          # third-party outage should not turn main red.
           args: >-
             --no-progress
             --timeout 45
             --max-retries 3
             --exclude-path '\.github'
+            --exclude '^https://doi\.org/'
             '**/*.md'
           fail: true
           jobSummary: true
