@@ -77,13 +77,14 @@ Threat actors: an attacker holding a stolen maintainer credential; a malicious c
 - OpenSSF Scorecard: [scorecard.dev viewer](https://scorecard.dev/viewer/?uri=github.com/DenisHogberg/OCOM)
 - OpenSSF Best Practices: [project 14573](https://www.bestpractices.dev/projects/14573)
 - REUSE: [api.reuse.software](https://api.reuse.software/info/github.com/DenisHogberg/OCOM)
-- Response headers of ocom.uno, checked on 2026-09-11: CSP, HSTS, nosniff, Referrer-Policy.
+- Response headers of ocom.uno, checked on 2026-09-13: CSP with `script-src 'self'`, HSTS, nosniff, Referrer-Policy.
+- Mozilla HTTP Observatory: A+ (110 of 110), scan of 2026-09-13, [observatory report](https://developer.mozilla.org/en-US/observatory/analyze?host=ocom.uno).
 - Record of the 5 September 2026 fixes: [site changelog](https://ocom.uno/changelog)
 - Archives: [Zenodo, DOI 10.5281/zenodo.21510450](https://doi.org/10.5281/zenodo.21510450); [Software Heritage origin](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/DenisHogberg/OCOM)
 
 ## 8. Residual risks
 
-- `script-src` and `style-src` still allow `'unsafe-inline'`. Removing it (nonces or external files for two inline scripts) is planned and would raise the Mozilla Observatory grade from B+ to A+.
+- `style-src` still allows `'unsafe-inline'`: 33 inline style blocks and 110 style attributes across the site would need extraction into per-page stylesheets, which is a separate job. `script-src` was reduced to `'self'` on 13 September 2026 by moving six inline scripts into files; the Mozilla Observatory grade went from B+ (80) to A+ (110).
 - Releases before the signing policy (v1.0.0, v1.1.0, v1.1.1) are unsigned and are not re-tagged. Their integrity rests on the Zenodo and Software Heritage copies.
 - One person holds every role. Archives and the continuity arrangement in GOVERNANCE.md mitigate this; they do not remove it.
 - The publication engine lives outside this repository, so CI cannot prove that the live site matches the repository. The site's observatory page and the maintainer's post-deploy checks cover that gap.
@@ -96,3 +97,4 @@ This case is reviewed at each release and whenever a security report is resolved
 | Version | Date | Change |
 |---|---|---|
 | 0.1 | 13 September 2026 | First version, written for the OpenSSF Best Practices silver criterion `assurance_case`. |
+| 0.2 | 13 September 2026 | Residual risk on `script-src` closed after the inline scripts were moved to files; Observatory A+ recorded as evidence; `style-src` residual risk stated precisely. |
