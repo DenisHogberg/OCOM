@@ -40,3 +40,15 @@ git verify-tag <tag>
 ```
 
 GitHub shows the same signature as "Verified" on the tag and release pages. The tags v1.0.0, v1.1.0 and v1.1.1 predate this policy and are unsigned; their contents can be checked against the Zenodo archives instead.
+
+## Secrets and credentials
+
+The repository contains no secrets and needs none: CI runs with read-only tokens and no repository secrets are defined. Credentials for the publication server, the domain registrar and the archives are held only in the maintainer's password manager, are never committed, and are rotated when a device or account is suspected to be compromised. GitHub secret scanning with push protection is enabled to block accidental commits of credentials.
+
+## Dependencies and remediation thresholds
+
+The only dependencies are the GitHub Actions used by CI, pinned to commit SHAs. Dependabot alerts and update pull requests are reviewed within seven days; an alert of high or critical severity is resolved, or verified as not exploitable, before the next release. A release is not cut while a dependency alert of high or critical severity is open.
+
+## Published vulnerability data
+
+Fixed defects with a security impact are recorded in the [site changelog](https://ocom.uno/changelog) and, where the repository is affected, in [CHANGELOG.md](CHANGELOG.md) and a GitHub Security Advisory. To date: two reflected cross-site scripting defects on the published site, fixed on 5 September 2026 before public disclosure.

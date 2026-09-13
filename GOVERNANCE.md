@@ -18,6 +18,7 @@ The core of the specification (Core Vocabulary terms, Canonical Principles, the 
 | CDKO (Chief Documentation and Knowledge Officer) | records: maintains the governance registers, logs observations and documentation debt, does not resolve them | Denis Petrenko |
 | Architecture Committee | reviews: approves baselines and releases | Denis Petrenko, acting alone at the current stage |
 | Maintainer | merges, tags and archives releases, answers security reports | Denis Petrenko |
+| Access to sensitive resources | holds the credentials for repository administration, the publication server, the domain registrar and the archive accounts (Zenodo, Software Heritage) | Denis Petrenko |
 
 All roles are held by one person today. That is stated rather than hidden, and the next section exists because of it.
 
@@ -30,6 +31,10 @@ If the maintainer is unavailable for more than a week, the project can continue 
 3. The maintainer keeps a sealed handover note for the successor, separate from the repository, covering the domain registrar, the hosting account, the Zenodo account and the ORCID record.
 4. The licences (CC BY 4.0 for the text, Apache 2.0 for the repository) let anyone continue the work from the archives even if no handover happens.
 
+## Access policy
+
+No collaborator holds write access today. Before anyone is granted write, maintainer or administrative access, the maintainer reviews their contribution history on this repository (at least three merged pull requests) and their public identity, and records the grant in the revision history of this page. Access is granted at the lowest level that fits the task and is reviewed at each release. Two-factor authentication is enforced by GitHub for all collaborators.
+
 ## Contact
 
 Security issues go through [SECURITY.md](SECURITY.md). Everything else goes through GitHub Issues, using the templates in `.github/ISSUE_TEMPLATE/`.
@@ -39,3 +44,4 @@ Security issues go through [SECURITY.md](SECURITY.md). Everything else goes thro
 | Version | Date | Change |
 |---|---|---|
 | 0.1 | 13 September 2026 | First version: decision path, roles and holders, continuity arrangement. |
+| 0.1 | 13 September 2026 | Added the Access policy section and the sensitive-resources row in the roles table (OpenSSF Baseline OSPS-AC-01.01, OSPS-GV-01.01). |
