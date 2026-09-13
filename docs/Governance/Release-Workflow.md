@@ -95,7 +95,28 @@ Verification
 - **Source:** The tag from step 6.
 - **Responsibility:** Chief Architect authorizes the release text; CDKO publishes it (`gh release create`).
 - **Result:** A public GitHub Release whose body states, at minimum, what it contains (per the Manifest entry) and, if applicable, what it explicitly does not contain yet — the omission that caused `v1.0.0`'s own mislabeling.
-- **Done when:** The Release body's claims are checkable against the Manifest entry with no reader-side inference required.
+- **Done when:** The Release body's claims are checkable against the Manifest entry with no reader-side inference required, and, for Releases cut from 13 September 2026, the three assets below are attached and both verification commands succeed.
+
+### Release assets (from 13 September 2026)
+
+GitHub's auto-generated "Source code" archives are not the artifact of record: they are rebuilt on request and carry no checksum. The CDKO builds the archive from the tag outside the working tree, writes its SHA-256 checksum, signs the checksum file with the maintainer's SSH key (the same key that signs the tag, published in `.github/allowed_signers`), and attaches the three files to the GitHub Release:
+
+```text
+cd "$(mktemp -d)"
+git -C /path/to/OCOM archive --format=zip --prefix=OCOM-<tag>/ -o "$PWD/OCOM-<tag>.zip" <tag>
+shasum -a 256 OCOM-<tag>.zip > SHA256SUMS
+ssh-keygen -Y sign -f ~/.ssh/id_ed25519 -n file SHA256SUMS
+```
+
+Building outside the repository keeps the archive, the checksum file and the signature out of the working tree, which has no `.gitignore`. The last command writes the detached signature `SHA256SUMS.sig`. Anyone verifies the three assets with the public key from `main`, holding nothing but the downloaded files:
+
+```text
+curl -fsSLO https://raw.githubusercontent.com/DenisHogberg/OCOM/main/.github/allowed_signers
+ssh-keygen -Y verify -f allowed_signers -I stremshop@gmail.com -n file -s SHA256SUMS.sig < SHA256SUMS
+shasum -a 256 -c SHA256SUMS
+```
+
+The second command proves the checksum file was signed by the maintainer's key; the third proves the archive matches the checksum. Verification needs `.github/allowed_signers` to permit the `file` signature namespace as well as `git`, so that change must be on `main` at or before the tagged commit. The Manifest entry's `Published Artifacts` field names the three assets when it is completed, at step 8. `SECURITY.md`, "Verifying releases", repeats the verification commands for readers who start from the Release page.
 
 ## 8. Publication
 
@@ -135,3 +156,4 @@ Verification
 | 0.1 | 20 August 2026 | Initial workflow, ten steps, grounded in existing roles and the current CI. Steps 8–9 explicitly marked unverifiable from this repository. |
 | 0.1 | 20 August 2026 | Corrected on independent review: Status changed Informative → Draft, consistent with this document being a `Governance/` process document per `Documentation-Standards.md`'s own Status Taxonomy; Purpose's "imposes no new requirement" claim removed, since Step 6's annotated-tag rule is in fact new and is now stated as such |
 | 0.1 | 13 September 2026 | Step 6: release tags are SSH-signed from 13 September 2026 per `SECURITY.md` (signed-release policy, commit `d3c4e43`); earlier tags stay unsigned. |
+| 0.1 | 13 September 2026 | Step 7: release assets (archive of record built with `git archive`, `SHA256SUMS`, detached SSH signature `SHA256SUMS.sig`) required from 13 September 2026, with the verification commands. `.github/allowed_signers` widened to the `file` namespace on the same date so the signature on `SHA256SUMS` can be verified. |

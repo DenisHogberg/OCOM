@@ -32,7 +32,7 @@ The `main` branch and the live site are the supported versions. Tagged releases 
 
 ## Verifying releases
 
-Release tags created after 13 September 2026 are signed with the maintainer's SSH key. The public key is published in [`.github/allowed_signers`](.github/allowed_signers). To verify a tag locally:
+Release tags created from 13 September 2026 are signed with the maintainer's SSH key. The public key is published in [`.github/allowed_signers`](.github/allowed_signers). To verify a tag locally:
 
 ```
 git config gpg.ssh.allowedSignersFile .github/allowed_signers
@@ -40,6 +40,16 @@ git verify-tag <tag>
 ```
 
 GitHub shows the same signature as "Verified" on the tag and release pages. The tags v1.0.0, v1.1.0 and v1.1.1 predate this policy and are unsigned; their contents can be checked against the Zenodo archives instead.
+
+Releases cut from 13 September 2026 also carry three assets: the archive of record `OCOM-<tag>.zip`, built with `git archive` from the tag, `SHA256SUMS`, and its detached SSH signature `SHA256SUMS.sig`. To verify them with nothing but the downloaded files:
+
+```
+curl -fsSLO https://raw.githubusercontent.com/DenisHogberg/OCOM/main/.github/allowed_signers
+ssh-keygen -Y verify -f allowed_signers -I stremshop@gmail.com -n file -s SHA256SUMS.sig < SHA256SUMS
+shasum -a 256 -c SHA256SUMS
+```
+
+The first command fetches the current public key from `main`, the second checks that the checksum file was signed by the maintainer's key, and the third checks the archive against the checksum. The signing key's fingerprint is `SHA256:D0gQI0nhkfM5Gj4/GUwovfj/kKXkhoPEqjrSKvlxKGU`.
 
 ## Secrets and credentials
 
