@@ -74,12 +74,12 @@ Threat actors: an attacker holding a stolen maintainer credential; a malicious c
 ## 7. Evidence
 
 - CI workflows: `.github/workflows/ci.yml` and `.github/workflows/scorecard.yml`; the design rationale is in CI-DESIGN.md.
-- OpenSSF Scorecard: https://scorecard.dev/viewer/?uri=github.com/DenisHogberg/OCOM
-- OpenSSF Best Practices: https://www.bestpractices.dev/projects/14573
-- REUSE: https://api.reuse.software/info/github.com/DenisHogberg/OCOM
+- OpenSSF Scorecard: [scorecard.dev viewer](https://scorecard.dev/viewer/?uri=github.com/DenisHogberg/OCOM)
+- OpenSSF Best Practices: [project 14573](https://www.bestpractices.dev/projects/14573)
+- REUSE: [api.reuse.software](https://api.reuse.software/info/github.com/DenisHogberg/OCOM)
 - Response headers of ocom.uno, checked on 2026-09-11: CSP, HSTS, nosniff, Referrer-Policy.
-- Record of the 5 September 2026 fixes: https://ocom.uno/changelog
-- Archives: Zenodo, https://doi.org/10.5281/zenodo.21510450; Software Heritage, https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/DenisHogberg/OCOM
+- Record of the 5 September 2026 fixes: [site changelog](https://ocom.uno/changelog)
+- Archives: [Zenodo, DOI 10.5281/zenodo.21510450](https://doi.org/10.5281/zenodo.21510450); [Software Heritage origin](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/DenisHogberg/OCOM)
 
 ## 8. Residual risks
 

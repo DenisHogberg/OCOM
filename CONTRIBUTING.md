@@ -41,7 +41,7 @@ Everything under `docs/` is CC BY 4.0 and everything else is Apache 2.0; the map
 
 ## Sign-off
 
-Contributions are accepted under the Developer Certificate of Origin, version 1.1 (https://developercertificate.org/). Sign off every commit with `git commit -s`, which adds a `Signed-off-by` line with your name and email address and states that you have the right to submit the work under the project's licences. Pull requests with unsigned commits will be asked to add the sign-off.
+Contributions are accepted under the [Developer Certificate of Origin, version 1.1](https://developercertificate.org/). Sign off every commit with `git commit -s`, which adds a `Signed-off-by` line with your name and email address and states that you have the right to submit the work under the project's licences. Pull requests with unsigned commits will be asked to add the sign-off.
 
 ## Conduct and security
 
