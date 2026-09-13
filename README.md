@@ -110,7 +110,7 @@ The OCOM name and logo identify this specification; see [Attribution](https://oc
 
 ## Contributing
 
-Read [`CONTRIBUTING.md`](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md) first. Objections and evidence enter through the issue templates above; pull requests that touch the frozen core are routed back to a Reference Case. Security concerns follow [`SECURITY.md`](SECURITY.md).
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md), [`GOVERNANCE.md`](GOVERNANCE.md) and the [Code of Conduct](CODE_OF_CONDUCT.md) first. Objections and evidence enter through the issue templates above; pull requests that touch the frozen core are routed back to a Reference Case. Security concerns follow [`SECURITY.md`](SECURITY.md).
 
 ## Disclaimer
 

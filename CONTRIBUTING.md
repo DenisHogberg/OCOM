@@ -39,6 +39,10 @@ Do not name real organizations, clients, products or people anywhere in the repo
 
 Everything under `docs/` is CC BY 4.0 and everything else is Apache 2.0; the map is `REUSE.toml`. By contributing you agree that your contribution is licensed the same way as the files it changes.
 
+## Sign-off
+
+Contributions are accepted under the Developer Certificate of Origin, version 1.1 (https://developercertificate.org/). Sign off every commit with `git commit -s`, which adds a `Signed-off-by` line with your name and email address and states that you have the right to submit the work under the project's licences. Pull requests with unsigned commits will be asked to add the sign-off.
+
 ## Conduct and security
 
 The [Code of Conduct](CODE_OF_CONDUCT.md) applies. Security issues go through [SECURITY.md](SECURITY.md), not the issue tracker.

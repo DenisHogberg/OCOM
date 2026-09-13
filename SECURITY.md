@@ -29,3 +29,14 @@ There is no bounty. The project sells nothing and has no budget for one.
 ## Supported versions
 
 The `main` branch and the live site are the supported versions. Tagged releases are archived snapshots and are not patched.
+
+## Verifying releases
+
+Release tags created after 13 September 2026 are signed with the maintainer's SSH key. The public key is published in [`.github/allowed_signers`](.github/allowed_signers). To verify a tag locally:
+
+```
+git config gpg.ssh.allowedSignersFile .github/allowed_signers
+git verify-tag <tag>
+```
+
+GitHub shows the same signature as "Verified" on the tag and release pages. The tags v1.0.0, v1.1.0 and v1.1.1 predate this policy and are unsigned; their contents can be checked against the Zenodo archives instead.
