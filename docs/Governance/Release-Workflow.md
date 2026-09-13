@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 August 2026
+**Last Updated:** 13 September 2026
 
 ---
 
@@ -87,8 +87,8 @@ Verification
 
 - **Source:** A validated commit on `main`, plus a completed `Publication-Manifest.md` entry for the intended Release (all fields filled, no `TBD`).
 - **Responsibility:** Chief Architect authorizes; CDKO executes (`git tag`).
-- **Result:** An annotated git tag pointing at the exact commit the Manifest entry names.
-- **Done when:** `git cat-file -t <tag>` confirms an annotated tag (not lightweight — a correction from `v1.0.0`'s own precedent, which was lightweight and untraceable to a decision), and the tag's target commit matches the Manifest entry's `Commit` field exactly.
+- **Result:** An annotated git tag pointing at the exact commit the Manifest entry names. From 13 September 2026 the tag is also signed with the maintainer's SSH key, per `SECURITY.md`; the public key is published in `.github/allowed_signers`, and `git tag -v <tag>` verifies it. Tags cut before that date (`v1.0.0`, `v1.1.0`, `v1.1.1`) stay unsigned by policy and are not re-tagged.
+- **Done when:** `git cat-file -t <tag>` confirms an annotated tag (not lightweight — a correction from `v1.0.0`'s own precedent, which was lightweight and untraceable to a decision), the tag's target commit matches the Manifest entry's `Commit` field exactly, and, for tags created from 13 September 2026, `git tag -v <tag>` reports a good signature.
 
 ## 7. GitHub Release
 
@@ -134,3 +134,4 @@ Verification
 |----------|------|-------------|
 | 0.1 | 20 August 2026 | Initial workflow, ten steps, grounded in existing roles and the current CI. Steps 8–9 explicitly marked unverifiable from this repository. |
 | 0.1 | 20 August 2026 | Corrected on independent review: Status changed Informative → Draft, consistent with this document being a `Governance/` process document per `Documentation-Standards.md`'s own Status Taxonomy; Purpose's "imposes no new requirement" claim removed, since Step 6's annotated-tag rule is in fact new and is now stated as such |
+| 0.1 | 13 September 2026 | Step 6: release tags are SSH-signed from 13 September 2026 per `SECURITY.md` (signed-release policy, commit `d3c4e43`); earlier tags stay unsigned. |
