@@ -1,0 +1,42 @@
+name: Dependency review
+
+# The only dependencies this repository has are the GitHub Actions its
+# workflows use; there is no package manifest and no runtime code. This
+# workflow reads the dependency graph on both sides of a pull request and
+# fails when the change introduces a dependency with a known vulnerability
+# of high or critical severity, which is the threshold SECURITY.md states.
+# In practice it guards the Dependabot pull requests that bump those
+# actions. Separate from ci.yml because it is the only job that cannot run
+# on a push: the action needs a base and a head to compare. See CI-DESIGN.md.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-review:
+    name: Dependency review
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Review dependency changes
+        # GitHub-owned, but pinned to the commit behind the v5.0.0 tag
+        # anyway: this job gates merges once it is a required check, and a
+        # floating tag would let its behaviour change under an unchanged
+        # commit. The SHA was resolved with `git ls-remote --tags` and
+        # confirmed through the GitHub API to be a commit object, not an
+        # annotated tag. Dependabot proposes bumps as reviewable PRs.
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high

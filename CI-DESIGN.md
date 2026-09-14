@@ -190,3 +190,20 @@ publishing needs `id-token: write`, which CI deliberately does not
 have. Checks about binaries, fuzzing, SAST, packaging and signed
 releases do not apply to a Markdown repository and will score N/A or
 low; the number is reported as it is.
+
+## Dependency review (added 14 September 2026)
+
+`.github/workflows/dependency-review.yml` runs
+`actions/dependency-review-action` (pinned to the commit behind v5.0.0:
+`a1d282b3`) on every pull request to `main`. It compares the dependency
+graph of the base and the head and fails the check when the change
+introduces a dependency carrying a known vulnerability of high or
+critical severity, the threshold `SECURITY.md` states. The only
+dependencies here are the GitHub Actions the workflows use, so in
+practice this guards the Dependabot bumps of those actions. It is a
+separate workflow rather than a sixth job in `ci.yml` because it is the
+one check that cannot run on a push: the action needs a base and a head
+to compare, so on a push it has nothing to review. The action is
+GitHub-owned and the pinning policy above would allow a major-version
+tag; it is pinned to a SHA anyway, because this check gates merges once
+the branch ruleset requires it.
