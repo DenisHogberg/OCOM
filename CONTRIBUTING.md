@@ -24,7 +24,7 @@ Discuss major architectural changes before opening one. The pull request templat
 
 ## Checks
 
-Every push and pull request runs the checks in `.github/workflows/ci.yml`: markdownlint over every Markdown file, lychee over every link, a publication-metadata job that keeps the Publication Manifest, the Specification version fields and the Status fields consistent with each other, and reuse lint over the licensing map. A failing check blocks the merge. [CI-DESIGN.md](CI-DESIGN.md) explains why each check exists and how to run the same checks locally. Every pull request runs the full check set before it can be merged; once the branch ruleset on `main` is active, it lists these checks as required.
+Every push and pull request runs the checks in `.github/workflows/ci.yml`: markdownlint over every Markdown file, lychee over every link, a publication-metadata job that keeps the Publication Manifest, the Specification version fields and the Status fields consistent with each other, and reuse lint over the licensing map. A sixth check, in `.github/workflows/dependency-review.yml`, runs on pull requests only and fails when a change introduces a dependency with a known vulnerability of high or critical severity. A failing check blocks the merge. [CI-DESIGN.md](CI-DESIGN.md) explains why each check exists and how to run the same checks locally. Every pull request runs the full check set before it can be merged; once the branch ruleset on `main` is active, it lists these checks as required.
 
 Two rules follow from that:
 
@@ -41,7 +41,7 @@ Everything under `docs/` is CC BY 4.0 and everything else is Apache 2.0; the map
 
 ## Sign-off
 
-Contributions are accepted under the [Developer Certificate of Origin, version 1.1](https://developercertificate.org/). Sign off every commit with `git commit -s`, which adds a `Signed-off-by` line with your name and email address and states that you have the right to submit the work under the project's licences. Pull requests with unsigned commits will be asked to add the sign-off.
+Contributions are accepted under the [Developer Certificate of Origin, version 1.1](https://developercertificate.org/). Sign off every commit with `git commit -s`, which adds a `Signed-off-by` line with your name and email address and states that you have the right to submit the work under the project's licences. A `DCO` check runs on every pull request and fails when a commit in it carries no matching `Signed-off-by` line, so an unsigned commit blocks the merge rather than waiting for someone to notice it.
 
 ## Conduct and security
 
