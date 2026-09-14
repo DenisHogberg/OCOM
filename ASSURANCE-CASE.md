@@ -40,7 +40,7 @@ Threat actors: an attacker holding a stolen maintainer credential; a malicious c
 - B2. GitHub to CI runners: workflows run with `contents: read`. The Scorecard workflow alone holds `id-token: write`, used only to publish its result. No workflow can push.
 - B3. Repository to publication engine to server: the site is rendered outside this repository by the maintainer and deployed over SSH to a server the maintainer controls. The repository cannot deploy by itself, and the server cannot change the repository.
 - B4. Site to readers and machines: HTTPS only, read-only, no accounts, no forms, no stored user input.
-- B5. Repository to external archives: Zenodo, Software Heritage and HAL hold independent copies with their own identifiers, and any of them can be compared against the repository at any time.
+- B5. Repository to external archives: Zenodo and Software Heritage hold independent copies with their own identifiers, and either can be compared against the repository at any time. A position paper is also deposited in HAL, where it is still under moderation and therefore not yet publicly resolvable; it is not counted as an available copy until it is.
 
 ## 5. How the requirements are met
 
@@ -52,7 +52,7 @@ Threat actors: an attacker holding a stolen maintainer credential; a malicious c
 
 **C4 against T4.** Third-party actions are pinned to full commit SHAs with the version in a comment. Each SHA is verified against the upstream tag before it is adopted. Dependabot proposes updates as reviewable pull requests, and workflow tokens are read-only. OpenSSF Scorecard's Token-Permissions and Dangerous-Workflow checks score 10 of 10 and run weekly.
 
-**C5 against T6.** The repository is archived in Software Heritage, each release is archived in Zenodo with a DOI, and a position paper is deposited in HAL. Any one of the three survives the loss of the others. GOVERNANCE.md describes the continuity arrangement for the maintainer role.
+**C5 against T6.** The repository is archived in Software Heritage and each release is archived in Zenodo with a DOI. Either survives the loss of the other and of the maintainer's accounts. The HAL deposit is submitted but still under moderation, so it does not yet add a third independent copy. GOVERNANCE.md describes the continuity arrangement for the maintainer role, including that no successor is designated today.
 
 **C6 against T5.** Every file resolves to a licence and a copyright holder under REUSE 3.3 (`REUSE.toml`, `LICENSES/`), checked in CI on every change and registered with the REUSE API.
 
@@ -98,3 +98,4 @@ This case is reviewed at each release and whenever a security report is resolved
 |---|---|---|
 | 0.1 | 13 September 2026 | First version, written for the OpenSSF Best Practices silver criterion `assurance_case`. |
 | 0.2 | 13 September 2026 | Residual risk on `script-src` closed after the inline scripts were moved to files; Observatory A+ recorded as evidence; `style-src` residual risk stated precisely. |
+| 0.3 | 14 September 2026 | HAL described as deposited and under moderation rather than as an available third copy, checked on 14 September 2026; the continuity claim points at the successor state recorded in GOVERNANCE.md. |
