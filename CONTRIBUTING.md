@@ -24,7 +24,7 @@ Discuss major architectural changes before opening one. The pull request templat
 
 ## Checks
 
-Every push and pull request runs the checks in `.github/workflows/ci.yml`: markdownlint over every Markdown file, lychee over every link, a publication-metadata job that keeps the Publication Manifest, the Specification version fields and the Status fields consistent with each other, and reuse lint over the licensing map. A sixth check, in `.github/workflows/dependency-review.yml`, runs on pull requests only and fails when a change introduces a dependency with a known vulnerability of high or critical severity. A failing check blocks the merge. [CI-DESIGN.md](CI-DESIGN.md) explains why each check exists and how to run the same checks locally. Every pull request runs the full check set before it can be merged; once the branch ruleset on `main` is active, it lists these checks as required.
+Every push and pull request runs the checks in `.github/workflows/ci.yml`: markdownlint over every Markdown file, lychee over every link, a publication-metadata job that keeps the Publication Manifest, the Specification version fields and the Status fields consistent with each other, and reuse lint over the licensing map. A sixth check, in `.github/workflows/dependency-review.yml`, runs on pull requests only and fails when a change introduces a dependency with a known vulnerability of high or critical severity. A failing check blocks the merge. [CI-DESIGN.md](CI-DESIGN.md) explains why each check exists and how to run the same checks locally. Every pull request runs the full check set before it can be merged: the branch ruleset on `main` lists all seven as required, `main` takes no direct pushes, and the ruleset has no bypass list.
 
 Two rules follow from that:
 
