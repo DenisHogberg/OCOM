@@ -44,7 +44,7 @@ Threat actors: an attacker holding a stolen maintainer credential; a malicious c
 
 ## 5. How the requirements are met
 
-**C1 against T1.** Direct pushes require the maintainer's SSH key and a GitHub account protected by two-factor authentication. Every commit is attributable in the public history. From the first release after 13 September 2026, release tags are signed with the maintainer's SSH key and can be verified with the key published in `.github/allowed_signers` (SECURITY.md, Verifying releases). A branch ruleset that blocks force pushes and deletion on main belongs to this argument and is listed under residual risks until it is in place.
+**C1 against T1.** Direct pushes require the maintainer's SSH key and a GitHub account protected by two-factor authentication. Every commit is attributable in the public history. From the first release after 13 September 2026, release tags are signed with the maintainer's SSH key and can be verified with the key published in `.github/allowed_signers` (SECURITY.md, Verifying releases). Since 14 September 2026 a branch ruleset on `main` enforces the rest: deletion and force pushes are blocked, every change arrives through a pull request, seven checks are required, and the bypass list is empty, so the rule binds the maintainer as well.
 
 **C2 against T2.** The server sends a Content Security Policy with `default-src 'self'`, `object-src 'none'`, `base-uri 'none'`, `frame-ancestors 'self'` and `form-action 'none'`, HTTP Strict Transport Security, `X-Content-Type-Options: nosniff` and a strict Referrer-Policy. Two reflected cross-site scripting defects found in the audit of 5 September 2026 were fixed the same day, and the CSP was introduced then. The site loads no third-party scripts, fonts or analytics, so there is no external origin to compromise.
 
@@ -88,7 +88,6 @@ Threat actors: an attacker holding a stolen maintainer credential; a malicious c
 - Releases before the signing policy (v1.0.0, v1.1.0, v1.1.1) are unsigned and are not re-tagged. Their integrity rests on the Zenodo and Software Heritage copies.
 - One person holds every role. Archives and the continuity arrangement in GOVERNANCE.md mitigate this; they do not remove it.
 - The publication engine lives outside this repository, so CI cannot prove that the live site matches the repository. The site's observatory page and the maintainer's post-deploy checks cover that gap.
-- Branch protection on main is not yet confirmed.
 
 ## 9. Review
 
@@ -99,3 +98,4 @@ This case is reviewed at each release and whenever a security report is resolved
 | 0.1 | 13 September 2026 | First version, written for the OpenSSF Best Practices silver criterion `assurance_case`. |
 | 0.2 | 13 September 2026 | Residual risk on `script-src` closed after the inline scripts were moved to files; Observatory A+ recorded as evidence; `style-src` residual risk stated precisely. |
 | 0.3 | 14 September 2026 | HAL described as deposited and under moderation rather than as an available third copy, checked on 14 September 2026; the continuity claim points at the successor state recorded in GOVERNANCE.md. |
+| 0.4 | 15 September 2026 | C1 records the branch ruleset as in place since 14 September 2026, with its seven required checks and empty bypass list; the residual risk about unconfirmed branch protection is removed, having been discharged. |

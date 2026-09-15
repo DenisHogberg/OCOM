@@ -4,9 +4,9 @@
 
 This repository contains a Markdown specification and no executable code. The public surfaces that can carry a security defect are:
 
-- the static site [ocom.uno](https://ocom.uno), which publishes this repository and serves two small client-side scripts, on `/search` and `/observatory/retrieval`;
+- the static site [ocom.uno](https://ocom.uno), which publishes this repository and serves a small number of client-side scripts from `/js/`, on the search page, the three observatory tools, the shape-check tool and the not-found page;
 - the machine records the site publishes: the Knowledge API under `/api/v1`, the resolver, the JSON, JSON-LD and Markdown projections;
-- the continuous integration workflow in `.github/workflows/ci.yml`, whose actions are pinned by commit SHA.
+- the workflows in `.github/workflows/`: continuous integration, dependency review and OpenSSF Scorecard. Third-party actions are pinned to a commit SHA; `actions/checkout`, which GitHub owns, is kept on its major-version tag, as CI-DESIGN.md explains under Action pinning policy.
 
 Reports about the following are welcome: cross-site scripting or injection on any page of ocom.uno; regressions in the response headers (Content Security Policy, HSTS, content types); a published record that could be used to mislead a machine consumer; a weakness in the CI workflow.
 
@@ -57,7 +57,7 @@ The repository contains no secrets and needs none: CI runs with read-only tokens
 
 ## Dependencies and remediation thresholds
 
-The only dependencies are the GitHub Actions used by CI, pinned to commit SHAs. Dependabot alerts and update pull requests are reviewed within seven days; an alert of high or critical severity is resolved, or verified as not exploitable, before the next release. A release is not cut while a dependency alert of high or critical severity is open.
+The only dependencies are the GitHub Actions the workflows use, pinned as described above: third-party actions to a commit SHA, `actions/checkout` to its major-version tag. Dependabot alerts and update pull requests are reviewed within seven days; an alert of high or critical severity is resolved, or verified as not exploitable, before the next release. A release is not cut while a dependency alert of high or critical severity is open.
 
 ## Published vulnerability data
 
