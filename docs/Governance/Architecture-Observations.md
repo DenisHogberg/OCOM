@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 11 September 2026
+**Last Updated:** 15 September 2026
 
 ---
 
@@ -570,11 +570,11 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. Track together with FW-001. If corroborated, a future Reference Case should either promote a minimal Evidence definition (per FW-001) or restate the public tagline in terms the Core defines (Identity, Ownership, Lifecycle, Governance) with Evidence named as a Constitution principle.
 
-**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+**Status:** Open; not escalated. Independent corroboration has arrived: the external review of 15 September 2026 reached the same finding without reference to this register, as `AO-053` did on 6 September from a different source. The corroboration condition in the Status above is therefore met; escalation still awaits a Reference Case per Standard Evolution Methodology Rules 1 and 2.
 
 **Architect Response:** *(pending)*
 
-**Related:** `Core/Constitution.md`, `Memory/Evidence Overlay.md`, `Documentation-Debt.md#FW-001`, `Specification/01 Introduction.md`
+**Related:** `Core/Constitution.md`, `Memory/Evidence Overlay.md`, `Documentation-Debt.md#FW-001`, `Specification/01 Introduction.md`, `AO-053`, `AO-062`
 
 ---
 
@@ -1378,6 +1378,66 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-062
+
+**Title:** Conformance Is Defined by Reference to a Set of Mandatory Requirements That No Document Enumerates, and the Normative Keywords Cannot Be Separated Mechanically from Ordinary Prose
+
+**Date observed:** 15 September 2026
+
+**Description:** Surfaced by an external review of the published model provided to the specification's author on 15 September 2026. The reviewer is not identified in this record, so the assurance rests on what the observation can be checked against in this repository rather than on its source, as `AO-008` records for `RC-008`. Specification/08 Conformance.md defines Core Conformance as supporting "all mandatory requirements defined in Chapters 4 to 6" and lists four obligations in the same terms, none of which enumerates a requirement. No document in this repository carries a requirement identifier, so a requirement cannot be cited, counted, or mapped to a test, and an implementer cannot state which requirements an implementation meets. The extraction problem is structural rather than an oversight: Core/Manifest.md's Normative Language section deliberately extends the RFC 2119 meanings to the lowercase forms, overriding RFC 8174's all-capitals restriction, because the granular documents use lowercase throughout. The cost of that choice is that the words carrying normative force cannot be told apart mechanically from the same words used descriptively. The scale is the point: across the normative tiers the uppercase keywords occur 37 times in 3 documents, while lowercase shall, must and should occur 2179 times in 261 documents.
+
+**Impact:** A conformance claim about OCOM is not checkable by the claimant or by anyone else, because the set it refers to has never been written down. This is the gap between a specification that is disciplined and one that can be implemented against: the Evidence Register records zero verified implementations and zero independent validations, and there is currently no artifact an implementer could be verified against.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should consider a requirement register produced as a projection rather than by editing the normative documents: each statement extracted with its source path, section and a hash of its wording, and a separate append-only file mapping a hash to a stable human-readable alias, so that a changed statement breaks its own identity instead of silently inheriting it. That route leaves the Core untouched, which matters while `CAND-007` holds, and keeps the register derived rather than becoming a second statement of what the requirements are.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Specification/08 Conformance.md`, `Core/Manifest.md`, `Specification/01 Introduction.md`, `Governance/Publication-Model.md`, `AO-014`, `AO-046`, `CAND-002`
+
+---
+
+## AO-063
+
+**Title:** An AI Agent Is Required to Operate Under a Policy That Defines Write-Back Permissions, While No Document Defines What a Write-Back Permission Is or Whether an Agent May Write at All
+
+**Date observed:** 15 September 2026
+
+**Description:** Surfaced by an external review of the published model provided to the specification's author on 15 September 2026. The reviewer is not identified in this record, so the assurance rests on what the observation can be checked against in this repository rather than on its source, as `AO-008` records for `RC-008`. AI/Agents/Agent.md:169 requires that every AI Agent operate under governance policies defining, among other things, write-back permissions, and AI/Agents/Agent.md:196 requires the execution record to log write-back operations. Nothing else in the specification defines a write-back permission, states who grants it, says what it ranges over, or answers whether an Agent may write to a governed record at all. The pattern is the one AO-062 records for time and AO-059 records for authority to act: an attribute is named in a list, a rule that would give it meaning is absent, and the reader is left to supply one. Here the missing rule governs whether an automated party may change a governed record, which is the point at which the specification's own guarantees about Ownership, Evidence and Lifecycle either hold or do not.
+
+**Impact:** Two implementations can both satisfy the letter of AI/Agents/Agent.md and disagree completely about whether an agent may write: one where every change is a proposal a human promotes, one where an agent writes directly and the log is the only control. The specification cannot currently prefer either, and it publishes AI-agent readiness as a reason to adopt it.
+
+**Recommendation:** Record only, and do not resolve it by convention. If corroborated, a future Reference Case should carry the question to an ADR Candidate with the options stated rather than assumed: human authorship only; proposal only, with promotion by an accountable party; conditional automatic promotion under a stated rule; promotion authority delegated per Domain. Until that decision exists, no normative statement should be added about agent writing, and any pattern published under Adoption should be marked as one pattern rather than as the pattern.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `AI/Agents/Agent.md`, `AI/Overview.md`, `Core/Constitution.md`, `Meta/Ownership.md`, `AO-059`, `AO-062`
+
+---
+
+## AO-064
+
+**Title:** The Publication Model Names a Projection Tier Without Requiring a Projection to Be Generated, so a Derived Artifact May Be Hand-Edited and Nothing Detects It
+
+**Date observed:** 15 September 2026
+
+**Description:** Surfaced by an external review of the published model provided to the specification's author on 15 September 2026. The reviewer is not identified in this record, so the assurance rests on what the observation can be checked against in this repository rather than on its source, as `AO-008` records for `RC-008`. Governance/Publication-Model.md defines Projection as a tier and declares it non-authoritative, and Governance/Publication-Manifest.md records that no versioned source file exists for the JSON-LD the site generates. One rule of the shape needed does exist, but only for one class of page: `CAND-012` states that the compiled adoption page is a projection, never edited directly. No general rule requires a projection to be produced from its canonical source, and no check compares a derived artifact against a regeneration of it. The failure mode has already occurred on the published site: the site changelog for 7 September 2026 records the Concept Candidate Queue published at two URLs whose explanatory notes disagreed, because a correction reached one representation and not the other.
+
+**Impact:** A projection that can be edited in place is a second source of truth wearing the label of a first one, which is the specific failure this specification exists to name. The label alone does not prevent it, and today nothing else does.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should consider a rule that a derived artifact is generated and never hand-edited, and a check that regenerates it and fails on divergence. Both belong to the publication apparatus rather than to the Core, so neither requires a Core change.
+
+**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Governance/Publication-Model.md`, `Governance/Publication-Manifest.md`, `ADR-Candidates.md#cand-012`, `FW-006`, `AO-051`, `AO-061`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1403,3 +1463,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 11 September 2026 | AO-042: Architect Response recorded and Status set to Open in part. The derivation contradiction is resolved by `CAND-014` Layer 1 and corrected in `AI/Knowledge/Knowledge.md`; the `Knowledge Sources.md` provenance half remains open as Layer 2. |
 | 0.1 | 11 September 2026 | Added AO-059 through AO-061 (Ownership without authority to act, Lifecycle without default read semantics, projections declared non-authoritative without a queryability obligation on the source), surfaced by an external practitioner review in a public architecture discussion (r/softwarearchitecture, u/srikanth_builds, 10 September 2026); all record only, not escalated. AO-061's citation was corrected against the canon before recording: the phrase "is not a source of truth" occurs once in this repository, at `Publication-Model.md:80`, scoped to the Consumer Tool tier, so the entry now cites `Publication-Model.md:61` and `Governance-Manifest.md:33` for the general position. |
 | 0.1 | 11 September 2026 | AO-001 (Domain Definition Divergence): Architect Response recorded and Status set to Closed. `Models/Domain.md` is canonical; `Domains/Common/Domain.md` is informative and restates rather than extends. Decided through `CAND-015`. Neither document changed pending the separately authorized integration. |
+| 0.1 | 15 September 2026 | Added AO-062 (conformance refers to a set of mandatory requirements no document enumerates, and the normative keywords cannot be separated mechanically from prose), AO-063 (an Agent must operate under a policy defining write-back permissions that nothing defines) and AO-064 (a projection tier with no rule that a projection is generated), all from an external review of 15 September 2026; AO-021 records that its corroboration condition is met, by that review and by AO-053. |
