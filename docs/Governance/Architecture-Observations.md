@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 15 September 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -1438,6 +1438,26 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-065
+
+**Title:** The Compiled Reading Path Covers Twelve Meta Documents While the Core Vocabulary Has Thirteen Governed Terms, so Organization Is Absent from the Specification a Reader Is Given
+
+**Date observed:** 16 September 2026
+
+**Description:** Surfaced while deciding `CAND-002`, whose adopted mechanism computes its floor from the Source lines of Chapters 4 to 6 and therefore had to read them exactly. `Specification/04 Meta Model.md` compiles twelve `Meta/` documents, named in its own Source line, and carries one section per concept: Object, Identity, Metadata, Classification, Relationship and Reference, Capability, Policy, Contract, Constraint, Ownership, Registry. `Meta/Organization.md` is not among them and the chapter has no Organization section, while `Meta/README.md` lists Organization among the governed terms and `CAND-005` added it as a first-class specialization of Object on 25 July 2026, three days after the chapter was compiled. The Source line is therefore accurate about what the chapter contains and the chapter is incomplete against the vocabulary it compiles. `Publication-Manifest.md` records the adjacent fact, that the addition carried no version bump, but no entry records that the compiled path omits the term.
+
+**Impact:** A reader who takes the Specification reading path as the specification meets twelve of the thirteen governed terms and is not told that a thirteenth exists. Anything that derives a set from Chapter 4 inherits the omission: `CAND-002`'s computed floor excludes `Meta/Organization.md`, which is why that Decision reports the discrepancy as a validator warning rather than silently accepting it.
+
+**Recommendation:** Record only. The correction is compilation work rather than a decision: Chapter 4 gains an Organization section compiled from `Meta/Organization.md` and its Source line is extended in the same change. It belongs to `EPIC-F`, which `CAND-007` permits as documentation-currency work, and it needs its own authorization like any other Backlog item. Until it is done, anything that computes a set from Chapter 4 should report the omission rather than treat the chapter as complete.
+
+**Status:** Open; not escalated (documentation-currency defect, not an architectural one; no Reference Case required, per `CAND-007` Section 3)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Specification/04 Meta Model.md`, `Meta/Organization.md`, `Meta/README.md`, `Governance/Publication-Manifest.md`, `Governance/Master-Architecture-Backlog.md` (EPIC-F), `CAND-002`, `CAND-005`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1464,3 +1484,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 11 September 2026 | Added AO-059 through AO-061 (Ownership without authority to act, Lifecycle without default read semantics, projections declared non-authoritative without a queryability obligation on the source), surfaced by an external practitioner review in a public architecture discussion (r/softwarearchitecture, u/srikanth_builds, 10 September 2026); all record only, not escalated. AO-061's citation was corrected against the canon before recording: the phrase "is not a source of truth" occurs once in this repository, at `Publication-Model.md:80`, scoped to the Consumer Tool tier, so the entry now cites `Publication-Model.md:61` and `Governance-Manifest.md:33` for the general position. |
 | 0.1 | 11 September 2026 | AO-001 (Domain Definition Divergence): Architect Response recorded and Status set to Closed. `Models/Domain.md` is canonical; `Domains/Common/Domain.md` is informative and restates rather than extends. Decided through `CAND-015`. Neither document changed pending the separately authorized integration. |
 | 0.1 | 15 September 2026 | Added AO-062 (conformance refers to a set of mandatory requirements no document enumerates, and the normative keywords cannot be separated mechanically from prose), AO-063 (an Agent must operate under a policy defining write-back permissions that nothing defines) and AO-064 (a projection tier with no rule that a projection is generated), all from an external review of 15 September 2026; AO-021 records that its corroboration condition is met, by that review and by AO-053. |
+| 0.1 | 16 September 2026 | Added AO-065 (the compiled Chapter 4 covers twelve `Meta/` documents while the Core Vocabulary has thirteen governed terms, so Organization is absent from the reading path), surfaced while deciding `CAND-002`; documentation-currency defect, record only. |
