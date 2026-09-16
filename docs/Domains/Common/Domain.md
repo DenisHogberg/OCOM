@@ -10,11 +10,11 @@
 
 **Document ID:** DOM-DOMAIN-01
 
-**Status:** Draft
+**Status:** Informative
 
 **Version:** 0.1
 
-**Last Updated:** 21 July 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -29,6 +29,8 @@ The Domain serves as a primary architectural building block for enterprise opera
 ---
 
 # Definition
+
+The canonical definition of Domain is `Models/Domain.md` (`Model-02`), per `CAND-015`. This document is informative: it restates that definition for the `Domains/` tier and does not extend it.
 
 A Domain is a logical business boundary responsible for managing a coherent set of Objects, capabilities, policies, processes, and operational outcomes.
 
@@ -73,6 +75,8 @@ Every Domain has:
 - Constraints;
 - Integration Points;
 - Governance.
+
+Business Capabilities, Policies, Constraints and Integration Points describe how Domains are applied within the `Domains/` tier; they are not characteristics `Models/Domain.md` requires and carry no normative force, per `CAND-015`.
 
 ---
 
@@ -236,3 +240,4 @@ A conforming Domain shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 21 July 2026 | Initial draft |
+| 0.1 | 16 September 2026 | Integration of `CAND-015` (Step 2): Status changed from Draft to Informative; Definition names `Models/Domain.md` as the canonical definition; Core Characteristics states that the four characteristics beyond `Model-02` carry no normative force. No definition changed. |
