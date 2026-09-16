@@ -39,27 +39,43 @@ Every candidate uses the same template, so every candidate follows the same life
 
 ---
 
-## CAND-001
+## CAND-001 — ✅ Decided
 
 **Title:** Content duplication between `AI/Agents/Context.md` and `AI/Context/Overview.md`
 
-**Status:** Open
+**Status:** Decided — `AI/Agents/Context.md` is replaced with an explicit reference to `AI/Context/Overview.md`; the Agents section does not own a description of Context.
 
-**Owner:** Chief Architect
+**Decision:** **`AI/Context/Overview.md` (`AI-Context-00`) is the single document describing Context within the AI framework. `AI/Agents/Context.md` (`AI-Agents-05`) keeps its path, its Document ID and its position in the Agents reading path, and its body becomes an Informative pointer to `AI/Context/Overview.md` and the four Context documents; it defines nothing and restates nothing. The Agents section does not own a description of Context distinct from the Context section.** Recorded 16 September 2026.
 
-**Created:** 21 July 2026
+**Owner:** Chief Architect (Decision recorded)
 
-**Related Documents:** `Architecture-Observations.md#obs-001`, `AI/Agents/Context.md`, `AI/Context/Overview.md`
+**Created:** 21 July 2026 · **Decided:** 16 September 2026 · **Decided by:** Chief Architect
 
-**Discussion:** Should `AI/Agents/Context.md` remain a full duplicate of `AI/Context/Overview.md`, be replaced with an explicit reference, or be given distinct Agent-specific content? This cannot be resolved editorially — it requires a decision about whether the Agents section should own a description of Context distinct from the dedicated Context section, which is a question about section boundaries.
+**Grounding:** `OBS-001`, `AO-035`, `Core/Principles.md` Principle 7, `Core/Terminology.md` (0.2), `Governance/Master-Architecture-Backlog.md` EPIC-C.
 
-Consequences by outcome:
+### The question
 
-- *Keep as duplicate:* no immediate harm, but risk of future divergence if one copy is edited without the other.
-- *Replace with reference:* removes duplication, but changes how a reader navigates the Agents section.
-- *Give distinct content:* requires new normative text describing Context specifically from an Agent's perspective — new authoring work.
+Should `AI/Agents/Context.md` remain a full duplicate of `AI/Context/Overview.md`, be replaced with an explicit reference, or be given distinct Agent-specific content? The candidate recorded on 21 July 2026 that this is a question about section boundaries, whether the Agents section should own a description of Context distinct from the dedicated Context section, and recorded the consequence of each outcome: a duplicate risks silent divergence; a reference changes how a reader navigates the Agents section; distinct content is new normative authoring.
 
-**Next Action:** Chief Architect to review and record a Decision.
+### Rationale
+
+1. `Core/Principles.md` Principle 7, Single Source of Truth: "Each operational concept shall have a single authoritative definition within the model." Two identical bodies under two Document IDs, each with its own Definition and Conformance sections, are two authoritative statements of Context by the specification's own rule.
+2. `Core/Terminology.md` 0.2 already names `AI/Context/Overview.md` as the document that defines Context. `AO-035` counts three definitional sentences for Context and notes that the identical pair is already recorded as `OBS-001` and this candidate; it records only the verbatim copy as a duplicate. No chapter of `Specification/` cites `AI/Agents/Context.md` (`Specification/Committee Review Package.md`), and outside the governance registers no document does.
+3. Distinct Agent-specific content, the third outcome, would be new normative text describing Context from an Agent's perspective. Under `CAND-007` new text of that kind enters through the pipeline in `Standard Evolution Methodology.md` and, per Rule 2, needs independent Reference Cases; none exists. `CAND-007` Section 3 permits deciding this candidate within its recorded scope, and new authoring is outside it.
+4. Keeping the duplicate, the first outcome, preserves the divergence risk the register has carried since 21 July 2026. At commit `d9dc3f7` the two files still differ only in the navigation block and the Document ID field, so replacing the copy now loses no content.
+5. The recorded cost of the second outcome, that a reader of the Agents section no longer finds Context there, is removed by keeping the path, the Document ID and the Back and Next chain: the Agents reading path still lands on a Context page, which now sends the reader to the one that governs.
+
+### Scope, and the Architecture Freeze
+
+Filed under `CAND-007`. Section 3 names `CAND-001` among the candidates that may be decided during the Freeze within recorded scope; this Decision selects one of the three outcomes the candidate recorded and no other. It introduces no Meta Object, no Canonical Principle and no Domains subdomain, so Section 4 is not engaged. No requirement is added or removed: the Conformance section of Context remains in `AI/Context/Overview.md` unchanged; what is removed is its second copy.
+
+### What this decision does not do
+
+It does not resolve the other definitional duplicates `AO-035` records, an Overview and a concept file each carrying a Definition heading in every `AI/` section; those are of a different kind and remain open under `AO-035`. It does not change `AI/Context/Overview.md` or any Context document.
+
+**Next Action:** Two-step discipline, as used for `CAND-003`, `CAND-005`, `CAND-006`, `CAND-009`, `CAND-014` and `CAND-015`. Step 1 is done by this record: the Decision is recorded here and `OBS-001` is marked Closed with its Architect Response pointing to this candidate. Step 2, the integration, is performed in the same change under the authorization to execute EPIC-C recorded in `Master-Architecture-Backlog.md`'s execution note of 16 September 2026: `AI/Agents/Context.md` is rewritten as the pointer described above, Status Informative, version 0.2.
+
+**Related Documents:** `OBS-001`, `AO-035`, `AI/Context/Overview.md`, `AI/Agents/Context.md`, `Core/Principles.md`, `Core/Terminology.md`, `Governance/Master-Architecture-Backlog.md` (EPIC-C).
 
 ---
 
@@ -1105,3 +1121,4 @@ It changes no document. `Models/Domain.md` and `Domains/Common/Domain.md` are bo
 | 0.1 | 11 September 2026 | CAND-014: postscript recording that Step 2, the Layer 1 Core integration, was performed (`Knowledge.md` Definition corrected, `Memory Record.md` Status restated as derived) and that `AO-042` is resolved in part by it. Step 3, Layer 2, unchanged and still gated. No Decision changed. |
 | 0.1 | 11 September 2026 | Added CAND-015 (Domain Definition Divergence) — Decision recorded: `Models/Domain.md` is the canonical normative definition of Domain; `Domains/Common/Domain.md` is informative, restates rather than extends, and its four extra characteristics carry no normative force. Consolidation was considered and not taken, because folding those characteristics into `Model-02` would add requirements and needs the `CAND-007` freeze-exception pipeline, which has no independent Reference Cases today. Resolves `AO-001`, the oldest open observation. No document changed; integration is a separately authorized step. |
 | 0.1 | 16 September 2026 | CAND-002 Decided: Profile Conformance is defined by the form of a claimant's declaration, not by any profile this repository publishes. Eight declaration rules and ten validator assertions recorded in `Governance/Concept-Paper-Profile-Conformance.md`; the Core is not coupled to the mechanism and no profile is defined or authorized. Satisfies half of `EPIC-E`'s Definition of Done. |
+| 0.1 | 16 September 2026 | CAND-001 Decided: `AI/Agents/Context.md` is replaced with an explicit reference to `AI/Context/Overview.md`; the Agents section does not own a description of Context. Path, Document ID and reading-path position kept; no requirement added or removed. Closes `OBS-001`, open since 21 July 2026. Integration performed in the same change as EPIC-C work under `CAND-007` Section 3. |
