@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 12 September 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -78,6 +78,28 @@ Every release entry from this point forward **shall** confirm the following:
 
 ---
 
+## Release: v1.2.0
+
+**Date:** 16 September 2026
+
+**Documentation Readiness:** Ready. All required checks green on the intended commit `e4a5a53` (required documents, Markdown structural lint, internal link integrity, publication-metadata consistency, REUSE 3.3, dependency review, DCO) and the weekly OpenSSF Scorecard run. The branch ruleset on `main` is active since 14 September 2026: every change from PR #4 to PR #16 reached `main` through a pull request under it, while the twelve commits of 12 to 14 September 2026 that precede it were pushed directly, before the ruleset existed. The Release body's bundle claims are checkable against the `Publication-Manifest.md` entry: Constitution 1.0.1, Core Vocabulary 0.1 (13 governed terms), Specification 0.2, commit named.
+
+**Open Observations:** 71 recorded (AO-001 to AO-068 and OBS-001 to OBS-003): 7 Closed, 2 Open in part (AO-042, AO-062), 1 Escalated (AO-008, to `CAND-009`), 61 Open. None blocks a Release: each open item is a disclosed tension in the model, not a defect in a published rule, and the Architecture Freeze (`CAND-007`) keeps the Core stable while they wait for Reference Cases.
+
+**Unresolved ADR Candidates:** CAND-004 (Open; each of its seven questions carries a v1.0 disposition) and CAND-008 (Open, Value Model) are the two open Candidates; 13 Decided, including CAND-009 promoted; CAND-003 promoted to ADR and integrated. Non-blocking: no open Candidate proposes a Core change this Release would pre-empt.
+
+**Critical Documentation Debt:** None critical. GAP-002 closed on 16 September 2026. DEBT-DOC-001, GAP-001, FW-001, FW-002 and FW-005 carry not-required-for-v1.0 dispositions recorded in `Documentation-Debt.md`. FW-006 (the external Publication Engine exposes no commit marker) stays open and is disclosed in the Manifest entry.
+
+**Known Deferred Content:** Layer 2 of `CAND-014` (the World Model document and the `AI/Knowledge/*` rewrite), gated behind the `CAND-007` pipeline; the Conformance Test Suite tooling and the `CAND-002` declaration Projection and CI validator, specified and not built; the `Memory/Evidence Overlay.md` reserved sections (FW-001). The Specification track label stays 0.2 in this Release; moving it to 1.0 is a separate decision.
+
+**Standard Evolution Methodology reviewed:** Yes. This Release carries the six Backlog Epics of `Master-Architecture-Backlog.md` executed or dispositioned under `CAND-007` Section 3, with Decisions `CAND-001`, `CAND-002` and `CAND-016` and dispositions on `CAND-004` and `CAND-014`, each within its recorded scope. Core edits are transcription only: `Core/Terminology.md` restated as an index, one sentence in `Models/Relationship.md`, `Domains/Common/Domain.md` made Informative. No new Core concept entered; independent Reference Cases toward Rule 2 stand where `v1.1.1` left them.
+
+**Recommendation:** Approved for release.
+
+**Status:** Prepared. Tag and GitHub Release to follow; the Release timestamp and the Zenodo version DOI are added to this entry once both exist.
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -86,3 +108,4 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 22 July 2026 | Added Pre-Release Checklist, including Standard Evolution Methodology review |
 | 0.1 | 12 September 2026 | Added the v1.1.1 release entry (first entry to run the Pre-Release Checklist), with the same-day v1.1.0 recorded under Known Deferred Content. |
 | 0.1 | 12 September 2026 | v1.1.1 entry: Status Prepared to Released, with the GitHub Release timestamp and the Zenodo version DOI. |
+| 0.1 | 16 September 2026 | Added the v1.2.0 release entry (Pre-Release Checklist run; the Part 8 bar of `Master-Architecture-Backlog.md` met on its recorded terms; Status Prepared). |

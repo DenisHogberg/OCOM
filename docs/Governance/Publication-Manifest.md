@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 12 September 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -72,7 +72,23 @@ Entries are append-only, mirroring the same discipline already used for `ADR-Can
 | **Publication Date** | Published 2026-09-12T10:47:22Z (GitHub Release timestamp); Zenodo record published 12 September 2026. |
 | **Published Artifacts** | GitHub Release "OCOM v1.1.1: Object-Centric Operating Model, an open specification for a machine-readable description of an organization" from annotated tag `v1.1.1` (`github.com/DenisHogberg/OCOM/releases/tag/v1.1.1`); Zenodo version DOI `10.5281/zenodo.22724309` (`doi.org/10.5281/zenodo.22724309`) under concept DOI `10.5281/zenodo.21510450`, minted by the Zenodo GitHub integration from `.zenodo.json` at this commit; DataCite resource type Standard, findable. |
 | **Machine-readable Projections** | `.zenodo.json` and `CITATION.cff` at this commit (deposit metadata: DataCite resource type Standard, `CC-BY-4.0`, ORCID-bound creator, 14 subjects; description taken from the Release body). ocom.uno projections as for `v1.1.0`: the `docs/` tree is byte-identical between the two commits. |
-| **Status** | **Current.** Metadata-only patch over `v1.1.0`: same `docs/` tree; adds `.zenodo.json`; narrows `CITATION.cff` `license` to the specification text's `CC-BY-4.0`. Cut per `Release-Workflow.md` steps 6 and 7: this entry recorded before tagging, annotated tag on the commit named above. |
+| **Status** | **Superseded by `v1.2.0`** (next entry). Metadata-only patch over `v1.1.0`: same `docs/` tree; adds `.zenodo.json`; narrows `CITATION.cff` `license` to the specification text's `CC-BY-4.0`. Cut per `Release-Workflow.md` steps 6 and 7: this entry recorded before tagging, annotated tag on the commit named above. |
+
+---
+
+## Release: `v1.2.0`
+
+| Field | Value |
+|---|---|
+| **Release Identifier** | `v1.2.0` |
+| **Commit** | `e4a5a53debeba4ff7ed0a1966e23ff258c573f64` |
+| **Constitution Version** | 1.0.1 |
+| **Core Vocabulary Version** | 0.1 (13 governed terms) |
+| **Specification Version** | 0.2 |
+| **Publication Date** | 16 September 2026, planned. The GitHub Release timestamp and the Zenodo version DOI are added to this entry by a follow-up revision once both exist; until then this entry describes the intended Release, not a published one. |
+| **Published Artifacts** | GitHub Release "OCOM v1.2.0: Object-Centric Operating Model, an open specification for a machine-readable description of an organization" from the SSH-signed annotated tag `v1.2.0` (`github.com/DenisHogberg/OCOM/releases/tag/v1.2.0`) with the three assets `Release-Workflow.md` step 7 names, `OCOM-v1.2.0.zip`, `SHA256SUMS` and `SHA256SUMS.sig`, verifiable with the key in `.github/allowed_signers`; Zenodo version DOI to be recorded by the follow-up revision. |
+| **Machine-readable Projections** | `.zenodo.json` and `CITATION.cff` at this commit, unchanged since `v1.1.1`. ocom.uno: `release.json` and `/changelog` to be updated for this Release and recorded by the follow-up revision; the term-card projections are unchanged, since no `Meta/` definition changed; the Specification reading-path pages are behind the repository for Chapters 0, 1, 4, 7 and 8 until regenerated. |
+| **Status** | **Current.** First content Release over `v1.1.1`: the `Master-Architecture-Backlog.md` Part 8 bar ("OCOM Specification v1.0 Ready") is met on the terms recorded there, with EPICs B to F executed and EPIC-A dispositioned on 16 September 2026; `Core/Terminology.md` 0.2; `Governance/Conformance-Test-Suite.md` and `Governance/Concept-Paper-Profile-Conformance.md` new; `CAND-001`, `CAND-002` and `CAND-016` decided; the OpenSSF Baseline policies, the branch ruleset, DCO and dependency review in place. First Release with a signed tag and signed assets. The Specification track label stays 0.2: moving it to 1.0 is a separate decision. Cut per `Release-Workflow.md` steps 6 and 7: this entry recorded before tagging, signed annotated tag on the commit named above. |
 
 # Revision History
 
@@ -84,3 +100,4 @@ Entries are append-only, mirroring the same discipline already used for `ADR-Can
 | 0.1 | 12 September 2026 | Replaced the `(next, not yet cut)` placeholder with two entries: `v1.1.0` (published 12 September 2026 outside this document's process, Superseded, no version DOI) and `v1.1.1` (metadata-only patch, commit `91d40db`, recorded before tagging per `Release-Workflow.md` step 6). |
 | 0.1 | 12 September 2026 | `v1.1.1` entry completed after publication: GitHub Release timestamp 2026-09-12T10:47:22Z, Zenodo version DOI `10.5281/zenodo.22724309`. |
 | 0.1 | 13 September 2026 | `v1.0.0` entry: `Published Artifacts` now also names the Zenodo version DOI `10.5281/zenodo.21510451`, which the entry had omitted since it was written. Record completed, nothing restated. |
+| 0.1 | 16 September 2026 | Added the `v1.2.0` entry (commit `e4a5a53`, recorded before tagging per `Release-Workflow.md` step 6; first Release with a signed tag and signed assets); `v1.1.1` marked Superseded by `v1.2.0`. Publication timestamp and Zenodo DOI to follow. |

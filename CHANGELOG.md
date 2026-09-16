@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.2.0 (16 September 2026)
+
+- Content Release over v1.1.1, cut from commit e4a5a53. Same version tracks (Constitution 1.0.1, Core Vocabulary 0.1 with 13 governed terms, Specification 0.2); the `docs/` tree changes across Governance, Core, Models, Domains, Entities, AI, Language, Adoption, Examples and the Specification reading path.
+- `docs/Governance/Master-Architecture-Backlog.md` Part 8, "OCOM Specification v1.0 Ready", is met on the terms recorded there: EPIC-D (Terminology 0.2 as a verbatim index of canonical definitions, GAP-002 closed), EPIC-C (CAND-001 decided and integrated, Domains Memory disposition, every Entity document bridged to Memory), EPIC-B (CAND-016: `Meta/Relationship.md` canonical, `Models/Relationship.md` its specialization; AO-002 closed; CAND-004 dispositioned per question; CAND-015 integrated), EPIC-F (reading path re-pointed to the Constitution, Chapter 4 gains Organization, CAND-002 integrated), EPIC-E (CAND-002 decided; `docs/Governance/Conformance-Test-Suite.md` specifies the Requirement Register as a derived projection, 335 Statements, and five Test kinds) and EPIC-A dispositioned (Layer 1 closes it for v1.0; the World Model document stays gated). The Specification track label stays 0.2.
+- Governance registers: AO-062 to AO-068 recorded; AO-001, AO-002, AO-065, AO-066 and OBS-001 closed; AO-042 and AO-062 Open in part; an Entry Lifecycle for observations. Two new Governance documents: `Concept-Paper-Profile-Conformance.md` and `Conformance-Test-Suite.md`.
+- Security and project baseline since v1.1.1: `SECURITY.md`, `GOVERNANCE.md` and `CONTRIBUTING.md` per the OpenSSF Baseline; `main` is pull-request-only under a branch ruleset with seven required checks; DCO sign-off and dependency review on every pull request; SSH-signed tags and signed release assets from 13 September 2026. This is the first Release cut with a signed tag and the three signed assets (`OCOM-v1.2.0.zip`, `SHA256SUMS`, `SHA256SUMS.sig`); verification commands are in `SECURITY.md`.
+- Zenodo version DOI: added by a follow-up revision once the deposit is published.
+
 ## v1.1.1 (12 September 2026)
 
 - Metadata-only patch over v1.1.0. Adds `.zenodo.json` so the Zenodo GitHub integration deposits each Release with the intended metadata (resource type Standard, CC-BY-4.0, ORCID-bound author, subjects, description from the Release body). Narrows the `CITATION.cff` license to the specification text's CC-BY-4.0: Zenodo's citation reader accepts that field only as a single value, and a CFF list means "either licence", which misstates the repository's scoped dual licensing.
