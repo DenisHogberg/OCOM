@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 August 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -56,12 +56,13 @@ Every Entity specification shall contain the following sections:
 10. Lifecycle
 11. Relationships
 12. Events
-13. Business Rules
-14. Invariants
-15. Constraints
-16. Conformance
-17. Examples
-18. Revision History
+13. Memory
+14. Business Rules
+15. Invariants
+16. Constraints
+17. Conformance
+18. Examples
+19. Revision History
 
 ---
 
@@ -104,6 +105,16 @@ Relationships shall be defined explicitly and shall not be implied.
 Entities may emit, receive, or react to Events.
 
 Events represent business facts and shall not directly modify Entity definitions.
+
+---
+
+# Memory
+
+An Entity holds no Memory of its own. Memory about an Entity is held in Memory Records, which may name the Entity as their Related Entity and may reference Entities among their Relationships, per `Memory/Memory Record.md`; Memory operates across all Entities, per `Memory/Overview.md`.
+
+A Memory Record about an Entity is governed by the Memory specification. It does not modify the Entity's attributes, States, Lifecycle or Relationships, which remain business facts governed by the Entity's Domain. The current state of an Entity is not a Memory Record: per `CAND-014` it is held in the World Model, computed from Memory and Knowledge, and the document that defines the World Model is Layer 2 of that decision and not yet authored.
+
+Every Entity specification shall contain a Memory section stating how the Entity relates to Memory. An Entity that adds nothing to this default states that it follows it.
 
 ---
 
@@ -163,3 +174,4 @@ Additional Lifecycle categories may be introduced in future versions of the spec
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 20 August 2026 | Status briefly changed to Informative, then reverted to Draft on independent review: Decision 4 governs Constitution §9 Core scope only, not this document's own Status, and this document's normative "shall" content was never actually reduced. Status note corrected to quote Decision 4's actual hedged wording ("mixed, mostly domain-specific") |
+| 0.1 | 16 September 2026 | Added Memory to the Entity structure and a Memory section defining the default relationship of an Entity to Memory: an Entity holds no Memory of its own, Memory Records may name it as Related Entity, current state is World Model per `CAND-014`. EPIC-C minimal bridge, per `Master-Architecture-Backlog.md` Part 8, under `CAND-007` Section 3. |

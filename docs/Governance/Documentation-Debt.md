@@ -60,7 +60,7 @@ Summary pointers only. Full entries, Impact, and Architect Response live in `Arc
 
 | ID | Summary | Status | Reference |
 |---|---|---|---|
-| OBS-001 | `AI/Context/Overview.md` and `AI/Agents/Context.md` are content-identical | Open | Architecture-Observations.md#obs-001 |
+| OBS-001 | `AI/Context/Overview.md` and `AI/Agents/Context.md` are content-identical. Closed 16 September 2026: `CAND-001` decided, `AI/Agents/Context.md` replaced with an Informative pointer. | Closed | Architecture-Observations.md#obs-001 |
 | OBS-002 | Reference Architecture layer name retains "Business Object Architecture" while internal section headers use "Entity" | Closed | Architecture-Observations.md#obs-002 |
 | OBS-003 | Reference Case: proposed Object attribute lifecycle categories (structural/type-level/evolving/derived) — not adopted, insufficient independent corroboration | Open | Architecture-Observations.md#obs-003 |
 
@@ -96,3 +96,4 @@ Consciously deferred decisions. Not documentation debt.
 | 0.1 | 5 September 2026 | Added GAP-005 (no Compliance Lifecycles document) and GAP-006 (Process and KPI undefined above the Domain tier), both surfaced by a full read of the Domains, Entities, AI and Reference Architecture tiers. |
 | 0.1 | 12 September 2026 | FW-007 closed: Release `v1.1.1` cut per `Governance/Release-Workflow.md` (Manifest entry before tagging, annotated tag) with Zenodo version DOI `10.5281/zenodo.22724309`; the same-day `v1.1.0` is recorded as Superseded in `Governance/Publication-Manifest.md`. |
 | 0.1 | 16 September 2026 | GAP-002 closed: `Core/Terminology.md` now indexes every Meta-level concept and every Constitution term, restating each owning document's Definition verbatim; the Constitution terms no document defines are listed as Reserved (`AO-066`, `AO-067`, `AO-068`). |
+| 0.1 | 16 September 2026 | OBS-001 closed per `CAND-001` (Decided 16 September 2026): `AI/Agents/Context.md` replaced with an Informative pointer to `AI/Context/Overview.md`. |

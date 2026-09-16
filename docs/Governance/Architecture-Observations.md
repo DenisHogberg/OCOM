@@ -66,9 +66,9 @@ An entry is never edited to look as though it always said what it now says. A St
 
 **Recommendation:** The Chief Architect should decide whether to keep the duplicate, replace `AI/Agents/Context.md` with an explicit reference to `AI/Context/Overview.md`, or give `AI/Agents/Context.md` distinct, Agent-specific content.
 
-**Status:** Open — escalated, see ADR-Candidates.md#cand-001
+**Status:** Closed
 
-**Architect Response:** *(pending)*
+**Architect Response:** Replace with a reference. Decided through `CAND-001`, Chief Architect decision, 16 September 2026: `AI/Context/Overview.md` is the single document describing Context; `AI/Agents/Context.md` keeps its path, Document ID and reading-path position and becomes an Informative pointer to it, defining nothing. Integrated in the same change. The other definitional duplicates in `AI/` remain open under `AO-035`.
 
 **Related:** `AI/Context/Overview.md`, `AI/Agents/Context.md`, `Documentation-Debt.md#OBS-001`, `ADR-Candidates.md#cand-001`
 
@@ -1575,3 +1575,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 16 September 2026 | Added AO-065 (the compiled Chapter 4 covers twelve `Meta/` documents while the Core Vocabulary has thirteen governed terms, so Organization is absent from the reading path), surfaced while deciding `CAND-002`; documentation-currency defect, record only. |
 | 0.1 | 16 September 2026 | Added an Entry Lifecycle section, defining the five Status values from observed usage and requiring an Open entry's Status to state what would move it. Retrofits nothing: no entry's Status changes, and `AO-004`, the one entry stating no condition, is named rather than amended. |
 | 0.1 | 16 September 2026 | Added AO-066 (Terminology declares itself authoritative while all thirteen of its definitions differ from the owning documents), AO-067 (Autonomy level is undefined and the only level scale in the specification runs the other way) and AO-068 (Provenance and Static and Dynamic World Modelling are undefined), all surfaced while executing EPIC-D. |
+| 0.1 | 16 September 2026 | OBS-001 closed: `CAND-001` decided (replace with a reference) and integrated; `AI/Agents/Context.md` is now an Informative pointer to `AI/Context/Overview.md`. |

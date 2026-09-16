@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 11 September 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -116,6 +116,8 @@ Two items in the Definition of Done above remain open and are deliberately gated
 
 **Definition of Done:** `CAND-001` has a recorded Decision and is integrated (no duplicate content remains, or the duplication is explicitly justified and kept); the AI-Memory linkage pattern is either present uniformly across all 14 Domains subdomains or its absence in specific subdomains is an explicit, stated decision, not silence; every Entity document has an explicit statement of how it relates to Memory (even if the answer is "no direct relationship, mediated entirely through Domain-level AI-Memory linkage" — the point is that the silence itself is closed).
 
+**Execution note (16 September 2026):** executed under `CAND-007` Section 3 as EPIC-C. `CAND-001` is Decided (replace with a reference) and integrated: `AI/Agents/Context.md` keeps its path, Document ID and reading-path position and is now an Informative pointer to `AI/Context/Overview.md`; `OBS-001` is Closed. The Domains census at execution differs from the count above: of the thirteen Domain AI documents, five carry an AI Memory section (BI, Compliance, CRM, Finance, Payments) and eight do not (AI, Affiliate, HR, Legal, Marketing, Operations, Product, Support); `Domains/Common` has none. The five sections restate `Memory/Overview.md` for their Domain, four with the same four compliance bullets and Compliance adding regulatory obligations, so the gap is closed by the explicit disposition Part 8 permits, recorded as the Relationship to Memory section of `Domains/Overview.md`, not by eight more copies of one paragraph. `Entities/Overview.md` now defines the default relationship of an Entity to Memory (Memory Records may name the Entity as Related Entity; the Entity holds no Memory of its own; current state is World Model per `CAND-014`) and adds Memory to the mandatory Entity structure; each of the twenty four Entity documents carries a Memory section, twenty three following the default and `Entities/AI-Agent/AI Agent.md` stating its one departure, that an AI Agent is both a subject of Memory Records and a contributor to them. `Entities/Department` remains a Planned stub with no document to carry the section. This is the minimal bridge Part 8 asks for; the bridge to the World Model document named in the 11 September 2026 note above stays with that document, Layer 2 of `CAND-014`. Definition of Done met on the terms Part 8 states.
+
 ## EPIC-D — Constitution & Terminology Closure
 
 **Architectural goal:** make Constitution's own text match decisions already made about it, and make sure every term Constitution uses is defined somewhere in the Specification.
@@ -128,6 +130,8 @@ Two items in the Definition of Done above remain open and are deliberately gated
 
 **Definition of Done:** §9 and §11 read consistently with their own recorded interpretation; `Core/Terminology.md` defines every term Constitution uses, including Autonomy level; no Constitution term is used without a locatable definition anywhere in the Specification.
 
+**Execution note (16 September 2026):** Section 9 and Section 11 wording was transcribed on 11 September 2026 (`Core/Constitution.md` 1.0.1, per `CAND-006`'s postscript). `Core/Terminology.md` 0.2 restates every term as the owning document's Definition verbatim, adds the `GAP-002` concepts and Memory, Knowledge and Context, and lists as Reserved the Constitution terms no document defines, each with the record that tracks it (`AO-021`, `AO-053`, `AO-024`, `AO-067`, `AO-068`, and `CAND-014` for World Model); the restatement was done under `AO-066`, now Closed. Autonomy level is not defined: `AO-067` records that no document defines it and that the only level scale in the specification, `Memory/Write-back Governance.md`, runs the other way, so defining it is new content that needs a Reference Case under `CAND-007`; it is Reserved and locatable, the disposition the Chief Architect accepted on 16 September 2026. `GAP-002` is Closed. Definition of Done met on those terms: every Constitution term is locatable, and the Reserved terms are defined nowhere and say so.
+
 ## EPIC-E — Conformance & Reference Implementation
 
 **Architectural goal:** make "OCOM-compatible" a provable claim, not a self-declared one, per Architecture Principle 6 — and prove the contract is independently buildable, per Architecture Principle 5.
@@ -139,6 +143,8 @@ Two items in the Definition of Done above remain open and are deliberately gated
 **Related AO/ADR:** `CAND-002`, `FW-003`, `FW-004`.
 
 **Definition of Done:** `CAND-002` has a recorded Decision; a checkable Conformance Test Suite specification exists (even if initial tooling is minimal); the guarantees it tests are stable (depends on EPIC-A, EPIC-D). A Reference Implementation existing is listed as Future Work here, not required for this Epic's own closure — see Part 8 for why.
+
+**Execution note (16 September 2026):** `CAND-002` is Decided: Profile Conformance is defined by the form of a claimant's declaration, per `Governance/Concept-Paper-Profile-Conformance.md`. Its integration into `Specification/08 Conformance.md`, `Language/Conformance.md` and `Adoption/FAQ.md` is a separate step. The Conformance Test Suite specification is not written; it depends on the requirement register `AO-062` describes, since no document enumerates the mandatory requirements Core Conformance refers to.
 
 ## EPIC-F — Specification Currency & Presentation
 
@@ -166,16 +172,16 @@ Two items in the Definition of Done above remain open and are deliberately gated
 | Write World Model document | A | Critical | M | Medium — first-ever document for this concept | Knowledge/World Model decision (landed, `CAND-014`); now gated as Layer 2 behind the `CAND-007` freeze-exception pipeline |
 | ✅ Resolve `AO-003` (Memory Record Status). Done 10 September 2026, closed by `CAND-014` as Option B | A | High | S | Low — narrow, well-scoped | Knowledge/World Model decision (same underlying question) |
 | Complete `FW-001` (Evidence Overlay reserved sections) | A | Medium | S | Low | Knowledge/World Model decision (only what it needs) |
-| Resolve `AO-001` (Domain vs Domain) | B | High | S | Medium — touches a widely-referenced term | None |
+| ✅ Resolve `AO-001` (Domain vs Domain). Done 11 September 2026, `CAND-015` | B | High | S | Medium — touches a widely-referenced term | None |
 | Resolve `AO-002` (Relationship/Organization) | B | High | S | Medium | None |
 | Decide `CAND-004` (7 questions) | B | Medium | L | Medium — broad surface, many documents | `AO-001`, `AO-002` |
-| Resolve `CAND-001`/`OBS-001` (Context duplication) | C | Medium | S | Low | None |
-| Close the 6-domain AI-Memory linkage gap | C | Medium | M | Low | None (independent of A/B, but low value until A is resolved) |
-| Bridge `Entities/*` to Memory/Evidence | C | High | L | Medium — 51 files | EPIC-A decision (need a stable target to bridge to) |
-| Update Constitution §9/§11 wording | D | High | S | Low — pure transcription of an existing decision | None |
-| Define Autonomy level (C12) | D | High | M | Medium — genuinely new content, not transcription | None |
-| Extend `Core/Terminology.md` (`GAP-002`) | D | Medium | S | Low | Autonomy-level definition (to include it) |
-| Decide `CAND-002` (Profile Conformance mechanics) | E | High | M | Medium | None, but low value until A/D are stable |
+| ✅ Resolve `CAND-001`/`OBS-001` (Context duplication). Done 16 September 2026, `CAND-001` Decided and integrated | C | Medium | S | Low | None |
+| ✅ Close the 6-domain AI-Memory linkage gap. Done 16 September 2026 by explicit disposition in `Domains/Overview.md` (census at execution: eight of thirteen without the section) | C | Medium | M | Low | None (independent of A/B, but low value until A is resolved) |
+| ✅ Bridge `Entities/*` to Memory/Evidence. Done 16 September 2026 as the minimal bridge Part 8 asks for (`Entities/Overview.md` default, a Memory section in all 24 Entity documents); the World Model target stays Layer 2 of `CAND-014` | C | High | L | Medium — 51 files | EPIC-A decision (need a stable target to bridge to) |
+| ✅ Update Constitution §9/§11 wording. Done 11 September 2026, `Core/Constitution.md` 1.0.1 | D | High | S | Low — pure transcription of an existing decision | None |
+| Define Autonomy level (C12). Dispositioned 16 September 2026: Reserved in `Core/Terminology.md`, tracked as `AO-067`; defining it needs a Reference Case under `CAND-007` | D | High | M | Medium — genuinely new content, not transcription | None |
+| ✅ Extend `Core/Terminology.md` (`GAP-002`). Done 16 September 2026, Terminology 0.2, `GAP-002` Closed | D | Medium | S | Low | Autonomy-level definition (to include it) |
+| ✅ Decide `CAND-002` (Profile Conformance mechanics). Done 16 September 2026 | E | High | M | Medium | None, but low value until A/D are stable |
 | Design Conformance Test Suite | E | Critical | XL | High — largest single deliverable in the backlog | EPIC-A, EPIC-D (guarantees must be stable first) |
 | Build a Reference Implementation (`FW-004`) | E | Medium (see Part 8) | XL | High | EPIC-A–D substantially complete; explicitly not Specification-authored, see Part 9 |
 | Refresh or retire `Specification/` v0.2; re-point `Adoption/` | F | High | M | Low | Ideally after EPIC-D (so it reflects the closed §9/§11 wording too), but not blocked by it |
@@ -286,11 +292,13 @@ If leading OCOM's development starting tomorrow morning, the first three items, 
 
 **Execution note (11 September 2026):** item 1 below is complete. The ADR Candidate was filed and decided on 10 September 2026 as `CAND-014` (Option 4, Layer 1), and `AO-003` was closed by the same decision. Read the list as starting at item 2. The reasoning below is left as written on 27 July 2026 and is not revised.
 
+**Execution note (16 September 2026):** items 2 and 3 are also complete, both on 11 September 2026 (`Core/Constitution.md` 1.0.1; `CAND-015`). The list is exhausted; the remaining work is tracked per Epic above.
+
 **1. File and decide the ADR Candidate for Knowledge vs. World Model (EPIC-A).** ✅ Done 10 September 2026, `CAND-014`. This is the single highest-leverage item in the entire backlog: it is already fully analyzed (`Concept-Paper-Knowledge-vs-World-Model.md`, `Architecture-Discussion-Knowledge-vs-World-Model.md`, explicitly rated "Decision Readiness: Yes"), so no new research is needed — only the decision itself — and it unblocks more downstream work (EPIC-C's Entities bridge, EPIC-E's Test Suite, part of EPIC-D) than any other single item in the graph.
 
-**2. Update Constitution §9 and §11's own wording (EPIC-D).** The lowest-cost item in the entire backlog — pure transcription of decisions already made (`Constitution-Step0-Summary.md`, Decisions 4 and 5) — and it closes a standing inconsistency in the single most authoritative document in the Specification. Near-zero risk, immediate credibility gain, and it can proceed in full parallel with item 1.
+**2. Update Constitution §9 and §11's own wording (EPIC-D).** ✅ Done 11 September 2026, `Core/Constitution.md` 1.0.1. The lowest-cost item in the entire backlog — pure transcription of decisions already made (`Constitution-Step0-Summary.md`, Decisions 4 and 5) — and it closes a standing inconsistency in the single most authoritative document in the Specification. Near-zero risk, immediate credibility gain, and it can proceed in full parallel with item 1.
 
-**3. Resolve `AO-001` (Domain vs. Domain).** The oldest unresolved item in the entire inventory (logged 25 July), self-contained, small in scope (two documents), and it directly unblocks `CAND-004` — a large, already fully-scoped body of work (seven research questions, already narrowed to exactly what remains undecided) that is otherwise just waiting.
+**3. Resolve `AO-001` (Domain vs. Domain).** ✅ Done 11 September 2026, `CAND-015`. The oldest unresolved item in the entire inventory (logged 25 July), self-contained, small in scope (two documents), and it directly unblocks `CAND-004` — a large, already fully-scoped body of work (seven research questions, already narrowed to exactly what remains undecided) that is otherwise just waiting.
 
 These three share the same property: each is either already decision-ready or trivially small, and each unblocks work disproportionate to its own size. Nothing about EPIC-E (Conformance, Reference Implementation) belongs in the first three — it is the most expensive work in the backlog, and starting it before EPIC-A and EPIC-D land means designing a test suite against guarantees that are still moving.
 
@@ -302,6 +310,8 @@ This is a backlog, not a decision. No specification document has been changed. N
 
 **Execution has since begun (11 September 2026).** The statements above describe this document as authored on 27 July 2026. Since then item 1 of Part 10 has been executed under its own authorization: `CAND-014` was filed and decided on 10 September 2026 and `AO-003` was closed. Both are recorded in `ADR-Candidates.md` and `Architecture-Observations.md`; this document tracks them, it does not own them. No Core, Meta, Models, AI or Memory document has been changed.
 
+**Execution continued (16 September 2026).** Under the Chief Architect's instruction to bring the specification to the Part 8 bar without waiting for implementation cases, EPIC-D and EPIC-C are executed and `CAND-002` is decided; see the execution notes under each Epic. Part 8 items still open: EPIC-A (Layer 2 gated; disposition pending), EPIC-B (`AO-002`, `CAND-004`), EPIC-E's Test Suite specification, and EPIC-F's core item. The documents changed by these executions carry the change in their own revision histories.
+
 ---
 
 # Revision History
@@ -310,3 +320,4 @@ This is a backlog, not a decision. No specification document has been changed. N
 |----------|------|-------------|
 | 0.1 | 27 July 2026 | Initial backlog, six Epics, normalized from the Architecture Audit plus the full open-item register in `ADR-Candidates.md`, `Architecture-Observations.md`, and `Documentation-Debt.md` |
 | 0.1 | 11 September 2026 | Recorded execution of Part 10 item 1: the EPIC-A Knowledge/World Model decision was filed and decided as `CAND-014` on 10 September 2026 (Option 4, three-layer split by time horizon, Layer 1), and `AO-003` was closed by the same decision as its own Option B. Corrected EPIC-A's "Related AO/ADR" clause, which still said no ADR Candidate had been filed; added an Execution status block to EPIC-A; marked the two completed rows in Part 5 and re-scoped the World Model document row; added dated execution notes to Parts 6, 10 and Status. EPIC-A is not fully closed: authoring the World Model document and rewriting `AI/Knowledge/*` are Layer 2, gated behind the `CAND-007` freeze-exception pipeline, and the Layer 1 Core integration is separately authorized and not yet performed. No Core document changed. |
+| 0.1 | 16 September 2026 | Recorded execution of EPIC-D (Terminology 0.2, `GAP-002` Closed, Autonomy level dispositioned as Reserved), EPIC-C (`CAND-001` Decided and integrated, `OBS-001` Closed, Domains disposition in `Domains/Overview.md`, Entities minimal bridge in `Entities/Overview.md` and all 24 Entity documents) and the `CAND-002` Decision (EPIC-E, first half). Marked eight Part 5 rows and Part 10 items 2 and 3; added execution notes to EPIC-C, EPIC-D, EPIC-E, Part 10 and Status. Corrected the Domains census (five of thirteen Domain AI documents carry an AI Memory section, not eight of fourteen). |

@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 21 July 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -152,6 +152,16 @@ Individual business domains specialize the principles defined by this specificat
 
 ---
 
+# Relationship to Memory
+
+Memory operates across all OCOM Domains, per `Memory/Overview.md`, and a Memory Record may reference Entities, Events, Workflows, Lifecycles, AI Agents and other Memory Records, per `Memory/Memory Record.md`. The Memory specification states this once for every Domain; this specification does not require each Domain to restate it.
+
+Of the thirteen Domain AI documents, five carry a section headed AI Memory, in BI, Compliance, CRM, Finance and Payments. Each states that the Domain's AI may consume and contribute to enterprise Memory subject to Memory governance, evidence, retention and privacy requirements, with Memory Ownership unchanged; the Compliance section additionally names regulatory obligations. The five sections restate the Memory specification for their Domain and impose no requirement on Memory itself. The eight Domain AI documents that carry no such section, in AI, Affiliate, HR, Legal, Marketing, Operations, Product and Support, are not exceptions: the same relationship holds for them by virtue of the Memory specification, and their silence is closed by this section rather than by a copy of that text in each. `Domains/Common` defines no Domain of its own and carries none. A Domain that departs from this relationship states so in its own AI document; none does in this version.
+
+This section is the explicit disposition `Governance/Master-Architecture-Backlog.md` Part 8 permits for EPIC-C in place of a uniform section, recorded 16 September 2026.
+
+---
+
 # Directory Structure
 
 The Domains package consists of:
@@ -207,3 +217,4 @@ A conforming Domain specification shall:
 |----------|------|-------------|
 | 0.1 | 21 July 2026 | Initial draft |
 | 0.1 | 20 August 2026 | Added status note citing `Constitution-Step0-Summary.md` Decision 4's "genuine borderline case" finding; Status left unchanged (`Draft`), deliberately, pending ongoing per-document review |
+| 0.1 | 16 September 2026 | Added Relationship to Memory: the Domain-level linkage to Memory is stated once by `Memory/Overview.md`; the five AI Memory sections (BI, Compliance, CRM, Finance, Payments) restate it for their Domain, the eight Domain AI documents without one are not exceptions. Explicit disposition for EPIC-C per `Master-Architecture-Backlog.md` Part 8, under `CAND-007` Section 3. |
