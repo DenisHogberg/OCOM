@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 11 September 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -63,15 +63,15 @@ Consequences by outcome:
 
 ---
 
-## CAND-002
+## CAND-002 — ✅ Decided
 
 **Title:** Mechanics of set-scoped (profile-based) Conformance
 
-**Status:** Open
+**Status:** Decided — profile mechanics defined as the form of a claimant's declaration, not as a profile this repository publishes (16 September 2026)
 
-**Owner:** Chief Architect
+**Owner:** Chief Architect (Decision recorded); text integration pending separate authorization
 
-**Created:** 22 July 2026
+**Created:** 22 July 2026 · **Decided:** 16 September 2026 · **Decided by:** Chief Architect
 
 **Related Documents:** `Language/Conformance.md`, `docs/Specification/08 Conformance.md`
 
@@ -82,7 +82,35 @@ Consequences by outcome:
 - *Define now:* clarifies Conformance fully, but risks coupling the Core specification to a mechanism that may need to change independently.
 - *Leave open, reference from the Conformance chapter:* keeps Core minimal, but leaves implementers without profile guidance until resolved.
 
-**Next Action:** Chief Architect to review and record a Decision.
+**Grounding:** `Governance/Concept-Paper-Profile-Conformance.md` (the eight declaration rules, the ten validator assertions, the four options considered, and the boundaries taken deliberately).
+
+**Decision:**
+
+**Profile Conformance is defined by the form of the claim, not by any profile this repository publishes.** OCOM defines no profile, approves none, certifies none, and keeps no list of them. What is defined is what a claimant shall publish before the words Profile Conformance resolve to anything, and the check any third party can run against that publication with nothing but a checkout of this repository and a SHA-256 implementation.
+
+A declaration names a Release and its commit, lists whole canonical source documents each carrying the hash of its bytes at that commit, contains the documents Chapters 4 to 6 compile as a floor, adds nothing, restates nothing, and asserts no exclusions because the complement is computed. A validator answers the three verbs the candidate asks about, offline, from the declaration and a checkout alone.
+
+### The question
+
+`Specification/08 Conformance.md` and `Language/Conformance.md` both publish Profile Conformance as one of three levels while deferring its mechanics. Core Conformance carries four obligations and Extended five. Profile carries none, against `Language/Conformance.md`'s own Design Principles, which require conformance to be objective, measurable and verifiable.
+
+### Rationale
+
+Two constraints decided the shape. First, no statement in this repository carries an identifier, recorded as `AO-062`, so a profile cannot be bounded by citing clauses; the whole document is the finest unit that can be addressed today, and the content hash is what makes a declaration break loudly instead of drifting. Second, Chapter 8's own Non-Conformance clause forbids a conformance claim from an implementation that fails a mandatory requirement, so a profile cannot be a subset of the Core: it is the Core plus a named selection from the documents outside it. Three of the four options considered permitted a claim below that floor or defined nothing at all.
+
+### Scope of this decision, and the Architecture Freeze
+
+Filed under `CAND-007` §3, which permits a Decision on this candidate provided it stays inside the candidate's recorded scope. That scope is three verbs, and the Decision answers declared, bounded and validated without opening a fourth question. Both consequences the candidate records are respected: the Core is not coupled to the mechanism, because the mechanism lives in a Governance-tier Informative document and refers to the Core only by path, commit and hash; and implementers stop being left without guidance, because what a claimant shall publish is stated exactly. The author's recorded position, that profile mechanics are a separate topic and are not to be folded into the Core, is preserved literally: Chapter 8 gains a pointer where it now carries a deferral, and gains no mechanism.
+
+§4 holds item by item. No new Domains subdomain, Entity type, `AI/` subsection, Workflows content, Examples collection or Canonical Principle; no Constitution amendment; no redesign of Object, Memory, Evidence or the derivation direction. The Stop List entry forbidding a new Conformance Profile ahead of this candidate is satisfied rather than waived: this Decision defines zero profiles and authorizes zero profiles, and each concrete profile would need its own Decision. No new Core concept is added: a Profile Declaration is a disclosure a claimant makes about its own scope, not a Meta Object, a Models concept, a term for `Core/Terminology.md` or a publication tier.
+
+### What this decision does not do
+
+It does not make any conformance claim true. A validated declaration is well formed, resolves at a pinned commit and has not drifted; it says nothing about behaviour. Verification remains the other half of `EPIC-E`'s Definition of Done and remains blocked on `AO-062`, which this Decision does not close. Specialization, which Chapter 8 names alongside subset, is left out of this version. Sub-document scoping is gated on a requirement register existing. `AO-032` is adopted only for the resolution of a profile declaration and stays Open. Who may attach the word OCOM to a profile belongs to the stewardship question `CAND-007` holds open, not here.
+
+**Next Action:** Two-step discipline, as used for `CAND-003`, `CAND-006`, `CAND-009` and `CAND-014`. Step 1 is done by this entry. Step 2, each item requiring its own separate authorization: replace the Note on scope in `Specification/08 Conformance.md` with a pointer to the grounding paper; add the same pointer to `Language/Conformance.md`'s Profile Conformance section; correct `Adoption/FAQ.md`, whose answer to "Can I use only part of OCOM?" implies a conformance claim may sit below Chapters 4 to 6, which `R4` and Chapter 8 forbid; publish the declaration field set as a Projection; add the validator to CI beside the existing publication-metadata job; and mark `EPIC-E`'s `CAND-002` half satisfied in `Master-Architecture-Backlog.md`.
+
+**Related Documents:** `Governance/Concept-Paper-Profile-Conformance.md`, `Language/Conformance.md`, `Specification/08 Conformance.md`, `Governance/Publication-Manifest.md`, `Governance/Publication-Model.md`, `Governance/Master-Architecture-Backlog.md` (EPIC-E), `Adoption/FAQ.md`, `AO-014`, `AO-032`, `AO-062`, `AO-065`, `CAND-007`
 
 ---
 
@@ -1076,3 +1104,4 @@ It changes no document. `Models/Domain.md` and `Domains/Common/Domain.md` are bo
 | 0.1 | 11 September 2026 | CAND-006: added a dated postscript recording that its quoted Canonical Principle list stays at the 26 July 2026 adoption wording, and that Principles 9 and 11 were transcribed into `Core/Constitution.md` (1.0.1) on 11 September 2026 per Decisions 4 and 5, the integration `CAND-007` §4 names as permitted. No Decision changed. |
 | 0.1 | 11 September 2026 | CAND-014: postscript recording that Step 2, the Layer 1 Core integration, was performed (`Knowledge.md` Definition corrected, `Memory Record.md` Status restated as derived) and that `AO-042` is resolved in part by it. Step 3, Layer 2, unchanged and still gated. No Decision changed. |
 | 0.1 | 11 September 2026 | Added CAND-015 (Domain Definition Divergence) — Decision recorded: `Models/Domain.md` is the canonical normative definition of Domain; `Domains/Common/Domain.md` is informative, restates rather than extends, and its four extra characteristics carry no normative force. Consolidation was considered and not taken, because folding those characteristics into `Model-02` would add requirements and needs the `CAND-007` freeze-exception pipeline, which has no independent Reference Cases today. Resolves `AO-001`, the oldest open observation. No document changed; integration is a separately authorized step. |
+| 0.1 | 16 September 2026 | CAND-002 Decided: Profile Conformance is defined by the form of a claimant's declaration, not by any profile this repository publishes. Eight declaration rules and ten validator assertions recorded in `Governance/Concept-Paper-Profile-Conformance.md`; the Core is not coupled to the mechanism and no profile is defined or authorized. Satisfies half of `EPIC-E`'s Definition of Done. |

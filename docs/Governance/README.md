@@ -34,6 +34,7 @@ The ten documents above form the 22 July 2026 baseline. The following were added
 - [OCOM v1.0 Architecture Release Review](Architecture-Release-Review-v1.0.md)
 - [Concept Paper: Knowledge vs World Model](Concept-Paper-Knowledge-vs-World-Model.md)
 - [Concept Paper: Value Model (with Measurement as its First Realized Value Kind)](Concept-Paper-Value-Model.md)
+- [Concept Paper: Profile Conformance](Concept-Paper-Profile-Conformance.md)
 - [OCOM Constitution: Step 0 Architecture Decision Summary](Constitution-Step0-Summary.md)
 - [Master Architecture Backlog: From Audit to OCOM v1.0](Master-Architecture-Backlog.md)
 - [Publication Manifest](Publication-Manifest.md)
