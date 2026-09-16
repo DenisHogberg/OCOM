@@ -22,6 +22,10 @@ Every Object is defined by these core characteristics: **Identity, Metadata, Cla
 
 **Architectural Role:** Object is the universal abstraction within OCOM. All managed concepts defined by the specification — including Entity, Domain, Workflow, Event, Lifecycle, Policy, Registry, and Contract — are specializations of Object. Specifications may extend Object but **shall** preserve its core characteristics.
 
+## Organization
+
+An **Organization** is an identifiable and governable Object that represents an independent participant within the operational ecosystem: an operating company, a partner, a supplier, a customer organization or a regulator, for example. It is not a subdivision of another Object, not a Domain, not a legal or regulatory term and not an organizational chart structure. Organization is a specialization of Object at the same architectural level as Entity, Domain, Workflow, Event, Policy and Contract; it is not a container for other Objects, does not sit above Domain or Entity, and connects to other Objects exclusively through ordinary, governed Relationships. It shares the core characteristics defined for Object and defines no additional characteristics, Relationship Types or Ownership rules of its own; where such rules are required they are addressed through the OCOM governance process (`CAND-005`).
+
 ## Identity
 
 Identity is the persistent and unique representation of an Object. Identity distinguishes one Object from all others regardless of changes to its metadata, state, relationships, or implementation, and **shall** remain stable throughout the Object's lifetime.
@@ -70,4 +74,4 @@ A compliant implementation **shall** ensure that every managed Object possesses 
 
 ---
 
-*Source: compiled from `Meta/Object.md`, `Meta/Identity.md`, `Meta/Metadata.md`, `Meta/Classification.md`, `Meta/Relationship.md`, `Meta/Reference.md`, `Meta/Capability.md`, `Meta/Policy.md`, `Meta/Contract.md`, `Meta/Constraint.md`, `Meta/Ownership.md`, `Meta/Registry.md`. Full detail — including Design Principles, Auditability, and Independence clauses for each concept — remains in those source documents; this chapter is a normative summary, not a replacement. (Committee Review, 22 July 2026: added a terminology note disambiguating "Governance" from Chapter 7's unrelated use of the same word; no definition changed.)*
+*Source: compiled from `Meta/Object.md`, `Meta/Organization.md`, `Meta/Identity.md`, `Meta/Metadata.md`, `Meta/Classification.md`, `Meta/Relationship.md`, `Meta/Reference.md`, `Meta/Capability.md`, `Meta/Policy.md`, `Meta/Contract.md`, `Meta/Constraint.md`, `Meta/Ownership.md`, `Meta/Registry.md`. Full detail — including Design Principles, Auditability, and Independence clauses for each concept — remains in those source documents; this chapter is a normative summary, not a replacement. (Committee Review, 22 July 2026: added a terminology note disambiguating "Governance" from Chapter 7's unrelated use of the same word; no definition changed.) (16 September 2026: added Organization, compiled from `Meta/Organization.md`, and named that document in this Source line, per `AO-065`; no definition changed)*

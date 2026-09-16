@@ -89,6 +89,8 @@ A validator takes a published declaration and a checkout at the commit it names,
 
 Advisory, never blocking: the count of included documents carrying a Conformance section, and a warning that `Meta/Organization.md` carries one while falling outside the computed floor, because Chapter 4 compiles twelve `Meta/` documents and the Core Vocabulary has thirteen governed terms. That discrepancy is recorded as `AO-065` and is reported rather than hidden.
 
+Postscript (16 September 2026): `AO-065` is Closed. From the commit that records this postscript, Chapter 4 compiles `Meta/Organization.md`, the floor computed from Chapters 4 to 6 is twenty two documents, and the advisory no longer fires. The count of twenty one at `91d40db` in `R4` is left as the record of the Decision.
+
 ---
 
 # 4. Options Considered
@@ -129,3 +131,4 @@ If nobody publishes a declaration, this mechanism produces a defined form and a 
 |----------|------|-------------|
 | 0.1 | 16 September 2026 | Initial paper, written as the grounding for `CAND-002`'s Decision: the eight declaration rules, the ten validator assertions, the four options considered, and the boundaries taken deliberately. |
 | 0.1 | 16 September 2026 | Pinned the Conformance-section count in 2.1 to a commit: `CAND-001`'s integration removes the duplicate Conformance section from `AI/Agents/Context.md`, so the count is 247 from the next commit. |
+| 0.1 | 16 September 2026 | Section 3: postscript recording that `AO-065` is Closed and the computed floor is twenty two documents from this commit on. |

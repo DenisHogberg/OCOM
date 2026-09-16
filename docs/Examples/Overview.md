@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 21 July 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -51,14 +51,10 @@ Examples are organized by industry.
 
 Current example collections include:
 
-- FinTech
-- Healthcare
 - iGaming
-- Manufacturing
-- Marketplace
-- SaaS
+- Implementation-Case, a single anonymized Reference Case of a real OCOM rollout
 
-Additional industries may be introduced in future revisions.
+Additional industries may be introduced in future revisions. Collections named in earlier revisions of this document and never populated (FinTech, Healthcare, Manufacturing, Marketplace, SaaS) are not promised by this version.
 
 ---
 
@@ -133,3 +129,4 @@ Conformance is determined exclusively by the normative OCOM Specification.
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 21 July 2026 | Initial draft |
+| 0.1 | 16 September 2026 | Organization: the list of collections now names the two that exist (iGaming, Implementation-Case) and states that the five never-populated collections are not promised, per `Master-Architecture-Backlog.md` EPIC-F. |

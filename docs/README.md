@@ -10,13 +10,13 @@ Docs
 
 Welcome to the documentation of the Object-Centric Operating Model (OCOM).
 
-New here? Start with [Adoption](Adoption/README.md) (15–30 minutes) or the [Specification reading path](Specification/00%20Executive%20Overview.md). For a one-page snapshot of what's done and what isn't, see [PROJECT_STATUS.md](PROJECT_STATUS.md).
+New here? Start with [Adoption](Adoption/README.md) (15–30 minutes) or the [Specification reading path](Specification/00%20Executive%20Overview.md). For a one-page snapshot of what's done and what isn't, see [PROJECT_STATUS.md](PROJECT_STATUS.md). The specification is governed by [Core/Constitution.md](Core/Constitution.md); the reading path compiles the canonical source documents and does not replace them (see [Governance/Publication-Model.md](Governance/Publication-Model.md)).
 
 ## Contents
 
 - [Adoption/](Adoption/) — Quick Start, First Pilot, FAQ, Common Mistakes. Informative; start here if new.
 - [AI/](AI/) — AI agents, context, evaluation, knowledge, prompts, tools.
-- [Core/](Core/) — Manifest, principles, naming, versioning, modeling rules, terminology.
+- [Core/](Core/) — Constitution, Manifest, principles, naming, versioning, modeling rules, terminology.
 - [Domains/](Domains/) — 13 business domain profiles (AI, Affiliate, BI, CRM, Compliance, Finance, HR, Legal, Marketing, Operations, Payments, Product, Support).
 - [Entities/](Entities/) — Reference entity catalog (Player, Payment, Affiliate, Wallet, Transaction, etc.).
 - [Examples/](Examples/) — Worked examples, including the iGaming reference scenario. Informative.

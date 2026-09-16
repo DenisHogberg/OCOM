@@ -68,6 +68,8 @@ Issues identified during the editorial preparation phase and left unresolved by 
 
 Both currently **Open**, tracked in `docs/Governance/ADR-Candidates.md`. Neither blocks approval of this reading path — both concern content the reading path only references, not content it defines.
 
+*Postscript (16 September 2026): both candidates have since been Decided, `CAND-002` and `CAND-001` on 16 September 2026; the table below is the 22 July 2026 record and is left as written.*
+
 | ID | Title | Relevance to this review |
 |---|---|---|
 | CAND-001 | Content duplication between `AI/Agents/Context.md` and `AI/Context/Overview.md` | Not referenced by any of the 9 chapters. Unrelated to this review. |
