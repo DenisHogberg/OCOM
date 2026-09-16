@@ -26,6 +26,34 @@ The CDKO records observations. It does not resolve them. Resolution is the respo
 
 ---
 
+# Entry Lifecycle
+
+No prior document defined how an entry in this register moves or ends. This section makes existing, observed usage explicit, in the same way `Documentation-Standards.md` made the four document `Status` values explicit. It changes no entry's Status and closes nothing.
+
+## Status values
+
+- **Open**: recorded, not resolved. The default. An entry stays Open until an Architect Response resolves it.
+- **Open in part**: one part of the entry is resolved by a recorded decision and the rest is not. The Status says which part.
+- **Escalated**: carried to an ADR Candidate, which now holds the question. The Status names the candidate, and the Architect Response is recorded there rather than here.
+- **Closed**: resolved by an Architect Response, either because the finding was accepted and acted on, or because it was considered and no change follows. Closure is always visible: an entry is never closed by silence or by the passage of time.
+- **Informative**: recorded for the record rather than as a defect to resolve. It has no closure condition and is not counted as open work.
+
+## What an Open entry must state
+
+While an entry is Open, its Status shall state what would move it. Fifty nine of the sixty two Open entries below already do, in phrases such as "awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2", "awaiting independent corroboration", or "single external source". This section makes that requirement explicit for entries recorded from now on rather than retrofitting it: `AO-004` is the one existing entry whose Status names no condition, and it is named here rather than quietly amended.
+
+The condition is what makes the register a working list rather than a museum. An entry whose Status says only Open records a finding and asks nothing of anyone.
+
+## Who resolves
+
+Resolution belongs to the Chief Architect, as the Purpose above already states. No per-entry owner is recorded, and none is added here: `GOVERNANCE.md` records that every role is held by one person today, so a per-entry owner field would restate what that page already says and would read as delegation that does not exist. If a role is ever held by more than one person, this section is where the change is recorded.
+
+## Append only
+
+An entry is never edited to look as though it always said what it now says. A Status change, an Architect Response, or a correction is an amendment recorded in the Revision History below, in the same discipline `ADR-Candidates.md` and `Publication-Manifest.md` use.
+
+---
+
 ## OBS-001
 
 **Title:** Content duplication between AI/Context/Overview.md and AI/Agents/Context.md
@@ -1485,3 +1513,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 11 September 2026 | AO-001 (Domain Definition Divergence): Architect Response recorded and Status set to Closed. `Models/Domain.md` is canonical; `Domains/Common/Domain.md` is informative and restates rather than extends. Decided through `CAND-015`. Neither document changed pending the separately authorized integration. |
 | 0.1 | 15 September 2026 | Added AO-062 (conformance refers to a set of mandatory requirements no document enumerates, and the normative keywords cannot be separated mechanically from prose), AO-063 (an Agent must operate under a policy defining write-back permissions that nothing defines) and AO-064 (a projection tier with no rule that a projection is generated), all from an external review of 15 September 2026; AO-021 records that its corroboration condition is met, by that review and by AO-053. |
 | 0.1 | 16 September 2026 | Added AO-065 (the compiled Chapter 4 covers twelve `Meta/` documents while the Core Vocabulary has thirteen governed terms, so Organization is absent from the reading path), surfaced while deciding `CAND-002`; documentation-currency defect, record only. |
+| 0.1 | 16 September 2026 | Added an Entry Lifecycle section, defining the five Status values from observed usage and requiring an Open entry's Status to state what would move it. Retrofits nothing: no entry's Status changes, and `AO-004`, the one entry stating no condition, is named rather than amended. |
