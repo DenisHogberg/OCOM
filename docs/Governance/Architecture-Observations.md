@@ -1418,11 +1418,11 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If corroborated, a future Reference Case should consider a requirement register produced as a projection rather than by editing the normative documents: each statement extracted with its source path, section and a hash of its wording, and a separate append-only file mapping a hash to a stable human-readable alias, so that a changed statement breaks its own identity instead of silently inheriting it. That route leaves the Core untouched, which matters while `CAND-007` holds, and keeps the register derived rather than becoming a second statement of what the requirements are.
 
-**Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+**Status:** Open in part; the enumeration exists as a projection, and the keyword separation awaits a Reference Case per Standard Evolution Methodology Rules 1 and 2
 
-**Architect Response:** *(pending)*
+**Architect Response:** Answered in part 16 September 2026 by `Governance/Conformance-Test-Suite.md` (EPIC-E): the requirement set of Core Conformance is enumerated as a projection derived by rule from the documents Chapters 4 to 6 compile, with a content-addressed identity per Statement and an append-only alias file, the route this Recommendation names; 335 Statements at that commit, no normative document edited. The keyword problem is not solved: the register over-includes by rule and records exceptions as dispositions. Open for that part; the single-source status of the observation is unchanged.
 
-**Related:** `Specification/08 Conformance.md`, `Core/Manifest.md`, `Specification/01 Introduction.md`, `Governance/Publication-Model.md`, `AO-014`, `AO-046`, `CAND-002`
+**Related:** `Specification/08 Conformance.md`, `Core/Manifest.md`, `Specification/01 Introduction.md`, `Governance/Publication-Model.md`, `Governance/Conformance-Test-Suite.md`, `AO-014`, `AO-046`, `CAND-002`
 
 ---
 
@@ -1578,3 +1578,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 16 September 2026 | OBS-001 closed: `CAND-001` decided (replace with a reference) and integrated; `AI/Agents/Context.md` is now an Informative pointer to `AI/Context/Overview.md`. |
 | 0.1 | 16 September 2026 | AO-002 closed: `CAND-016` decided that `Meta/Relationship.md` is the canonical definition of Relationship and `Models/Relationship.md` its specialization for Entities; integrated in the same change. |
 | 0.1 | 16 September 2026 | AO-065 closed: Chapter 4 now compiles `Meta/Organization.md` (EPIC-F). |
+| 0.1 | 16 September 2026 | AO-062 answered in part by `Governance/Conformance-Test-Suite.md`: the requirement set is enumerated as a derived projection; the keyword separation stays open. |
