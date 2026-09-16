@@ -62,7 +62,7 @@ A profile is formally defined, in the sense `Specification/08 Conformance.md` al
 
 # 2.1 What a Profile Can and Cannot Express
 
-248 documents in this repository carry a level-one Conformance section. Twenty one of them are the floor. A profile is therefore a named, published selection from the remainder, declared on top of the Core rather than carved out of it.
+At commit `d9dc3f7`, 248 documents in this repository carry a level-one Conformance section. Twenty one of them are the floor. A profile is therefore a named, published selection from the remainder, declared on top of the Core rather than carved out of it.
 
 A profile cannot take less than the Core. Chapter 8's Non-Conformance clause already states that an implementation failing one or more mandatory requirements shall not claim conformance with the corresponding version. The adopter who wants to drop part of Chapters 4 to 6 was never served by this level and is not served by it now: that adopter stays where Chapter 8 already puts them, documenting partial support without a conformance claim.
 
@@ -128,3 +128,4 @@ If nobody publishes a declaration, this mechanism produces a defined form and a 
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 16 September 2026 | Initial paper, written as the grounding for `CAND-002`'s Decision: the eight declaration rules, the ten validator assertions, the four options considered, and the boundaries taken deliberately. |
+| 0.1 | 16 September 2026 | Pinned the Conformance-section count in 2.1 to a commit: `CAND-001`'s integration removes the duplicate Conformance section from `AI/Agents/Context.md`, so the count is 247 from the next commit. |

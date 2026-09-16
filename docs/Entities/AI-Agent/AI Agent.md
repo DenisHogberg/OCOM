@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -132,6 +132,12 @@ Typical Events include:
 
 ---
 
+# Memory
+
+An AI Agent holds no Memory of its own as an Entity. Memory about an AI Agent is held in Memory Records that name it as their Related Entity, per `Memory/Memory Record.md`; such records are governed by the Memory specification and do not modify its attributes or Lifecycle. Separately, an AI Agent acts on Memory: `AI/Agents/Agent.md` lists Memory Records among the things an AI Agent may interact with, and a Memory Record may reference AI Agents; where an AI Agent's Memory Records update business systems, `Memory/Write-back Governance.md` governs it. This Entity therefore departs from the default in `Entities/Overview.md` in one respect only: an AI Agent is both a subject of Memory Records and a contributor to them.
+
+---
+
 # Business Rules
 
 - An AI Agent shall have exactly one Owner.
@@ -188,3 +194,4 @@ Examples include:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 16 September 2026 | Added Memory section: an AI Agent is both a subject of Memory Records and a contributor to them, the one departure from the default in `Entities/Overview.md`. EPIC-C, under `CAND-007` Section 3. |

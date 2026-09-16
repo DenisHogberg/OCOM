@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -170,6 +170,12 @@ Events represent immutable operational facts.
 
 ---
 
+# Memory
+
+A Payment holds no Memory of its own. Memory about a Payment is held in Memory Records that name it as their Related Entity, per `Memory/Memory Record.md`; such records are governed by the Memory specification and do not modify its attributes, States or Lifecycle. This Entity follows the default relationship to Memory defined in `Entities/Overview.md` and adds nothing to it.
+
+---
+
 # Invariants
 
 The following conditions shall always remain true.
@@ -216,3 +222,4 @@ Example implementations may differ while remaining conformant to this specificat
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 16 September 2026 | Added Memory section: follows the default relationship to Memory defined in `Entities/Overview.md`. EPIC-C, under `CAND-007` Section 3. |
