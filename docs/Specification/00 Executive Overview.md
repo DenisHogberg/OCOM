@@ -18,8 +18,10 @@ This is not a product, a database schema, or a piece of software. It is a specif
 
 If that idea is useful to you — as an architect trying to bring order to a fragmented landscape, an engineer building something that needs to interoperate, or someone simply trying to understand how a business is put together — the rest of the reading path walks through it in order: what the specification is and why it exists (Chapter 1, Introduction), the principles it is built on (Chapter 2), its core concepts (Chapter 3), the detailed models that follow from them (Chapters 4 to 6: Meta Model, Object Model, Lifecycle Model), how the model is governed (Chapter 7) and how conformance is claimed (Chapter 8).
 
+The specification is governed by a Constitution, `Core/Constitution.md`, adopted after this reading path was compiled; Chapter 1 states how the two relate.
+
 ---
 
 *This document is informative. It introduces no terms and imposes no requirements — definitions and requirements begin in Chapter 1.*
 
-*Source: synthesized from `Core/Manifest.md` (Abstract, Purpose, Motivation) and the root `README.md`. No new claims beyond those documents.*
+*Source: synthesized from `Core/Manifest.md` (Abstract, Purpose, Motivation) and the root `README.md`. No new claims beyond those documents. (16 September 2026: one sentence added pointing to the Constitution; nothing else changed)*

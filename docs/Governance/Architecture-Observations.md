@@ -1478,9 +1478,9 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. The correction is compilation work rather than a decision: Chapter 4 gains an Organization section compiled from `Meta/Organization.md` and its Source line is extended in the same change. It belongs to `EPIC-F`, which `CAND-007` permits as documentation-currency work, and it needs its own authorization like any other Backlog item. Until it is done, anything that computes a set from Chapter 4 should report the omission rather than treat the chapter as complete.
 
-**Status:** Open; not escalated (documentation-currency defect, not an architectural one; no Reference Case required, per `CAND-007` Section 3)
+**Status:** Closed
 
-**Architect Response:** *(pending)*
+**Architect Response:** Done 16 September 2026 under EPIC-F, the compilation work the Recommendation describes: `Specification/04 Meta Model.md` gains an Organization section compiled from `Meta/Organization.md` and its Source line names that document, so Chapter 4 compiles thirteen `Meta/` documents and the floor computed from Chapters 4 to 6 is twenty two documents from this change on. The advisory in `Governance/Concept-Paper-Profile-Conformance.md` Section 3 no longer fires; its record of twenty one documents at `91d40db` is left as written.
 
 **Related:** `Specification/04 Meta Model.md`, `Meta/Organization.md`, `Meta/README.md`, `Governance/Publication-Manifest.md`, `Governance/Master-Architecture-Backlog.md` (EPIC-F), `CAND-002`, `CAND-005`
 
@@ -1577,3 +1577,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 16 September 2026 | Added AO-066 (Terminology declares itself authoritative while all thirteen of its definitions differ from the owning documents), AO-067 (Autonomy level is undefined and the only level scale in the specification runs the other way) and AO-068 (Provenance and Static and Dynamic World Modelling are undefined), all surfaced while executing EPIC-D. |
 | 0.1 | 16 September 2026 | OBS-001 closed: `CAND-001` decided (replace with a reference) and integrated; `AI/Agents/Context.md` is now an Informative pointer to `AI/Context/Overview.md`. |
 | 0.1 | 16 September 2026 | AO-002 closed: `CAND-016` decided that `Meta/Relationship.md` is the canonical definition of Relationship and `Models/Relationship.md` its specialization for Entities; integrated in the same change. |
+| 0.1 | 16 September 2026 | AO-065 closed: Chapter 4 now compiles `Meta/Organization.md` (EPIC-F). |

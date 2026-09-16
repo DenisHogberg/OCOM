@@ -34,7 +34,7 @@ Yes. Evolvability is one of the ten Design Principles: "The framework shall supp
 
 ## Can I use only part of OCOM?
 
-Yes, and this is formally supported, not just tolerated. `Language/Conformance.md` defines three Conformance Levels: **Core Conformance** (the mandatory requirements only), **Extended Conformance** (Core plus documented extensions), and **Profile Conformance** (a bounded, named subset of the specification). You do not need Memory, AI, or every Meta concept to have a conforming model — Core Conformance alone is a valid, complete destination.
+Yes, and this is formally supported, not just tolerated. `Language/Conformance.md` defines three Conformance Levels: **Core Conformance** (the mandatory requirements only), **Extended Conformance** (Core plus documented extensions), and **Profile Conformance** (a claimant-declared, named subset of whole canonical documents that still contains everything Chapters 4 to 6 compile, per `CAND-002`). You do not need Memory or AI to have a conforming model; you do need everything Chapters 4 to 6 compile, the Meta Model, the Object Model and the Lifecycle Model, because Core Conformance is defined over them. Core Conformance alone is a valid, complete destination.
 
 ## How is OCOM different from BPMN, DDD, and a CMDB?
 
@@ -46,4 +46,4 @@ These comparisons are for orientation only — OCOM's own documents do not defin
 
 ---
 
-*Source: answers restate `Core/Manifest.md`, `Core/Principles.md`, `Models/Event.md`, `Models/Workflow.md`, `Language/Conformance.md`, and `docs/Specification/03 Core Concepts.md`. The BPMN/DDD/CMDB comparison is interpretive orientation, not a claim made anywhere in the normative specification.*
+*Source: answers restate `Core/Manifest.md`, `Core/Principles.md`, `Models/Event.md`, `Models/Workflow.md`, `Language/Conformance.md`, and `docs/Specification/03 Core Concepts.md`. The BPMN/DDD/CMDB comparison is interpretive orientation, not a claim made anywhere in the normative specification. (16 September 2026: the Profile Conformance answer corrected per `CAND-002`; Chapters 4 to 6 are the floor of every claim)*

@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -218,6 +218,8 @@ Supports mandatory requirements together with documented language extensions.
 
 Supports a formally defined OCOM profile while preserving compatibility with the core specification.
 
+A profile is formally defined when its claimant has published a Profile Declaration in the form recorded for `CAND-002` (Decided 16 September 2026) in `Governance/Concept-Paper-Profile-Conformance.md`: pinned to a Release and its commit, bounded by whole canonical source documents with their content hashes, containing every document Chapters 4 to 6 of the reading path compile, adding nothing and restating nothing. OCOM publishes no profile and reviews, registers or certifies none.
+
 ---
 
 # Revision History
@@ -226,3 +228,4 @@ Supports a formally defined OCOM profile while preserving compatibility with the
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 5 September 2026 | Definition: stated that conforming, compliant and conformant are used interchangeably for an implementation; no requirement changed. |
+| 0.1 | 16 September 2026 | Profile Conformance: added the pointer to the `CAND-002` Decision and its grounding paper, stating the form of a Profile Declaration; no other requirement changed. |

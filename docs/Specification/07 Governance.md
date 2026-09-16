@@ -48,10 +48,14 @@ The principles above are carried out through a dedicated Governance process, mai
 
 Ten principles govern how the specification is maintained: Specification First; Architecture Before Implementation; Documentation Before Development; Traceability by Design; Decision Transparency; Continuous Quality; No Hidden Knowledge; Minimal Technical Debt; Version Integrity; Governance is Part of the Architecture.
 
+## Constitution and Architecture Freeze
+
+`Core/Constitution.md` (Core-00), adopted through `CAND-006` and in force since 27 July 2026, at version 1.0.1 since 11 September 2026, is the highest-authority document of the specification; it changes only by amendment recorded through the process above. Under the Architecture Freeze recorded as `CAND-007` on the same day, no new Core concept, Canonical Principle or Domains subdomain enters the specification except through the pipeline of `Governance/Standard Evolution Methodology.md`: Reference Case, Observation, Repeated Pattern, ADR Candidate, Decision. Decisions on the candidates and observations already open on 27 July 2026, within their recorded scope, transcription of recorded decisions, and the work of `Governance/Master-Architecture-Backlog.md` remain permitted, as `CAND-007` Section 3 lists.
+
 ## Conformance
 
 A change to this specification conforms to this chapter only if it has been proposed, reviewed, and approved through the process defined above, and its record is preserved.
 
 ---
 
-*Source: compiled from `Core/Governance.md` (specification-evolution charter) and `docs/Governance/Governance-Manifest.md` (operational realization of that charter, established alongside this revision). (Committee Review, 22 July 2026: added a terminology note disambiguating "Governance" from Chapter 4's unrelated use of the same word; citing `docs/Governance/` alongside `Core/Governance.md` was reviewed and confirmed acceptable, since `docs/Governance/` is itself an approved Baseline.)*
+*Source: compiled from `Core/Governance.md` (specification-evolution charter) and `docs/Governance/Governance-Manifest.md` (operational realization of that charter, established alongside this revision). (Committee Review, 22 July 2026: added a terminology note disambiguating "Governance" from Chapter 4's unrelated use of the same word; citing `docs/Governance/` alongside `Core/Governance.md` was reviewed and confirmed acceptable, since `docs/Governance/` is itself an approved Baseline.) (16 September 2026: added Constitution and Architecture Freeze, compiled from `Core/Constitution.md`, `CAND-006` and `CAND-007`, per `Master-Architecture-Backlog.md` EPIC-F; no requirement changed)*

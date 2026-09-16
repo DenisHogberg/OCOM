@@ -35,4 +35,4 @@ If you have already read `docs/Specification/00 Executive Overview.md` through `
 3. **[FAQ](FAQ.md)** — direct answers to the questions people usually ask before starting.
 4. **[Common Mistakes](Common%20Mistakes.md)** — what tends to go wrong early, and why.
 
-After these, the next step is `docs/Specification/01 Introduction.md` — the actual entry point to the normative specification.
+After these, the next step is `Core/Constitution.md`, the document that governs the specification, and then `docs/Specification/01 Introduction.md`, the compiled reading path through the canonical source documents (`Governance/Publication-Model.md`).

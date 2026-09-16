@@ -43,7 +43,7 @@ Implementations may provide extensions. Extensions **shall** preserve compatibil
 - **Extended Conformance** — supports mandatory requirements together with documented extensions.
 - **Profile Conformance** — supports a formally defined OCOM profile (a bounded, named subset or specialization of the specification) while preserving compatibility with Core Conformance.
 
-**Note on scope:** the precise mechanics of profile definition — how a profile is declared, bounded, and validated — are intentionally not fully specified in this revision. They are tracked as a separate, open topic (see `docs/Governance/ADR-Candidates.md`) rather than folded into this chapter, consistent with the decision to keep set-scoped conformance a distinct discussion from the Core.
+**Note on scope:** Profile Conformance is defined by the form of a claimant's Profile Declaration, decided through `CAND-002` on 16 September 2026 and grounded in `docs/Governance/Concept-Paper-Profile-Conformance.md`. A declaration names the claimant, pins a Release from `docs/Governance/Publication-Manifest.md` and that Release's commit, lists whole canonical source documents each with its content hash, contains every document Chapters 4 to 6 compile, adds nothing and restates nothing; OCOM publishes no profile and reviews, registers or certifies none. Chapters 4 to 6 remain the floor of every profile claim, consistent with the Non-Conformance clause below. The mechanics are kept in the Governance tier rather than folded into this chapter, consistent with the decision to keep set-scoped conformance a distinct discussion from the Core.
 
 ## Non-Conformance
 
@@ -59,4 +59,4 @@ This chapter does not prescribe certification bodies, compliance programs, testi
 
 ---
 
-*Source: compiled from `Language/Conformance.md` and the Conformance clauses of `Core/Manifest.md` and `Core/Principles.md`. The "Note on scope" reflects the explicit decision that set-scoped conformance remains a separate discussion from this Core reading path. (4 September 2026: editorial note added on the scope of conformance across Chapters 2, 5, 6 and 8; no requirement changed.)*
+*Source: compiled from `Language/Conformance.md` and the Conformance clauses of `Core/Manifest.md` and `Core/Principles.md`. The "Note on scope" reflects the explicit decision that set-scoped conformance remains a separate discussion from this Core reading path. (4 September 2026: editorial note added on the scope of conformance across Chapters 2, 5, 6 and 8; no requirement changed.) (16 September 2026: the Note on scope now points to the `CAND-002` Decision and its grounding paper; no requirement changed)*
