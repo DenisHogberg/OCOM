@@ -40,7 +40,7 @@ No prior document defined how an entry in this register moves or ends. This sect
 
 ## What an Open entry must state
 
-While an entry is Open, its Status shall state what would move it. Fifty nine of the sixty two Open entries below already do, in phrases such as "awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2", "awaiting independent corroboration", or "single external source". This section makes that requirement explicit for entries recorded from now on rather than retrofitting it: `AO-004` is the one existing entry whose Status names no condition, and it is named here rather than quietly amended.
+While an entry is Open, its Status shall state what would move it. Nearly every Open entry below already does, in phrases such as "awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2", "awaiting independent corroboration", or "single external source". This section makes that requirement explicit for entries recorded from now on rather than retrofitting it: `AO-004` is the one existing entry whose Status names no condition, and it is named here rather than quietly amended.
 
 The condition is what makes the register a working list rather than a museum. An entry whose Status says only Open records a finding and asks nothing of anyone.
 
@@ -163,9 +163,9 @@ Following the adoption of the Organization model (ADR CAND-005, Option C — Org
 
 **Recommendation:** A separate architectural decision is required to determine how `Models/Relationship.md` should accommodate non-Entity Object participants (e.g., broadening participants to Object, or defining an explicit specialization relationship between the Meta and Model layers). No changes to be made until that decision is recorded.
 
-**Status:** Open — related to ADR CAND-005 and the pending CAND-004 rework (Modeling Cross-Organization Relationships)
+**Status:** Closed
 
-**Architect Response:** *(pending)*
+**Architect Response:** An explicit specialization relationship between the Meta and Model layers, the second route this observation recorded. Decided through `CAND-016`, Chief Architect decision, 16 September 2026: `Meta/Relationship.md` defines Relationship with Objects as participants and is the canonical definition; `Models/Relationship.md` specializes it for Relationships between Entities, as its Purpose states, and restricts nothing else; an Organization participates in Relationships under `Meta/Relationship.md`, as `Meta/Organization.md` already states. Integrated in the same change: one sentence in the Purpose of `Models/Relationship.md`, and the Relationship entry of `Core/Terminology.md` now names `Meta/Relationship.md` as the defining document. No requirement changed.
 
 **Related:** `Meta/Relationship.md`, `Models/Relationship.md`, `Meta/Organization.md`, `ADR-Candidates.md#cand-005`, `ADR-Candidates.md#cand-004`
 
@@ -1576,3 +1576,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 16 September 2026 | Added an Entry Lifecycle section, defining the five Status values from observed usage and requiring an Open entry's Status to state what would move it. Retrofits nothing: no entry's Status changes, and `AO-004`, the one entry stating no condition, is named rather than amended. |
 | 0.1 | 16 September 2026 | Added AO-066 (Terminology declares itself authoritative while all thirteen of its definitions differ from the owning documents), AO-067 (Autonomy level is undefined and the only level scale in the specification runs the other way) and AO-068 (Provenance and Static and Dynamic World Modelling are undefined), all surfaced while executing EPIC-D. |
 | 0.1 | 16 September 2026 | OBS-001 closed: `CAND-001` decided (replace with a reference) and integrated; `AI/Agents/Context.md` is now an Informative pointer to `AI/Context/Overview.md`. |
+| 0.1 | 16 September 2026 | AO-002 closed: `CAND-016` decided that `Meta/Relationship.md` is the canonical definition of Relationship and `Models/Relationship.md` its specialization for Entities; integrated in the same change. |

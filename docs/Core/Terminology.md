@@ -100,9 +100,9 @@ Described in `Meta/Ownership.md`, which lists Owner among the fields every Owner
 
 # Relationship
 
-A Relationship is an explicit operational association between two or more Entities.
+A Relationship is a governed semantic association between Objects.
 
-Defined in `Models/Relationship.md`. `Meta/Relationship.md` separately defines a Relationship as a governed semantic association between Objects; the difference in participant types is tracked as `AO-002`.
+Defined in `Meta/Relationship.md`. `Models/Relationship.md` specializes it for Relationships in which every participant is an Entity, defined there as an explicit operational association between two or more Entities, per `CAND-016`.
 
 ---
 
@@ -278,3 +278,4 @@ Defined here; no other document carries a Definition for the term.
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 25 July 2026 | Corrected Organization definition to align with ADR CAND-005 (Option C) |
 | 0.2 | 16 September 2026 | Restated as a verbatim index of canonical definitions, per `AO-066`: every existing entry now carries the Definition sentence of the document that owns the term, with that document named; the Purpose no longer claims this document is authoritative. Added Object, Ownership, Identity, Metadata, Classification, Reference, Capability, Policy, Contract, Constraint, Registry, Memory, Memory Record, Confidence, Knowledge and Context, closing `GAP-002`. Added Reserved Terms for the Constitution terms no document defines (Evidence, World Model, Autonomy level, Provenance, Static and Dynamic World Modelling, and the Architectural Principles vocabulary), each naming the observation that tracks it. EPIC-D, executed under `CAND-007` Section 3. |
+| 0.2 | 16 September 2026 | Relationship entry now restates `Meta/Relationship.md`'s Definition and names `Models/Relationship.md` as its specialization for Entities, per `CAND-016`; the `AO-002` tracker note is removed as that observation is Closed. |

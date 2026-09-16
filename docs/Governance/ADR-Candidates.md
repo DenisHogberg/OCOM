@@ -183,7 +183,7 @@ Proposed new Core Principle, to be numbered **11** (Principle 10 is already "Evo
 
 **Title:** Modeling Cross-Organization Relationships
 
-**Status:** Open
+**Status:** Open; each of the seven questions carries a disposition for v1.0, recorded in the Postscript of 16 September 2026
 
 **Owner:** Chief Architect
 
@@ -273,6 +273,18 @@ How does AI operate across multiple Organizations at once, without mixing contex
 **Explicitly out of scope for this candidate:** proposing an implementation mechanism, introducing any new Meta Object, and proposing any new Core Principle. This candidate's purpose is to enumerate the open questions precisely, using only what already exists, so the Architect can decide with full information — not to pre-select answers.
 
 **Next Action:** Chief Architect to review the seven questions above and decide which require a Core change, which are already resolved by existing primitives (per the "what's already in place" notes), and which need further, separate architectural discussion before any decision is recorded.
+
+**Postscript (16 September 2026):** the review the Next Action asked for is done, under the authorization to execute EPIC-B recorded in `Master-Architecture-Backlog.md`, and its dependencies are met: `AO-001` was decided on 11 September 2026 (`CAND-015`) and `AO-002` on 16 September 2026 (`CAND-016`). Each question carries one of the two outcomes `Master-Architecture-Backlog.md` Part 8 allows, a decision or an explicit "not required for v1.0". No Core document is changed by this postscript.
+
+1. Inter-organizational relationship types: resolved by existing primitives. `Meta/Relationship.md`'s Relationship Types list is open by its own words, "Additional relationship types may be introduced without affecting the model", and `Meta/Organization.md` defers Organization-specific Relationship Types to the governance process. No constrained enumeration is defined for v1.0.
+2. Ownership: resolved by existing primitives for a single owner. `Meta/Ownership.md` names an organizational unit among the parties that may own an Object, so an Organization may be the one responsible owner `Models/Entity.md` requires. More than one owning Organization for one Object is not required for v1.0: it would change the single-owner rule and needs a Reference Case under `CAND-007`.
+3. Cross-Organization references: resolved by existing primitives for the mechanism. `Meta/Reference.md` and `Meta/Relationship.md` already give two mechanisms of different weight, and `Meta/Relationship.md`'s Constraints section names organizational restrictions. The omission the question records, that a Reference or Relationship crossing an Organization boundary does not by itself grant access to the target Organization's Memory, is not required for v1.0: stating it is a new rule and needs a Reference Case.
+4. Shared objects: not required for v1.0. Whether a Contract between two Organizations has one owner with the others as parties, or a different ownership model, needs a Reference Case; `Meta/Contract.md`'s "two or more Objects" stands as written.
+5. Operational Memory per Organization: not required for v1.0. No document in `Memory/` addresses isolation or sharing across Organizations, and defining either needs a Reference Case.
+6. Registry and Identity scope: resolved by existing primitives for Identity, not required for v1.0 for Registry. `Meta/Identity.md`'s Identity Scope section lists Organization, Business Domain, Registry, External System and Global Ecosystem as scopes and requires that "Organizations shall define the appropriate scope for each Identity"; Organization as an Identity scope is therefore available today. `Meta/Registry.md` is silent on multi-Organization scope, and a rule for it needs a Reference Case.
+7. AI across Organizations: not required for v1.0. `AI/Overview.md` binds an AI Agent to organizational governance and policies; operating across several Organizations at once is new territory and needs a Reference Case.
+
+The candidate stays Open for what still needs a Reference Case, questions 4, 5 and 7 in whole and questions 2, 3 and 6 in part, and is not blocked on anything inside the specification.
 
 ---
 
@@ -1082,6 +1094,48 @@ It changes no document. `Models/Domain.md` and `Domains/Common/Domain.md` are bo
 
 **Related Documents:** `AO-001`, `AO-002`, `Models/Domain.md`, `Domains/Common/Domain.md`, `Governance/Knowledge-Map.md`, `Governance/ADR-Candidates.md#cand-004`, `Governance/ADR-Candidates.md#cand-005`, `Governance/Master-Architecture-Backlog.md` (EPIC-B).
 
+**Postscript (16 September 2026):** Step 2 of the Next Action above is done, under the authorization to execute EPIC-B recorded in `Master-Architecture-Backlog.md`: `Domains/Common/Domain.md`'s Status is Informative, its Definition names `Models/Domain.md` as the canonical definition, and its Core Characteristics section states that the four characteristics beyond `Model-02` describe the `Domains/` tier and carry no normative force. `Models/Domain.md` is not edited.
+
+---
+
+## CAND-016 — ✅ Decided
+
+**Title:** Relationship Participants: Object at the Meta level, Entity in the Object Model
+
+**Status:** Decided — `Meta/Relationship.md` is the canonical definition of Relationship, with Objects as participants; `Models/Relationship.md` is its specialization for Relationships between Entities and restricts nothing else.
+
+**Decision:** **`Meta/Relationship.md` defines Relationship: a governed semantic association between Objects, with a Source Object and a Target Object. `Models/Relationship.md` (`Model-03`) is a specialization of that definition for the case in which every participant is an Entity, as its own Purpose states, "the normative model of Relationships between Entities"; its Source Entity and Target Entity requirement binds Relationships within that case and does not restrict which Objects may participate in a Relationship. An Organization, or any other Object that is not an Entity, participates in Relationships under `Meta/Relationship.md`, as `Meta/Organization.md` already states. No requirement in either document changes.** Recorded 16 September 2026.
+
+**Owner:** Chief Architect (Decision recorded)
+
+**Created:** 16 September 2026 · **Decided:** 16 September 2026 · **Decided by:** Chief Architect
+
+**Grounding:** `AO-002` (Relationship Participant Inconsistency, logged 25 July 2026), `Meta/Relationship.md`, `Models/Relationship.md`, `Meta/Organization.md`, `CAND-005`, `Specification/04 Meta Model.md`, `Specification/05 Object Model.md`, `Governance/Master-Architecture-Backlog.md` EPIC-B.
+
+### The question
+
+`AO-002` records that `Meta/Relationship.md` defines Relationship participants as Objects while `Models/Relationship.md` requires a Source Entity and a Target Entity, so that Organization, a first-class Object per `CAND-005` that `Meta/Organization.md` says connects to other Objects exclusively through Relationships, cannot satisfy `Models/Relationship.md` as written. `AO-002` recorded two routes: broaden the participants of `Models/Relationship.md` to Object, or define an explicit specialization relationship between the Meta and Model layers.
+
+### Rationale
+
+1. The Meta-to-Model relation is already specialization. `Specification/05 Object Model.md` states that the Meta Model defines the abstract vocabulary and the Object Model defines the structure that vocabulary takes when used to build an operational model, and `Models/Entity.md` states that an Entity is a specialization of Object. Reading `Models/Relationship.md` as the specialization of `Meta/Relationship.md` for Entity participants applies the pattern the two tiers already use; it introduces none.
+2. `Models/Relationship.md` limits its own scope in its Purpose: it "defines the normative model of Relationships between Entities". Its Entity-only participants describe that scope. Nothing in the document states that Relationships between other Objects are prohibited.
+3. The Meta level already carries Organization participation. `Meta/Organization.md` states that an Organization participates "through the same governed Relationships available to any Object", and `Meta/Relationship.md`'s Relationship to Other Specifications section lists Organization and states that Organization connects to other Objects exclusively through Relationship. Nothing at the Meta level needs to change.
+4. Broadening `Models/Relationship.md` to Object would make every requirement of that document, cardinality, direction and the Entity-level constraints, bind Relationships among Organizations, Policies, Contracts and every other Object. That is a change to what the Object Model requires, which under `CAND-007` enters through the pipeline in `Standard Evolution Methodology.md` and, per Rule 2, needs independent Reference Cases; none exists. The specialization route removes the contradiction `AO-002` records without adding or removing a requirement.
+5. `Core/Terminology.md` 0.2 recorded the divergence in its Relationship entry and named `AO-002` as its tracker. Under this Decision the entry names `Meta/Relationship.md` as the document that defines the term and `Models/Relationship.md` as its specialization.
+
+### Scope, and the Architecture Freeze
+
+Filed under `CAND-007`. Section 3 names `AO-002` among the observations on which a decision may be taken during the Freeze within recorded scope; this Decision takes the second of the two routes `AO-002` recorded and no other. It introduces no Meta Object, no Canonical Principle and no Domains subdomain, so Section 4 is not engaged. No requirement anywhere is added, removed or reworded.
+
+### What this decision does not do
+
+It does not decide any of `CAND-004`'s seven questions, which carry their own dispositions. It does not define Organization-specific Relationship Types; `Meta/Organization.md` defers those to the governance process. It does not change the editorial note in `Specification/05 Object Model.md`, which belongs to the compiled tier and to EPIC-F. It does not touch the statement in `Models/Entity.md` and `Entities/Overview.md` that Entities may establish relationships with other Entities, which is an Entity-level statement consistent with the specialization.
+
+**Next Action:** Two-step discipline, as used for `CAND-003`, `CAND-005`, `CAND-006`, `CAND-009`, `CAND-014`, `CAND-015` and `CAND-001`. Step 1 is done by this record: the Decision is recorded here and `AO-002` is marked Closed with its Architect Response pointing to this candidate. Step 2, the integration, is performed in the same change under the authorization to execute EPIC-B recorded in `Master-Architecture-Backlog.md`'s execution note of 16 September 2026: one sentence in the Purpose of `Models/Relationship.md` names the specialization, and the Relationship entry of `Core/Terminology.md` names `Meta/Relationship.md` as the defining document. `Meta/Relationship.md` is not edited.
+
+**Related Documents:** `AO-002`, `CAND-004`, `CAND-005`, `Meta/Relationship.md`, `Models/Relationship.md`, `Meta/Organization.md`, `Core/Terminology.md`, `Specification/04 Meta Model.md`, `Specification/05 Object Model.md`, `Governance/Master-Architecture-Backlog.md` (EPIC-B).
+
 ---
 
 # Revision History
@@ -1122,3 +1176,4 @@ It changes no document. `Models/Domain.md` and `Domains/Common/Domain.md` are bo
 | 0.1 | 11 September 2026 | Added CAND-015 (Domain Definition Divergence) — Decision recorded: `Models/Domain.md` is the canonical normative definition of Domain; `Domains/Common/Domain.md` is informative, restates rather than extends, and its four extra characteristics carry no normative force. Consolidation was considered and not taken, because folding those characteristics into `Model-02` would add requirements and needs the `CAND-007` freeze-exception pipeline, which has no independent Reference Cases today. Resolves `AO-001`, the oldest open observation. No document changed; integration is a separately authorized step. |
 | 0.1 | 16 September 2026 | CAND-002 Decided: Profile Conformance is defined by the form of a claimant's declaration, not by any profile this repository publishes. Eight declaration rules and ten validator assertions recorded in `Governance/Concept-Paper-Profile-Conformance.md`; the Core is not coupled to the mechanism and no profile is defined or authorized. Satisfies half of `EPIC-E`'s Definition of Done. |
 | 0.1 | 16 September 2026 | CAND-001 Decided: `AI/Agents/Context.md` is replaced with an explicit reference to `AI/Context/Overview.md`; the Agents section does not own a description of Context. Path, Document ID and reading-path position kept; no requirement added or removed. Closes `OBS-001`, open since 21 July 2026. Integration performed in the same change as EPIC-C work under `CAND-007` Section 3. |
+| 0.1 | 16 September 2026 | Added CAND-016 (Relationship Participants), Decision recorded: `Meta/Relationship.md` is the canonical definition of Relationship with Objects as participants; `Models/Relationship.md` is its specialization for Relationships between Entities and restricts nothing else. Resolves `AO-002`; no requirement changed; integration in the same change as EPIC-B work. CAND-004: postscript recording a v1.0 disposition for each of the seven questions (each question resolved by existing primitives, not required for v1.0 pending a Reference Case, or split between the two); Status line updated. CAND-015: postscript recording that Step 2, the integration into `Domains/Common/Domain.md`, is done. |

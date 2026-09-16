@@ -14,13 +14,15 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 16 September 2026
 
 ---
 
 # Purpose
 
 This document defines the normative model of Relationships between Entities.
+
+It specializes the Relationship defined in `Meta/Relationship.md`, whose participants are Objects, for the case in which every participant is an Entity; a Relationship with a participant that is not an Entity, including an Organization, is governed by `Meta/Relationship.md`, per `CAND-016`.
 
 Relationships describe how Entities are connected within an operational model.
 
@@ -143,3 +145,4 @@ Future versions of this specification may introduce additional Relationship type
 | Version | Date | Description |
 |----------|------|-------------|
 |0.1|20 July 2026|Initial draft|
+| 0.1 | 16 September 2026 | Integration of `CAND-016` (Step 2): one sentence added to Purpose naming this document as the specialization of `Meta/Relationship.md` for Relationships between Entities. No requirement changed. |
