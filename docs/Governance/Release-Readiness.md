@@ -96,7 +96,7 @@ Every release entry from this point forward **shall** confirm the following:
 
 **Recommendation:** Approved for release.
 
-**Status:** Prepared. Tag and GitHub Release to follow; the Release timestamp and the Zenodo version DOI are added to this entry once both exist.
+**Status:** Released. GitHub Release `v1.2.0` published 2026-09-16T18:04:46Z from the SSH-signed tag on `e4a5a53`, with the three signed assets verified from the public download; Zenodo version DOI pending after a webhook failure on Zenodo's side on publication day.
 
 ---
 
@@ -109,3 +109,4 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 12 September 2026 | Added the v1.1.1 release entry (first entry to run the Pre-Release Checklist), with the same-day v1.1.0 recorded under Known Deferred Content. |
 | 0.1 | 12 September 2026 | v1.1.1 entry: Status Prepared to Released, with the GitHub Release timestamp and the Zenodo version DOI. |
 | 0.1 | 16 September 2026 | Added the v1.2.0 release entry (Pre-Release Checklist run; the Part 8 bar of `Master-Architecture-Backlog.md` met on its recorded terms; Status Prepared). |
+| 0.1 | 16 September 2026 | v1.2.0 entry: Status Prepared to Released, with the GitHub Release timestamp; Zenodo DOI pending. |
