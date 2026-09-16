@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 12 September 2026
+**Last Updated:** 16 September 2026
 
 ---
 
@@ -46,7 +46,7 @@ Entries are split into four categories to separate real problems from consciousl
 | ID | Description | Severity | Affected Documents | Recommendation | Status |
 |---|---|---|---|---|---|
 | GAP-001 | Four competing filename conventions coexist across the specification (Title Case With Spaces, snake_case/UPPER-suffix, PascalCase, kebab-case) | Low | ~237 content files across the specification | Agree on a single convention for a future version; do not rename files without a separate approved proposal | Open |
-| GAP-002 | `Core/Terminology.md` does not define Object, Capability, Policy, Contract, Context, Knowledge, or Memory, although each has its own normative document elsewhere | Medium | `Core/Terminology.md` | Extend the glossary to cover all Meta-level concepts | Open |
+| GAP-002 | `Core/Terminology.md` does not define Object, Capability, Policy, Contract, Context, Knowledge, or Memory, although each has its own normative document elsewhere | Medium | `Core/Terminology.md` | Extend the glossary to cover all Meta-level concepts. Closed 16 September 2026: `Core/Terminology.md` restated as a verbatim index and extended, per `AO-066`. | Closed |
 | GAP-003 | Author referenced "M020 — Public Product Release" (23 July 2026) as a prior Milestone. No definition, criteria, or scope for M020 exists anywhere in the repository, its full commit history, or any Governance document. | Low | Milestone numbering generally; `ROADMAP.md` | Author decision. | Closed |
 | GAP-004 | `Core/Constitution.md` paragraph 4 names the retained-fact concept Memory Entry while the Memory tier's document is titled Memory Record; `Constitution-Step0-Summary.md` Decision 1 ruled them one concept with Memory Entry canonical, and the rename was never executed | Low | `Memory/Memory Record.md`, `Core/Constitution.md` | Execute the rename through the change process; a terminology note was added to `Memory Record.md` on 5 September 2026 | Open |
 | GAP-005 | The Compliance Domain is the only profile without a Lifecycles document, although `Compliance_Objects.md` carried a shall-clause pointing at one and `Compliance/Overview.md` claims the Domain defines its Lifecycles | Medium | `Domains/Compliance/` | Either write the profile's Lifecycles document or keep the Models-tier reference added on 5 September 2026 | Open |
@@ -95,3 +95,4 @@ Consciously deferred decisions. Not documentation debt.
 | 0.1 | 5 September 2026 | Added GAP-004 (Memory Entry / Memory Record rename pending) and FW-008 (World Model, Autonomy level and the Workflows/ stubs), so that gaps tracked only in the Backlog and CAND-007 are visible from this register. |
 | 0.1 | 5 September 2026 | Added GAP-005 (no Compliance Lifecycles document) and GAP-006 (Process and KPI undefined above the Domain tier), both surfaced by a full read of the Domains, Entities, AI and Reference Architecture tiers. |
 | 0.1 | 12 September 2026 | FW-007 closed: Release `v1.1.1` cut per `Governance/Release-Workflow.md` (Manifest entry before tagging, annotated tag) with Zenodo version DOI `10.5281/zenodo.22724309`; the same-day `v1.1.0` is recorded as Superseded in `Governance/Publication-Manifest.md`. |
+| 0.1 | 16 September 2026 | GAP-002 closed: `Core/Terminology.md` now indexes every Meta-level concept and every Constitution term, restating each owning document's Definition verbatim; the Constitution terms no document defines are listed as Reserved (`AO-066`, `AO-067`, `AO-068`). |

@@ -1486,6 +1486,66 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-066
+
+**Title:** Terminology Declares Itself Authoritative While Every One of Its Thirteen Definitions Differs from the Document That Owns the Term
+
+**Date observed:** 16 September 2026
+
+**Description:** Surfaced while executing EPIC-D, whose Definition of Done requires `Core/Terminology.md` to define every term the Constitution uses. Terminology's Purpose states "All terms defined here are authoritative", and the document carries thirteen definitions. Compared sentence by sentence against the Definition section of the document that owns each term, all thirteen differ: Domain reads "a logical boundary responsible for governing one or more entities" where `Models/Domain.md` reads "an operational boundary", which `CAND-015` made the canonical definition a third wording later than the two it reconciled; Entity reads "a uniquely identifiable operational object with defined attributes, ownership, lifecycle, and state" where `Models/Entity.md` reads "an identifiable operational object that represents something with business meaning"; Event reads "a recorded occurrence representing a meaningful operational change" where `Models/Event.md` reads "an immutable record describing something that has occurred within the operational model", and immutability is the property Constitution Principle 4 rests on. Three entries, Attribute, Identifier and Specification, restate concepts whose Definition lives in `Models/Entity.md`, `Language/Identifier Syntax.md` or nowhere. Seven Meta-level concepts with their own normative documents, recorded as `GAP-002` since 23 July 2026, are absent, as are Memory, Knowledge and Context, which Constitution Principles 4, 5 and 12 use. A document that claims authority and diverges from the sources it summarises is a second source of truth in the exact form `Core/Principles.md` forbids.
+
+**Impact:** A reader who takes Terminology at its word has a definition of Domain that no other document shares and a definition of Event without immutability. Nothing detects the divergence, because nothing compares the two, and each edit to a canonical document widens it silently.
+
+**Recommendation:** Restate Terminology as a verbatim index: each entry carries the owning document's Definition sentence unchanged and names that document; the Purpose says the named document governs; every Constitution term without a Definition anywhere is listed as Reserved with the observation that tracks it, so that EPIC-D's requirement that every Constitution term be locatable is met without inventing definitions under the Architecture Freeze. This is transcription of decisions already recorded, Single Source of Truth and `CAND-015`, and is permitted by `CAND-007` Section 3 as EPIC-D work.
+
+**Status:** Closed
+
+**Architect Response:** Approved 16 September 2026. `Core/Terminology.md` is restated as a verbatim index of canonical definitions with the owning document named beside each term, its Purpose no longer claims authority, the seven concepts of `GAP-002` and the Memory, Knowledge and Context terms are added, and the Constitution terms no document defines are listed as Reserved with the observation that tracks each. No definition is invented; the Core is unchanged in meaning.
+
+**Related:** `Core/Terminology.md`, `Core/Principles.md`, `Models/Domain.md`, `Models/Entity.md`, `Models/Event.md`, `Governance/Master-Architecture-Backlog.md` (EPIC-D), `CAND-015`, `GAP-002`, `AO-046`
+
+---
+
+## AO-067
+
+**Title:** The Constitution Makes Autonomy an Independent Dimension and Lets a Higher Autonomy Level Move Responsibility, While No Document Defines Autonomy or Any Level of It, and the Only Level Scale in the Specification Runs the Other Way
+
+**Date observed:** 16 September 2026
+
+**Description:** Surfaced while executing EPIC-D, whose Definition of Done names Autonomy level as a term `Core/Terminology.md` must define. `Core/Constitution.md` Principle 7 states that Architecture, Capability and Autonomy are independent dimensions, and Principle 14 states that responsibility remains with the designated human role "unless a higher Autonomy level has been explicitly delegated". No document in the specification defines Autonomy, states what a level of it is, or gives a scale: the word occurs in the Constitution and nowhere else as a term, and `AI/Agents/Agent.md` uses "autonomous" only descriptively. The one level scale the specification does define is `Memory/Write-back Governance.md`, Levels 1 to 3, where Level 1 is Automatic, Level 2 is Confirmation Required and Level 3 is Approval Required, so a higher level there means more human control, while a higher Autonomy level in Principle 14 means more delegated to the system. A reader who maps one onto the other reads the two scales in opposite directions. Separately, Principle 14 lets delegation of a higher Autonomy level move responsibility away from the human role, while `Meta/Ownership.md` requires that delegation "preserve accountability"; whether responsibility in Principle 14 and accountability in Ownership are the same thing is not stated, and if they are, the two texts disagree.
+
+**Impact:** Principle 14 is the sentence a regulator or a risk owner reads first, and it turns on a term the specification never defines. Two implementations can both claim to honour it while placing responsibility in opposite places, and the specification cannot say which is right.
+
+**Recommendation:** Record only. The term is listed as Reserved in `Core/Terminology.md` so that it is locatable. If corroborated, a future Reference Case should settle three things together: whether Autonomy is a property of an Agent, of an operation, or of a delegation; whether its scale is the one `Memory/Write-back Governance.md` already defines, read in the opposite direction, or a distinct one; and whether Principle 14's responsibility and Ownership's accountability are one concept. Defining the term without settling the scale would give Principle 14 a word and not a meaning.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Constitution.md` (Principles 7 and 14), `Memory/Write-back Governance.md`, `Meta/Ownership.md`, `AI/Agents/Agent.md`, `AO-059`, `AO-063`
+
+---
+
+## AO-068
+
+**Title:** Canonical Principles 8 and 12 Rest on Provenance and on Static and Dynamic World Modelling, and No Document Defines Any of the Three
+
+**Date observed:** 16 September 2026
+
+**Description:** Surfaced while executing EPIC-D, and parallel to `AO-024`, which recorded the same defect for the Architectural Principles. `Core/Constitution.md` Principle 8 states that Static World Modelling precedes Dynamic World Modelling; neither phrase occurs in any other document. Principle 12 requires the system to communicate "provenance and confidence appropriately"; Confidence is defined in `Memory/Confidence.md`, and Provenance is defined nowhere, although `AI/Context/Context Assembly.md`, `AI/Context/Context Optimization.md` and `AI/Knowledge/Knowledge Sources.md` each carry a section headed Provenance that imposes requirements on it. A Canonical Principle differs from an Architectural Principle in that it is what `CAND-006` adopted and `CAND-007` froze, so a term it rests on is a Core term whether or not any tier defines it.
+
+**Impact:** Principle 8 orders two activities the specification cannot name, and Principle 12 requires a property three documents constrain and none defines. An implementer meets both by declaring so.
+
+**Recommendation:** Record only. The three terms are listed as Reserved in `Core/Terminology.md` so that they are locatable. If corroborated, a future Reference Case should either define Provenance once, at the tier the three AI documents already assume, or record that it is a Memory-tier concept and move it there; and should either define Static and Dynamic World Modelling or record that Principle 8 names a sequencing rule rather than two concepts, in which case its wording is the finding.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Constitution.md` (Principles 8 and 12), `Memory/Confidence.md`, `AI/Context/Context Assembly.md`, `AI/Context/Context Optimization.md`, `AI/Knowledge/Knowledge Sources.md`, `AO-024`, `CAND-014`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1514,3 +1574,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 15 September 2026 | Added AO-062 (conformance refers to a set of mandatory requirements no document enumerates, and the normative keywords cannot be separated mechanically from prose), AO-063 (an Agent must operate under a policy defining write-back permissions that nothing defines) and AO-064 (a projection tier with no rule that a projection is generated), all from an external review of 15 September 2026; AO-021 records that its corroboration condition is met, by that review and by AO-053. |
 | 0.1 | 16 September 2026 | Added AO-065 (the compiled Chapter 4 covers twelve `Meta/` documents while the Core Vocabulary has thirteen governed terms, so Organization is absent from the reading path), surfaced while deciding `CAND-002`; documentation-currency defect, record only. |
 | 0.1 | 16 September 2026 | Added an Entry Lifecycle section, defining the five Status values from observed usage and requiring an Open entry's Status to state what would move it. Retrofits nothing: no entry's Status changes, and `AO-004`, the one entry stating no condition, is named rather than amended. |
+| 0.1 | 16 September 2026 | Added AO-066 (Terminology declares itself authoritative while all thirteen of its definitions differ from the owning documents), AO-067 (Autonomy level is undefined and the only level scale in the specification runs the other way) and AO-068 (Provenance and Static and Dynamic World Modelling are undefined), all surfaced while executing EPIC-D. |
