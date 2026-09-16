@@ -72,7 +72,7 @@ Consciously deferred decisions. Not documentation debt.
 
 | ID | Description | Target Version | Affected Documents | Source of Decision | Status |
 |---|---|---|---|---|---|
-| FW-001 | `Evidence Overlay`: Definition, Independence, Conformance sections and the Source/Reliability attributes were intentionally removed during the v0.1 release candidate review | Undetermined | `Memory/Evidence Overlay.md` | Author RC decision, 21 July 2026 | Planned |
+| FW-001 | `Evidence Overlay`: Definition, Independence, Conformance sections and the Source/Reliability attributes were intentionally removed during the v0.1 release candidate review | Undetermined | `Memory/Evidence Overlay.md` | Author RC decision, 21 July 2026 | Planned; not required for v1.0, disposition 16 September 2026: written only as Layer 2 of `CAND-014` needs it (`Master-Architecture-Backlog.md` EPIC-A) |
 | FW-002 | `Campaign.md`: Business Rules section was intentionally removed during the v0.1 release candidate review, without replacement | Undetermined | `Entities/Campaign/Campaign.md` | Author RC decision, 21 July 2026 | Planned; not required for v1.0, disposition 16 September 2026: the author decision stands and `Campaign.md` carries no Business Rules section by decision |
 | FW-003 | Reference Agent does not exist anywhere in the repository — the final link of the traceability chain | Next stage of OCOM | Repository-wide | CDKO role charter, "Дополнительная задача" | Planned |
 | FW-004 | Reference Implementation does not exist anywhere in the repository | Next stage of OCOM | Repository-wide | CDKO role charter, "Дополнительная задача" | Planned |
@@ -98,3 +98,4 @@ Consciously deferred decisions. Not documentation debt.
 | 0.1 | 16 September 2026 | GAP-002 closed: `Core/Terminology.md` now indexes every Meta-level concept and every Constitution term, restating each owning document's Definition verbatim; the Constitution terms no document defines are listed as Reserved (`AO-066`, `AO-067`, `AO-068`). |
 | 0.1 | 16 September 2026 | OBS-001 closed per `CAND-001` (Decided 16 September 2026): `AI/Agents/Context.md` replaced with an Informative pointer to `AI/Context/Overview.md`. |
 | 0.1 | 16 September 2026 | DEBT-DOC-001, GAP-001, FW-002 and FW-005 each carry a not-required-for-v1.0 disposition, per `Master-Architecture-Backlog.md` Part 8 (EPIC-F). Statuses otherwise unchanged. |
+| 0.1 | 16 September 2026 | FW-001 carries a not-required-for-v1.0 disposition per the EPIC-A disposition of the same day. |

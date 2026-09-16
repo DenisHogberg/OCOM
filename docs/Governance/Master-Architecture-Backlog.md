@@ -92,6 +92,8 @@ This does not match the example structure given in the task ("Entry Point, Knowl
 
 Two items in the Definition of Done above remain open and are deliberately gated. Authoring the World Model document and rewriting `AI/Knowledge/*` are Layer 2 of `CAND-014`, routed through the `CAND-007` freeze-exception pipeline, which per `Standard Evolution Methodology.md` Rule 2 requires independent Reference Cases that do not yet exist. The Layer 1 Core integration, correcting `Knowledge.md`'s "independent of Memory Records" line and noting in `Memory/Memory Record.md` that Status is derived, is authorized separately and has not been performed. `FW-001` is untouched.
 
+**Disposition for v1.0 (16 September 2026):** the Layer 1 Core integration named above as not yet performed was performed on 11 September 2026 (`CAND-014` postscript). The Chief Architect's disposition, recorded the same day in `CAND-014`'s postscript: Layer 1 closes this Epic for the v1.0 claim; the World Model document and the `AI/Knowledge/*` rewrite, Layer 2, stay open and gated behind the `CAND-007` pipeline and are not required for v1.0; `FW-001` carries the same disposition. This is the explicit disposition Part 8 permits, and the last Part 8 item to carry one.
+
 ## EPIC-B — Object Model & Cross-Organization Consolidation
 
 **Architectural goal:** one authoritative definition of Domain, a Relationship model that accommodates every Object type Constitution §1 already recognizes, and a decided answer to how independent Organizations interact.
@@ -173,9 +175,9 @@ Two items in the Definition of Done above remain open and are deliberately gated
 | Work item | Epic | Priority | Effort | Risk | Dependencies |
 |---|---|---|---|---|---|
 | ✅ Decide Knowledge/World Model split (file + resolve ADR). Done 10 September 2026, `CAND-014` Option 4 Layer 1 | A | Critical | L | High — the largest single architectural decision left | None (already decision-ready) |
-| Write World Model document | A | Critical | M | Medium — first-ever document for this concept | Knowledge/World Model decision (landed, `CAND-014`); now gated as Layer 2 behind the `CAND-007` freeze-exception pipeline |
+| Write World Model document. Dispositioned 16 September 2026: Layer 2 of `CAND-014`, gated, not required for v1.0 | A | Critical | M | Medium — first-ever document for this concept | Knowledge/World Model decision (landed, `CAND-014`); now gated as Layer 2 behind the `CAND-007` freeze-exception pipeline |
 | ✅ Resolve `AO-003` (Memory Record Status). Done 10 September 2026, closed by `CAND-014` as Option B | A | High | S | Low — narrow, well-scoped | Knowledge/World Model decision (same underlying question) |
-| Complete `FW-001` (Evidence Overlay reserved sections) | A | Medium | S | Low | Knowledge/World Model decision (only what it needs) |
+| Complete `FW-001` (Evidence Overlay reserved sections). Dispositioned 16 September 2026: written only as Layer 2 needs it, not required for v1.0 | A | Medium | S | Low | Knowledge/World Model decision (only what it needs) |
 | ✅ Resolve `AO-001` (Domain vs Domain). Done 11 September 2026, `CAND-015` | B | High | S | Medium — touches a widely-referenced term | None |
 | ✅ Resolve `AO-002` (Relationship/Organization). Done 16 September 2026, `CAND-016` | B | High | S | Medium | None |
 | Decide `CAND-004` (7 questions). Dispositioned 16 September 2026: resolved by existing primitives where they are, not required for v1.0 where a Reference Case is needed (postscript in `CAND-004`) | B | Medium | L | Medium — broad surface, many documents | `AO-001`, `AO-002` |
@@ -273,6 +275,8 @@ Minimum mandatory set — not "desirable," not "complete every backlog item":
 
 Everything not listed above may remain open post-v1.0 with an explicit disposition, consistent with how this Specification has already treated `CAND-004`'s scope and `OBS-003`.
 
+**Execution note (16 September 2026):** every item above is met or carries the explicit disposition this Part permits. EPIC-A: Layer 1 decided and integrated, Layer 2 dispositioned (`CAND-014` postscript). EPIC-B: `AO-001` and `AO-002` Closed, `CAND-004` dispositioned per question. EPIC-D: every Constitution term locatable, the undefined ones Reserved. EPIC-C: `CAND-001` and `OBS-001` Closed, Entities minimally bridged, Domains dispositioned. EPIC-E: `CAND-002` decided and integrated, the Conformance Test Suite specified in `Governance/Conformance-Test-Suite.md`, tooling open. EPIC-F: the reading path and `Adoption/` re-pointed. The v1.0 Ready bar is met on these terms. Whether the Specification track's own version label moves from 0.2 to 1.0 is a separate Release decision under `Publication-Model.md`, not made here.
+
 ---
 
 # Part 9 — Stop List
@@ -314,7 +318,7 @@ This is a backlog, not a decision. No specification document has been changed. N
 
 **Execution has since begun (11 September 2026).** The statements above describe this document as authored on 27 July 2026. Since then item 1 of Part 10 has been executed under its own authorization: `CAND-014` was filed and decided on 10 September 2026 and `AO-003` was closed. Both are recorded in `ADR-Candidates.md` and `Architecture-Observations.md`; this document tracks them, it does not own them. No Core, Meta, Models, AI or Memory document has been changed.
 
-**Execution continued (16 September 2026).** Under the Chief Architect's instruction to bring the specification to the Part 8 bar without waiting for implementation cases, EPIC-D, EPIC-C, EPIC-B, EPIC-F and EPIC-E are executed, with `CAND-002` decided and integrated and the Conformance Test Suite specified; see the execution notes under each Epic. The one Part 8 item still open is EPIC-A: Layer 2 is gated behind the `CAND-007` pipeline, and whether Layer 1 closes the Epic for v1.0 with Layer 2 dispositioned is the Chief Architect's call, not yet recorded. The documents changed by these executions carry the change in their own revision histories.
+**Execution continued (16 September 2026).** Under the Chief Architect's instruction to bring the specification to the Part 8 bar without waiting for implementation cases, EPIC-D, EPIC-C, EPIC-B, EPIC-F and EPIC-E are executed, with `CAND-002` decided and integrated and the Conformance Test Suite specified; see the execution notes under each Epic. No Part 8 item is open: EPIC-A carries the Chief Architect's disposition of 16 September 2026 (Layer 1 closes the Epic for v1.0; Layer 2 stays gated and open), recorded in its Execution status, in `CAND-014`'s postscript and in Part 8's execution note. The documents changed by these executions carry the change in their own revision histories.
 
 ---
 
@@ -328,3 +332,4 @@ This is a backlog, not a decision. No specification document has been changed. N
 | 0.1 | 16 September 2026 | Recorded execution of EPIC-B: `CAND-015` Step 2 integrated into `Domains/Common/Domain.md`; `AO-002` closed by `CAND-016` and integrated into `Models/Relationship.md` and `Core/Terminology.md`; `CAND-004`'s seven questions dispositioned for v1.0. Marked two Part 5 rows; execution note under EPIC-B; Status paragraph updated. |
 | 0.1 | 16 September 2026 | Recorded execution of EPIC-F: reading path re-pointed to the Constitution (Chapters 0, 1, 7), Chapter 4 Organization section (`AO-065` Closed), `CAND-002` integrated (Chapter 8, `Language/Conformance.md`, `Adoption/FAQ.md`), `Adoption/README.md`, `docs/README.md` and `PROJECT_STATUS.md` made current, `Examples/Overview.md` scope aligned, four Documentation-Debt items dispositioned. Marked three Part 5 rows; Status paragraph updated. |
 | 0.1 | 16 September 2026 | Recorded execution of EPIC-E's second half: `Governance/Conformance-Test-Suite.md` specifies the Requirement Register as a derived projection, five Test kinds and the Test Report; tooling left open as not required for v1.0. Marked the Part 5 row; Status paragraph now names EPIC-A as the only open Part 8 item. |
+| 0.1 | 16 September 2026 | Recorded the EPIC-A disposition for v1.0 (Layer 1 closes the Epic; Layer 2 and `FW-001` not required for v1.0) and the Part 8 execution note stating that every item is met or dispositioned; two Part 5 rows and the Status paragraph updated. |
