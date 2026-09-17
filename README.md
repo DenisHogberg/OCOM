@@ -4,6 +4,7 @@
   <a href="https://scorecard.dev/viewer/?uri=github.com/DenisHogberg/OCOM"><img src="https://api.scorecard.dev/projects/github.com/DenisHogberg/OCOM/badge" alt="OpenSSF Scorecard"></a>
   <a href="CODE_OF_CONDUCT.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa" alt="Contributor Covenant 2.1"></a>
   <a href="https://www.bestpractices.dev/projects/14573"><img src="https://www.bestpractices.dev/projects/14573/badge" alt="OpenSSF Best Practices: passing"></a>
+  <a href="https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/DenisHogberg/OCOM"><img src="https://archive.softwareheritage.org/badge/origin/https://github.com/DenisHogberg/OCOM/" alt="Archived in Software Heritage"></a>
 </p>
 
 <h1 align="center">OCOM</h1>
@@ -97,7 +98,7 @@ See [`ROADMAP.md`](ROADMAP.md) for what is done, what is open and what is under 
 
 ## Cite
 
-The concept DOI always resolves to the most recent archived version. GitHub also offers "Cite this repository" from [`CITATION.cff`](CITATION.cff).
+The concept DOI always resolves to the most recent archived version. GitHub also offers "Cite this repository" from [`CITATION.cff`](CITATION.cff). Software Heritage archives the repository independently of GitHub and of Zenodo; release `v1.2.0` is addressable there as [`swh:1:rel:78eb36465ed18b3bf8f2d0948712537a7a51ae89`](https://archive.softwareheritage.org/swh:1:rel:78eb36465ed18b3bf8f2d0948712537a7a51ae89).
 
 > Petrenko, D. (2026). OCOM: the Object-Centric Operating Model specification. <https://ocom.uno>. <https://doi.org/10.5281/zenodo.21510450>. CC BY 4.0.
 
