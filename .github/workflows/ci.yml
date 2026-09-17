@@ -235,6 +235,27 @@ jobs:
           done
           exit 0
 
+  requirement-register:
+    name: Requirement register regenerates cleanly
+    # Added per docs/Governance/Conformance-Test-Suite.md, Section 2, and the
+    # rule AO-064 recommends for derived artifacts: the Requirement Register
+    # is generated from the documents Chapters 4 to 6 compile, never edited by
+    # hand, and a divergence between the committed file and a regeneration
+    # fails the build. The second step keeps the append-only Alias File in
+    # step with the register: every Statement needs an alias, and an alias
+    # whose identity no Statement carries must be marked superseded. The
+    # generator is standard-library Python and reads only this repository.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Register matches a regeneration
+        run: python3 tools/conformance/requirement_register.py --check
+
+      - name: Every Statement has an alias
+        run: python3 tools/conformance/requirement_register.py --check-aliases
+
   reuse-compliance:
     name: Licensing is machine-readable (REUSE 3.3)
     runs-on: ubuntu-latest
