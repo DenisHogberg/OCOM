@@ -14,6 +14,8 @@
 
 **Version:** 0.1
 
+**Last Updated:** 17 September 2026
+
 ---
 
 ## Modeling Processes Instead of Objects
@@ -35,6 +37,13 @@ It is tempting, mid-pilot, to invent a new primitive when the existing vocabular
 ## Breaking the Boundaries of Core
 
 Related to the above, but narrower: redefining an existing concept locally instead of raising a gap through Governance. If your team's definition of "Domain" or "Lifecycle" quietly diverges from `Models/Domain.md` or `Models/Lifecycle.md` to make a specific case easier, you no longer have one OCOM model — you have a private dialect that happens to reuse OCOM's words. "Each operational concept shall have a single authoritative definition within the model" *(`Core/Principles.md`, Principle 7 — Single Source of Truth)*. If the existing definition genuinely doesn't fit, that's a signal for Governance, not a license to redefine it locally.
+
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.1 | 22 July 2026 | Initial guide, part of the Adoption framework (M021). |
+| 0.1 | 17 September 2026 | Revision History and Last Updated added, which `Governance/Documentation-Standards.md` requires of every document and this one had never carried; content unchanged. |
 
 ---
 

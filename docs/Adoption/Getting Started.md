@@ -14,6 +14,8 @@
 
 **Version:** 0.1
 
+**Last Updated:** 17 September 2026
+
 ---
 
 This is a simplified, guided path. Every claim here is backed by a normative document — look for the *(see ...)* references if you want the precise wording.
@@ -85,6 +87,13 @@ Pick one Domain your team already owns. Model two or three Entities that Domain 
 Expect it to feel small at first. That is by design — the Core is meant to be minimal, and grows only when repeated real experience shows it needs to *(see `docs/Governance/Standard Evolution Methodology.md`, Principle of Minimal Evolution)*.
 
 When you're ready to try this for real, continue to **[First Pilot](First%20Pilot.md)**.
+
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.1 | 22 July 2026 | Initial guide, part of the Adoption framework (M021). |
+| 0.1 | 17 September 2026 | Revision History and Last Updated added, which `Governance/Documentation-Standards.md` requires of every document and this one had never carried; content unchanged. |
 
 ---
 

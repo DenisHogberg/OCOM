@@ -14,6 +14,8 @@
 
 **Version:** 0.1
 
+**Last Updated:** 17 September 2026
+
 ---
 
 ## Purpose
@@ -52,6 +54,13 @@ A first pilot exists to answer one question — does modeling our operations as 
 Not "we finished modeling the Domain." Success is: the team can point at the model and explain their own work more consistently than before, and they can name specific places where the model was wrong or incomplete. Both outcomes are useful — a pilot that surfaces real gaps is doing its job.
 
 If a gap looks like it's in OCOM itself, rather than in how your pilot modeled it, that's a Reference Case — see `docs/Governance/Standard Evolution Methodology.md`, not something to solve by inventing new rules inside the pilot.
+
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.1 | 22 July 2026 | Initial guide, part of the Adoption framework (M021). |
+| 0.1 | 17 September 2026 | Revision History and Last Updated added, which `Governance/Documentation-Standards.md` requires of every document and this one had never carried; content unchanged. |
 
 ---
 
