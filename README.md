@@ -17,7 +17,7 @@ An open, technology-independent specification that describes an organization as 
   <a href="https://ocom.uno"><img src="https://img.shields.io/badge/read%20online-ocom.uno-0f172a" alt="Read online at ocom.uno"></a>
   <a href="https://github.com/DenisHogberg/OCOM/actions/workflows/ci.yml"><img src="https://github.com/DenisHogberg/OCOM/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
   <a href="docs/Meta/README.md"><img src="https://img.shields.io/badge/Core%20Vocabulary-0.1-0f766e" alt="Core Vocabulary 0.1"></a>
-  <a href="docs/Specification/00%20Executive%20Overview.md"><img src="https://img.shields.io/badge/Specification-0.2-0f766e" alt="Specification 0.2"></a>
+  <a href="docs/Specification/00%20Executive%20Overview.md"><img src="https://img.shields.io/badge/Specification-1.0-0f766e" alt="Specification 1.0"></a>
   <a href="docs/Core/Constitution.md"><img src="https://img.shields.io/badge/Constitution-1.0-0f766e" alt="Constitution 1.0"></a>
   <a href="LICENSE-docs.md"><img src="https://img.shields.io/badge/text-CC%20BY%204.0-2dd4bf" alt="Specification text licensed CC BY 4.0"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/code-Apache--2.0-2dd4bf" alt="Code licensed Apache-2.0"></a>
@@ -84,13 +84,13 @@ Everything normative is Markdown under `docs/`. There is no code in this reposit
 - [`Meta/`](docs/Meta/README.md): the 13 Core Vocabulary terms.
 - [`Models/`](docs/Models/): domain, entity, event, lifecycle, relationship, state and workflow models.
 - [`Reference Architecture/`](docs/Reference%20Architecture/): enterprise, domain, object, business-event, memory and AI architecture views. Informative.
-- [`Specification/`](docs/Specification/): the v0.2 sequential reading path through the normative text. Baseline.
+- [`Specification/`](docs/Specification/): the v1.0 sequential reading path through the normative text, recompiled on 17 September 2026. Baseline.
 - [`Workflows/`](docs/Workflows/): workflow specifications, planned.
 
 ## Status
 
 - Core Vocabulary v0.1: released 21 July 2026 with 12 terms; Organization was added on 25 July 2026 through ADR CAND-005, bringing the set to 13. The 0.1 label did not change on either date, and the [Publication Manifest](docs/Governance/Publication-Manifest.md) records that.
-- Specification v0.2 reading path and Governance: baseline. Baseline means reviewed and frozen pending the change process, not finished.
+- Specification v1.0 reading path and Governance: baseline. Baseline means reviewed and frozen pending the change process, not finished.
 - Constitution v1.0: adopted through ADR CAND-006; Architecture Freeze in force through CAND-007.
 - Evidence: one Reference Case published; reference implementations, verified implementations and independent validations all stand at zero, and the [Evidence Register](https://ocom.uno/evidence-register) says so.
 
@@ -115,4 +115,4 @@ Read [`CONTRIBUTING.md`](CONTRIBUTING.md), [`GOVERNANCE.md`](GOVERNANCE.md) and 
 
 ## Disclaimer
 
-OCOM is an early-stage specification. The v0.1 Core is released; Governance and the Specification v0.2 reading path are baseline, which means reviewed and frozen pending the approved change process, not that the specification is finished. Terminology, structure and scope may still change through that process before v1.0. Content is provided as is, without warranty.
+OCOM is an early-stage specification. The v0.1 Core is released; Governance and the Specification v1.0 reading path are baseline, which means reviewed and frozen pending the approved change process, not that the specification is finished. Terminology, structure and scope may still change through that process before v1.0. Content is provided as is, without warranty.

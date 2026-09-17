@@ -1,14 +1,16 @@
-# OCOM Specification v0.2 — Design Principles
+# OCOM Specification v1.0 — Design Principles
 
 **Document ID:** SPEC-02
 
 **Status:** Draft
 
-**Version:** 0.2
+**Version:** 1.0
+
+**Last Updated:** 17 September 2026
 
 ---
 
-These eleven principles are normative and apply to every model created using this specification.
+These principles are normative and apply to every model created using this specification.
 
 ## 1. Organization Before Technology
 
@@ -58,6 +60,15 @@ This principle is canonically stated in Constitution §14 — Professional Respo
 
 All models created using this specification **shall** conform to these principles.
 
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.2 | 22 July 2026 | Compiled reading path, approved by the Architecture Committee with editorial changes (`Specification/Committee Review Package.md`). |
+| 0.2 | 22 July 2026 | Committee Review: an earlier draft retitled Principle 9 to "Interpretability"; the Architecture Committee directed reversion to the source title, on the basis that retitling a sourced principle is an architectural judgment requiring an ADR, not an editorial choice. |
+| 0.2 | 4 September 2026 | Resynchronised with `Core/Principles.md` after Principle 11 (ADR CAND-003, 23 July 2026) and the Constitution cross-references in Principles 2 and 6 (CAND-006) were added to the source; editorial recompilation, no content of its own. |
+| 1.0 | 17 September 2026 | Version label 1.0; the one sentence that departed from `Core/Principles.md` (an editorial count of the principles) restated verbatim; content otherwise unchanged and verified verbatim against `Core/Principles.md` as of this date. |
+
 ---
 
-*Source: compiled from `Core/Principles.md`, verbatim, including principle titles. (Committee Review, 22 July 2026: an earlier draft retitled Principle 9 to "Interpretability"; the Architecture Committee directed reversion to the source title, on the basis that retitling a sourced principle is an architectural judgment requiring an ADR, not an editorial choice.) (4 September 2026: resynchronised with `Core/Principles.md` after Principle 11 (ADR CAND-003, 23 July 2026) and the Constitution cross-references in Principles 2 and 6 (CAND-006) were added to the source; editorial recompilation, no content of its own.)*
+*Source: compiled from `Core/Principles.md`, verbatim, including principle titles. (Committee Review, 22 July 2026: an earlier draft retitled Principle 9 to "Interpretability"; the Architecture Committee directed reversion to the source title, on the basis that retitling a sourced principle is an architectural judgment requiring an ADR, not an editorial choice.) (4 September 2026: resynchronised with `Core/Principles.md` after Principle 11 (ADR CAND-003, 23 July 2026) and the Constitution cross-references in Principles 2 and 6 (CAND-006) were added to the source; editorial recompilation, no content of its own.) (17 September 2026: recompiled as v1.0 against the canonical documents as of this date; see Revision History)*

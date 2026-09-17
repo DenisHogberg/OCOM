@@ -14,11 +14,11 @@
 
 **Version:** 0.1
 
-**Last Updated:** 16 September 2026
+**Last Updated:** 17 September 2026
 
 ---
 
-**Currency note (16 September 2026):** the tables below record the 22 July 2026 state and are left as written. The current Release is recorded in `Governance/Publication-Manifest.md` (v1.2.0, 16 September 2026) and readiness in `Governance/Release-Readiness.md`; the Constitution (`Core/Constitution.md`, 1.0.1) was adopted on 27 July 2026, after this snapshot.
+**Currency note (16 September 2026):** the tables below record the 22 July 2026 state and are left as written. The current Release is recorded in `Governance/Publication-Manifest.md` (v1.2.0, 16 September 2026) and readiness in `Governance/Release-Readiness.md`; the Constitution (`Core/Constitution.md`, 1.0.1) was adopted on 27 July 2026, after this snapshot, and the Specification reading path is v1.0 since 17 September 2026.
 
 This is a snapshot, not a normative document. For the full history and forward-looking notes, see [`ROADMAP.md`](../ROADMAP.md). For the process by which any of this changes, see [`Governance/`](Governance/README.md).
 
@@ -90,3 +90,4 @@ Per-document `Status` fields are authoritative; as a general guide:
 |----------|------|-------------|
 | 0.1 | 22 July 2026 | Initial snapshot |
 | 0.1 | 16 September 2026 | Currency note added (the tables record the 22 July 2026 state; current Release v1.2.0); the Section 9 sentence dated to the 11 September 2026 transcription; this Revision History table added, since `Governance/Documentation-Standards.md` requires one in every document. |
+| 0.1 | 17 September 2026 | Currency note extended: the Specification reading path is v1.0. |

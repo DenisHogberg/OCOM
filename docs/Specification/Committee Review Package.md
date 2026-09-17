@@ -126,6 +126,8 @@ Per `docs/Governance/Release-Readiness.md`, v0.1 remains the only released versi
 
 **Next step:** Commit `docs/Specification/` and mark it **Specification Baseline v0.2**, per the publication step.
 
+*Postscript (17 September 2026): this package remains the record of the v0.2 review of 22 July 2026 and keeps its Version field accordingly. On 17 September 2026 the nine chapters were recompiled against the canonical documents as they stood that day and labelled v1.0 of the reading path; each chapter's Revision History and Source line record what changed, and `Governance/Publication-Manifest.md` records the Release that publishes it. The v1.0 recompilation carries the Chief Architect's approval through that Release; it was not put to a second committee review, since the committee is a review role held by the author at this stage.*
+
 ---
 
 *This package does not itself require a Source citation — it is a review artifact, not a specification chapter. It draws its facts from `docs/Specification/00–08`, `docs/Governance/ADR-Candidates.md`, and `docs/Governance/Release-Readiness.md`, current as of 22 July 2026.*

@@ -100,6 +100,28 @@ Every release entry from this point forward **shall** confirm the following:
 
 ---
 
+## Release: v1.3.0
+
+**Date:** 17 September 2026 (planned)
+
+**Documentation Readiness:** Ready once the carrying pull request is merged: the nine chapters of the reading path recompiled as v1.0 against the canonical documents as of this date, each with a Revision History and a Source line naming what changed; a forward-traceability check of every chapter sentence against its sources was run on this date and every normative sentence is traceable; the publication-metadata check now expects Specification Version 1.0 in every chapter. The Release body's bundle claims are checkable against the `Publication-Manifest.md` entry: Constitution 1.0.1, Core Vocabulary 0.1 (13 governed terms), Specification 1.0.
+
+**Open Observations:** 71 recorded (AO-001 to AO-068 and OBS-001 to OBS-003): 7 Closed, 2 Open in part (AO-042, AO-062), 2 Escalated (AO-005 to `CAND-008`, AO-008 to `CAND-009`), 60 Open. None blocks a Release: each open item is a disclosed tension in the model, not a defect in a published rule, and the Architecture Freeze (`CAND-007`) keeps the Core stable while they wait for Reference Cases.
+
+**Unresolved ADR Candidates:** CAND-004 (Open; each question dispositioned for v1.0) and CAND-008 (Open, Value Model); 13 Decided, including CAND-009 promoted; CAND-003 promoted to ADR and integrated. Non-blocking: no open Candidate proposes a Core change this Release would pre-empt.
+
+**Critical Documentation Debt:** None critical. GAP-007 (documents without a Revision History table) is closed for the nine chapters by this Release and stays open for the six remaining documents; DEBT-DOC-001, GAP-001, FW-001, FW-002, FW-005 and FW-009 carry not-required-for-v1.0 dispositions; FW-006 stays open and is disclosed in the Manifest entry.
+
+**Known Deferred Content:** Layer 2 of `CAND-014`; the Conformance Test Suite tooling (in progress, not part of this Release); the `CAND-002` declaration Projection and CI validator; the `Memory/Evidence Overlay.md` reserved sections (FW-001). The Committee Review Package remains the v0.2 review record; the v1.0 recompilation carries the Chief Architect's approval through this Release rather than a second committee review.
+
+**Standard Evolution Methodology reviewed:** Yes. This Release changes no canonical document: the recompilation is editorial work on the Compiled tier, permitted by `CAND-007` Section 3 as EPIC-F currency work, and every sentence it carries traces to a canonical source as of this date. No new Core concept entered; independent Reference Cases toward Rule 2 stand where `v1.2.0` left them.
+
+**Recommendation:** Approved for release once the Commit field of the Manifest entry is filled.
+
+**Status:** Prepared. Tag and GitHub Release to follow; timestamp and Zenodo version DOI are added once they exist.
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -111,3 +133,4 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 16 September 2026 | Added the v1.2.0 release entry (Pre-Release Checklist run; the Part 8 bar of `Master-Architecture-Backlog.md` met on its recorded terms; Status Prepared). |
 | 0.1 | 16 September 2026 | v1.2.0 entry: Status Prepared to Released, with the GitHub Release timestamp; Zenodo DOI pending. |
 | 0.1 | 17 September 2026 | v1.2.0 entry: Zenodo version DOI `10.5281/zenodo.22807178` recorded. |
+| 0.1 | 17 September 2026 | Added the v1.3.0 release entry (Specification reading path 1.0; Pre-Release Checklist run; Status Prepared). |

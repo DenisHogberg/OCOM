@@ -27,7 +27,7 @@ New here? Start with [Adoption](Adoption/README.md) (15–30 minutes) or the [Sp
 - [Meta/](Meta/) — Meta-model constructs (Object, Relationship, Capability, Policy, Contract, etc.).
 - [Models/](Models/) — Domain, entity, event, lifecycle, relationship, state, workflow models.
 - [Reference Architecture/](Reference%20Architecture/) — Enterprise, domain, object, business-event, memory, and AI architecture views. Informative.
-- [Specification/](Specification/) — OCOM Specification v0.2 — sequential reading path through the normative spec. Baseline.
+- [Specification/](Specification/) — OCOM Specification v1.0 — sequential reading path through the normative spec, recompiled on 17 September 2026. Baseline.
 - [Workflows/](Workflows/) — Workflow specifications. Planned, not yet populated.
 
 ## Normative vs. Informative

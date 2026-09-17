@@ -1,16 +1,18 @@
-# OCOM Specification v0.2 — Conformance
+# OCOM Specification v1.0 — Conformance
 
 **Document ID:** SPEC-08
 
 **Status:** Draft
 
-**Version:** 0.2
+**Version:** 1.0
+
+**Last Updated:** 17 September 2026
 
 ---
 
 ## Purpose
 
-Conformance establishes the criteria by which an implementation, model, or repository may claim compliance with OCOM. It promotes interoperability, consistency, portability, and predictable behavior across independent implementations.
+Conformance establishes the criteria by which implementations may claim compliance with the OCOM Specification. It promotes interoperability, consistency, portability, and predictable behavior across independent implementations.
 
 ## Definition
 
@@ -57,6 +59,15 @@ An implementation **shall** identify the specification version against which con
 
 This chapter does not prescribe certification bodies, compliance programs, testing frameworks, or commercial products. Organizations remain free to establish their own conformance assessment processes.
 
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.2 | 22 July 2026 | Compiled reading path, approved by the Architecture Committee with editorial changes (`Specification/Committee Review Package.md`). |
+| 0.2 | 4 September 2026 | Editorial note added on the scope of conformance across Chapters 2, 5, 6 and 8; no requirement changed. |
+| 0.2 | 16 September 2026 | The Note on scope now points to the `CAND-002` Decision and its grounding paper; no requirement changed. |
+| 1.0 | 17 September 2026 | Purpose restated from `Language/Conformance.md` (conformance is claimed by implementations, as the Definition below already says); every other statement verified against its source as of this date. |
+
 ---
 
-*Source: compiled from `Language/Conformance.md` and the Conformance clauses of `Core/Manifest.md` and `Core/Principles.md`. The "Note on scope" reflects the explicit decision that set-scoped conformance remains a separate discussion from this Core reading path. (4 September 2026: editorial note added on the scope of conformance across Chapters 2, 5, 6 and 8; no requirement changed.) (16 September 2026: the Note on scope now points to the `CAND-002` Decision and its grounding paper; no requirement changed)*
+*Source: compiled from `Language/Conformance.md` and the Conformance clauses of `Core/Manifest.md` and `Core/Principles.md`. The "Note on scope" reflects the explicit decision that set-scoped conformance remains a separate discussion from this Core reading path. (4 September 2026: editorial note added on the scope of conformance across Chapters 2, 5, 6 and 8; no requirement changed.) (16 September 2026: the Note on scope now points to the `CAND-002` Decision and its grounding paper; no requirement changed) (17 September 2026: recompiled as v1.0 against the canonical documents as of this date; see Revision History)*

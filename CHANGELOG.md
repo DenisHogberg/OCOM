@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.0 (17 September 2026, planned)
+
+- Specification reading path 1.0: the nine chapters of `docs/Specification/` recompiled against the canonical documents as they stand on 17 September 2026. Chapter 1 now carries `Core/Manifest.md`'s sections verbatim, including the whole Normative Language section; Chapters 3 and 4 add Organization to the specializations of Object; Chapter 5 compiles the `CAND-016` specialization sentence and replaces an unsourced sentence about Domains with `Models/Domain.md`'s governance rules; Chapter 6 is restated from `Models/Lifecycle.md`, `Models/State.md`, `Lifecycles/Lifecycles.md`, `Models/Entity.md`, `Models/Domain.md` and `Models/Event.md` and no longer calls the Domains and Entities sections non-normative; Chapter 8's Purpose follows `Language/Conformance.md`; every chapter gains a Revision History and a Last Updated field (GAP-007 closed for the chapters). Constitution 1.0.1 and Core Vocabulary 0.1 unchanged.
+- `Specification/Committee Review Package.md` keeps its v0.2 review record and Version, with a dated postscript; the CI version check skips it by name (`CI-DESIGN.md`).
+- Root `README.md` badge and text, `docs/README.md`, `PROJECT_STATUS.md` and `Governance/Publication-Model.md` name Specification 1.0.
+- GitHub Release timestamp and Zenodo version DOI: added by follow-up revisions once they exist.
+
 ## v1.2.0 (16 September 2026)
 
 - Content Release over v1.1.1, cut from commit e4a5a53. Same version tracks (Constitution 1.0.1, Core Vocabulary 0.1 with 13 governed terms, Specification 0.2); the `docs/` tree changes across Governance, Core, Models, Domains, Entities, AI, Language, Adoption, Examples and the Specification reading path.
