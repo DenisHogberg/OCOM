@@ -18,7 +18,7 @@
 
 ---
 
-**Currency note (16 September 2026):** the tables below record the 22 July 2026 state and are left as written. The current Release is recorded in `Governance/Publication-Manifest.md` (v1.1.1, 12 September 2026) and readiness in `Governance/Release-Readiness.md`; the Constitution (`Core/Constitution.md`, 1.0.1) was adopted on 27 July 2026, after this snapshot.
+**Currency note (16 September 2026):** the tables below record the 22 July 2026 state and are left as written. The current Release is recorded in `Governance/Publication-Manifest.md` (v1.2.0, 16 September 2026) and readiness in `Governance/Release-Readiness.md`; the Constitution (`Core/Constitution.md`, 1.0.1) was adopted on 27 July 2026, after this snapshot.
 
 This is a snapshot, not a normative document. For the full history and forward-looking notes, see [`ROADMAP.md`](../ROADMAP.md). For the process by which any of this changes, see [`Governance/`](Governance/README.md).
 
@@ -41,7 +41,7 @@ This is a snapshot, not a normative document. For the full history and forward-l
 | AI extension layer | `AI/` | Released in v0.1 |
 | Workflows | `Workflows/` | Not started — folder exists, no content |
 
-In this table, "v0.1" is the release named "v0.1: Core Specification" in `ROADMAP.md`. The word "Core" in that release name is a release label; it is not the Domain-Neutral Core of Constitution §9. For §9's purposes, `Governance/Constitution-Step0-Summary.md` Decision 4 defines Core by semantic invariance across industries: it includes `Core/`, `Meta/`, `Models/`, `Language/`, `Governance/`, `Memory/`, `AI/`, `Lifecycles/` and `Reference Architecture/`; it excludes `Entities/` and `Examples/`; it treats `Domains/` as a borderline case under ongoing per-document review. `Domains/` and `Entities/` are therefore released content of v0.1, normative by their own Status, and not part of the §9 Core. §9's own wording has not yet been updated to state its scope; that transcription is an open Backlog item (`Master-Architecture-Backlog.md` EPIC-D, `CAND-007` §3).
+In this table, "v0.1" is the release named "v0.1: Core Specification" in `ROADMAP.md`. The word "Core" in that release name is a release label; it is not the Domain-Neutral Core of Constitution §9. For §9's purposes, `Governance/Constitution-Step0-Summary.md` Decision 4 defines Core by semantic invariance across industries: it includes `Core/`, `Meta/`, `Models/`, `Language/`, `Governance/`, `Memory/`, `AI/`, `Lifecycles/` and `Reference Architecture/`; it excludes `Entities/` and `Examples/`; it treats `Domains/` as a borderline case under ongoing per-document review. `Domains/` and `Entities/` are therefore released content of v0.1, normative by their own Status, and not part of the §9 Core. §9's own wording was updated on 11 September 2026 (Constitution 1.0.1) to state its scope; when this snapshot was written that transcription was still an open Backlog item (`Master-Architecture-Backlog.md` EPIC-D, `CAND-007` §3).
 
 ## Governance Status
 
@@ -81,3 +81,12 @@ Per-document `Status` fields are authoritative; as a general guide:
 ---
 
 *This document restates the status recorded in `ROADMAP.md`, `Governance/Release-Readiness.md`, `Governance/Architecture-Observations.md`, and the commit history. It defines nothing and is not itself a source of truth for any status it reports.*
+
+---
+
+# Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.1 | 22 July 2026 | Initial snapshot |
+| 0.1 | 16 September 2026 | Currency note added (the tables record the 22 July 2026 state; current Release v1.2.0); the Section 9 sentence dated to the 11 September 2026 transcription; this Revision History table added, since `Governance/Documentation-Standards.md` requires one in every document. |

@@ -39,7 +39,7 @@ git config gpg.ssh.allowedSignersFile .github/allowed_signers
 git verify-tag <tag>
 ```
 
-GitHub shows the same signature as "Verified" on the tag and release pages. The tags v1.0.0, v1.1.0 and v1.1.1 predate this policy and are unsigned; their contents can be checked against the Zenodo archives instead.
+GitHub marks a tag signature "Verified" only when the signing key is registered on the maintainer's account as a signing key; until that registration is done, GitHub reports the signature on `v1.2.0` as unverified (unknown key), and `git tag -v` with `.github/allowed_signers` is the check that counts. The tags v1.0.0, v1.1.0 and v1.1.1 predate this policy and are unsigned; their contents can be checked against the Zenodo archives instead.
 
 Releases cut from 13 September 2026 also carry three assets: the archive of record `OCOM-<tag>.zip`, built with `git archive` from the tag, `SHA256SUMS`, and its detached SSH signature `SHA256SUMS.sig`. To verify them with nothing but the downloaded files:
 

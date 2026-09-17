@@ -14,15 +14,15 @@
 
 **Version:** 0.1
 
-**Last Updated:** 12 September 2026
+**Last Updated:** 16 September 2026
 
 ---
 
 # Purpose
 
-A re-verification of ocom.uno against this repository found that version identifiers, publication layers, normative references, and file statuses do not currently form one unambiguous chain from canonical source to public authoritative artifact. Specifically: the site shows "Core Vocabulary v0.1"; `Core/Constitution.md` is v1.0; the only GitHub tag/release is named `v1.0.0` and was cut on commit `f7a33e238e7c1b11482853fcbba648d350c20fa3` (22–23 July 2026) — **before** Constitution v1.0 was adopted (`CAND-006`, 26–27 July) and before the Architecture Freeze (`CAND-007`, 27 July). Three numbers currently describe overlapping-but-different things with no documented relationship between them.
+A re-verification of ocom.uno against this repository found that version identifiers, publication layers, normative references, and file statuses do not currently form one unambiguous chain from canonical source to public authoritative artifact. Specifically: the site shows "Core Vocabulary v0.1"; `Core/Constitution.md` is v1.0; at the time of that audit the only GitHub tag/release was named `v1.0.0` and was cut on commit `f7a33e238e7c1b11482853fcbba648d350c20fa3` (22–23 July 2026) — **before** Constitution v1.0 was adopted (`CAND-006`, 26–27 July) and before the Architecture Freeze (`CAND-007`, 27 July). Three numbers currently describe overlapping-but-different things with no documented relationship between them.
 
-This document is that relationship, stated once. It executes `Master-Architecture-Backlog.md`'s `EPIC-F` ("Specification Currency & Presentation") and is itself Informative — it documents governance/publication structure, it does not add a Canonical Principle, a Meta Object, or change Object/Memory/Evidence/Knowledge. Nothing here requires a Freeze exception under `CAND-007`.
+This document is that relationship, stated once. It executes `Master-Architecture-Backlog.md`'s `EPIC-F` ("Specification Currency & Presentation") and is itself a governance document, Status Draft per its Revision History — it documents governance/publication structure, it does not add a Canonical Principle, a Meta Object, or change Object/Memory/Evidence/Knowledge. Nothing here requires a Freeze exception under `CAND-007`.
 
 ---
 
@@ -32,10 +32,10 @@ Four independent version tracks. The confusion the audit found comes from treati
 
 | Track | Owner document | Current value | Changes via |
 |---|---|---|---|
-| **Constitution** | `Core/Constitution.md` (`Core-00`) | v1.0 | RFC-like amendment only — the process `Constitution.md`'s own Governance implication already states: Reference Case or direct proposal → ADR Candidate → Chief Architect Decision, never an editorial edit. |
+| **Constitution** | `Core/Constitution.md` (`Core-00`) | 1.0.1 (since 11 September 2026) | RFC-like amendment only — the process `Constitution.md`'s own Governance implication already states: Reference Case or direct proposal → ADR Candidate → Chief Architect Decision, never an editorial edit. |
 | **Core Vocabulary** | the 13 `Meta/` term set (Capability, Classification, Constraint, Contract, Identity, Metadata, Object, Organization, Ownership, Policy, Reference, Registry, Relationship), published individually on ocom.uno | v0.1 | Ordinary ADR Candidate, per term — a term's own definition can be refined without touching a Canonical Principle, and vice versa. |
 | **Specification** (compiled reading path) | `docs/Specification/*` (`SPEC-00` through `SPEC-08`, plus the Committee Review Package) | v0.2 | Editorial recompilation of the granular canonical documents — see "Publication Layers" below. Must record which Constitution and Core Vocabulary versions it was compiled from; this was not previously done and is closed by this document (see "Known Gaps"). |
-| **Release** (public, citable identifier) | GitHub tag/release, resolved by `Publication-Manifest.md` | `v1.1.1` (current; `v1.0.0` was mislabeled, see below) | An independent semver track. **Does not mirror any single component's version number.** Names one specific bundle: {this Constitution version + this Core Vocabulary version + this Specification version + this commit}. |
+| **Release** (public, citable identifier) | GitHub tag/release, resolved by `Publication-Manifest.md` | `v1.2.0` (current, 16 September 2026; `v1.1.1` Superseded; `v1.0.0` was mislabeled, see below) | An independent semver track. **Does not mirror any single component's version number.** Names one specific bundle: {this Constitution version + this Core Vocabulary version + this Specification version + this commit}. |
 
 Treating Release as its own track, rather than assuming it equals Constitution's version, is the specific fix for how `v1.0.0` came to be cut before Constitution v1.0 existed: a Release identifier that numerically echoes one internal component's version invites exactly that kind of premature or misleading naming. Decoupling them means a future Release can be minted whenever a coherent, reviewed bundle is ready, independent of which internal track happens to have moved most recently.
 
@@ -44,11 +44,11 @@ Treating Release as its own track, rather than assuming it equals Constitution's
 # Answering the Six Authoritative-Version Questions
 
 1. **Which version is authoritative?** Whichever entry `Publication-Manifest.md` lists as current (not superseded).
-2. **Which documents are in that version?** Resolved by checking out the Manifest entry's declared `commit` — `Publication-Manifest.md` does not carry a separate document-list field; the commit itself pins the exact file set.
-3. **Which Git commit corresponds to it?** The `commit` field on that Manifest entry.
-4. **Which public artifact corresponds to it?** The `published_artifacts` field on that Manifest entry.
-5. **Which machine-readable representations were generated from it?** The `projections` field on that Manifest entry.
-6. **How can one confirm the site and GitHub publish the same version?** By comparing the Manifest entry's `commit` field against whatever commit or version marker the live site exposes. **This repository can state this contract; it cannot enforce it** — see "Known Gaps."
+2. **Which documents are in that version?** Resolved by checking out the Manifest entry's declared `Commit` — `Publication-Manifest.md` does not carry a separate document-list field; the commit itself pins the exact file set.
+3. **Which Git commit corresponds to it?** The `Commit` field on that Manifest entry.
+4. **Which public artifact corresponds to it?** The `Published Artifacts` field on that Manifest entry.
+5. **Which machine-readable representations were generated from it?** The `Machine-readable Projections` field on that Manifest entry.
+6. **How can one confirm the site and GitHub publish the same version?** By comparing the Manifest entry's `Commit` field against whatever commit or version marker the live site exposes. **This repository can state this contract; it cannot enforce it** — see "Known Gaps."
 
 ---
 
@@ -113,3 +113,4 @@ An interactive, read-only tool published on the site (currently one instance: `o
 | 0.1 | 20 August 2026 | Corrected on independent review: Status changed Informative → Draft (this is a `Governance/` process document, not an analysis document, per `Documentation-Standards.md`'s Status Taxonomy); question 2's answer no longer cites a nonexistent `canonical_sources` Manifest field; added a Known Gap disclosing the live site's Specification `v0.1` vs. this repository's `v0.2` |
 | 0.1 | 5 September 2026 | Tier 4 now names the site-held informative records (`/why`, `/evidence-register`, `/specification/how-to-review`, `/api`, `/observatory`), which previously belonged to no tier. |
 | 0.1 | 12 September 2026 | Release track current value updated from `v1.0.0` to `v1.1.1`, per `Publication-Manifest.md`. |
+| 0.1 | 16 September 2026 | Release track current value updated from `v1.1.1` to `v1.2.0` and the Constitution track from v1.0 to 1.0.1, per `Publication-Manifest.md` and `Core/Constitution.md`; the six-question answers now name the Manifest's actual field labels (`Commit`, `Published Artifacts`, `Machine-readable Projections`); one audit-narrative sentence in Purpose put in the past tense and the document's Status named correctly. Found by the dogfooding audit of Release v1.2.0. |
