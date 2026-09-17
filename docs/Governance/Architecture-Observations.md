@@ -458,7 +458,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. An editorial note was added to Chapter 8 on 4 September 2026 recording the difference. A future Reference Case should propose one scoping rule: the implementation claims conformance, and the models it produces are required to satisfy Chapters 2, 5 and 6 as part of that claim.
 
-**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2) Partly resolved on 17 September 2026 by the v1.0 recompilation of the reading path: Chapter 8's Purpose no longer reads "an implementation, model, or repository" but restates `Language/Conformance.md`, so the Purpose and Definition no longer disagree. The other three parts stand, and the same recompilation leaves two widenings this entry did not name: Chapter 8 compiles `Language/Conformance.md`'s "required language constructs" as "the required language and structural constructs (Chapters 4 to 6)" and its "compatibility with the core language" as "compatibility with the core specification", so a rule the Language tier scopes to the OCOM Language is stated as a rule about the specification as a whole. Both predate this recompilation; neither is a new requirement, and both are recorded here rather than corrected, per the editorial policy Chapter 5 states.
 
 **Architect Response:** *(pending)*
 
@@ -1580,3 +1580,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 16 September 2026 | AO-065 closed: Chapter 4 now compiles `Meta/Organization.md` (EPIC-F). |
 | 0.1 | 16 September 2026 | AO-062 answered in part by `Governance/Conformance-Test-Suite.md`: the requirement set is enumerated as a derived projection; the keyword separation stays open. |
 | 0.1 | 16 September 2026 | AO-005 Status label aligned with the Entry Lifecycle (Escalated); AO-025 corroborated by the dogfooding audit of Release v1.2.0 with three further instances of Informative documents carrying their own shall-sentences. |
+| 0.1 | 17 September 2026 | AO-014: dated note recording that the v1.0 recompilation removed the Purpose widening and naming two Language-tier widenings the entry had not named. Found by the dogfooding audit of Release v1.3.0. |

@@ -34,12 +34,13 @@ publication controls it verifies (b564bf5, 21 August 2026), and
 11 September 2026). CONTRIBUTING.md states both rules for
 contributors.
 
-## The five jobs
+## The jobs
+
+Five jobs are described here in the order they were added; a sixth, `requirement-register`, landed on 17 September 2026 and is described in its own section below, as the licensing, Scorecard and dependency-review checks are.
 
 **`required-documents`** — confirms LICENSE, README, CONTRIBUTING,
 CHANGELOG, ROADMAP, this file, and `docs/README.md` /
-`docs/PROJECT_STATUS.md` still exist. Cheap, and the only one of the
-five that would catch an accidental deletion — nothing else would.
+`docs/PROJECT_STATUS.md` still exist. Cheap, and the only job that would catch an accidental deletion — nothing else would.
 
 **`markdown-lint`** — structural Markdown checks via markdownlint,
 using `.markdownlint-cli2.jsonc`. Several default rules are disabled

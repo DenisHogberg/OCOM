@@ -28,7 +28,7 @@ A Transition defines movement from one State to another. Transitions **shall** b
 
 ## Lifecycle Ownership
 
-Every Entity **shall** belong to exactly one primary Domain, and the Domain governs ownership, responsibility, and operational rules (`Models/Entity.md`). A Domain's responsibilities include ensuring lifecycle governance, and primary governance **shall** never be shared between Domains (`Models/Domain.md`).
+Every Entity **shall** belong to exactly one primary Domain, and the Domain governs ownership, responsibility, and operational rules (`Models/Entity.md`). A Domain's responsibilities include ensuring lifecycle governance, and primary governance **shall not** be shared between Domains (`Models/Domain.md`).
 
 ## Events and Lifecycle
 
@@ -48,7 +48,7 @@ A Lifecycle conforms to this specification only if all mandatory requirements de
 |----------|------|-------------|
 | 0.2 | 22 July 2026 | Compiled reading path, approved by the Architecture Committee with editorial changes (`Specification/Committee Review Package.md`). |
 | 0.2 | 22 July 2026 | Committee Review: added an inline definition of "Reference Material" at first use, per committee direction; no source document changed. |
-| 1.0 | 17 September 2026 | Purpose no longer calls the Domains, Entities and Lifecycles sections non-normative (their Status fields decide, per `Documentation-Standards.md`); Definition, States, Transitions and Conformance restated from `Models/Lifecycle.md`, `Models/State.md` and `Lifecycles/Lifecycles.md` ("shall never" normalized to "shall not" as Chapter 5 did on 22 July 2026); Lifecycle Ownership now compiles `Models/Entity.md` and `Models/Domain.md` instead of an unsourced rule, and Events and Lifecycle compiles `Models/Event.md` and `Models/State.md`; Source line extended accordingly. |
+| 1.0 | 17 September 2026 | "shall never", inherited verbatim from `Models/Domain.md`, normalized to "shall not" as the Committee Review of 22 July 2026 directed for Chapter 5; no requirement changed. Purpose no longer calls the Domains, Entities and Lifecycles sections non-normative (their Status fields decide, per `Documentation-Standards.md`); Definition, States, Transitions and Conformance restated from `Models/Lifecycle.md`, `Models/State.md` and `Lifecycles/Lifecycles.md` ("shall never" normalized to "shall not" as Chapter 5 did on 22 July 2026); Lifecycle Ownership now compiles `Models/Entity.md` and `Models/Domain.md` instead of an unsourced rule, and Events and Lifecycle compiles `Models/Event.md` and `Models/State.md`; Source line extended accordingly. |
 
 ---
 

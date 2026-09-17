@@ -35,7 +35,7 @@ An Entity **shall not** exist without identity, without ownership, without a lif
 
 ## Domain
 
-A Domain is an operational boundary responsible for governing one or more Entities. A Domain organizes responsibility rather than organizational structure — it represents what is governed, not who performs the work. A Domain may govern multiple Entities; primary governance **shall** never be shared between Domains, and relationships between Domains define cooperation but do not transfer governance.
+A Domain is an operational boundary responsible for governing one or more Entities. A Domain organizes responsibility rather than organizational structure — it represents what is governed, not who performs the work. A Domain may govern multiple Entities; primary governance **shall not** be shared between Domains, and relationships between Domains define cooperation but do not transfer governance.
 
 ## Relationship
 
@@ -71,7 +71,7 @@ An Entity, Domain, Relationship, Event, State, or Workflow conforms to this spec
 |----------|------|-------------|
 | 0.2 | 22 July 2026 | Compiled reading path, approved by the Architecture Committee with editorial changes (`Specification/Committee Review Package.md`). |
 | 0.2 | 22 July 2026 | Committee Review: "shall never," inherited verbatim from `Models/Entity.md`, normalized to "shall not" to match Chapter 1's keyword glossary; no requirement changed. |
-| 1.0 | 17 September 2026 | Relationship section compiles the specialization sentence `Models/Relationship.md` gained under `CAND-016`, with a dated editorial note closing the earlier one; the Domain section's unsourced sentence about Domains owning Domains replaced by the governance rules of `Models/Domain.md`; every other sentence verified against its `Models/` source as of this date. |
+| 1.0 | 17 September 2026 | "shall never", inherited verbatim from `Models/Domain.md`, normalized to "shall not" as the Committee Review of 22 July 2026 directed for this chapter; no requirement changed. Relationship section compiles the specialization sentence `Models/Relationship.md` gained under `CAND-016`, with a dated editorial note closing the earlier one; the Domain section's unsourced sentence about Domains owning Domains replaced by the governance rules of `Models/Domain.md`; every other sentence verified against its `Models/` source as of this date. |
 
 ---
 
