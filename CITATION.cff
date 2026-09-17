@@ -16,8 +16,8 @@ authors:
 repository-code: "https://github.com/DenisHogberg/OCOM"
 url: "https://ocom.uno"
 license: CC-BY-4.0
-version: 1.2.0
-date-released: 2026-09-16
+version: 1.3.0
+date-released: 2026-09-17
 keywords:
   - operating model
   - enterprise architecture

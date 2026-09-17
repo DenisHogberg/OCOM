@@ -97,14 +97,14 @@ Entries are append-only, mirroring the same discipline already used for `ADR-Can
 | Field | Value |
 |---|---|
 | **Release Identifier** | `v1.3.0` |
-| **Commit** | TBD: the merge commit of the pull request that carries this entry and the v1.0 reading path, filled by a follow-up revision before tagging, per `Release-Workflow.md` step 6. |
+| **Commit** | `8235b8562dfa309d2f328e8fdc12e7baa9bc4fe6` |
 | **Constitution Version** | 1.0.1 |
 | **Core Vocabulary Version** | 0.1 (13 governed terms) |
 | **Specification Version** | 1.0 |
 | **Publication Date** | 17 September 2026, planned. The GitHub Release timestamp and the Zenodo version DOI are added by follow-up revisions once they exist; until then this entry describes the intended Release, not a published one. |
 | **Published Artifacts** | GitHub Release "OCOM v1.3.0: Object-Centric Operating Model, an open specification for a machine-readable description of an organization" from an SSH-signed annotated tag `v1.3.0` with the three assets `Release-Workflow.md` step 7 names (`OCOM-v1.3.0.zip`, `SHA256SUMS`, `SHA256SUMS.sig`); Zenodo version DOI to be recorded by the follow-up revision. |
-| **Machine-readable Projections** | `.zenodo.json` and `CITATION.cff` at this commit (`CITATION.cff` carries `version` and `date-released` since `v1.2.0`, to be set to 1.3.0 in the follow-up revision). ocom.uno: the Specification pages, `specification.md` and `specification.json` to be regenerated from the v1.0 chapters and recorded by the follow-up revision; term-card projections unchanged, since no `Meta/` definition changed. |
-| **Status** | **Current (planned).** The Specification track moves from 0.2 to 1.0: the nine chapters of `docs/Specification/` recompiled against the canonical documents as they stand on 17 September 2026, per the Chief Architect's decision of the same day, each with a Revision History and a Source line naming what changed; `Specification/Committee Review Package.md` keeps the v0.2 review record. Constitution and Core Vocabulary tracks unchanged. Cut per `Release-Workflow.md` steps 6 and 7 once the Commit field is filled. |
+| **Machine-readable Projections** | `.zenodo.json` and `CITATION.cff` at this commit (`CITATION.cff` at this commit still says 1.2.0; it is set to 1.3.0 on `main` in the revision that fills this Commit field, since the tagged commit cannot carry its own hash). ocom.uno: the Specification pages, `specification.md` and `specification.json` to be regenerated from the v1.0 chapters and recorded by the follow-up revision; term-card projections unchanged, since no `Meta/` definition changed. |
+| **Status** | **Current (planned).** The Specification track moves from 0.2 to 1.0: the nine chapters of `docs/Specification/` recompiled against the canonical documents as they stand on 17 September 2026, per the Chief Architect's decision of the same day, each with a Revision History and a Source line naming what changed; `Specification/Committee Review Package.md` keeps the v0.2 review record. Constitution and Core Vocabulary tracks unchanged. Cut per `Release-Workflow.md` steps 6 and 7: this entry recorded before tagging, signed annotated tag on the commit named above. |
 
 # Revision History
 
@@ -122,3 +122,4 @@ Entries are append-only, mirroring the same discipline already used for `ADR-Can
 | 0.1 | 17 September 2026 | `v1.2.0` entry completed: Zenodo version DOI `10.5281/zenodo.22807178`, record published 2026-09-17T07:02:57Z after the release event was redelivered by hand. |
 | 0.1 | 17 September 2026 | `v1.2.0` entry: Software Heritage snapshot and release SWHID recorded; the archived release resolves to the same commit `e4a5a53`. |
 | 0.1 | 17 September 2026 | Added the `v1.3.0` entry (Specification track 1.0; Commit TBD until the carrying pull request is merged, then filled before tagging); `v1.2.0` marked Superseded by `v1.3.0`. |
+| 0.1 | 17 September 2026 | `v1.3.0` entry: Commit filled with the merge commit of the carrying pull request (`8235b85`), per `Release-Workflow.md` step 6. |
