@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 16 September 2026
+**Last Updated:** 17 September 2026
 
 ---
 
@@ -34,7 +34,7 @@ Four independent version tracks. The confusion the audit found comes from treati
 |---|---|---|---|
 | **Constitution** | `Core/Constitution.md` (`Core-00`) | 1.0.1 (since 11 September 2026) | RFC-like amendment only — the process `Constitution.md`'s own Governance implication already states: Reference Case or direct proposal → ADR Candidate → Chief Architect Decision, never an editorial edit. |
 | **Core Vocabulary** | the 13 `Meta/` term set (Capability, Classification, Constraint, Contract, Identity, Metadata, Object, Organization, Ownership, Policy, Reference, Registry, Relationship), published individually on ocom.uno | v0.1 | Ordinary ADR Candidate, per term — a term's own definition can be refined without touching a Canonical Principle, and vice versa. |
-| **Specification** (compiled reading path) | `docs/Specification/*` (`SPEC-00` through `SPEC-08`, plus the Committee Review Package) | v0.2 | Editorial recompilation of the granular canonical documents — see "Publication Layers" below. Must record which Constitution and Core Vocabulary versions it was compiled from; this was not previously done and is closed by this document (see "Known Gaps"). |
+| **Specification** (compiled reading path) | `docs/Specification/*` (`SPEC-00` through `SPEC-08`, plus the Committee Review Package, which keeps the v0.2 review record) | 1.0 (since 17 September 2026) | Editorial recompilation of the granular canonical documents — see "Publication Layers" below. Must record which Constitution and Core Vocabulary versions it was compiled from; this was not previously done and is closed by this document (see "Known Gaps"). |
 | **Release** (public, citable identifier) | GitHub tag/release, resolved by `Publication-Manifest.md` | `v1.2.0` (current, 16 September 2026; `v1.1.1` Superseded; `v1.0.0` was mislabeled, see below) | An independent semver track. **Does not mirror any single component's version number.** Names one specific bundle: {this Constitution version + this Core Vocabulary version + this Specification version + this commit}. |
 
 Treating Release as its own track, rather than assuming it equals Constitution's version, is the specific fix for how `v1.0.0` came to be cut before Constitution v1.0 existed: a Release identifier that numerically echoes one internal component's version invites exactly that kind of premature or misleading naming. Decoupling them means a future Release can be minted whenever a coherent, reviewed bundle is ready, independent of which internal track happens to have moved most recently.
@@ -114,3 +114,4 @@ An interactive, read-only tool published on the site (currently one instance: `o
 | 0.1 | 5 September 2026 | Tier 4 now names the site-held informative records (`/why`, `/evidence-register`, `/specification/how-to-review`, `/api`, `/observatory`), which previously belonged to no tier. |
 | 0.1 | 12 September 2026 | Release track current value updated from `v1.0.0` to `v1.1.1`, per `Publication-Manifest.md`. |
 | 0.1 | 16 September 2026 | Release track current value updated from `v1.1.1` to `v1.2.0` and the Constitution track from v1.0 to 1.0.1, per `Publication-Manifest.md` and `Core/Constitution.md`; the six-question answers now name the Manifest's actual field labels (`Commit`, `Published Artifacts`, `Machine-readable Projections`); one audit-narrative sentence in Purpose put in the past tense and the document's Status named correctly. Found by the dogfooding audit of Release v1.2.0. |
+| 0.1 | 17 September 2026 | Specification track current value updated from v0.2 to 1.0: the nine chapters recompiled against the canonical documents on 17 September 2026, per the Chief Architect's decision of the same day; the Committee Review Package keeps its v0.2 record. |

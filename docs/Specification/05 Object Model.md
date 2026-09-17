@@ -1,10 +1,12 @@
-# OCOM Specification v0.2 — Object Model
+# OCOM Specification v1.0 — Object Model
 
 **Document ID:** SPEC-05
 
 **Status:** Draft
 
-**Version:** 0.2
+**Version:** 1.0
+
+**Last Updated:** 17 September 2026
 
 ---
 
@@ -33,13 +35,15 @@ An Entity **shall not** exist without identity, without ownership, without a lif
 
 ## Domain
 
-A Domain is an operational boundary responsible for governing one or more Entities. A Domain organizes responsibility rather than organizational structure — it represents what is governed, not who performs the work. Domains do not own other Domains.
+A Domain is an operational boundary responsible for governing one or more Entities. A Domain organizes responsibility rather than organizational structure — it represents what is governed, not who performs the work. A Domain may govern multiple Entities; primary governance **shall** never be shared between Domains, and relationships between Domains define cooperation but do not transfer governance.
 
 ## Relationship
 
-A Relationship is an explicit operational association between two or more Entities. It defines structural connections and does not itself represent operational behavior. Every Relationship **shall** connect identifiable Entities, have a defined type, and define cardinality; direction **shall** be explicit whenever operational meaning depends on it.
+A Relationship is an explicit operational association between two or more Entities. It defines structural connections and does not itself represent operational behavior. Every Relationship **shall** connect identifiable Entities, have a defined type, and define cardinality; direction **shall** be explicit whenever operational meaning depends on it. This chapter's Relationship specializes the Relationship defined in `Meta/Relationship.md`, whose participants are Objects, for the case in which every participant is an Entity; a Relationship with a participant that is not an Entity, including an Organization, is governed by `Meta/Relationship.md` (`CAND-016`).
 
 > **Editorial note.** `Meta/Relationship.md` (Chapter 4) frames Relationship in terms of the business *meaning* it conveys ("unlike a Reference, a Relationship conveys business meaning"), while `Models/Relationship.md` (this chapter) frames it as a *structural* connection that "does not represent operational behavior." Read together, these are not stated as contradictory in the source documents — meaning and behavior are different properties, and a structural connection can still carry business meaning without describing behavior. This chapter records the difference in emphasis rather than resolving it, per editorial policy: apparent tensions between source documents are flagged, not corrected, in this reading path.
+>
+> **Editorial note (17 September 2026).** The difference recorded above was settled on 16 September 2026 by `CAND-016`: `Meta/Relationship.md` is the canonical definition of Relationship and `Models/Relationship.md` its specialization for Entity participants, as the paragraph above now compiles from the latter's Purpose. The earlier note is kept as the record of what this reading path flagged.
 
 ## Event
 
@@ -61,6 +65,14 @@ An Entity is a specialization of Object as defined by the Meta Model. It shares 
 
 An Entity, Domain, Relationship, Event, State, or Workflow conforms to this specification only if all mandatory requirements defined for it are satisfied.
 
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.2 | 22 July 2026 | Compiled reading path, approved by the Architecture Committee with editorial changes (`Specification/Committee Review Package.md`). |
+| 0.2 | 22 July 2026 | Committee Review: "shall never," inherited verbatim from `Models/Entity.md`, normalized to "shall not" to match Chapter 1's keyword glossary; no requirement changed. |
+| 1.0 | 17 September 2026 | Relationship section compiles the specialization sentence `Models/Relationship.md` gained under `CAND-016`, with a dated editorial note closing the earlier one; the Domain section's unsourced sentence about Domains owning Domains replaced by the governance rules of `Models/Domain.md`; every other sentence verified against its `Models/` source as of this date. |
+
 ---
 
-*Source: compiled from `Models/Model.md`, `Models/Entity.md`, `Models/Domain.md`, `Models/Relationship.md`, `Models/Event.md`, `Models/State.md`, `Models/Workflow.md`. The Entity↔Object cross-reference reflects the explicit link added to `Models/Entity.md` during v0.1 stabilization. (Committee Review, 22 July 2026: "shall never," inherited verbatim from `Models/Entity.md`, normalized to "shall not" to match Chapter 1's keyword glossary; no requirement changed.)*
+*Source: compiled from `Models/Model.md`, `Models/Entity.md`, `Models/Domain.md`, `Models/Relationship.md`, `Models/Event.md`, `Models/State.md`, `Models/Workflow.md`. The Entity↔Object cross-reference reflects the explicit link added to `Models/Entity.md` during v0.1 stabilization. (Committee Review, 22 July 2026: "shall never," inherited verbatim from `Models/Entity.md`, normalized to "shall not" to match Chapter 1's keyword glossary; no requirement changed.) (17 September 2026: recompiled as v1.0 against the canonical documents as of this date; see Revision History)*

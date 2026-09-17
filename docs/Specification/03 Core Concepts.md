@@ -1,10 +1,12 @@
-# OCOM Specification v0.2 — Core Concepts
+# OCOM Specification v1.0 — Core Concepts
 
 **Document ID:** SPEC-03
 
 **Status:** Draft
 
-**Version:** 0.2
+**Version:** 1.0
+
+**Last Updated:** 17 September 2026
 
 ---
 
@@ -16,7 +18,7 @@ This chapter orients the reader before the detailed Meta Model (Chapter 4) and O
 
 **Object** is the universal abstraction within OCOM. It is an identifiable and governable element that exists within the operational model — something that can be described, managed, related, evaluated, or governed throughout its lifecycle, independently of implementation technology or business domain.
 
-All managed concepts defined by this specification — Entity, Domain, Workflow, Event, Lifecycle, Policy, Contract, and others — are specializations of Object.
+All managed concepts defined by this specification — Entity, Organization, Domain, Workflow, Event, Lifecycle, Policy, Contract, and others — are specializations of Object.
 
 ## Entity
 
@@ -40,15 +42,15 @@ All managed concepts defined by this specification — Entity, Domain, Workflow,
 
 ## Capability, Policy, and Contract
 
-**Capability** is a governed description of an ability possessed or provided by an Object — potential functionality, not a specific execution. **Policy** is a governed rule defining expected behavior or constraints applicable to one or more Objects. **Contract** is a governed agreement between two or more Objects specifying the conditions under which they interact.
+**Capability** is a governed description of an ability possessed or provided by an Object — potential functionality, not a specific execution. **Policy** is a governed set of rules that defines expected behavior or constraints applicable to one or more Objects. **Contract** is a governed agreement between two or more Objects specifying the conditions under which they interact.
 
 ## How These Concepts Relate
 
 ```text
 Object
   |
-  |-- is specialized by ----> Entity, Domain, Workflow, Event, Lifecycle,
-  |                            Policy, Contract, Registry, ...
+  |-- is specialized by ----> Entity, Organization, Domain, Workflow, Event,
+  |                            Lifecycle, Policy, Contract, Registry, ...
   |
   |-- is described by ------> Identity, Metadata, Classification, Ownership
   |
@@ -61,8 +63,15 @@ An Entity belongs to a Domain, follows a Lifecycle expressed through States, is 
 
 ## What Is Deliberately Not Introduced Here
 
-This specification does not define AI-specific concepts (Agent, Context, Knowledge, Memory) or runtime/execution semantics as part of the Core. Where they exist elsewhere in the repository, they are extensions, not prerequisites for understanding Chapters 4–6.
+This reading path compiles the Meta Model, the Object Model and the Lifecycle Model (Chapters 4 to 6). Memory, Knowledge, Context and AI Agents are defined in their own sections of the repository (`docs/Memory/`, `docs/AI/`) and are governed by `Core/Constitution.md`; they are outside this reading path, neither prerequisites for Chapters 4 to 6 nor extensions of them. Runtime and execution semantics are not defined by the Core. Core Conformance (Chapter 8) is defined over Chapters 4 to 6.
+
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.2 | 22 July 2026 | Compiled reading path, approved by the Architecture Committee with editorial changes (`Specification/Committee Review Package.md`). |
+| 1.0 | 17 September 2026 | Organization added to the specializations of Object (prose and diagram) per `Meta/Organization.md`; the Policy sentence restated from `Meta/Policy.md`; the closing section restated: Memory, Knowledge, Context and AI Agents are defined in their own sections and governed by the Constitution, outside this reading path rather than extensions of it. |
 
 ---
 
-*Source: synthesized from `Meta/Object.md`, `Meta/Relationship.md`, `Meta/Reference.md`, `Meta/Capability.md`, `Meta/Policy.md`, `Meta/Contract.md`, `Models/Entity.md`, `Models/Domain.md`, `Models/Relationship.md`, `Models/Event.md`, `Models/State.md`, `Models/Lifecycle.md`, `Models/Workflow.md`. No new concepts introduced.*
+*Source: synthesized from `Meta/Object.md`, `Meta/Relationship.md`, `Meta/Reference.md`, `Meta/Capability.md`, `Meta/Policy.md`, `Meta/Contract.md`, `Models/Entity.md`, `Models/Domain.md`, `Models/Relationship.md`, `Models/Event.md`, `Models/State.md`, `Models/Lifecycle.md`, `Models/Workflow.md`, `Meta/Organization.md`, `Core/Constitution.md`. No new concepts introduced. (17 September 2026: recompiled as v1.0 against the canonical documents as of this date; see Revision History)*

@@ -1,10 +1,12 @@
-# OCOM Specification v0.2 — Governance
+# OCOM Specification v1.0 — Governance
 
 **Document ID:** SPEC-07
 
 **Status:** Draft
 
-**Version:** 0.2
+**Version:** 1.0
+
+**Last Updated:** 17 September 2026
 
 ---
 
@@ -56,6 +58,16 @@ Ten principles govern how the specification is maintained: Specification First; 
 
 A change to this specification conforms to this chapter only if it has been proposed, reviewed, and approved through the process defined above, and its record is preserved.
 
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.2 | 22 July 2026 | Compiled reading path, approved by the Architecture Committee with editorial changes (`Specification/Committee Review Package.md`). |
+| 0.2 | 22 July 2026 | Committee Review: added a terminology note disambiguating "Governance" from Chapter 4's unrelated use of the same word; citing `docs/Governance/` alongside `Core/Governance.md` was reviewed and confirmed acceptable, since `docs/Governance/` is itself an approved Baseline. |
+| 0.2 | 16 September 2026 | Added Constitution and Architecture Freeze, compiled from `Core/Constitution.md`, `CAND-006` and `CAND-007`, per `Master-Architecture-Backlog.md` EPIC-F; no requirement changed. |
+| 0.2 | 16 September 2026 | Adoption date stated as 26 July 2026 per `CAND-006`, recording date 27 July 2026. |
+| 1.0 | 17 September 2026 | Version label 1.0; every statement verified against `Core/Governance.md`, `docs/Governance/Governance-Manifest.md`, `Core/Constitution.md` and the Decisions cited as of this date; content unchanged. |
+
 ---
 
-*Source: compiled from `Core/Governance.md` (specification-evolution charter) and `docs/Governance/Governance-Manifest.md` (operational realization of that charter, established alongside this revision). (Committee Review, 22 July 2026: added a terminology note disambiguating "Governance" from Chapter 4's unrelated use of the same word; citing `docs/Governance/` alongside `Core/Governance.md` was reviewed and confirmed acceptable, since `docs/Governance/` is itself an approved Baseline.) (16 September 2026: added Constitution and Architecture Freeze, compiled from `Core/Constitution.md`, `CAND-006` and `CAND-007`, per `Master-Architecture-Backlog.md` EPIC-F; no requirement changed) (16 September 2026, later the same day: adoption date stated as 26 July 2026 per `CAND-006`, recording date 27 July 2026)*
+*Source: compiled from `Core/Governance.md` (specification-evolution charter) and `docs/Governance/Governance-Manifest.md` (operational realization of that charter, established alongside this revision). (Committee Review, 22 July 2026: added a terminology note disambiguating "Governance" from Chapter 4's unrelated use of the same word; citing `docs/Governance/` alongside `Core/Governance.md` was reviewed and confirmed acceptable, since `docs/Governance/` is itself an approved Baseline.) (16 September 2026: added Constitution and Architecture Freeze, compiled from `Core/Constitution.md`, `CAND-006` and `CAND-007`, per `Master-Architecture-Backlog.md` EPIC-F; no requirement changed) (16 September 2026, later the same day: adoption date stated as 26 July 2026 per `CAND-006`, recording date 27 July 2026) (17 September 2026: recompiled as v1.0 against the canonical documents as of this date; see Revision History)*

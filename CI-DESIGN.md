@@ -207,3 +207,7 @@ to compare, so on a push it has nothing to review. The action is
 GitHub-owned and the pinning policy above would allow a major-version
 tag; it is pinned to a SHA anyway, because this check gates merges once
 the branch ruleset requires it.
+
+## Specification version check and the Committee Review Package (17 September 2026)
+
+The publication-metadata job compares the Manifest's current Specification Version with the `**Version:**` field of every file under `docs/Specification/`. `Committee Review Package.md` is the record of the 22 July 2026 review of the v0.2 reading path and keeps `Version: 0.2` for good, so the loop skips it by name; the nine chapters remain covered.

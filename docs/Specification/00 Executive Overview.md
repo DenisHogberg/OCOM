@@ -1,10 +1,12 @@
-# OCOM Specification v0.2 — Executive Overview
+# OCOM Specification v1.0 — Executive Overview
 
 **Document ID:** SPEC-00
 
 **Status:** Informative
 
-**Version:** 0.2
+**Version:** 1.0
+
+**Last Updated:** 17 September 2026
 
 ---
 
@@ -20,8 +22,16 @@ If that idea is useful to you — as an architect trying to bring order to a fra
 
 The specification is governed by a Constitution, `Core/Constitution.md`, adopted after this reading path was compiled; Chapter 1 states how the two relate.
 
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.2 | 22 July 2026 | Compiled reading path, approved by the Architecture Committee with editorial changes (`Specification/Committee Review Package.md`). |
+| 0.2 | 16 September 2026 | One sentence added pointing to the Constitution; nothing else changed. |
+| 1.0 | 17 September 2026 | Version label 1.0; content unchanged apart from the Constitution sentence added on 16 September 2026. |
+
 ---
 
 *This document is informative. It introduces no terms and imposes no requirements — definitions and requirements begin in Chapter 1.*
 
-*Source: synthesized from `Core/Manifest.md` (Abstract, Purpose, Motivation) and the root `README.md`. No new claims beyond those documents. (16 September 2026: one sentence added pointing to the Constitution; nothing else changed)*
+*Source: synthesized from `Core/Manifest.md` (Abstract, Purpose, Motivation) and the root `README.md`. No new claims beyond those documents. (16 September 2026: one sentence added pointing to the Constitution; nothing else changed) (17 September 2026: recompiled as v1.0 against the canonical documents as of this date; see Revision History)*
