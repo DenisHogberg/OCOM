@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 16 September 2026
+**Last Updated:** 17 September 2026
 
 ---
 
@@ -96,7 +96,7 @@ Every release entry from this point forward **shall** confirm the following:
 
 **Recommendation:** Approved for release.
 
-**Status:** Released. GitHub Release `v1.2.0` published 2026-09-16T18:04:46Z from the SSH-signed tag on `e4a5a53`, with the three signed assets verified from the public download; Zenodo version DOI pending after a webhook failure on Zenodo's side on publication day.
+**Status:** Released. GitHub Release `v1.2.0` published 2026-09-16T18:04:46Z from the SSH-signed tag on `e4a5a53`, with the three signed assets verified from the public download; Zenodo version DOI `10.5281/zenodo.22807178`, record published 2026-09-17T07:02:57Z after the publication-day webhook deliveries failed on Zenodo's side and the release event was redelivered by hand.
 
 ---
 
@@ -110,3 +110,4 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 12 September 2026 | v1.1.1 entry: Status Prepared to Released, with the GitHub Release timestamp and the Zenodo version DOI. |
 | 0.1 | 16 September 2026 | Added the v1.2.0 release entry (Pre-Release Checklist run; the Part 8 bar of `Master-Architecture-Backlog.md` met on its recorded terms; Status Prepared). |
 | 0.1 | 16 September 2026 | v1.2.0 entry: Status Prepared to Released, with the GitHub Release timestamp; Zenodo DOI pending. |
+| 0.1 | 17 September 2026 | v1.2.0 entry: Zenodo version DOI `10.5281/zenodo.22807178` recorded. |
