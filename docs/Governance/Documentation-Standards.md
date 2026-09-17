@@ -38,6 +38,7 @@ Normative documents consistently use "shall" for mandatory requirements, "may" f
 - Every document ends with a Revision History table.
 - Documents are organized into named sections (Purpose, Definition, Design Principles, Conformance, etc.) rather than free-form prose.
 - "Status: Informative" is used consistently for non-normative, illustrative material (Examples, Reference Architecture).
+- A generated or append-only artifact carries its provenance in place of the version fields, decided 17 September 2026: a file a tool writes from other files, such as `Governance/Requirement-Register.md`, names its generator instead of Version and Last Updated and ends with no Revision History, because its content is its version and any history would be a second, hand-kept copy of the sources' own; a file that is only ever appended to, such as `Governance/Requirement-Aliases.md`, carries Last Updated and no Revision History, because its rows are that history. Both carry Document ID and Status like any other document. These two files are the only ones in this class today; the exception is theirs, not a licence for hand-written documents to omit either field.
 
 ---
 
@@ -99,3 +100,4 @@ ASCII diagrams are used for layered/sequential relationships, inside ```text``` 
 | 0.1 | 20 August 2026 | Added Status Taxonomy section, defining Draft/Informative/Reserved/Planned precisely from existing observed usage — per `Governance/Publication-Model.md` |
 | 0.1 | 20 August 2026 | Corrected the Draft-directory list on independent review: it omitted `Domains/`, `Entities/`, and `Specification/`, the three largest Draft populations in the repository, contradicting the section's own descriptive claim. Removed the `Entities/`-as-Informative-example clause after `Entities/Overview.md`'s Status was reverted to Draft |
 | 0.1 | 5 September 2026 | Normative Language: replaced the stale statement that RFC 2119 is not cited explicitly (it has been cited in `Core/Manifest.md` since 20 August 2026). |
+| 0.1 | 17 September 2026 | Recorded the convention for generated and append-only artifacts (`Requirement-Register.md`, `Requirement-Aliases.md`), which carry provenance in place of Version, Last Updated and a Revision History. Found by the dogfooding audit of Release v1.3.0. |

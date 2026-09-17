@@ -2,13 +2,13 @@
 
 ## What this covers
 
-This repository contains a Markdown specification and no executable code. The public surfaces that can carry a security defect are:
+This repository contains a Markdown specification and one script, `tools/conformance/requirement_register.py`, which generates the Requirement Register of `docs/Governance/Conformance-Test-Suite.md` and runs in continuous integration. The script uses the Python standard library only, opens no network connection, and reads and writes only files inside this repository. The public surfaces that can carry a security defect are:
 
 - the static site [ocom.uno](https://ocom.uno), which publishes this repository and serves a small number of client-side scripts from `/js/`, on the search page, the three observatory tools, the shape-check tool and the not-found page;
 - the machine records the site publishes: the Knowledge API under `/api/v1`, the resolver, the JSON, JSON-LD and Markdown projections;
-- the workflows in `.github/workflows/`: continuous integration, dependency review and OpenSSF Scorecard. Third-party actions are pinned to a commit SHA; `actions/checkout`, which GitHub owns, is kept on its major-version tag, as CI-DESIGN.md explains under Action pinning policy.
+- that script, and the workflows in `.github/workflows/` that run it: continuous integration, dependency review and OpenSSF Scorecard. Third-party actions are pinned to a commit SHA; `actions/checkout`, which GitHub owns, is kept on its major-version tag, as CI-DESIGN.md explains under Action pinning policy.
 
-Reports about the following are welcome: cross-site scripting or injection on any page of ocom.uno; regressions in the response headers (Content Security Policy, HSTS, content types); a published record that could be used to mislead a machine consumer; a weakness in the CI workflow.
+Reports about the following are welcome: cross-site scripting or injection on any page of ocom.uno; regressions in the response headers (Content Security Policy, HSTS, content types); a published record that could be used to mislead a machine consumer; a weakness in the CI workflow or in the script it runs.
 
 A page or record that disagrees with the canonical file it names as its source is not a security issue. It is a projection defect, and it has its own [issue template](.github/ISSUE_TEMPLATE/projection-defect.md).
 
