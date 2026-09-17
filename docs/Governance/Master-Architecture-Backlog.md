@@ -292,7 +292,6 @@ Only items architecturally blocked by the backlog above, per the instruction to 
 - **Any new Profile definition for Conformance.** Blocked directly by `CAND-002`: the profile mechanism itself has not been decided, so no concrete profile can be defined yet.
 - **Pulling Reader/product-roadmap concepts (e.g. persona-adaptive explainer work, "OCOM Bot") into the Specification.** Blocked by EPIC-E and Architecture Principle 5: the Specification/Reader boundary work (Test Suite, independent implementation) is not done, and product-shaped content entering the Specification before that boundary is proven is exactly the governance-capture risk already named.
 
-
 **Execution note (16 September 2026):** the list above is left as written on 27 July 2026; the registers lift four of its blocks. `AO-001` is Closed (`CAND-015`, 11 September 2026), so the Domain definition is no longer disputed. The Section 9 and Section 11 transcription is done (Constitution 1.0.1, 11 September 2026). `CAND-002` is Decided, so a claimant may publish a Profile Declaration, while OCOM still publishes none. `Entities/` has its minimal Memory bridge (EPIC-C), so a new Entity type would carry a Memory section from the start. The EPIC-A block on new AI capabilities stands: Layer 2 is open. The Workflows block stands with it, and the Reader boundary block is unchanged.
 
 ---
