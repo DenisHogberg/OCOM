@@ -213,6 +213,44 @@ jobs:
             exit 1
           fi
 
+      - name: Every document carries its metadata block and a revision table
+        # Governance/Documentation-Standards.md requires Document ID, Status,
+        # Version, Last Updated and a Revision History in every document. The
+        # Russian projection of the implementation case carries the same fields
+        # under Russian labels, so both spellings are accepted; a check that
+        # matched English only is what put that document on the GAP-007 list
+        # twice. Three documents are outside the rule by recorded decision:
+        # the Committee Review Package, which is the record of the 22 July 2026
+        # review, and the two Conformance Test Suite artifacts, covered by the
+        # generated and append-only convention the standard records.
+        run: |
+          python3 - <<'PY'
+          import pathlib, re, subprocess, sys
+          exceptions = {
+              "docs/Specification/Committee Review Package.md",
+              "docs/Governance/Requirement-Register.md",
+              "docs/Governance/Requirement-Aliases.md",
+          }
+          pats = {
+              "Document ID": re.compile(r"^\*\*Document ID:\*\*", re.M),
+              "Status": re.compile(r"^\*\*(Status|Статус):\*\*", re.M),
+              "Version": re.compile(r"^\*\*(Version|Версия):\*\*", re.M),
+              "Last Updated": re.compile(r"^\*\*(Last Updated|Обновлено):\*\*", re.M),
+              "Revision History": re.compile(r"^#{1,3} (Revision History|История ревизий)", re.M),
+          }
+          files = [f for f in subprocess.run(["git", "ls-files", "docs"], capture_output=True, text=True).stdout.splitlines() if f.endswith(".md")]
+          fail = 0
+          for f in files:
+              if pathlib.Path(f).name == "README.md" or f in exceptions:
+                  continue
+              text = pathlib.Path(f).read_text(encoding="utf-8")
+              for name, pat in pats.items():
+                  if not pat.search(text):
+                      print("::error file=%s::%s is missing its %s" % (f, f, name))
+                      fail = 1
+          sys.exit(fail)
+          PY
+
       - name: Dangling normative-reference heuristic (advisory, non-blocking)
         # Heuristic only, grep-based, deliberately not made blocking: it
         # cannot reliably distinguish a genuine dangling reference (like

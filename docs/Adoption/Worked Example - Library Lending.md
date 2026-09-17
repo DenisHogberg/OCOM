@@ -14,6 +14,8 @@
 
 **Version:** 0.1
 
+**Last Updated:** 17 September 2026
+
 ---
 
 ## Purpose
@@ -108,6 +110,13 @@ Try it yourself → [Shape Check](https://ocom.uno/shape-check)
 ## Run a First Pilot
 
 **Try OCOM on your own team → [First Pilot](https://github.com/DenisHogberg/OCOM/blob/main/docs/Adoption/First%20Pilot.md)**
+
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.1 | 21 August 2026 | Initial worked example, authorized as scope by `CAND-010`. |
+| 0.1 | 17 September 2026 | Revision History and Last Updated added, which `Governance/Documentation-Standards.md` requires of every document and this one had never carried; content unchanged. |
 
 ---
 

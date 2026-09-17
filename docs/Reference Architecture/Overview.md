@@ -126,3 +126,12 @@ The Reference Architecture follows the principles defined by OCOM:
 The Reference Architecture is informative.
 
 Implementations may vary provided they preserve the normative principles defined by the OCOM Specification.
+
+---
+
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.1 | 21 July 2026 | Initial overview of the Reference Architecture views. |
+| 0.1 | 17 September 2026 | Revision History and Last Updated added, which `Governance/Documentation-Standards.md` requires of every document and this one had never carried; content unchanged. |

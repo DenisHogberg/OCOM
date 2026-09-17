@@ -14,6 +14,8 @@
 
 **Version:** 0.1
 
+**Last Updated:** 17 September 2026
+
 ---
 
 ## Do I need to rewrite my systems?
@@ -43,6 +45,14 @@ These comparisons are for orientation only — OCOM's own documents do not defin
 - **BPMN** models processes — the flow of activity. OCOM models Entities first: "Every operational concept shall be represented through identifiable entities" *(`Core/Principles.md`, Principle 2 — Entity-Centric Modeling)*, and treats a Workflow as something that acts *on* Entities, not the primary subject of the model *(`Models/Workflow.md`)*. A process diagram answers "what happens." An OCOM model answers "what exists, and what state is it in."
 - **DDD (Domain-Driven Design)** shares vocabulary — Entity, Domain — because both trace to the same general modeling tradition, but the resemblance stops at the words. In DDD, Entities and bounded contexts are typically project-specific design choices made by a single team. In OCOM, Entity, Domain, and their required characteristics are fixed by the specification itself, so that the same concept means the same thing across teams and organizations *(`Core/Principles.md`, Principle 8 — Semantic Consistency)*.
 - **CMDB** (Configuration Management Database) typically tracks IT assets and their configuration relationships. OCOM's Entities are not limited to IT assets — a Customer, a Campaign, and a Payment are as valid as a server — and OCOM is a specification for describing operational meaning, not a database product or schema *(`Core/Manifest.md`, Abstract)*.
+
+## Revision History
+
+| Version | Date | Description |
+|----------|------|-------------|
+| 0.1 | 22 July 2026 | Initial answers, part of the Adoption framework (M021). |
+| 0.1 | 16 September 2026 | The Profile Conformance answer corrected per `CAND-002`; Chapters 4 to 6 are the floor of every claim. |
+| 0.1 | 17 September 2026 | Revision History and Last Updated added, which `Governance/Documentation-Standards.md` requires of every document and this one had never carried; content unchanged. |
 
 ---
 
