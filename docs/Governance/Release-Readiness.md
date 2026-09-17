@@ -116,7 +116,7 @@ Every release entry from this point forward **shall** confirm the following:
 
 **Standard Evolution Methodology reviewed:** Yes. This Release changes no canonical document: the recompilation is editorial work on the Compiled tier, permitted by `CAND-007` Section 3 as EPIC-F currency work, and every sentence it carries traces to a canonical source as of this date. No new Core concept entered; independent Reference Cases toward Rule 2 stand where `v1.2.0` left them.
 
-**Recommendation:** Approved for release once the Commit field of the Manifest entry is filled.
+**Recommendation:** Approved for release; the Manifest entry names commit `8235b85`.
 
 **Status:** Prepared. Tag and GitHub Release to follow; timestamp and Zenodo version DOI are added once they exist.
 
@@ -134,3 +134,4 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 16 September 2026 | v1.2.0 entry: Status Prepared to Released, with the GitHub Release timestamp; Zenodo DOI pending. |
 | 0.1 | 17 September 2026 | v1.2.0 entry: Zenodo version DOI `10.5281/zenodo.22807178` recorded. |
 | 0.1 | 17 September 2026 | Added the v1.3.0 release entry (Specification reading path 1.0; Pre-Release Checklist run; Status Prepared). |
+| 0.1 | 17 September 2026 | v1.3.0 entry: Recommendation confirmed once the Manifest Commit field was filled. |
