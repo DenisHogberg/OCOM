@@ -102,7 +102,7 @@ Every release entry from this point forward **shall** confirm the following:
 
 ## Release: v1.3.0
 
-**Date:** 17 September 2026 (planned)
+**Date:** 17 September 2026
 
 **Documentation Readiness:** Ready once the carrying pull request is merged: the nine chapters of the reading path recompiled as v1.0 against the canonical documents as of this date, each with a Revision History and a Source line naming what changed; a forward-traceability check of every chapter sentence against its sources was run on this date and every normative sentence is traceable; the publication-metadata check now expects Specification Version 1.0 in every chapter. The Release body's bundle claims are checkable against the `Publication-Manifest.md` entry: Constitution 1.0.1, Core Vocabulary 0.1 (13 governed terms), Specification 1.0.
 
@@ -118,7 +118,7 @@ Every release entry from this point forward **shall** confirm the following:
 
 **Recommendation:** Approved for release; the Manifest entry names commit `8235b85`.
 
-**Status:** Prepared. Tag and GitHub Release to follow; timestamp and Zenodo version DOI are added once they exist.
+**Status:** Released. GitHub Release `v1.3.0` published 2026-09-17T09:27:34Z from the SSH-signed tag on `8235b85`, with the three signed assets verified from the public download; Zenodo version DOI `10.5281/zenodo.22809694`, record published 2026-09-17T09:27:43Z.
 
 ---
 
@@ -135,3 +135,4 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 17 September 2026 | v1.2.0 entry: Zenodo version DOI `10.5281/zenodo.22807178` recorded. |
 | 0.1 | 17 September 2026 | Added the v1.3.0 release entry (Specification reading path 1.0; Pre-Release Checklist run; Status Prepared). |
 | 0.1 | 17 September 2026 | v1.3.0 entry: Recommendation confirmed once the Manifest Commit field was filled. |
+| 0.1 | 17 September 2026 | v1.3.0 entry: Status Prepared to Released, with the GitHub Release timestamp and the Zenodo version DOI. |
