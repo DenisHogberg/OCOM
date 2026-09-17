@@ -25,10 +25,13 @@ An anonymized end-to-end adoption narrative in `Examples/Implementation-Case/`: 
 **Public Essay: "Your organization is not your software".** September 2026.
 Published at ocom.uno/why: the motivation, origin, honest boundaries of applicability, and an open invitation to break the model.
 
+**Specification v1.0 (Reading Path).** 17 September 2026, Release v1.3.0.
+`docs/Specification/`: the nine chapters recompiled against the canonical documents as they stood that day, each with a Revision History and a Source line naming what changed; the 22 July 2026 Committee Review Package keeps the v0.2 review record. Published as Release v1.3.0 with a signed tag and signed assets, Zenodo version DOI 10.5281/zenodo.22809694; the reading path pages on ocom.uno are regenerated from the same commit. Preceded by Release v1.2.0 (16 September 2026, DOI 10.5281/zenodo.22807178), which closed the Master Architecture Backlog's Part 8 bar ("OCOM Specification v1.0 Ready") with every item met or dispositioned.
+
 ## Current State
 
 - The Standard Evolution Methodology is active. Its first Reference Case (OBS-003, *Object Attribute Lifecycle Categories*) is logged and Open, pending independent corroboration before any Core impact is considered; see `docs/Governance/Architecture-Observations.md`.
-- Governance and Specification v0.2 are frozen baselines. Neither changes except through their own approved processes (editorial fixes, or ADR for architectural change).
+- Governance and the Specification v1.0 reading path are baselines. Neither changes except through their own approved processes (editorial fixes, or ADR for architectural change).
 - The canonical repository remains documentation only by design: the specification itself ships no runtime. In-house implementations run privately in production under NDA; none is independent of the author, who was the architect or consultant on each. Tooling around the specification, where it exists, is developed and governed separately from it; it is not part of OCOM and places no obligation on an implementer.
 - The specification's principles are applied in production settings under NDA (the author works as architect or consultant; in-house teams implement). No public case studies exist yet; converting private practice into public evidence is the explicit goal of the current phase.
 - The specification has entered its public review phase: ocom.uno/why invites critique, and independent implementations are actively sought.
