@@ -1,0 +1,363 @@
+<!-- nav:start -->
+[Docs](../README.md) / [Governance](README.md) / Requirement Aliases
+
+[← Back](Requirement-Register.md) · [↑ Up](README.md)
+
+---
+<!-- nav:end -->
+
+# Requirement Aliases
+
+**Document ID:** GOV-REQUIREMENT-ALIASES-01
+
+**Status:** Informative
+
+**Last Updated:** 17 September 2026
+
+---
+
+# Purpose
+
+The append-only Alias File that Section 2 of `Conformance-Test-Suite.md` specifies. Each row binds a stable alias of the form `REQ-<document>-<n>` to the content-addressed identity of one Statement in `Requirement-Register.md` and carries at most one Disposition: `Descriptive` (the keyword imposes no obligation), `Review` (an obligation no mechanical procedure can decide), or empty. Rows are appended, never edited or removed; when a source sentence changes, its Statement gets a new identity, a new row is appended for it, and the old row's Disposition cell records `superseded by <alias>`. The first population was written by `tools/conformance/requirement_register.py --init-aliases`; every later row is a recorded decision with a reason and a date.
+
+---
+
+# Aliases
+
+| Alias | Identity | Document | Section | Recorded | Disposition | Note |
+|---|---|---|---|---|---|---|
+| REQ-META-OBJECT-001 | `c9551160da7b05c6dff2785eb204d19a67a34db562fcb2191a525c8310d581a1` | `Meta/Object.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-002 | `e2cb0bcc359e19fb6a4efcaeffdc8404b8ff11fd5de1b8516f2f354fe2fdbdab` | `Meta/Object.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-003 | `32b4911ad6c8c621b2854b30b071c0d1caf368e6b01690896d4e402aed3a5049` | `Meta/Object.md` | Object Identity | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-004 | `2eb8ff8e05916f63217eb3d5a94ddb48e961edb4fdd74b8fd62f032d7c843e2c` | `Meta/Object.md` | Object Identity | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-005 | `7a4ecf74ab9883e7a04389415345a2c22c73bc60bd689368bd0370d8b20036dc` | `Meta/Object.md` | Object Metadata | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-006 | `8857682929ee500d71a0b6024dec53c9f235a407a818329e9198cadc3947aeda` | `Meta/Object.md` | Object Relationships | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-007 | `77d8c28fe681a90618910269474e5e202ee739209d39c38df4bdf4dbe513a25a` | `Meta/Object.md` | Object References | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-008 | `076f1ea32ffea57030b11fa9cffb04cf1a88ae164b4bd5c324d592e1c091a25b` | `Meta/Object.md` | Object Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-009 | `9e5f6cad4f6c82b16505c6b5595e6aa1f62f9ec451d469daa932a409ce220a96` | `Meta/Object.md` | Object Ownership | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-010 | `5297601252ac33cdcc67e3f66bdd5c72c495a862c280b879122d53f19da292ec` | `Meta/Object.md` | Object Classification | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-011 | `6d1d4149d28f286d23ea57ee1a5d824492d6d33223673f423c7a95ac1fc2b833` | `Meta/Object.md` | Object Capabilities | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-012 | `2382522bcde50b34ed8ffc75271f336b0b63fb9f3ecc7d428c7ea1bedf5a8cfe` | `Meta/Object.md` | Object Policies | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-013 | `ef23c7d649c8b1456b4f09edbcbe4e948bb6f0f2d2d258dcd11ea627f9162be8` | `Meta/Object.md` | Object Constraints | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-014 | `dc77411175983bfb3625593e1dc93b7c3e9bad468007c2029d5bef390167953a` | `Meta/Object.md` | Object Contracts | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-015 | `92a2e3691e4b55ab200c68423409f5f4c745e9c42410b2dc59717ed8344ba1b5` | `Meta/Object.md` | Examples of Objects | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-016 | `f6b12ce15114a8b225f57a0c2cb9d2434706872972c04a6569c18ca0420d4afb` | `Meta/Object.md` | Architectural Role | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-017 | `efe1c0dea14cb3d10804129dd1b0c822c52dc0a7df0884cbe87f99660261e578` | `Meta/Object.md` | Independence | 17 September 2026 |  | first population |
+| REQ-META-OBJECT-018 | `28a02255dc65fd4981585f44ab00680bb2a213ee35328a4264aac48272640da4` | `Meta/Object.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-ORGANIZATION-001 | `4f5aeb506d0d0fb76e4ce51d36e249c673efde00d99ba474d59a7cac1d85025d` | `Meta/Organization.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-ORGANIZATION-002 | `195ff0eb3b9ff8c0f627a9c5dc5bafbbda790ce7e71debd693b0900054a76e04` | `Meta/Organization.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-001 | `05b668a67154be78d686317f4082ec60c6826bdbf74d6d0dd30862ce39c28b5e` | `Meta/Identity.md` | Definition | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-002 | `5381515059f4e4b1c3c31a8de6206e5d8cde6eae408c5a7e9129f3eec6901b53` | `Meta/Identity.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-003 | `989eeeac807f86f89e5d235472b67ba2a22811d698265a781c5e8d0d24449a8a` | `Meta/Identity.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-004 | `55cc8ecad79f38f21960cbee16d081ffc403c5378fbc74a1c9b24613142f8770` | `Meta/Identity.md` | Identity Scope | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-005 | `f069e553604a6d76a395325f6fff216a4dc3e2b1c25a413af52ff261c67dc00f` | `Meta/Identity.md` | Identity Scope | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-006 | `9d51cf3c5ad14fed3b49202a47d8c113fa908c92e108954bb0a402c8fb7a72ac` | `Meta/Identity.md` | Identity Types | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-007 | `529394011cef2f63f449e403f5bf77983d9502798130e9cfd376b1d381664272` | `Meta/Identity.md` | Identity Assignment | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-008 | `7a5374de9f25e604e8d7ad01ac58f67687dc12d8081e791a9d6cb19a46d8fa34` | `Meta/Identity.md` | Identity Assignment | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-009 | `c9d8854d2162fd1f935e8d6f7d768fe742e7f6efa3eb7ae7fd15a72865bbd82b` | `Meta/Identity.md` | Identity Assignment | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-010 | `c2a1c6c086ee2c4b843e01d63b7834265b8e30349bd9be1b2a8f71a7f9a77535` | `Meta/Identity.md` | Identity Persistence | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-011 | `3a3053f1f50c2362f893399efb6a39f6deeaa590f685fd70d8d3b026311a2e99` | `Meta/Identity.md` | Identity Resolution | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-012 | `2c2eee8b9ea68e6dca2edbc798b694c8b3637008aa1bed59f1d3fe825d5aeefe` | `Meta/Identity.md` | Identity Resolution | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-013 | `ff8d95d0d974bc8d8be00544ad87c682bb76db5aae8d1168498f12009bdf719d` | `Meta/Identity.md` | Relationship to Other Specifications | 17 September 2026 |  | first population |
+| REQ-META-IDENTITY-014 | `396b09339aa4a5c37e816767d3443eaa58916fe72a8f07a5b496e6d6616760eb` | `Meta/Identity.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-METADATA-001 | `51855ab6040b09aecc871bbd126ebaeeb53afc2850334ae143094a01860899aa` | `Meta/Metadata.md` | Definition | 17 September 2026 |  | first population |
+| REQ-META-METADATA-002 | `691a41e11f8251920a465335c7e96b5152a0154762439231cb2352563ba3e00d` | `Meta/Metadata.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-METADATA-003 | `bd71f9fe77570a2d43fcef649a532d9a38007b51dd50e14d28f0d081e28ec933` | `Meta/Metadata.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-METADATA-004 | `d9d4f432a43a235f92bb312084704217eeb439873137e195b6dd2de170d4ec12` | `Meta/Metadata.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-METADATA-005 | `4598c530ab020fbb472f1d781e1df38d2a0e4ae37f38017a181c7d8a83b8849d` | `Meta/Metadata.md` | Metadata Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-METADATA-006 | `25c224dc5f0e5e6e6044a3b1fbe6bd56462df1f5d7eab1b868595b7dc4ea2392` | `Meta/Metadata.md` | Metadata Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-METADATA-007 | `b166433174304e6bc2e008301c41a282a190f4d91fe879f9a83ee595d37e13c2` | `Meta/Metadata.md` | Metadata Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-METADATA-008 | `58bbd42b4c084adcc376d980db24e542399f13a476c1ea7ffe655a5a3864ac6e` | `Meta/Metadata.md` | Metadata Ownership | 17 September 2026 |  | first population |
+| REQ-META-METADATA-009 | `1e93ca9c2d570df3899879bb1536bfcbcf3fe174490d9b861f818138867268a6` | `Meta/Metadata.md` | Metadata Ownership | 17 September 2026 |  | first population |
+| REQ-META-METADATA-010 | `0934305f48a327f031c3e7915a511a6902d02985dc02b7f5dc6cde6cb62053f2` | `Meta/Metadata.md` | Metadata Ownership | 17 September 2026 |  | first population |
+| REQ-META-METADATA-011 | `305b2b59b14d72523b61747c3ca36d1baac062ce9cca35005a57fdc06b46ab49` | `Meta/Metadata.md` | Metadata Validation | 17 September 2026 |  | first population |
+| REQ-META-METADATA-012 | `f00819d449637f9554de8f25c4589ef6768b82fb2ed1160b1803bdccb5feb735` | `Meta/Metadata.md` | Metadata Relationships | 17 September 2026 |  | first population |
+| REQ-META-METADATA-013 | `ddd649759fc80e438c3ffef1226f9b5d617b6f22acd1e21f53add2e643fcca96` | `Meta/Metadata.md` | Metadata Relationships | 17 September 2026 |  | first population |
+| REQ-META-METADATA-014 | `8f2ad10dded460330c11446fe5218c8616e86f1eb930e63a53a251aa4badf6a1` | `Meta/Metadata.md` | Relationship to Other Specifications | 17 September 2026 |  | first population |
+| REQ-META-METADATA-015 | `0c95397dd36409e4d89b7ad6345ec6af6f95aa65e5eecc0c38f3a617bb0510c7` | `Meta/Metadata.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-001 | `428cc3949ae196d83d3093946fef10c24e10f061304131b0b4eb541743b3fd83` | `Meta/Classification.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-002 | `80a02ec7c32dd7ee64adc1488646f892231b294d87bbe09c88735d8c95aed197` | `Meta/Classification.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-003 | `6df812ce81742eabc4ef70a007b05cec12e8bd9274e339b57c69bf1c9dd4e121` | `Meta/Classification.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-004 | `9dc72ddc9040bd8fb6cbca92ab8890c7536855332086910e73857986eb7577c3` | `Meta/Classification.md` | Classification Types | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-005 | `b45296cfff9fd0a844a51a6c6c41bcc8b88530d6948b2a3040e13430a228e66d` | `Meta/Classification.md` | Classification Types | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-006 | `1f9f082604685e0c9fe82636d16fc91269dbbbe33c4033e9f4256ce02a280327` | `Meta/Classification.md` | Multiple Classification | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-007 | `885749e58c4680d9067fb902363689b98d78af6d10cdde3a976e806ffb02ba0b` | `Meta/Classification.md` | Multiple Classification | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-008 | `d86fe99f4a662c1732d00c096600fe81d0bf6afa6132f2af6c74f40eac80d219` | `Meta/Classification.md` | Multiple Classification | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-009 | `82ca3b1b5510983e856e5e5df755cc538b9aad4955e0a4628b23781a7655f499` | `Meta/Classification.md` | Classification Hierarchies | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-010 | `811b3e46b26fae5fc38310393d9e3130b5d81d2873784b1fc32385dc1eea489d` | `Meta/Classification.md` | Classification Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-011 | `e004c01138c5b97f0a7e7374cdab05f77debdef2d65102acf485db47749c5ee4` | `Meta/Classification.md` | Classification Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-012 | `224907faeda6efd5b8f8dbb46907fd84adb16cd1a449d28c14a36b081654b501` | `Meta/Classification.md` | Classification Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-013 | `3e1cb541b4b47469b9143b808c079d69461a330c05fc47b82937e9323257c97f` | `Meta/Classification.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-014 | `53cce9037740c381345e0b9c06acfaad6ab8fe459b733a4ecb351df7265e195f` | `Meta/Classification.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-015 | `4dcb1837001290744f3638ccf623e61c9e2565f7be70335423659de9f8e7db4c` | `Meta/Classification.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-016 | `689c79909da6d860e441eaf84bf17fa26481f2663ec60bca073bf0118b8471bc` | `Meta/Classification.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-CLASSIFICATION-017 | `95739c8edc58368d55c44739c7beda038e17a19edfafdcf1dfedcce13a23d827` | `Meta/Classification.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-001 | `e01202c6d71a1da893a330d548ea214da6d12d26077a9ca9e262d24acc47d490` | `Meta/Relationship.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-002 | `70482938bf6d4bffec373cb008c3780b50812236b19a8e24dfba723e355248a7` | `Meta/Relationship.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-003 | `e501b16271eb9ea8f60400a87245555850fdec0e9dc11bc0ecd07108a8a70bf6` | `Meta/Relationship.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-004 | `70d07e474ef4e4f4d74bee90e5890d12255bd87cb17e4e01c70264f073e72311` | `Meta/Relationship.md` | Relationship Types | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-005 | `3c114ebf8211386e0ee1edbe1445c392f020ea8de80166a68a30fdc5a812fde7` | `Meta/Relationship.md` | Relationship Types | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-006 | `f636c178d51132dec7dfa41ab6e871b3289122912c02ea0a5e35a55e11d7fe8f` | `Meta/Relationship.md` | Direction | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-007 | `1e82a78a15ca0a528f9338c4edc2bd707b0fc304e6dda4b881aab2f08d286904` | `Meta/Relationship.md` | Direction | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-008 | `002b653d544361968459923e09a0ff03fa6913c98e57d6476eaf6f9c9af11bf4` | `Meta/Relationship.md` | Cardinality | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-009 | `181da8d1be0617462e2d8a29f88772620ffcac06a5af7f5dba3615267427fd67` | `Meta/Relationship.md` | Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-010 | `347f25074ba6032640f6bfb68d6fee51202918def4219b2912ee620e52f58044` | `Meta/Relationship.md` | Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-011 | `84c6e5bdef992223379541d6c2079640037049661aa37a510e37b8b415639f7a` | `Meta/Relationship.md` | Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-012 | `9d6ee5a17677399c53a1c9bba148cf87993370e0e921a3811e83f42e54d9976a` | `Meta/Relationship.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-013 | `9d3cc39d9374010be85474805a772c0c00e6e623d1758645400f9c6fe30e1309` | `Meta/Relationship.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-014 | `4f45478eb7e62ed0eba925f9c649ad47459d11c6afb58b7d1b1498155b912341` | `Meta/Relationship.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-015 | `109c182d6164c1b650182d6993a8cd3370e0203ff0d3202147bdc252199c99d7` | `Meta/Relationship.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-016 | `01754de3a366e2c6c15fc660a2aa8536d346a1cca8a2e3c76545b2d65a36cd22` | `Meta/Relationship.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-RELATIONSHIP-017 | `e0b7ccf703d6d41415faac317d2101545b401a265aec3efa7f3a4e177af25846` | `Meta/Relationship.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-001 | `5000c42213e98618cd10001511f335c6b3af3741e4696f0f36e174bcf147295d` | `Meta/Reference.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-002 | `940d4e7e1a0c95c9d523bfdf488fea6d9257d97a9a84029e4b7916e1216a21aa` | `Meta/Reference.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-003 | `f486b6d69227d49de9b0da79eb6ab0f9eae0c3e1446f97dac926a95590e261cd` | `Meta/Reference.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-004 | `a76b8e0db65b09b29a7051306e5c48210d210286535d4021bf07368b710588b7` | `Meta/Reference.md` | Reference Direction | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-005 | `6b9c491ea55b690cf88c15fe6382db41b01cbc8b6a00ca6d826beeaf723c8ff9` | `Meta/Reference.md` | Reference Types | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-006 | `37e7530805e2c135d4703ced688b0ae9fd223e606cf7b7fc4a87d495fe74a625` | `Meta/Reference.md` | Reference Types | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-007 | `13a62ca96d949e8e4d895e023556e8be7d7ec5a920605c18c38f207c70393026` | `Meta/Reference.md` | Reference Validity | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-008 | `aa69821180abfc66aa9beab647ff9df652e33a142b65602a380f4351a6214d2c` | `Meta/Reference.md` | Reference Validity | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-009 | `7eb3dfc30b25810d6de917fb92bdde05c316c302b7a4336a2b20a69bb7093aad` | `Meta/Reference.md` | Reference Integrity | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-010 | `ae70c86aba11e2ae5585af52fbf234ef86126af6092ef21b91fab3d33d924bda` | `Meta/Reference.md` | Reference Integrity | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-011 | `fd4a1f2a28653f2264354ac7e8030397a5071f98a2b271923f94332efedee583` | `Meta/Reference.md` | Reference Integrity | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-012 | `2fc48c074ff50cd4def15b01326c23d5518a13f06877b367950d258259caf48b` | `Meta/Reference.md` | Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-013 | `e3b5798378c4546b249e730fc2650730e5dfe082d8295d3ad2fba6d6a2603d46` | `Meta/Reference.md` | Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-014 | `ad19e3c890f52257184a0054c56600726d33606a8fc625fbe33f530d43437a00` | `Meta/Reference.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-015 | `11867fb738592f3e8661933b061ab5f95b3b8d76af75382024e266d45ad42fa9` | `Meta/Reference.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-016 | `35d8dcc34b307851535d74fa06f87e47b63cf32b1bcb2ac141ac9dc7ccc842d8` | `Meta/Reference.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-017 | `5a72512663e12d42d9a8a27bede24e0990e32ceae5407b7893b4c927f39ab136` | `Meta/Reference.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-REFERENCE-018 | `1a13dc1a57b41d1b44b204e5c84e2f981ab18ccd81ddfa499a5f28d233705dfd` | `Meta/Reference.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-001 | `ceffd5b6d9e1dc53de8a1e95b6da9387e8253eb7d2ffcf125d33b9f1fe5af500` | `Meta/Capability.md` | Definition | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-002 | `51ee183fd90e262849d3fc65f99daf1716b6a01b563aa478a8f76e920b3f16ca` | `Meta/Capability.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-003 | `102f26b4606f2f16431387ff104fe4ab7b95639e228a801beaa1e28dadecef0f` | `Meta/Capability.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-004 | `f941390f87bd1d2c49a6e7e4f0a6e20a7bb5b5ba1f9f2b02419037a97b9480c3` | `Meta/Capability.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-005 | `9d3c400f9edff838f115867d705222f3d62a9781969b701f890eeddce384655f` | `Meta/Capability.md` | Capability Providers | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-006 | `447bd993636651290157e31dffc7acfb9d268ab3f1057917a3891945d00b2b75` | `Meta/Capability.md` | Capability Providers | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-007 | `3d0ec483afa964edebfe8ccbd4d4a4e8ab27866b02272f2271894c197af89c5b` | `Meta/Capability.md` | Capability Consumers | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-008 | `fa7bb66cf806a78576151dfb71781c23d989df209fcd3c342d889e9c1e2c735a` | `Meta/Capability.md` | Capability Consumers | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-009 | `183fd8ec9676907c11e6c05c8954013b7ee5b5fcec93facbb1b4a79885fd64df` | `Meta/Capability.md` | Capability Composition | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-010 | `b98b5521e4bdd7727c844695b1614b5e78169506f6afb44299902c83046c177a` | `Meta/Capability.md` | Capability Composition | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-011 | `cc638542db1e11dd46bcbd5f3b99b3586d8cafe4599755ba7d6540af0aec4f45` | `Meta/Capability.md` | Capability Dependencies | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-012 | `4863165cfcb9e80c28329b3d135dcb16c7c9d090ddf81f2cbc112a007944a7d8` | `Meta/Capability.md` | Capability Dependencies | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-013 | `f5472db45b3bd431d7bcd5ed6e4a45fcaf975731d1e5fe0f6e9be57a8a977be3` | `Meta/Capability.md` | Capability Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-014 | `dfaa434b81b897fc199bbe17b8b7be2b9d54390f0e94b87d78b51133123a6da7` | `Meta/Capability.md` | Capability Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-015 | `e1af8ee3bf97cb6b7a2b7f1c694deb1480e064e8d4ddc58ba7e73946cae42e53` | `Meta/Capability.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-016 | `3871385104a54bd988470a0219054b6f2c7c113846ef31f7cb51577cd54e1a63` | `Meta/Capability.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-017 | `17a74aa393185c06d844155ec21c65895fe70ccfba8b6780e9a3618643ed8696` | `Meta/Capability.md` | Evaluation | 17 September 2026 |  | first population |
+| REQ-META-CAPABILITY-018 | `9cf0a24410ac1af4652869e42e591ab0f64f58db22bb7b94d8932e1cef148acf` | `Meta/Capability.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-POLICY-001 | `4a580179512c62ff4b554d98d6a68daad5065b27d26637da7ea3d35ddf25f0ac` | `Meta/Policy.md` | Definition | 17 September 2026 |  | first population |
+| REQ-META-POLICY-002 | `b0a250dabef9e637baee02a36c6998b12dfdcbf9f1eda3b6cb0129bcb6f82cbd` | `Meta/Policy.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-POLICY-003 | `acea9a41ebd0777b7d5fd3345bc5d0cf9f7642dd4a36f4c01adcd49e25ca189c` | `Meta/Policy.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-POLICY-004 | `155b3a5bbf8dedc7c23b7aa12abb9e151ff8f62743b5c17f0c00bcb47c15b4d7` | `Meta/Policy.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-POLICY-005 | `b3f790b93cc8b1953a3e6445ab4d7d7e73c6d306939d62ff5cf9c6c3c4134e9c` | `Meta/Policy.md` | Policy Scope | 17 September 2026 |  | first population |
+| REQ-META-POLICY-006 | `c705ae624c929612905654b7e9e2bc764efa4696b4c36ca769f31af8d4806db3` | `Meta/Policy.md` | Policy Scope | 17 September 2026 |  | first population |
+| REQ-META-POLICY-007 | `97507afc05cb96cfb2327cef9602453c695a159bbd56a2002a3c5992b7ba31b9` | `Meta/Policy.md` | Policy Categories | 17 September 2026 |  | first population |
+| REQ-META-POLICY-008 | `457d5d4fc25207dde345f6cc28db813c0c159b7f3166de9dd58f0abbff14d230` | `Meta/Policy.md` | Policy Application | 17 September 2026 |  | first population |
+| REQ-META-POLICY-009 | `46c1fbd73e28a0294fc0d3297f22b5a40aad214d2eedb3815da662caf94713c3` | `Meta/Policy.md` | Policy Application | 17 September 2026 |  | first population |
+| REQ-META-POLICY-010 | `7d8e942e3db9b7646c01949cab5e8c7c78aa4d9e29a2750035e7679cb9da55b0` | `Meta/Policy.md` | Policy Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-POLICY-011 | `47c1a221bd1e17a58f293908f4aeb9436e7cd71b5413707498e3105548ced018` | `Meta/Policy.md` | Policy Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-POLICY-012 | `16f49031bfa2cb6e88322bca77e5e1e310902662da9372a76d8b578ecb8931db` | `Meta/Policy.md` | Policy Enforcement | 17 September 2026 |  | first population |
+| REQ-META-POLICY-013 | `039055ecca4e08aeb0a0abd11ce7c7fcb2268165c05237a4fc1f0209be10fdcf` | `Meta/Policy.md` | Policy Enforcement | 17 September 2026 |  | first population |
+| REQ-META-POLICY-014 | `e62b2c061f4d136602e07d40efc0e22ef6dfa45564f750394ba141276cda5be3` | `Meta/Policy.md` | Policy Exceptions | 17 September 2026 |  | first population |
+| REQ-META-POLICY-015 | `52e230cf1993c058a8ef5e1d107fe8491631c563fe47a327ed94b33269496673` | `Meta/Policy.md` | Policy Exceptions | 17 September 2026 |  | first population |
+| REQ-META-POLICY-016 | `257bd9e7aefdfef1daf1bbd88cf2cc0b8567cfecf724a8fc196bd29979adb338` | `Meta/Policy.md` | Policy Exceptions | 17 September 2026 |  | first population |
+| REQ-META-POLICY-017 | `67e6ab67aa6b0e7a39acdaed82fffb23c1fd158e38e74c2c0f4f1a3277ac3c8f` | `Meta/Policy.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-POLICY-018 | `b1064499e9d9d592b6d134d120675a8e15a8993fb9fc77eb35dc300e45a4e38f` | `Meta/Policy.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-POLICY-019 | `bbcd985ad6a3a8d6a7d437333814b2793c36a8a7e25a7e1c16b4be2ea46e731b` | `Meta/Policy.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-POLICY-020 | `3f3a375414a360957256f7dc8f1ce5035c375cbc8b7ff2ab16be2746b395752a` | `Meta/Policy.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-POLICY-021 | `ca473fea1e0f3734ae059793437099af39e054c426c2e5208d011089b9d5ff9e` | `Meta/Policy.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-001 | `77b508ea299549d1b9bcab0a2934d9b98c9832f6c4c2d9f0fd51a89d9ebc8da0` | `Meta/Contract.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-002 | `2605defcdebbaa979ba35eceedf89d2ab917f1444e76e6edfeba5179b219369e` | `Meta/Contract.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-003 | `f37c1e6f4a9e54dedfaf832f15670eda603a99535a5ac9bb083ebc7544f76280` | `Meta/Contract.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-004 | `b42a7cd9a584ae0e70d03847b94b533e6fc7596880d3c6d5bd9e117c117e9ff3` | `Meta/Contract.md` | Participants | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-005 | `474b964807b52b24615e61fef028b28b47c9369fd2c3da5098a67d048f545cf0` | `Meta/Contract.md` | Participants | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-006 | `f8db1ce41363f7c268acb5805489057ab9cce52cc31cd8d64efee321039badde` | `Meta/Contract.md` | Responsibilities | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-007 | `15619d4601be4bfdd4f4869a7bd14dad2f1fcdaaa873ee5619170461eef68ab6` | `Meta/Contract.md` | Responsibilities | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-008 | `f58f270407c32100529848ab5e4f9c0789adb3b17d5fce15af5fc12920cfff49` | `Meta/Contract.md` | Preconditions | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-009 | `e66b1a07df146a9bd898a1e211d9e8a1efc5bd3c6596f45bbcc750e9087aa347` | `Meta/Contract.md` | Postconditions | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-010 | `659b30d2ad3c086de98311c1022e26818b68b9af97504009bb1e5471a9b6a74f` | `Meta/Contract.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-011 | `5e83d51b35dabecac6dbfb6b586cbcfe37ed65d60d767192aedbc87768c7e21c` | `Meta/Contract.md` | Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-012 | `210afed40163a476a37b3c8eccaaf7f0feac88a51724df836d635ce942dc6694` | `Meta/Contract.md` | Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-013 | `bfde87dd9e9bdef1ded38f99b21cabd6abfbe794189b9c4d3b62e6cb91fb29db` | `Meta/Contract.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-014 | `3fc8ae69be3d92e543a135867e280cb7d29dfb90ae4153635f9fc15dab5663be` | `Meta/Contract.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-015 | `05e6ada9b2d80df66db7f1e9ad75fb0041a66e6c789daf13ab5470951b9a8d1a` | `Meta/Contract.md` | Evaluation | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-016 | `bad469c6514f19a0b5ec2e10d41455b69f35477239bb3b9bc3376366ad32bc26` | `Meta/Contract.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-017 | `93ef5ffc6fa0bc987d221a0ce6098a87326bdb3a6892d3c9c5af319d5607cebb` | `Meta/Contract.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-CONTRACT-018 | `bd77333ea468fdb83af0957d6b3e27d34f0a441f299dbad7556a6037d8cea879` | `Meta/Contract.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-001 | `73234cac56bbf3d8f3b8e0bbcbb64c600284ca5fd3209b3e050cde0356c56722` | `Meta/Constraint.md` | Definition | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-002 | `405b83dcbc165d95f7983767571c60c18b4ff1d39869b79da3eb4c8a9a2bf243` | `Meta/Constraint.md` | Definition | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-003 | `0161254c13c2986637c3aaa07a3b3195bca95ef4f4419b2de8a1a380555ebd3a` | `Meta/Constraint.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-004 | `ac43c08983e853def9cc240da19c70e501d4a74a8ec9102ac096941e413a5592` | `Meta/Constraint.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-005 | `c0d39115ff318610e248885ae20dcc90a4583050f6563a28fc1209c7a72e0d23` | `Meta/Constraint.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-006 | `2aeec16e10c5f9726861488ec1f79c473feaa8fb0583210bd664327994a63da9` | `Meta/Constraint.md` | Constraint Scope | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-007 | `7989575aff9dd46bbaebd443a1caad3ea8694cbd8e2d41effaee0f0c87d74a80` | `Meta/Constraint.md` | Constraint Scope | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-008 | `6543ebf52f256060dc757bece0c8a653e6a5d0797242ca0218ff3a9dc5b61bc0` | `Meta/Constraint.md` | Constraint Categories | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-009 | `687b1c1dae6df8411c8f614ff815e8bce3a221695195a5cc99abea2c57d57c37` | `Meta/Constraint.md` | Constraint Evaluation | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-010 | `b43d9995b30871a2d3bbf096374918fee1eb0d52bdf5f0361dc8eeaca74365a8` | `Meta/Constraint.md` | Constraint Evaluation | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-011 | `9715ad38e9d3862db8151348bce9d75ad0c82723f23b860423faf7e0b49c59d3` | `Meta/Constraint.md` | Constraint Violations | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-012 | `3b47b636d604421165d9c710697134b81e4014b4fb50ba381e8d2e1c7a4b4928` | `Meta/Constraint.md` | Constraint Violations | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-013 | `bb46eb3647ce6677ca498a5366d70d38a64eb8481d21fc024c566aa93f1eb2e2` | `Meta/Constraint.md` | Constraint Violations | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-014 | `5b763c506930fbfdf41fbcedc8cb653bd1c8a0545cde2a5700c047a54f20540e` | `Meta/Constraint.md` | Exceptions | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-015 | `afe42950a7ca69f92bc99fbfb6602adc81a8448ddb8a0e2db5aedcad68c69fd1` | `Meta/Constraint.md` | Exceptions | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-016 | `dc3b9be3589b10f279e049a4781cfc0a06fcd0eb41a1d0efe1f170249b630488` | `Meta/Constraint.md` | Exceptions | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-017 | `af5056b96ac855e297a9e281fc1f17b9033e0098688a642bfcdaca49e9753f94` | `Meta/Constraint.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-018 | `46a6e9596662beff3682803337a2f2ad05b885855ebe1e5d2547845f47861297` | `Meta/Constraint.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-019 | `07f6c8a55b151fd5308c9b2241cb2aa704498ebf453fef8d60d4ece6bbc54bba` | `Meta/Constraint.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-020 | `3318fcd95ed0f2a6da349230834698b9ff51382cd72c0cd2466bf71ed5097a4c` | `Meta/Constraint.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-CONSTRAINT-021 | `c729395301df06e33e87895a8e457f0b5000ad54c64270071453394151f36a40` | `Meta/Constraint.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-001 | `4afc144ca768a352f5fb996d8e5cd7891afc0b4e20a155d979a3eadf06bb75ee` | `Meta/Ownership.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-002 | `b6c4b7df0506af3d47395fb5b4ee37f5d9719161ddf0263168a4b0a4cb5607f6` | `Meta/Ownership.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-003 | `1c73a41f5d9107c90c10a13ee442e57f6e7111fb2106e29c68bf49520fd2d624` | `Meta/Ownership.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-004 | `b1b6f6a48a5c42529f072762e9cd29405d5c208cf3441c09e8bf4f9e78744a4d` | `Meta/Ownership.md` | Ownership Types | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-005 | `9a607a45ea0c895fa0edcab300c61b672078734cf7a65b3ca32414aa57cd9a39` | `Meta/Ownership.md` | Ownership Types | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-006 | `52d89404923f76377cf81c893d3ea8a728bbf40bb19ba54969ee87844423baa8` | `Meta/Ownership.md` | Ownership Responsibilities | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-007 | `876109d6ab7612cdee5ad130c1b9fcc6115f24347c45da020e8d25e37eda2626` | `Meta/Ownership.md` | Shared Ownership | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-008 | `f0728f7090cb676b13f0cd69aacd16f5eff38309ef8ea698c3d448e38f352a12` | `Meta/Ownership.md` | Shared Ownership | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-009 | `62f6e499ccf71bce9ae250277a6fab9b2d82d7d33a716c9dcdf9706ab66b9d61` | `Meta/Ownership.md` | Shared Ownership | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-010 | `00026918bbf699fe5fca8239c934bd73fd0f5866ee324e1abfcd2f8d60863d10` | `Meta/Ownership.md` | Delegation | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-011 | `496a7e74adc9e559f6a51dae4573e9574a674727d433a6f11f7195927909fb53` | `Meta/Ownership.md` | Delegation | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-012 | `6adfd214fb87b80bcd48fa8bf62f9a36f151312320bb9841ab0f422643a89e4d` | `Meta/Ownership.md` | Delegation | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-013 | `1cd9280f2f2e6162545b2bebdd3b836730ec3224f46d21594334bc23932f6ee9` | `Meta/Ownership.md` | Ownership Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-014 | `15333024c3ac415d8bcc1d235b08d8a8ed42b655dc6239a538f59cdf8d7f59c2` | `Meta/Ownership.md` | Ownership Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-015 | `79919041803847078fdd98f3a8e13bc71eb90e39095f6d5fc4699e7967687286` | `Meta/Ownership.md` | Ownership Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-016 | `99e724747c9b95fdb2ee88727316e3bf0ff1e05471deab4cea3da90b54687d1d` | `Meta/Ownership.md` | Ownership Transfer | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-017 | `b723a5ab550b83005932b9f11c18fec2cb397bdb2f4bbf565cad14f1701f5865` | `Meta/Ownership.md` | Ownership Transfer | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-018 | `ee773d5a885ee7104e5965ae4fb5852491de1cc11fa09c7d5ec99a38807666b0` | `Meta/Ownership.md` | Ownership Transfer | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-019 | `19c07d5de1e2f9b81f76915f8ac46a7e6b6ee62d9cb29c8137f3dab70d9c7efa` | `Meta/Ownership.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-020 | `111150f9d1aa4848a8f7bbcaf96dec07358023a25502798f234682685093abdc` | `Meta/Ownership.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-021 | `571fe918ea9fdbc683bfdb8bdc5bafa4e1ced13edc9f114b14357288f4532307` | `Meta/Ownership.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-022 | `d63b8878e4544094e34745b43dab7c2869280f3f7829b161536d4a655bd47efe` | `Meta/Ownership.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-OWNERSHIP-023 | `1a96e6b6d9dcdd971d578438f59ee0314b4102007aedb8e3ee509ffc16e6ad18` | `Meta/Ownership.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-001 | `3323a0311ac999b331d631b8213c354dc1fbdf76bfbf089e7c40bccff68e9d0d` | `Meta/Registry.md` | Design Principles | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-002 | `70cf96544d124c5ca7ac9e9902df3a75ccba3ca51906ff7f26671f9d93d592ea` | `Meta/Registry.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-003 | `32b85133fafe8261c8b5e5ead0cd8b42de9aaa7288fcd8412fcda270fa15df47` | `Meta/Registry.md` | Core Characteristics | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-004 | `d8af36bee5408974491d9fa9a8720bd90140d9a6ea2c0b99ab92965f0ad2b36e` | `Meta/Registry.md` | Registry Scope | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-005 | `173d8787930e3a0a67cd32b207f22e9ad96d6bd83b8655aa9a9e8bfaba44deab` | `Meta/Registry.md` | Registry Scope | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-006 | `0c5b48fbe1d7fc0d178859180a7e4a5e40e4ac1ec5f0323b84996d5a8cf47801` | `Meta/Registry.md` | Registration | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-007 | `574ab487cd0ec09d28d99e50b4ac2592200e7cfa9dd54d401c5823d004919346` | `Meta/Registry.md` | Registration | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-008 | `2e3ddf75f82a0dadc9ea4f3fd15ed49260fde815b2b92160f15a4f9ddc51ca0f` | `Meta/Registry.md` | Registration Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-009 | `99fba64e8d58ee79490f8b3fe53a8917f3dee5b7a734ce4778998944feac1024` | `Meta/Registry.md` | Registration Lifecycle | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-010 | `5401c582d4ab7e0ef05013874102721def61a134c426e473dc9d29e396f28353` | `Meta/Registry.md` | Registry Integrity | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-011 | `79916043bfaf6bb3e78160d5366930e23db34fe919ae0da8431a3868b21aa008` | `Meta/Registry.md` | Registry Integrity | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-012 | `9a9aa775d0b76c3a4ccec00046928fdbd30e9a877e8ee7a3fb82d01710c22107` | `Meta/Registry.md` | Discovery | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-013 | `a4a4ba4b3ed91964d96cb1397836fa1a011566b4610c6bcfcf784fe928634c14` | `Meta/Registry.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-014 | `645baa746d38f21e1b3764004df352453d5e1b25be260d84f8b82438041ffc18` | `Meta/Registry.md` | Governance | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-015 | `0581eb27d8bb23298704df7842b87e090fc0b5fd62ed0af4f80662d949326881` | `Meta/Registry.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-016 | `a2873f24e5120b9b784ea07c055f2c3070cef067cba63a83cef95ae458bfeb5e` | `Meta/Registry.md` | Auditability | 17 September 2026 |  | first population |
+| REQ-META-REGISTRY-017 | `6fe39b435417e677d816553968f4c57e9ef1a789308b4b99c43c9bb27592f5d3` | `Meta/Registry.md` | Conformance | 17 September 2026 |  | first population |
+| REQ-MODELS-MODEL-001 | `35ae55bf4536ed635480c2d61ec3503bb0aa0965f6cbfc2da4d20f4d080951e3` | `Models/Model.md` | Composition | 17 September 2026 |  | first population |
+| REQ-MODELS-MODEL-002 | `97dae619cca0bc00b598e7ea6ec73982806594a9efdb0b0d19b975d03e7ae0f1` | `Models/Model.md` | Model Integrity | 17 September 2026 |  | first population |
+| REQ-MODELS-MODEL-003 | `0c46bea4fa0748e47fe0d2f7ae13f11902898808290accdb65effe0662e4c09e` | `Models/Model.md` | Model Integrity | 17 September 2026 |  | first population |
+| REQ-MODELS-MODEL-004 | `2ea0334f215e0c36599b770b74d901cf19127caa4060c8b858a46ba6eb9c364e` | `Models/Model.md` | Model Integrity | 17 September 2026 |  | first population |
+| REQ-MODELS-MODEL-005 | `5cd674b42869ec0bf297882192b9865c9b49305633bb5a6be133c6c24b70af8f` | `Models/Model.md` | Operational Consistency | 17 September 2026 |  | first population |
+| REQ-MODELS-MODEL-006 | `f07638756491bb39569790e7a88e2ad64dd2c470e9bbe2a413510cccee93d58b` | `Models/Model.md` | Traceability | 17 September 2026 |  | first population |
+| REQ-MODELS-MODEL-007 | `e97bd3844a2c3b2c70c4610c1efcf6ba0d3ab849f7eb7757d628e4820f248b32` | `Models/Model.md` | Extensibility | 17 September 2026 |  | first population |
+| REQ-MODELS-MODEL-008 | `4bad3bb5e56c791586667bd57cfb9cda09312fa199227b38658fa44be93334c6` | `Models/Model.md` | Extensibility | 17 September 2026 |  | first population |
+| REQ-MODELS-MODEL-009 | `c6b50de592873871873a7e41b49c0e82a20ac2364226d1afbcc3a45686b6f785` | `Models/Model.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-MODEL-010 | `aa311d4a4955437538d71c53b0bf807c0f561b3b06836510ce0f43d99e0ebb69` | `Models/Model.md` | Future Extensions | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-001 | `13aebe9d811ece62b2a23ce463263c33dbaf9271411b8f72dcbe969795c4cba4` | `Models/Entity.md` | Characteristics | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-002 | `385835f5687abaa30ce894f0da5d8f9a6f207e1bdeb0cd5f890409d9d617474e` | `Models/Entity.md` | Identity | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-003 | `73595db9ddf608237ed581f152682eec9958610902e1a30a8ae4714f44152925` | `Models/Entity.md` | Identity | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-004 | `4e4b6ffc0f6dd17dd49454f11a9c8113868609880980f371b2ef71d910ab9501` | `Models/Entity.md` | Ownership | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-005 | `e0f963219b099fe4e34d198d195307942a3c0109f0c72a2e20e0895131deb23a` | `Models/Entity.md` | Ownership | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-006 | `adc398a8b48ec5b771f8da2e86af4cf68633f8a89d25c614ea31def5094336bd` | `Models/Entity.md` | Attributes | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-007 | `19ab12f2d4e103b99b026893720ee8b14020b6195ee3ef7df0c06479c2518d3e` | `Models/Entity.md` | State | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-008 | `76090f2c6d86da35f38169ef740e64cda4e0e018c5ea0ec402e05696ff204acf` | `Models/Entity.md` | State | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-009 | `bc942a4fc77debf19ce486bdf93d01fb5c58f80cbebb7be05da2ca3b3f6e9f9d` | `Models/Entity.md` | Lifecycle | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-010 | `d8b3da0f66d1764c943307c7a4797d4a6a379ff4946f77b2de592da6d0e6cec6` | `Models/Entity.md` | Relationships | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-011 | `46b6189034d3d388d0d21bfd50de777f24b968c71d46f4fa6761a6c1500e60ed` | `Models/Entity.md` | Relationships | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-012 | `f4b41ee44306864f769765336a2112436716fe5f5729a2838e4b0d903385220f` | `Models/Entity.md` | Relationships | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-013 | `8de6187c4ff2ca265f2f7c6d0ac0ee54ca0faf3fafd08fce2695c5f3f2c00137` | `Models/Entity.md` | Events | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-014 | `7d32b51abb83ed5d278708bb4d4f7c42258f14db5c2722dabca38e72f3adee7f` | `Models/Entity.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-ENTITY-015 | `4ea8cc9af4fcea19f0f5adc4b4d84971de9c5907d1bc6b0a4a90d15f15f30d2b` | `Models/Entity.md` | Future Extensions | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-001 | `f9c6ce03a5ec3330b878bedbb17f30722f16a22e2bef8b13c0b7b88a12359743` | `Models/Domain.md` | Characteristics | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-002 | `a8671c957c1d79819a98aea8c26bb3092e248648bd909b6c4e176c8bd2819d9b` | `Models/Domain.md` | Identity | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-003 | `f783ac2f049f0a0cbc89c0541a77998dfec10d6d74d6726e5637f6031d010992` | `Models/Domain.md` | Identity | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-004 | `f587faef28cfea56581076515433978385bc5e78340806b071ec2a3aec90b501` | `Models/Domain.md` | Purpose | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-005 | `4b68adf2e13ea1ca4a0d7a882c4207cd63fb6d0739ae7612a02d988373eb8073` | `Models/Domain.md` | Purpose | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-006 | `d3668ed404e3354a480b98616b963fe76d4e224033690a000cd809317eb4987c` | `Models/Domain.md` | Ownership | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-007 | `532f63c28ce504615a962476dca71adccafdd4aebdf6df595d2b8ac59cd53689` | `Models/Domain.md` | Ownership | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-008 | `203556ee5b0086090d8444d6cdc215bb20810795130c221455e203dec0d9acea` | `Models/Domain.md` | Entity Governance | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-009 | `30e2a631ee973f4ef0b0992f17512b7b98b90898cf2a1ec62a307d39ac6e0305` | `Models/Domain.md` | Entity Governance | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-010 | `bd1b99ad5e9f218d8558e29b89a505591bd034b1cd217b2d62e8986af5ee3c1b` | `Models/Domain.md` | Entity Governance | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-011 | `761b1ef4b71dbba5b592dea9e34fa1a3f0631470482f38ba07d3f20bb5609a7f` | `Models/Domain.md` | Relationships | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-012 | `6a5f9d58fc845de114a4b687b45b06621c80cf26b309bd7d472f3e7f3b9f159e` | `Models/Domain.md` | Relationships | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-013 | `b252c62c37277bbeafdde40daaf5c5ee386ac7e8205e035fa3a4a6389f86c633` | `Models/Domain.md` | Boundaries | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-014 | `99b7cc4fb40e590bc41d490e5bb8934b0d9270ad614a22f16e5e1281f085de77` | `Models/Domain.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-DOMAIN-015 | `ff66661894c996ad32871c89e854d784abf64c3e9824f5bca647d33424c153fe` | `Models/Domain.md` | Future Extensions | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-001 | `e710193b3bc4ca47b4a18b0d4336323f9a663097c4b3f3660bf32775d64b1bc0` | `Models/Relationship.md` | Characteristics | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-002 | `4404b449a8378a9bfe9ffa2871a881952ba99bc6d8694c601a8584d73f811461` | `Models/Relationship.md` | Participants | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-003 | `c1b0612841a5a4526aeee4ea672e55f1ced67a7477c28c2d6b3cc749ffd08935` | `Models/Relationship.md` | Participants | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-004 | `2d00f9cc53983abb093a529fd2705be552a2482b81d6d7230d5761e2d1c819f9` | `Models/Relationship.md` | Relationship Types | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-005 | `80dc954f6b9e5c6582710fb77f0eadec198b60d0506fd7f7a8f69a659992e215` | `Models/Relationship.md` | Relationship Types | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-006 | `43c7f66123e65f66c34bdfece1a8883756257415212f632db98f36acdbb45497` | `Models/Relationship.md` | Cardinality | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-007 | `e1a57f932e4d42428dbd38f30953b2f9b5bafd7c40a75668ec9bfa23606903ee` | `Models/Relationship.md` | Direction | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-008 | `742cf8e956e474b170e88376a2b258057376503623fd4a3c4fb075fc094f1e99` | `Models/Relationship.md` | Direction | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-009 | `9a0ae8d0b9642d2107fa4b7d44502dff811e4d8bce1eeb505116d55a798d3b20` | `Models/Relationship.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-010 | `e1b3b8730fc6b22a8e1785a86d64e8a05750314e71953e4c3942e5cc71d836cc` | `Models/Relationship.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-011 | `d713d89b94fec58cd646f9ee265f859184452b0bdb8bc5f4c8f0b2e2d07bc267` | `Models/Relationship.md` | Lifecycle | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-012 | `ffc57ebd1b258711855436e19ab57463cd8fc96d097288d66e4f2c936c89a42c` | `Models/Relationship.md` | Ownership | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-013 | `5aa17dc44903fc836874d592bb96b29484733ca5e68faa3a8e6d7d3885688923` | `Models/Relationship.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-RELATIONSHIP-014 | `680b84a1a02124a3ad26064d3e6d5b97df914ada2a391cbb2c8c2510cd5b386d` | `Models/Relationship.md` | Future Extensions | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-001 | `509f4a64234730e1fe76cab9ea6342972487b292a3c4f12c89fcd4f81b4dab0e` | `Models/Event.md` | Characteristics | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-002 | `38754265b122b2e9efe461033f82fa254b654736ab1251abd2d5f80aba140d97` | `Models/Event.md` | Identity | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-003 | `36a94db31b4efb8d1b13343736e6a2e27d0e8f4fbeb1475fa779d5060fac0543` | `Models/Event.md` | Timestamp | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-004 | `ce63d192ce000622b0be308de021e5f9c4f3a8379f1aad3a9f0a2fb550f76e9c` | `Models/Event.md` | Timestamp | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-005 | `220c976aa1f98132bc18180f1e926ca941849f83658d77e1a2574ee3bc84925c` | `Models/Event.md` | Event Source | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-006 | `26de501dce8af0dcb73f985b68b2807cf5ded5a559275c8a79f102bc64f37ad3` | `Models/Event.md` | Event Source | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-007 | `309f72f75ade1d97edc17bb9c7423eabd5ce36f48307de28b5d7c2b564e2699c` | `Models/Event.md` | Event Payload | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-008 | `213586270f34204c98278ceeb44113ee100dfee8de8b4dd05a8e4b01a12b62d1` | `Models/Event.md` | Event Payload | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-009 | `c1f19a39d1b3f08158caa39103c728c0a58699ec3af7d9849aba82a4d591e77f` | `Models/Event.md` | Entity References | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-010 | `be1fad192467c4517fd1c02d13fd816e71e6d81de6d65d8a7c56d1e2cbb384e5` | `Models/Event.md` | Immutability | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-011 | `00717207bb05102b9bf3458e21c741fdccdf53c42e342a35319d53947ecbdbd0` | `Models/Event.md` | Immutability | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-012 | `9f51932b928a02ecc8369c10fe7f95e31fbb88f89f5888bdc95d91effb8c6582` | `Models/Event.md` | Ordering | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-013 | `1d51aa42684c5da60e53917f86cdaef4fa632c27941d52e499bd4450b1c883e7` | `Models/Event.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-EVENT-014 | `5aad759fd821b15d2306eef9f772b8a47a7450491456841fac8c7648ef1fdc67` | `Models/Event.md` | Future Extensions | 17 September 2026 |  | first population |
+| REQ-MODELS-STATE-001 | `bc5d434b84a457edab52eb3a65ca30e8fa6b945a48436b12b1d289f7b4d8d916` | `Models/State.md` | Characteristics | 17 September 2026 |  | first population |
+| REQ-MODELS-STATE-002 | `c8b0d839ebdd634539a37d3f15b095173b350d1e7e8dcf08b0d1761dd33b2412` | `Models/State.md` | State Identity | 17 September 2026 |  | first population |
+| REQ-MODELS-STATE-003 | `012e2e71def345287e810db1ceef891242df28f423e5dc842da431d2d8fa0129` | `Models/State.md` | Initial State | 17 September 2026 |  | first population |
+| REQ-MODELS-STATE-004 | `2828628982d4ca6c5007235c148c4c7b19b1dbf636d2f610aab97aa457417bf0` | `Models/State.md` | Terminal State | 17 September 2026 |  | first population |
+| REQ-MODELS-STATE-005 | `99fc902a4880d08af85c49fc0a0e2cdfb1e1b99a0e48f1409bcdb58344b1bfb5` | `Models/State.md` | State Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-STATE-006 | `1838a2e257b9283b7ba2ba028dfb2b3088e3a75b403f019fa6a2baea3bb61eec` | `Models/State.md` | State Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-STATE-007 | `da1df37b364c01eb8282921f3420fec73f196aa856ba2ade266099b6b65258aa` | `Models/State.md` | State Attributes | 17 September 2026 |  | first population |
+| REQ-MODELS-STATE-008 | `2b75c1aa4d63e90fa3375bf0886fe258561aedc67fd233dc7842abee225c21bf` | `Models/State.md` | Immutability | 17 September 2026 |  | first population |
+| REQ-MODELS-STATE-009 | `d109d718fc2c172d55f68a4b4e7fedca8259b953c1772d0ff0454b4269c6b936` | `Models/State.md` | Immutability | 17 September 2026 |  | first population |
+| REQ-MODELS-STATE-010 | `76a368081279b146d1771f519d6b25f97d6ef088a03d10bfcbcfd22d2ff4bd4e` | `Models/State.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-STATE-011 | `2edf4ec6b28073bb102e828505006dd14daa0457babdedc68c53db08b054d21d` | `Models/State.md` | Future Extensions | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-001 | `d4c423aec38efbc1671e7ea5ffa11bbb70eb8022f9b05653a2774ca444128d8e` | `Models/Workflow.md` | Characteristics | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-002 | `15c925dd9327caeaec1f9a1a93570d6c2c43bff9919edbead217a501a045f58a` | `Models/Workflow.md` | Scope | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-003 | `cb11f77aa63d381173a838d33cc7592f3dc6174410f66078f527d6c578203124` | `Models/Workflow.md` | Scope | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-004 | `1f5678a29bb7f5b5184c0268803cf2d8cfaa665987524ff48f1963c56c727f5b` | `Models/Workflow.md` | Inputs | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-005 | `45f1d4086a809b45fe5533085553ccae3af5309b27ae8e8821d1ad3076828179` | `Models/Workflow.md` | Inputs | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-006 | `f6436adccbe3fb59c9a0f47907b75001f71fcc53759a1ae6ae5bbb74fabfa12d` | `Models/Workflow.md` | Outputs | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-007 | `fc606ad507fd004f13ad59ceec405a2342e74f129dc2bf874e5d59821ba0a98e` | `Models/Workflow.md` | Outputs | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-008 | `efac1bb2b11f490b4d9ee7bcc25a1017c5b9fc28cc884b32f9b99a9fd569e624` | `Models/Workflow.md` | State Transitions | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-009 | `66f1bb7410deb865186b189a54cd16c1f502fbb961abad6f3ef312556a6659f6` | `Models/Workflow.md` | Business Rules | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-010 | `748ba606d46ad68abc2604d8f134653d5778d573c82436b50367e5ab15ffd81c` | `Models/Workflow.md` | Error Handling | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-011 | `5c5ae1ec71301262c27071cd48e78b3e1272727a546a992bbbac7440d159c12c` | `Models/Workflow.md` | Error Handling | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-012 | `55bb86a50c0168b2572cbe9f21dd18e289dee02dbf948d86b0a19ed05804dae9` | `Models/Workflow.md` | Professional Review Escalation | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-013 | `a8731380679b68ffccc3dd8a4c4aa764da696b534eaf8b3004377e34ebe7e3f2` | `Models/Workflow.md` | Professional Review Escalation | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-014 | `c41ae99be30701144fe420336e968a09aeb371a62034be08b53b1e819376e153` | `Models/Workflow.md` | Professional Review Escalation | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-015 | `99009f99cddecadc8422c8c61b8e14d20541507ab41d22c587bcea6d3073d5cb` | `Models/Workflow.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-WORKFLOW-016 | `2143d37c4fd830b2d99e3e8b729a75f345b80fbe719cb0d29226d72c50d1e700` | `Models/Workflow.md` | Future Extensions | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-001 | `9387c6368e7bfe1e12ce0762e56a99f9b59312afc19363bdddfc7cd1bc7ad2ae` | `Models/Lifecycle.md` | Definition | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-002 | `cf9229d7bc7c4060232e1f2aff2717ce777dea6919ba385f2d81ef4b66de4a06` | `Models/Lifecycle.md` | Characteristics | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-003 | `942ce668fd5945c29279675aa44e4021837c4c5b073051c49dcf2681b9fde4fa` | `Models/Lifecycle.md` | Initial State | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-004 | `6aa67ad6717d9f884b9d6ec5aa31e5b1bd93cb5c0a2951dab4601ea071e1e06e` | `Models/Lifecycle.md` | Operational States | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-005 | `ee73a8d53436cdc73cfc4fa50c6019ce374b3f66387902204e7eeb4cbfd449ca` | `Models/Lifecycle.md` | Operational States | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-006 | `38312d9ddebb4745460b91ca991a992ae77cced3ff33a8c53c653925b75e0c2e` | `Models/Lifecycle.md` | Terminal States | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-007 | `920ad2ed085210c51972e4ee62b20b7cd337bfb36b760bc67ac0e9642c62f2ca` | `Models/Lifecycle.md` | State Transitions | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-008 | `3a260dab8f2b8720e88d80d89afa0e73765a9b82d1a364fcff4d42321f4485a9` | `Models/Lifecycle.md` | Transition Rules | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-009 | `bc081e703ef9f6ea7608d26e83665980a97cdb239b22d9fff49eb2fe81f53fef` | `Models/Lifecycle.md` | Lifecycle Integrity | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-010 | `9ff878b4a2ce23006085fa40ec7a6df26b5a09cb9d2015157c5c76a8ba947b5c` | `Models/Lifecycle.md` | Lifecycle Evolution | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-011 | `d5a1fd57762c750d243eaae6a629d35e3aff63e85c8fe0868628f7b14622d7b7` | `Models/Lifecycle.md` | Lifecycle Evolution | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-012 | `786f008edce33fb9afa21774737640e8b5ba5a8ed5502e90da4738e48c4e3d93` | `Models/Lifecycle.md` | Constraints | 17 September 2026 |  | first population |
+| REQ-MODELS-LIFECYCLE-013 | `0ced24ffff785013e0fa0d160907ec278c0531f76b890990d601f8f1ab73d713` | `Models/Lifecycle.md` | Future Extensions | 17 September 2026 |  | first population |
+| REQ-LIFECYCLES-001 | `97a8d56c63319545e068e2352cd0c2568e7d827f55c7d4341eb7c579c09691ec` | `Lifecycles/Lifecycles.md` | Principles | 17 September 2026 |  | first population |
+| REQ-LIFECYCLES-002 | `9746ca104ce2c350cec36250714a15345d3e452a2495761b26c483cd9f629024` | `Lifecycles/Lifecycles.md` | Principles | 17 September 2026 |  | first population |
+| REQ-LIFECYCLES-003 | `e382475878161d0cfc53f70059d2a11c98ac37be14e6d50af0a074801c726784` | `Lifecycles/Lifecycles.md` | Principles | 17 September 2026 |  | first population |
+| REQ-LIFECYCLES-004 | `5999ad8dde4cb681e678f808152357ee825a0390dfad1dbbdd4b250923bd5067` | `Lifecycles/Lifecycles.md` | Principles | 17 September 2026 |  | first population |
+| REQ-LIFECYCLES-005 | `425060d5a95a976721b0a79edb8da94a337c718aaf9540ae44a1de6227db4a2b` | `Lifecycles/Lifecycles.md` | Principles | 17 September 2026 |  | first population |
+| REQ-LIFECYCLES-006 | `62fc62173bbeca3ff9bc062ff8b2820da7f737f9f9a010375fad69deafb7c6c7` | `Lifecycles/Lifecycles.md` | Relationship to Entities | 17 September 2026 |  | first population |
+| REQ-LIFECYCLES-007 | `20a3b3a855777f5c4c3348132e3385e2ff2483becd20d52bd96d6fe1470c6050` | `Lifecycles/Lifecycles.md` | Relationship to Entities | 17 September 2026 |  | first population |
+| REQ-LIFECYCLES-008 | `df1444093a4b7438d8f2388154d950cd3be156d727c124c276314e3decc9d3e8` | `Lifecycles/Lifecycles.md` | Standard Lifecycles | 17 September 2026 |  | first population |
