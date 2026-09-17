@@ -30,7 +30,7 @@ The Domain serves as a primary architectural building block for enterprise opera
 
 # Definition
 
-The canonical definition of Domain is `Models/Domain.md` (`Model-02`), per `CAND-015`. This document is informative: it restates that definition for the `Domains/` tier and does not extend it.
+The canonical definition of Domain is `Models/Domain.md` (`Model-02`), per `CAND-015`. This document is informative: it restates that definition for the `Domains/` tier and does not extend it. Sentences in this document that use shall restate `Models/Domain.md` where that document has a counterpart and describe the `Domains/` tier where it has none; as an Informative document it imposes no requirement of its own.
 
 A Domain is a logical business boundary responsible for managing a coherent set of Objects, capabilities, policies, processes, and operational outcomes.
 
@@ -241,3 +241,4 @@ A conforming Domain shall:
 |----------|------|-------------|
 | 0.1 | 21 July 2026 | Initial draft |
 | 0.1 | 16 September 2026 | Integration of `CAND-015` (Step 2): Status changed from Draft to Informative; Definition names `Models/Domain.md` as the canonical definition; Core Characteristics states that the four characteristics beyond `Model-02` carry no normative force. No definition changed. |
+| 0.1 | 16 September 2026 | Definition: stated that the document's shall-sentences restate `Models/Domain.md` where a counterpart exists and describe the tier where none does, imposing no requirement (per `CAND-015`'s second postscript and `AO-025`). |
