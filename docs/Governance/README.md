@@ -24,7 +24,7 @@ This section describes how the OCOM Specification itself is maintained, reviewed
 
 ## Added after the 22 July 2026 baseline
 
-The ten documents above form the 22 July 2026 baseline. The following were added later through the same process (18 documents as of 17 September 2026):
+The eleven documents above form the 22 July 2026 baseline. The following were added later through the same process (18 documents as of 17 September 2026):
 
 - [Architecture Analysis: AO-003: Derived State in an Immutable Memory Model](Architecture-Analysis-AO-003-State-Derivation.md)
 - [Architecture Audit: Current State of the OCOM Specification](Architecture-Audit-Current-State.md)

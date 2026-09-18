@@ -6,7 +6,7 @@
 
 **Version:** 1.0
 
-**Last Updated:** 17 September 2026
+**Last Updated:** 18 September 2026
 
 ---
 
@@ -27,11 +27,12 @@ Every Entity **shall**:
 - contain attributes (each with a name, meaning, data type, and optional constraints);
 - define one or more states;
 - define a lifecycle;
-- participate in relationships.
+- participate in relationships;
+- be governed by the rules of this specification.
 
 The minimum conforming Entity consists of: Identifier, Name, Domain, Owner, Attributes, State, Lifecycle.
 
-An Entity **shall not** exist without identity, without ownership, without a lifecycle, or belong to multiple primary Domains.
+An Entity **shall not** exist without identity, without ownership, without a lifecycle, belong to multiple primary Domains, or have ambiguous meaning.
 
 ## Domain
 
@@ -39,7 +40,7 @@ A Domain is an operational boundary responsible for governing one or more Entiti
 
 ## Relationship
 
-A Relationship is an explicit operational association between two or more Entities. It defines structural connections and does not itself represent operational behavior. Every Relationship **shall** connect identifiable Entities, have a defined type, and define cardinality; direction **shall** be explicit whenever operational meaning depends on it. This chapter's Relationship specializes the Relationship defined in `Meta/Relationship.md`, whose participants are Objects, for the case in which every participant is an Entity; a Relationship with a participant that is not an Entity, including an Organization, is governed by `Meta/Relationship.md` (`CAND-016`).
+A Relationship is an explicit operational association between two or more Entities. It defines structural connections and does not itself represent operational behavior. Every Relationship **shall** connect identifiable Entities, have a defined type, and define cardinality; direction **shall** be explicit whenever operational meaning depends on it. A Relationship **shall not** connect undefined Entities, have ambiguous meaning, duplicate another Relationship without justification, or exist without a defined type. This chapter's Relationship specializes the Relationship defined in `Meta/Relationship.md`, whose participants are Objects, for the case in which every participant is an Entity; a Relationship with a participant that is not an Entity, including an Organization, is governed by `Meta/Relationship.md` (`CAND-016`).
 
 > **Editorial note.** `Meta/Relationship.md` (Chapter 4) frames Relationship in terms of the business *meaning* it conveys ("unlike a Reference, a Relationship conveys business meaning"), while `Models/Relationship.md` (this chapter) frames it as a *structural* connection that "does not represent operational behavior." Read together, these are not stated as contradictory in the source documents — meaning and behavior are different properties, and a structural connection can still carry business meaning without describing behavior. This chapter records the difference in emphasis rather than resolving it, per editorial policy: apparent tensions between source documents are flagged, not corrected, in this reading path.
 >
@@ -72,6 +73,7 @@ An Entity, Domain, Relationship, Event, State, or Workflow conforms to this spec
 | 0.2 | 22 July 2026 | Compiled reading path, approved by the Architecture Committee with editorial changes (`Specification/Committee Review Package.md`). |
 | 0.2 | 22 July 2026 | Committee Review: "shall never," inherited verbatim from `Models/Entity.md`, normalized to "shall not" to match Chapter 1's keyword glossary; no requirement changed. |
 | 1.0 | 17 September 2026 | "shall never", inherited verbatim from `Models/Domain.md`, normalized to "shall not" as the Committee Review of 22 July 2026 directed for this chapter; no requirement changed. Relationship section compiles the specialization sentence `Models/Relationship.md` gained under `CAND-016`, with a dated editorial note closing the earlier one; the Domain section's unsourced sentence about Domains owning Domains replaced by the governance rules of `Models/Domain.md`; every other sentence verified against its `Models/` source as of this date. |
+| 1.0 | 18 September 2026 | Three obligations its sources carry and this chapter did not: the ninth item of `Models/Entity.md`'s "Every Entity shall" list, the fifth of its prohibitions, and the four prohibitions of `Models/Relationship.md`. The traceability check of 17 September 2026 ran forward, from chapter to source, so an obligation the chapter never compiled was invisible to it; recorded as `AO-077`. No requirement changed in any source document. |
 
 ---
 

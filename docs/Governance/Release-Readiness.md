@@ -62,9 +62,9 @@ Every release entry from this point forward **shall** confirm the following:
 
 **Documentation Readiness:** Ready. All CI checks green on the tagged commit `91d40db` (markdownlint, link check, required documents, publication-metadata consistency, REUSE compliance, OpenSSF Scorecard). The Release body's bundle claims are checkable against the `Publication-Manifest.md` entry: Constitution 1.0.1, Core Vocabulary 0.1 (13 governed terms), Specification 0.2.
 
-**Open Observations:** 61 recorded (AO-001 to AO-061): 3 Closed, AO-042 Open in part, AO-008 Escalated to `CAND-009`, one Informative, the rest Open. None blocks a Release: each open item is a disclosed tension in the model, not a defect in a published rule, and the Architecture Freeze (`CAND-007`) holds the Core stable while they are worked.
+**Open Observations:** 61 recorded (AO-001 to AO-061): 3 Closed, AO-042 Open in part, AO-008 Escalated to `CAND-009`, the rest Open. (Corrected 18 September 2026: this line and the Candidates line below each counted one Informative entry, a status no entry carried then or now.) None blocks a Release: each open item is a disclosed tension in the model, not a defect in a published rule, and the Architecture Freeze (`CAND-007`) holds the Core stable while they are worked.
 
-**Unresolved ADR Candidates:** CAND-001, CAND-002, CAND-004 and CAND-008 Open; 9 Decided; CAND-009 Promoted to ADR; one Informative. Non-blocking: no open Candidate proposes a Core change this Release would pre-empt.
+**Unresolved ADR Candidates:** CAND-001, CAND-002, CAND-004 and CAND-008 Open; 9 Decided; CAND-009 Promoted to ADR. Non-blocking: no open Candidate proposes a Core change this Release would pre-empt.
 
 **Critical Documentation Debt:** None critical. FW-007 (a correctly-scoped next Release not yet cut) is discharged by this Release and closed on 12 September 2026. FW-006 (the external Publication Engine exposes no commit marker) stays open and is disclosed in the Manifest entry.
 
@@ -139,3 +139,4 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 17 September 2026 | v1.3.0 entry: Recommendation confirmed once the Manifest Commit field was filled. |
 | 0.1 | 17 September 2026 | v1.3.0 entry: Status Prepared to Released, with the GitHub Release timestamp and the Zenodo version DOI. |
 | 0.1 | 18 September 2026 | v1.3.0: post-release note recording the `AO-069` finding, the Chief Architect's disposition of the same day, and the qualification the v1.0 claim now carries. |
+| 0.1 | 18 September 2026 | v1.1.1: two tallies each counted an Informative entry that neither register carried; corrected with a dated note. |
