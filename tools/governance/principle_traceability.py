@@ -94,13 +94,13 @@ def check():
     canon = principles()
     alias_map = aliases()
     blocks = list(BLOCK.finditer(doc))
-    seen = set()
+    seen = []
     rows_checked = 0
 
     for b in blocks:
         n = int(b.group(1))
         title, statement = canon.get(n, (None, None))
-        seen.add(n)
+        seen.append(n)
         if title is None:
             failures.append("Principle %d is not a Canonical Principle" % n)
             continue
@@ -116,7 +116,12 @@ def check():
         if scope not in {"yes", "no", "partly"}:
             failures.append("Principle %d: conformance scope %r is not yes, no or partly" % (n, scope))
 
-        table = [l for l in b.group("table").splitlines() if l.startswith("| `")]
+        # Every line of the table except the header and the |---| separator is a row and must be
+        # checked. Selecting only lines that start with a backtick dropped malformed rows before
+        # the unparsable-row failure below could see them, so a row naming a file that does not
+        # exist passed by being unreadable.
+        table = [l for l in b.group("table").splitlines()
+                 if l.startswith("|") and not l.startswith("| Carrier") and set(l) - set("|-: ")]
         if verdict == "no occurrence" and table:
             failures.append("Principle %d: verdict is 'no occurrence' but the table names carriers" % n)
         if verdict != "no occurrence" and not table:
@@ -141,13 +146,17 @@ def check():
                 failures.append("Principle %d: %s does not exist" % (n, path))
                 continue
             try:
-                source = target.read_text(encoding="utf-8").splitlines()[int(lineno) - 1]
+                # split on newlines only: str.splitlines() also breaks on form feed and the
+                # unicode line separators, which would shift every line number after one of them
+                source = target.read_text(encoding="utf-8").split("\n")[int(lineno) - 1]
             except (ValueError, IndexError):
                 failures.append("Principle %d: %s has no line %s" % (n, path, lineno))
                 continue
             text = quote.strip().strip('"')
             if text not in source:
                 failures.append("Principle %d: %s:%s does not carry %r" % (n, path, lineno, text[:60]))
+            if kind == "absent":
+                failures.append("Principle %d: a row classified 'absent' names %s; absent means no carrier exists" % (n, path))
             if kind == "binding rule":
                 if not NORMATIVE.search(source) and not stem_of(target, int(lineno)):
                     failures.append("Principle %d: %s:%s is classified 'binding rule' and neither it nor a stem above it carries shall or must" % (n, path, lineno))
@@ -159,9 +168,15 @@ def check():
                 elif text and text not in alias_map[alias][1]:
                     failures.append("Principle %d: alias %s does not carry %r" % (n, alias, text[:60]))
 
-    missing = sorted(set(canon) - seen)
+    missing = sorted(set(canon) - set(seen))
     if missing:
         failures.append("no block for Canonical Principle(s): %s" % ", ".join(str(m) for m in missing))
+    repeated = sorted({n for n in seen if seen.count(n) > 1})
+    if repeated:
+        failures.append("more than one block for Canonical Principle(s): %s" % ", ".join(str(r) for r in repeated))
+    unparsed = len(re.findall(r"^## Principle \d+:", doc, re.M)) - len(blocks)
+    if unparsed:
+        failures.append("%d principle heading(s) whose block does not parse: check the field order and the table" % unparsed)
 
     for f in failures:
         print("FAIL %s" % f)
@@ -185,8 +200,9 @@ def summary():
 
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--check", action="store_true")
-    p.add_argument("--summary", action="store_true")
+    g = p.add_mutually_exclusive_group()
+    g.add_argument("--check", action="store_true", help="verify the document against the corpus (the default)")
+    g.add_argument("--summary", action="store_true", help="print the verdict counts only")
     a = p.parse_args()
     if a.summary:
         return summary()

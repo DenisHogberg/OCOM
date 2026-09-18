@@ -82,12 +82,13 @@ repository's history. The manifest's current Specification Version
 must match the `**Version:**` field of every file in
 `docs/Specification/`. `docs/Entities/Overview.md` must keep Status
 Draft, because its content stayed normative after Constitution
-Decision 4 moved Entities out of Core scope. The advisory step is a
-grep heuristic that warns about SHALL sentences naming a capitalized
-term with no matching file under Meta, Models, AI, Core, Memory or
-Lifecycles; it never fails the build, because it cannot tell a
-dangling reference from an ordinary capitalized word. The job checks
-this repository only. It cannot see whether ocom.uno matches the
+Decision 4 moved Entities out of Core scope. An advisory grep
+heuristic for dangling normative references ran here until 18
+September 2026 and was removed: it matched nothing on this corpus and
+printed nothing, so it read as a check while checking nothing, which
+is the failure mode this repository's own tools were reviewed for the
+same day. The job checks this repository only. It cannot see whether
+ocom.uno matches the
 repository, because the publication engine that renders the site lives
 outside it.
 
@@ -222,3 +223,13 @@ The job `Requirement register regenerates cleanly` runs `tools/conformance/requi
 The job `Principle traceability claims hold` runs `tools/governance/principle_traceability.py --check`, standard-library Python, no network. It exists because `docs/Governance/Principle-Traceability.md` is the one document in this repository whose content is a judgment about other documents: it says which rules carry each Canonical Principle. A judgment cannot be generated, so the register-style regenerate-and-diff discipline does not apply to it. What can be kept honest is the evidence under the judgment, and that is what this job checks: every cited line still carries its quoted text verbatim, every named Requirement Register alias exists and carries the quoted sentence, every row classified as a binding rule quotes a sentence that carries shall or must and is neither a revision row nor an editorial note, every one of the fourteen Canonical Principles has exactly one block, and each block quotes its principle verbatim.
 
 The practical effect is that the map cannot rot silently. An edit that moves a cited sentence, renames a document, or changes a rule's wording fails this job, and whoever made the edit either updates the map or learns that they changed something a principle rested on. That is the same property the Requirement Register gives the conformance claim, applied one layer up. It makes this the ninth required check on `main`.
+
+## Tool tests (added 18 September 2026)
+
+The job `Tool tests` runs `python3 tools/tests/test_tools.py`: eighteen cases, standard library only, no network. Seventeen of them break exactly one thing and assert that the tool exits non-zero and names what broke; the rest assert that the healthy corpus stays green.
+
+They exist because a review of the three tools on 18 September 2026 found six defects of one kind: the tool passed while doing no work. A presence row computed over an empty set reported ok having checked nothing. The JSON-LD leg of the citation rule compared nothing on every term, because the citation sits under `@graph` and a missing value counted as agreement. A traceability row that did not match the row pattern was dropped before the unparsable-row failure could fire, so a row naming a file that does not exist passed. An alias edited to a name already in use bound two Statements and both alias checks stayed green. A principle with two contradictory blocks passed a checker whose docstring promised exactly one. And the health tool's `--check` compared six of the eleven figures the record publishes.
+
+All six are fixed, and each one has a test that fails without the fix. The site tool is tested against an in-memory fixture (`tools/tests/fake_site.py`) that serves an ocom.uno-shaped site on loopback: a test removes an index, corrupts a citation inside `@graph`, deletes a projection or tampers with a published figure, and asserts the tool notices. Nothing in the suite touches the live site, and the whole run takes about six seconds.
+
+This is the tenth required check on `main`.
