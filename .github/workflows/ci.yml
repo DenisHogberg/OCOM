@@ -311,6 +311,25 @@ jobs:
       - name: Every Statement has an alias
         run: python3 tools/conformance/requirement_register.py --check-aliases
 
+  principle-traceability:
+    name: Principle traceability claims hold
+    # Added per AO-074, which asks for a map from each Canonical Principle to
+    # the rules that carry it. The map itself is judgment and is not generated;
+    # what this job checks is the evidence under the judgment, so a reader who
+    # disagrees with a verdict argues about the verdict rather than about the
+    # facts. Every cited line must carry its quoted text verbatim, every named
+    # Requirement Register alias must exist and carry the quoted sentence, every
+    # row classified as a binding rule must quote a sentence carrying shall or
+    # must, and each of the fourteen principles must have exactly one block
+    # quoting it verbatim. A corpus edit that moves a cited line fails here.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Every claim in Principle-Traceability.md resolves
+        run: python3 tools/governance/principle_traceability.py --check
+
   reuse-compliance:
     name: Licensing is machine-readable (REUSE 3.3)
     runs-on: ubuntu-latest
