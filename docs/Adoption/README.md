@@ -34,5 +34,6 @@ If you have already read `docs/Specification/00 Executive Overview.md` through `
 2. **[First Pilot](First%20Pilot.md)** — how to run a small, bounded first attempt, without Enterprise-scale ambition.
 3. **[FAQ](FAQ.md)** — direct answers to the questions people usually ask before starting.
 4. **[Common Mistakes](Common%20Mistakes.md)** — what tends to go wrong early, and why.
+5. **[Worked Example: Library Lending](Worked%20Example%20-%20Library%20Lending.md)**, one small operating model built end to end, from Objects through States to a Lifecycle, in a domain nobody has to know first.
 
 After these, the next step is `Core/Constitution.md`, the document that governs the specification, and then `docs/Specification/01 Introduction.md`, the compiled reading path through the canonical source documents (`Governance/Publication-Model.md`).

@@ -240,6 +240,14 @@ jobs:
           }
           files = [f for f in subprocess.run(["git", "ls-files", "docs"], capture_output=True, text=True).stdout.splitlines() if f.endswith(".md")]
           fail = 0
+          months = {m: i for i, m in enumerate(["January","February","March","April","May","June","July","August","September","October","November","December"], 1)}
+          months.update({m: i for i, m in enumerate(["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"], 1)})
+          def parse(d):
+              m = re.match(r"(\d{1,2}) ([A-Za-zА-Яа-я]+) (\d{4})", d.strip())
+              if not m:
+                  return None
+              mon = months.get(m.group(2)) or months.get(m.group(2).lower())
+              return (int(m.group(3)), mon, int(m.group(1))) if mon else None
           for f in files:
               if pathlib.Path(f).name == "README.md" or f in exceptions:
                   continue
@@ -247,6 +255,15 @@ jobs:
               for name, pat in pats.items():
                   if not pat.search(text):
                       print("::error file=%s::%s is missing its %s" % (f, f, name))
+                      fail = 1
+              # A Last Updated field older than the document's own newest revision row is a
+              # contradiction inside one document; fourteen carried one until 18 September 2026.
+              lu = re.search(r"^\*\*(?:Last Updated|Обновлено):\*\* (.+)$", text, re.M)
+              rows = [d for d in (parse(r) for r in re.findall(r"^\| [\d.]+ \| ([^|]+) \|", text, re.M)) if d]
+              if lu and rows:
+                  cur = parse(lu.group(1))
+                  if cur and max(rows) > cur:
+                      print("::error file=%s::%s says Last Updated %s but its newest revision row is %04d-%02d-%02d" % (f, f, lu.group(1).strip(), *max(rows)))
                       fail = 1
           sys.exit(fail)
           PY
