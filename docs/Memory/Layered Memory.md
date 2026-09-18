@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 18 September 2026
 
 ---
 
@@ -179,6 +179,8 @@ Memory may move to a lower layer when:
 - retention expires;
 - business rules require removal.
 
+> **Editorial note (18 September 2026).** This section and Layer Promotion above describe a layer change as movement of an existing record, while Constitution §4 makes a Memory Entry immutable after creation. Whether a layer is an attribute of a record or a projection computed from the append-only sequence is the question `CAND-014` answered for Status and left open here. It is recorded as `AO-069`, together with the same question for `Memory/Retention.md`. This note changes no requirement.
+
 ---
 
 # Relationship to Other Memory Components
@@ -208,3 +210,4 @@ A compliant implementation shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 18 September 2026 | Editorial note added under Layer Demotion recording that a layer change is described as movement of an existing record while Constitution §4 makes a Memory Entry immutable, per `AO-069`; no requirement changed. |

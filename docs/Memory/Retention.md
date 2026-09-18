@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 18 September 2026
 
 ---
 
@@ -100,6 +100,8 @@ Archived records remain accessible but are excluded from normal operational work
 The record has been permanently removed in accordance with organizational or regulatory policy.
 
 Deletion shall be auditable.
+
+> **Editorial note (18 September 2026).** Constitution §4 requires Memory to be append-only and a Memory Entry to be immutable after creation, and §6 requires Knowledge and World Models to be reproducible from Memory. This Deleted state, and the Conformance clause below that requires a compliant implementation to "support controlled deletion", stand against both. The divergence is recorded as `AO-069` and carries a Chief Architect disposition of 18 September 2026: it is disclosed, its correction is a Memory-model change gated behind `CAND-007` Section 5 and a Reference Case, and it does not block the v1.0 claim. This note changes no requirement.
 
 ---
 
@@ -200,3 +202,4 @@ A compliant implementation shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 18 September 2026 | Editorial note added under Deleted recording that this document's Deleted state and its controlled-deletion Conformance clause stand against Constitution §4 and §6, per `AO-069`; no requirement changed. |
