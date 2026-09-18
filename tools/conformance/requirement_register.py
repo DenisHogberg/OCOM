@@ -55,6 +55,12 @@ def classify(text):
     return {"shall": "mandatory", "must": "mandatory", "should": "recommended", "may": "optional"}[keyword]
 
 
+# A metadata field line, the only thing a leading ** is allowed to mean here. A sentence that
+# merely opens with a bold term ("**Ownership** shall be explicit.") is a Statement like any other,
+# and skipping every line that starts with ** dropped it silently.
+FIELD = re.compile(r"^\*\*[A-Z][A-Za-z ]{2,30}:\*\*")
+
+
 def statements(path):
     """Statements of one document, in document order: (section, class, text, identity)."""
     text = (DOCS / path).read_text(encoding="utf-8")
@@ -68,11 +74,12 @@ def statements(path):
     def unit_at(index):
         """Return (kind, text, next_index) for the block starting at index, or None."""
         line = lines[index]
-        if line.startswith("- "):
-            return "item", line[2:].strip(), index + 1
+        if line.lstrip().startswith("- "):
+            return "item", line.lstrip()[2:].strip(), index + 1
         parts = []
         j = index
-        while j < len(lines) and lines[j].strip() and not lines[j].startswith(("- ", "# ", "|", "**")) and lines[j].strip() != "---":
+        while j < len(lines) and lines[j].strip() and not lines[j].lstrip().startswith("- ") \
+                and not lines[j].startswith(("# ", "|")) and not FIELD.match(lines[j]) and lines[j].strip() != "---":
             parts.append(lines[j].strip())
             j += 1
         if not parts:
@@ -85,7 +92,7 @@ def statements(path):
             section = line[2:].strip()
             i += 1
             continue
-        if section is None or not line.strip() or line.startswith(("|", "**", "#")) or line.strip() == "---":
+        if section is None or not line.strip() or line.startswith(("|", "#")) or FIELD.match(line) or line.strip() == "---":
             i += 1
             continue
         unit = unit_at(i)
@@ -96,9 +103,11 @@ def statements(path):
         if kind == "para" and KEYWORD.search(utext) and utext.endswith(":"):
             # the stem absorbs the list that follows it, blank lines allowed
             j = nxt
-            while j < len(lines) and (not lines[j].strip() or lines[j].startswith("- ")):
-                if lines[j].startswith("- "):
-                    utext += " " + lines[j][2:].strip()
+            while j < len(lines) and (not lines[j].strip() or lines[j].lstrip().startswith("- ")):
+                if lines[j].lstrip().startswith("- "):
+                    # an indented sub-bullet belongs to the same obligation; stopping at it split
+                    # one Statement into two and changed the identity of both
+                    utext += " " + lines[j].lstrip()[2:].strip()
                 j += 1
             nxt = j
         if KEYWORD.search(utext):
@@ -113,8 +122,12 @@ def derive():
     return paths, {path: statements(path) for path in paths}
 
 
-def read_aliases():
-    """alias file rows keyed by identity: {identity: (alias, disposition, superseded)}."""
+def read_aliases(pairs=None):
+    """alias file rows keyed by identity: {identity: (alias, disposition, superseded)}.
+
+    Keying by identity loses a collision, so a caller that needs to see one passes a list in
+    `pairs` and receives every (alias, identity) row in file order.
+    """
     if not ALIASES.exists():
         return {}
     rows = {}
@@ -124,6 +137,8 @@ def read_aliases():
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
         alias, identity = cells[0], cells[1].strip("`")
         disposition = cells[5] if len(cells) > 5 else ""
+        if pairs is not None:
+            pairs.append((alias, identity))
         rows[identity] = (alias, disposition, "superseded" in disposition.lower())
     return rows
 
@@ -252,17 +267,29 @@ def main(argv):
         ALIASES.write_text(render_aliases(paths, derived, today), encoding="utf-8")
         print("wrote %s with %d aliases" % (ALIASES, total))
         return 0
-    aliases = read_aliases()
+    pairs = []
+    aliases = read_aliases(pairs)
     if mode == "--check-aliases":
         identities = {identity for path in paths for _, _, _, identity in derived[path]}
         missing = [(path, section, text[:80]) for path in paths for section, _, text, identity in derived[path] if identity not in aliases]
         stale = [alias for identity, (alias, _, superseded) in aliases.items() if identity not in identities and not superseded]
+        # An alias names one Statement and a Statement carries one alias. Coverage in both
+        # directions does not imply either: an alias edited to a name already in use binds two
+        # Statements, and every consumer keyed by alias then resolves to whichever row it read last.
+        from collections import Counter
+        dup_alias = sorted(a for a, n in Counter(a for a, _ in pairs).items() if n > 1)
+        dup_identity = sorted(i for i, n in Counter(i for _, i in pairs).items() if n > 1)
         for path, section, text in missing:
             print("no alias: %s / %s: %s" % (path, section, text))
         for alias in stale:
             print("alias %s names an identity no Statement carries and is not marked superseded" % alias)
-        print("aliases %d, statements %d, missing %d, stale %d" % (len(aliases), total, len(missing), len(stale)))
-        return 1 if (missing or stale) else 0
+        for alias in dup_alias:
+            print("alias %s is bound to more than one Statement identity" % alias)
+        for identity in dup_identity:
+            print("Statement identity %s carries more than one alias" % identity[:16])
+        print("aliases %d, statements %d, missing %d, stale %d, duplicate aliases %d, duplicate identities %d"
+              % (len(aliases), total, len(missing), len(stale), len(dup_alias), len(dup_identity)))
+        return 1 if (missing or stale or dup_alias or dup_identity) else 0
     rendered = render_register(paths, derived, aliases)
     if mode == "--write":
         REGISTER.write_text(rendered, encoding="utf-8")

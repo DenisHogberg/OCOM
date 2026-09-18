@@ -19,9 +19,12 @@ this implementation is narrower than the rule, the record says so in its own not
                                         its threshold or a published figure disagrees
   publication_health.py --summary       recompute and print the counts only
 
-Figures the published records mark as not reproducible (the directed-cycle count, whose
-counting rule was never published) are carried forward unchanged, with the date they were
-last computed, rather than silently recomputed by a different rule.
+Figures the published records mark as not reproducible are carried forward as constants in
+this file, with the date they were last computed, rather than read back from the record under
+test: a figure copied from the record it is meant to check can never disagree with it. Today
+that is the directed-cycle count, whose counting rule was never published. The ownership block
+of the publication-health record is carried from the published record for the same reason and
+is listed there under carriedForward.
 """
 import argparse
 import json
@@ -37,13 +40,29 @@ BASE = "https://ocom.uno"
 TIMEOUT = 30
 PAUSE = 0.12  # a courtesy pause between requests; the site is small and single-homed
 CYCLES_LAST_COMPUTED = "2026-09-07"
+CYCLES_LAST_VALUE = 44  # what the lost generator counted on that date; carried forward, never recomputed
+
+
+def as_path(url):
+    """The site-relative path of a published URL, whatever origin the record spells.
+
+    Published records name their own origin (https://ocom.uno/...), and a fixture or a staging
+    host names another. Stripping one hardcoded prefix left the other form untouched and the
+    fetcher then asked for base + absolute-url, so every such check silently failed to run.
+    """
+    u = str(url)
+    if u.startswith("http://") or u.startswith("https://"):
+        parts = urllib.parse.urlsplit(u)
+        return parts.path + (("?" + parts.query) if parts.query else "")
+    return u
 
 
 class Site:
     """Fetches published files once each and remembers what was asked for."""
 
-    def __init__(self, base):
+    def __init__(self, base, pause=PAUSE):
         self.base = base.rstrip("/")
+        self.pause = pause
         self.cache = {}
 
     def raw(self, path):
@@ -57,12 +76,12 @@ class Site:
                 with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
                     out = (r.status, r.read().decode("utf-8", "replace"))
                 self.cache[path] = out
-                time.sleep(PAUSE)
+                time.sleep(self.pause)
                 return out
             except urllib.error.HTTPError as e:
                 out = (e.code, "")
                 self.cache[path] = out
-                time.sleep(PAUSE)
+                time.sleep(self.pause)
                 return out
             except Exception as e:  # a reset connection is the server pacing us, not a site defect
                 last = e
@@ -87,16 +106,37 @@ class Site:
 
 
 def term_slugs(site):
-    terms = site.json("/api/v1/terms.json") or {}
-    return [t["url"].rsplit("/", 1)[-1] for t in terms.get("terms", [])]
+    """The published term set. An unreachable or empty index is a failure, not an empty set.
+
+    Every presence row is computed over a list derived from this one index, and a row over an
+    empty list has nothing missing, so it would pass having checked nothing. Failing here is
+    what keeps `ok` on those rows meaningful.
+    """
+    terms = site.json("/api/v1/terms.json")
+    if not isinstance(terms, dict) or not terms.get("terms"):
+        raise SystemExit("cannot read the term index at %s/api/v1/terms.json: every presence row "
+                         "is derived from it, so this tool refuses to report on a site without it" % site.base)
+    return [t["url"].rsplit("/", 1)[-1] for t in terms["terms"]]
 
 
 def registry(site):
-    return site.json("/resolve.json") or {}
+    """The identifier registry, under the same rule as the term index."""
+    reg = site.json("/resolve.json")
+    if not isinstance(reg, dict) or not reg.get("entries"):
+        raise SystemExit("cannot read the identifier registry at %s/resolve.json: the resolver and "
+                         "explain rows are derived from it, so this tool refuses to report without it" % site.base)
+    return reg
 
 
 def row(name, rule, checked, missing):
-    return {"name": name, "rule": rule, "checked": checked, "missing": sorted(missing), "ok": not missing}
+    """A row passes when nothing is missing AND something was checked.
+
+    `not missing` alone passes a row whose candidate list came back empty, which is what a
+    reshaped or unreachable index produces. Every row on the published site checks at least
+    one file, so requiring a non-zero count changes no passing row and closes that hole.
+    """
+    return {"name": name, "rule": rule, "checked": checked, "missing": sorted(missing),
+            "ok": bool(checked > 0 and not missing)}
 
 
 def presence_rows(site, slugs, entries):
@@ -129,11 +169,11 @@ def presence_rows(site, slugs, entries):
     for c in comparisons:
         for key in ("url", "record"):
             if c.get(key):
-                paths.append(c[key].replace(BASE, ""))
+                paths.append(as_path(c[key]))
     every("Comparison records", "Every comparison has an HTML page and a JSON record.", paths)
 
     discovery = site.json("/discovery.json") or {}
-    machine = sorted({r["url"].replace(BASE, "") for r in discovery.get("resources", [])
+    machine = sorted({as_path(r["url"]) for r in discovery.get("resources", [])
                       if isinstance(r, dict) and r.get("mediaType", "").startswith("application/")
                       and "{" not in r.get("url", "")})
     every("Machine entry points", "The discovery, manifest and index files are published.", machine)
@@ -143,6 +183,12 @@ def presence_rows(site, slugs, entries):
 def citation_parity(site, slugs):
     """The recommended citation must be the same string in all four representations."""
     def citation(obj):
+        if isinstance(obj, dict) and isinstance(obj.get("@graph"), list):
+            # a JSON-LD alternate publishes its nodes under @graph; the citation sits on one of them
+            for node in obj["@graph"]:
+                found = citation(node)
+                if found:
+                    return found
         if not isinstance(obj, dict):
             return None
         for key in ("citation", "recommendedCitation", "recommended_citation"):
@@ -164,8 +210,10 @@ def citation_parity(site, slugs):
         checked += 1
         for path, found in (("/vocabulary/%s.jsonld" % s, citation(site.json("/vocabulary/%s.jsonld" % s))),):
             checked += 1
-            if found is not None and found != base:
-                missing.append(path)
+            if found != base:
+                # a missing citation in the alternate is a parity failure like any other; treating
+                # None as a pass made this leg of the rule vacuous
+                missing.append(path if found is not None else path + " (no citation field)")
         md = site.text("/vocabulary/%s.md" % s) or ""
         checked += 1
         if base not in md:
@@ -188,7 +236,7 @@ def published_records(site, slugs):
     paths += ["/api/v1/term/%s" % s for s in slugs]
     for c in (site.json("/comparisons.json") or {}).get("comparisons", []):
         if c.get("record"):
-            paths.append(c["record"].replace(BASE, ""))
+            paths.append(as_path(c["record"]))
     return [p for p in paths if site.ok(p)]
 
 
@@ -196,8 +244,9 @@ def ownership_row(site, slugs):
     """The one Ownership assignment carries the properties it says Meta/Ownership.md requires,
     and every record with an ownership block points at it."""
     own = site.json("/ownership.json") or {}
-    required = (own.get("specification") or {}).get("required_characteristics") or [
-        "Identifier", "Owner", "Owned Object", "Responsibility Scope", "Effective Date"]
+    # The five properties come from Meta/Ownership.md, not from the record under test: reading
+    # them out of ownership.json let the site shorten its own criterion.
+    required = ["Identifier", "Owner", "Owned Object", "Responsibility Scope", "Effective Date"]
     keys = {k.lower().replace("_", " "): v for k, v in own.items()}
     missing = ["ownership.json: %s" % name for name in required if not keys.get(name.lower())]
     identifier = own.get("identifier")
@@ -230,7 +279,7 @@ def resolver_rows(site, entries):
 
     printed, unregistered = set(), []
     sitemap = site.text("/sitemap.xml") or ""
-    pages = [u.replace(BASE, "") for u in re.findall(r"<loc>([^<]+)</loc>", sitemap)]
+    pages = [as_path(u) for u in re.findall(r"<loc>([^<]+)</loc>", sitemap)]
     label = re.compile(r"(?:class=\"(?:attr|k)\"[^>]*>|<dt[^>]*>)\s*(?:Identifier|Record|URI|Document ID)\s*<")
     value = re.compile(r"([A-Za-z][A-Za-z0-9:.\-]{4,60})")
     for page in pages:
@@ -292,7 +341,10 @@ def graph_figures(site):
         if i in seen:
             duplicates.append(i)
         seen.add(i)
-    broken = sorted({b for _, b in edges if b.startswith(BASE) and b not in ids})
+    # An edge target is internal when it names this site or is site-relative; both forms dangle
+    # in the same way, and counting only the absolute form let a relative one pass unseen.
+    internal = lambda u: str(u).startswith(site.base) or str(u).startswith("/")
+    broken = sorted({b for _, b in edges if internal(b) and b not in ids})
     return {
         "nodes": len(nodes), "terms": len(terms), "relationships": len(edges),
         "governanceCandidates": len(concepts),
@@ -343,9 +395,10 @@ def recompute(site, today):
         "orphans": figures["orphans"],
         "duplicateIdentities": figures["duplicateIdentities"],
         "governanceCandidates": figures["governanceCandidates"],
-        "cycles": published.get("cycles"),
+        "cycles": CYCLES_LAST_VALUE,
         "missingReverse": figures["missingReverse"],
-        "coreVocabularyProjectionCoverage": 100 if all(r["ok"] for r in rows[:4]) else 0,
+        "coreVocabularyProjectionCoverage": 100 if all(
+            r["ok"] for r in rows if r["name"].startswith("Core Vocabulary ")) else 0,
         "projectionParity": parity,
         "missingReverseEdges": figures["missingReverseEdges"],
         "computedBy": "`tools/site/publication_health.py` in the canonical repository, run against the published site",
@@ -368,7 +421,10 @@ def recompute(site, today):
                  "%d pages sitemap.xml lists and from the JSON records this tool reads, which is narrower than every published surface." % page_count),
         "ok": all(r["ok"] for r in rows),
         "checks": rows,
+        # carried forward from the published record: this tool checks the site, and the block that
+        # records who owns the record is not a figure it can derive
         "ownership": (site.json("/observatory/publication-health.json") or {}).get("ownership"),
+        "carriedForward": ["ownership"],
     }
     return health, pub
 
@@ -376,6 +432,7 @@ def recompute(site, today):
 def main(argv):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--base", default=BASE)
+    ap.add_argument("--pause", type=float, default=PAUSE, help="seconds between requests (0 for a local fixture)")
     ap.add_argument("--today", default=None, help="date to stamp, YYYY-MM-DD; defaults to today")
     g = ap.add_mutually_exclusive_group(required=True)
     g.add_argument("--write", metavar="DIR")
@@ -385,12 +442,19 @@ def main(argv):
     if a.today is None:
         import datetime
         a.today = datetime.date.today().isoformat()
-    site = Site(a.base)
+    site = Site(a.base, a.pause)
     health, pub = recompute(site, a.today)
     failed = [r for r in pub["checks"] if not r["ok"]]
     for r in pub["checks"]:
-        print("%-32s %-4s checked=%d%s" % (r["name"], "ok" if r["ok"] else "FAIL", r["checked"],
-                                           "" if r["ok"] else "  missing: " + ", ".join(r["missing"][:4])))
+        tail = ""
+        if not r["ok"]:
+            shown = r["missing"][:4]
+            tail = "  missing: " + ", ".join(shown)
+            if len(r["missing"]) > len(shown):
+                tail += " (+%d more)" % (len(r["missing"]) - len(shown))
+            if not r["missing"]:
+                tail = "  nothing was checked"
+        print("%-32s %-4s checked=%d%s" % (r["name"], "ok" if r["ok"] else "FAIL", r["checked"], tail))
     print("figures: terms=%d relationships=%d mutualPairs=%d missingReverse=%d orphans=%d duplicates=%d brokenLinks=%d" % (
         health["coreTerms"], health["relationships"], health["mutualPairs"], health["missingReverse"],
         health["orphans"], health["duplicateIdentities"], health["brokenLinks"]))
@@ -408,20 +472,33 @@ def main(argv):
     live_h = site.json("/observatory/health.json") or {}
     live_p = site.json("/observatory/publication-health.json") or {}
     diffs = []
-    for key in ("coreTerms", "relationships", "brokenLinks", "orphans", "duplicateIdentities", "missingReverse"):
+    # Compare every figure the record publishes, not a chosen six: a check that reads six of
+    # eleven fields passes while the record is wrong in the other five.
+    skip = {"checkedAt", "computedBy", "notes", "missingReverseEdges", "projectionParity", "carriedForward"}
+    for key in sorted(set(health) | set(live_h)):
+        if key in skip:
+            continue
         if live_h.get(key) != health.get(key):
             diffs.append("health.%s: published %r, recomputed %r" % (key, live_h.get(key), health.get(key)))
     lp = (live_h.get("projectionParity") or {}).get("specification") or {}
-    if lp.get("version") != spec["version"] or lp.get("chapters") != spec["chapters"]:
-        diffs.append("health.projectionParity.specification: published %r/%r, recomputed %r/%r" % (
-            lp.get("version"), lp.get("chapters"), spec["version"], spec["chapters"]))
+    for key in sorted(set(spec) | set(lp)):
+        if lp.get(key) != spec.get(key):
+            diffs.append("health.projectionParity.specification.%s: published %r, recomputed %r" % (
+                key, lp.get(key), spec.get(key)))
     live_rows = {r["name"]: r for r in live_p.get("checks", [])}
     for r in pub["checks"]:
         old = live_rows.get(r["name"])
         if old is None:
             diffs.append("publication-health: row %r is published nowhere" % r["name"])
-        elif old.get("ok") != r["ok"]:
-            diffs.append("publication-health.%s: published ok=%r, recomputed ok=%r" % (r["name"], old.get("ok"), r["ok"]))
+        else:
+            if old.get("ok") != r["ok"]:
+                diffs.append("publication-health.%s: published ok=%r, recomputed ok=%r" % (r["name"], old.get("ok"), r["ok"]))
+            if old.get("checked") != r["checked"]:
+                diffs.append("publication-health.%s: published checked=%r, recomputed checked=%r" % (
+                    r["name"], old.get("checked"), r["checked"]))
+    # and in the other direction: a row that used to be published and is no longer computed
+    for name in sorted(set(live_rows) - {r["name"] for r in pub["checks"]}):
+        diffs.append("publication-health: published row %r is computed by nothing" % name)
     for d in diffs:
         print("DIFF", d)
     print("published records differ in %d place(s); %d row(s) fail their rule" % (len(diffs), len(failed)))
