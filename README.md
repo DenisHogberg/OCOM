@@ -18,7 +18,7 @@ An open, technology-independent specification that describes an organization as 
   <a href="https://github.com/DenisHogberg/OCOM/actions/workflows/ci.yml"><img src="https://github.com/DenisHogberg/OCOM/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
   <a href="docs/Meta/README.md"><img src="https://img.shields.io/badge/Core%20Vocabulary-0.1-0f766e" alt="Core Vocabulary 0.1"></a>
   <a href="docs/Specification/00%20Executive%20Overview.md"><img src="https://img.shields.io/badge/Specification-1.0-0f766e" alt="Specification 1.0"></a>
-  <a href="docs/Core/Constitution.md"><img src="https://img.shields.io/badge/Constitution-1.0-0f766e" alt="Constitution 1.0"></a>
+  <a href="docs/Core/Constitution.md"><img src="https://img.shields.io/badge/Constitution-1.0.1-0f766e" alt="Constitution 1.0.1"></a>
   <a href="LICENSE-docs.md"><img src="https://img.shields.io/badge/text-CC%20BY%204.0-2dd4bf" alt="Specification text licensed CC BY 4.0"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/code-Apache--2.0-2dd4bf" alt="Code licensed Apache-2.0"></a>
   <a href="https://orcid.org/0009-0001-3381-5957"><img src="https://img.shields.io/badge/ORCID-0009--0001--3381--5957-A6CE39?logo=orcid&logoColor=white" alt="ORCID 0009-0001-3381-5957"></a>
@@ -34,7 +34,7 @@ The specification governs its own evolution. Its core is frozen under an Archite
 
 - Not a product, not a SaaS, not a database schema. Nothing to install, nothing to buy, no commercial offer anywhere in the text.
 - Not a notation for diagrams (see the comparisons with BPMN and ArchiMate) and not a software design discipline (see the comparison with Domain-Driven Design).
-- Not finished. The Core Vocabulary is at 0.1, the reading path at 0.2, and the specification says so on every page.
+- Not finished. The Core Vocabulary is at 0.1 and the reading path at 1.0, each on its own track, and the specification says so on every page.
 
 ## Read it
 
@@ -53,10 +53,10 @@ Prefer the repository? Start with [`docs/README.md`](docs/README.md), then [`doc
 
 ## How the text is governed
 
-- [Constitution v1.0](docs/Core/Constitution.md): the canonical principles, amended only through an RFC-like process.
+- [Constitution v1.0.1](docs/Core/Constitution.md): the canonical principles, amended only through an RFC-like process.
 - [Architecture Freeze](docs/Governance/ADR-Candidates.md) (ADR Candidate CAND-007): no new Core concept, no reworded Canonical Principle, until the freeze is lifted through the change process.
-- [ADR Candidates](docs/Governance/ADR-Candidates.md): 13 recorded decisions and proposals, CAND-001 to CAND-013.
-- [Architecture Observations](docs/Governance/Architecture-Observations.md): 58 recorded tensions, AO-001 to AO-058, including the ones the specification's own site found when it audited itself.
+- [ADR Candidates](docs/Governance/ADR-Candidates.md): 17 recorded decisions and proposals, CAND-001 to CAND-017.
+- [Architecture Observations](docs/Governance/Architecture-Observations.md): 75 recorded tensions, AO-001 to AO-076 with 072 reserved, including the ones the specification's own site found when it audited itself and the ones its own logic check found.
 - [Standard Evolution Methodology](docs/Governance/Standard%20Evolution%20Methodology.md): how a Reference Case becomes an observation, a candidate and, eventually, a change.
 
 Found something the text gets wrong? Open a [Reference Case](.github/ISSUE_TEMPLATE/reference-case.md). Found two rules that contradict each other? Open an [Architecture Observation](.github/ISSUE_TEMPLATE/architecture-observation.md). Found a page on ocom.uno that disagrees with the file it names as its source? Open a [Projection defect](.github/ISSUE_TEMPLATE/projection-defect.md).

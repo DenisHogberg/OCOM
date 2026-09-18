@@ -38,6 +38,14 @@ No prior document defined how an entry in this register moves or ends. This sect
 - **Closed**: resolved by an Architect Response, either because the finding was accepted and acted on, or because it was considered and no change follows. Closure is always visible: an entry is never closed by silence or by the passage of time.
 - **Informative**: recorded for the record rather than as a defect to resolve. It has no closure condition and is not counted as open work.
 
+## Numbering
+
+Entries are numbered in the order they are recorded and a number is never reused. One number is
+reserved rather than absent: **AO-072** is held for an entry drafted on 15 September 2026 whose
+Reference Case is not yet citable, and it will be committed with that number when it is. A gap in
+the sequence therefore means a reservation, not a deletion; nothing has ever been removed from this
+register.
+
 ## What an Open entry must state
 
 While an entry is Open, its Status shall state what would move it. Nearly every Open entry below already does, in phrases such as "awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2", "awaiting independent corroboration", or "single external source". This section makes that requirement explicit for entries recorded from now on rather than retrofitting it: `AO-004` is the one existing entry whose Status names no condition, and it is named here rather than quietly amended.
@@ -1700,6 +1708,26 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-077
+
+**Title:** The Compiled Reading Path Is Checked Forward and Never Backward, so an Obligation a Chapter Never Compiled Is Invisible
+
+**Date observed:** 18 September 2026
+
+**Description:** Surfaced by a deep test of the repository and the site (18 September 2026). The traceability check run on 17 September 2026 for the v1.0 recompilation, and the discipline the chapters record in their Revision Histories, both run in one direction: every sentence of a chapter is traced to a sentence of a source document. Nothing runs the other way, from each mandatory Statement of a source document to the chapter that compiles it. Three obligations were therefore missing from `Specification/05 Object Model.md` while every sentence it carried traced correctly: the ninth item of `Models/Entity.md`'s "Every Entity shall" list ("be governed by the rules of this specification"), the fifth of its prohibitions ("have ambiguous meaning"), and all four prohibitions of `Models/Relationship.md:122-128`. They are compiled into the chapter by the change that records this entry. `Governance/Requirement-Register.md` enumerates the Statements of the 22 canonical documents, so the raw material for a backward check exists; nothing consumes it that way.
+
+**Impact:** A reader of the published reading path, which the site presents as the way into the specification, could satisfy every requirement the chapter states and still miss a mandatory prohibition the canonical source carries. The gap is not visible to any check the repository runs: the forward trace passes, the publication-metadata job compares versions and dates, and the Requirement Register is derived from the canonical documents rather than from the chapters, so a Statement missing from a chapter changes nothing it computes. Three instances were found in one chapter by reading; how many the other eight chapters carry is unknown.
+
+**Recommendation:** Record only. The mechanical form of the check is available and cheap: for each chapter, the Source line names its documents, and every mandatory Statement of those documents should be represented in the chapter, which a human can review as a list of candidates rather than a pass or fail. If corroborated, a future Reference Case should state whether a compiled chapter is required to carry every mandatory Statement of its sources or is permitted to abridge them, because the chapters currently do both without saying which.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when a backward check exists, or when the Chief Architect records that a chapter may abridge its sources and says on what rule.
+
+**Architect Response:** *(pending)*
+
+**Related:** `Specification/05 Object Model.md`, `Models/Entity.md`, `Models/Relationship.md`, `Governance/Requirement-Register.md`, `Governance/Conformance-Test-Suite.md`, `AO-032`, `AO-051`, `AO-062`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1741,3 +1769,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 18 September 2026 | AO-071: Reference Case `RC-011` recorded, filing authorized by the Chief Architect under `CAND-007` Section 5, Status now Escalated to `CAND-017`. |
 | 0.1 | 18 September 2026 | Added AO-073 (Constitution §6 is carried by no rule), AO-074 (four of fourteen Canonical Principles reach a normative clause and no principle-to-rule map exists), AO-075 (22 documents require Audit records to remain immutable and no tier defines one) and AO-076 (25 of the 182 mandatory requirements carry predicates no observation can fail). Found by a check of the specification's own logic over the canonical tiers. |
 | 0.1 | 18 September 2026 | AO-074: Status now Open in part, the principle-to-rule map it asks for exists as `Governance/Principle-Traceability.md`; a dated note records that the map found carriers for Principles 2, 9 and 11 in words this entry did not search, and that its central claim stands. AO-073 points at the map's row for Principle 6. |
+| 0.1 | 18 September 2026 | Added AO-077 (the compiled reading path is checked forward and never backward; three obligations were missing from Chapter 5 and are now compiled). A Numbering section records that AO-072 is reserved rather than missing. Found by a deep test of the repository and the site. |
