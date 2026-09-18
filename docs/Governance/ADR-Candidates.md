@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 16 September 2026
+**Last Updated:** 18 September 2026
 
 ---
 
@@ -535,6 +535,8 @@ Only when a genuinely new fundamental question is found — one that fails the s
 
 Two candidates already meet this bar today, named in Section 1: the "OCOM"/"OCOM-compatible" stewardship gap, and the Memory/Evidence tamper-evidence gap. Naming them here is not the same as filing them — filing either through the Reference Case format is separate, not-yet-authorized follow-up work. They are recorded now so this Decision does not itself become a second instance of the defect it was revised to fix: claiming completeness while an unresolved item goes unmentioned.
 
+**Postscript (18 September 2026):** the first of those two is now filed. `AO-071` records that the condition the Release Review attached to it has occurred, the Chief Architect authorized filing under this Section on 18 September 2026, and the question moved to `CAND-017` with `RC-011` as its Reference Case. The authorization covers the filing and no document change. The second candidate, the tamper-evidence guarantee, is untouched by it and stays unfiled.
+
 A second, standing trigger: real contact with an independent implementation attempt (Milestone 4 in `Architecture-Release-Review-v1.0.md` Part 9) revealing the contract is not buildable as specified. This is the category of evidence Green Team (`Architecture-Release-Review-v1.0.md` Part 7) identified as the legitimate next test of the architecture — it is a valid Freeze-exception trigger precisely because it is evidence from outside the same two-party process that produced the Freeze decision itself.
 
 ## 6. How New Proposals Are Evaluated
@@ -1053,6 +1055,8 @@ It changes no document outside this register and `Architecture-Observations.md`.
 
 **Postscript (16 September 2026):** Disposition for v1.0, Chief Architect decision recorded under `Master-Architecture-Backlog.md` Part 8: Layer 1, decided by this candidate and integrated on 11 September 2026, closes EPIC-A for the v1.0 claim. Layer 2, the `Meta/World-Model.md` document and the rewrite of `AI/Knowledge/*`, stays open and gated behind the `CAND-007` pipeline as Step 3 above states, and is not required for v1.0; `FW-001`'s reserved sections carry the same disposition. Nothing in this postscript changes the Decision.
 
+**Postscript (18 September 2026):** the v1.0 disposition above is extended. `AO-069` records that `Architecture-Release-Review-v1.0.md` Part 2 routed `Memory/Layered Memory.md` and `Memory/Retention.md` into EPIC-A on 27 July 2026, that `CAND-007` Section 3 binds that correction to the Epic, and that neither document was addressed before the Epic was closed for the v1.0 claim. The Chief Architect's extension, 18 September 2026: both documents are covered by the disposition and do not block v1.0; the contradiction between `Memory/Retention.md`'s controlled-deletion Conformance clause and Constitution §4 and §6 stays open under `AO-069`, awaiting a Reference Case of the kind this candidate had for Status. Option 4's Layer 1 answered the Status manifestation only; the Layer and Retention manifestations the review named are not answered by it.
+
 ## CAND-015 — ✅ Decided
 
 **Title:** Domain Definition Divergence: which of the two Domain documents is canonical
@@ -1144,6 +1148,49 @@ It does not decide any of `CAND-004`'s seven questions, which carry their own di
 
 ---
 
+## CAND-017
+
+**Title:** Stewardship of the Name OCOM and the Phrase OCOM-compatible
+
+**Status:** Open. Filed 18 September 2026 as a `CAND-007` Section 5 Freeze exception, on the Chief Architect's authorization recorded in `AO-071`.
+
+**Owner:** Chief Architect
+
+**Created:** 18 September 2026
+
+**Grounding:** `AO-071` and its Reference Case `RC-011`; `Architecture-Release-Review-v1.0.md` Part 2, finding 2 (27 July 2026); `CAND-007` Section 5; `CAND-002`; `Governance/Conformance-Test-Suite.md`; `Governance/Requirement-Register.md`; `Language/Conformance.md`; `Governance/Concept-Paper-Profile-Conformance.md`; `LICENSE`.
+
+### The question
+
+Who may state publicly that an implementation is OCOM-compatible, or conforms to the OCOM Specification, and what follows when the statement is false?
+
+The specification answers everything around that question and not the question itself. `Language/Conformance.md` defines what conformance is and states that an implementation failing a mandatory requirement shall not claim it. `CAND-002` fixes the form a claimant's declaration takes. `Conformance-Test-Suite.md` says how requirements are enumerated and what a Test Report carries, and `Requirement-Register.md` enumerates the 335 Statements a claim is measured against. So a claim is now checkable by any reader. What no document records is who is entitled to make it, what the words OCOM and OCOM-compatible may be attached to, and what recourse exists when a claim is made without the evidence. `LICENSE` is Apache-2.0, whose Section 6 grants no trademark rights and says nothing about compatibility claims either way.
+
+### Why this is a Freeze exception, and what that means here
+
+Section 5 permits escalation when a question fits inside no existing Epic, ADR Candidate or Observation and is not a bounded scope correction to one. `Architecture-Release-Review-v1.0.md` Part 2 states in its own words that this one "sits outside all six Epics", and `CAND-007` Section 1 carries it forward as one of two named, not-yet-filed exception candidates. Section 6's second check also passes: the question is contract shaped rather than product shaped, because it governs what a third party may assert about the specification, not what any implementation does.
+
+Meeting the bar authorizes escalation, not a change. This filing therefore changes no document. It carries one Reference Case, `RC-011`, whose External Assurance is recorded as weak: it is drawn from the publication's own artifacts by their author, and no independent implementation has yet made or been refused a claim. Repeatability Before Standardization asks for a second, independent case, and the natural one is the first real conformance declaration from outside this repository.
+
+### The options, as they stand today
+
+1. **Out of scope.** Stewardship of the name belongs to the publication and its licensing, not to the specification, because `Core/Manifest.md` excludes business strategy from scope. The specification would record that boundary explicitly, so the gap is named rather than silent, and the question moves to ocom.uno and the license.
+2. **A claim rule at the Language tier.** `Language/Conformance.md` gains the conditions a public claim shall satisfy: a published declaration in the `CAND-002` form, naming the Release Identifier and Commit tested against, with the Test Report reachable. The rule stays technical and testable, and it binds the claim rather than the name.
+3. **A register of declarations.** The publication lists declarations it can resolve, marks each as resolving or not resolving at a pinned commit, and endorses none. This makes a false claim visible without asserting authority over the words themselves.
+4. **A mark.** A trademark or certification mark over OCOM and OCOM-compatible, with a policy stating who may use them. This is the only option that creates recourse, and the only one that is legal rather than architectural work, with cost and jurisdiction attached.
+
+The options are not exclusive: 2 and 3 compose, and 1 can be recorded alongside 4 if the mark is held outside the specification.
+
+### What this candidate does not do
+
+It proposes no Core change and asserts no Core Impact: `RC-011` records Core Impact None. It does not decide whether OCOM is a trademark, and it does not authorize any document edit. It does not touch `CAND-002`, whose declaration form it relies on, and it does not reopen `Language/Conformance.md`'s definition of conformance. It says nothing about the second Section 5 candidate, the tamper-evidence guarantee for Memory and Evidence, which stays unfiled.
+
+**Next Action:** Two-step discipline, as used for `CAND-003`, `CAND-005`, `CAND-006`, `CAND-009`, `CAND-014`, `CAND-015`, `CAND-001` and `CAND-016`. Step 1 is this filing: the question, the grounding and the options are recorded and `AO-071` is Escalated to this candidate. Step 2 is a Chief Architect Decision, taken on its own and recorded here; integration into any document is authorized separately after that. A second Reference Case, ideally the first conformance declaration from an independent implementation, is what would make the Decision rest on more than the publication's own state.
+
+**Related Documents:** `AO-071`, `RC-011`, `CAND-002`, `CAND-007`, `Governance/Architecture-Release-Review-v1.0.md`, `Governance/Conformance-Test-Suite.md`, `Governance/Requirement-Register.md`, `Governance/Concept-Paper-Profile-Conformance.md`, `Language/Conformance.md`, `Core/Manifest.md`, `LICENSE`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1186,3 +1233,5 @@ It does not decide any of `CAND-004`'s seven questions, which carry their own di
 | 0.1 | 16 September 2026 | CAND-002: postscript recording that four of the six Step 2 items are done under EPIC-F (Chapter 8, `Language/Conformance.md`, `Adoption/FAQ.md`, Backlog); the Projection and the CI validator remain open as tooling. |
 | 0.1 | 16 September 2026 | CAND-014: postscript recording the Chief Architect's v1.0 disposition: Layer 1 closes EPIC-A for the v1.0 claim; Layer 2 stays open and gated, not required for v1.0. |
 | 0.1 | 16 September 2026 | CAND-015: second postscript recording that six shall-sentences of `Domains/Common/Domain.md` have no counterpart in `Models/Domain.md`, contrary to the Decision's premise for those sentences; they bind nothing as the document is Informative. |
+| 0.1 | 18 September 2026 | CAND-014: postscript recording that the Chief Architect extended the v1.0 EPIC-A disposition to `Memory/Layered Memory.md` and `Memory/Retention.md`, with the contradiction left open as `AO-069`. |
+| 0.1 | 18 September 2026 | Added CAND-017 (Stewardship of the Name OCOM and the Phrase OCOM-compatible), Open, filed as a `CAND-007` Section 5 Freeze exception from `AO-071` and `RC-011`; CAND-007 gained a postscript recording that one of its two named Section 5 candidates is now filed. |

@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 17 September 2026
+**Last Updated:** 18 September 2026
 
 ---
 
@@ -116,6 +116,8 @@ Every release entry from this point forward **shall** confirm the following:
 
 **Standard Evolution Methodology reviewed:** Yes. This Release changes no canonical document: the recompilation is editorial work on the Compiled tier, permitted by `CAND-007` Section 3 as EPIC-F currency work, and every sentence it carries traces to a canonical source as of this date. No new Core concept entered; independent Reference Cases toward Rule 2 stand where `v1.2.0` left them.
 
+**Post-release note (18 September 2026):** a deep check of the architecture's internal logic, run after this Release, found that the `EPIC-A` Definition-of-Done correction bound by `CAND-007` Section 3 (adding `Memory/Layered Memory.md` and `Memory/Retention.md`) was never written into the Epic, and that `Memory/Retention.md` requires a compliant implementation to "support controlled deletion" against Constitution §4 and §6. This Release was assessed without that fact. The Chief Architect's disposition of 18 September 2026 extends the EPIC-A disposition to both documents and leaves the contradiction open as `AO-069`, so the v1.0 Specification track claim stands and carries this qualification: one Memory-tier Conformance clause contradicts the Constitution, it is disclosed here, in `AO-069` and in the two documents themselves, and it is not resolved. The next Release body carries the same sentence.
+
 **Recommendation:** Approved for release; the Manifest entry names commit `8235b85`.
 
 **Status:** Released. GitHub Release `v1.3.0` published 2026-09-17T09:27:34Z from the SSH-signed tag on `8235b85`, with the three signed assets verified from the public download; Zenodo version DOI `10.5281/zenodo.22809694`, record published 2026-09-17T09:27:43Z.
@@ -136,3 +138,4 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 17 September 2026 | Added the v1.3.0 release entry (Specification reading path 1.0; Pre-Release Checklist run; Status Prepared). |
 | 0.1 | 17 September 2026 | v1.3.0 entry: Recommendation confirmed once the Manifest Commit field was filled. |
 | 0.1 | 17 September 2026 | v1.3.0 entry: Status Prepared to Released, with the GitHub Release timestamp and the Zenodo version DOI. |
+| 0.1 | 18 September 2026 | v1.3.0: post-release note recording the `AO-069` finding, the Chief Architect's disposition of the same day, and the qualification the v1.0 claim now carries. |
