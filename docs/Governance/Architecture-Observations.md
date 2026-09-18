@@ -1728,6 +1728,26 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-078
+
+**Title:** The Published Graph Types Every Edge and Every Governance Candidate With a Prefix That Expands to a URI the Site Defines Nowhere
+
+**Date observed:** 18 September 2026
+
+**Description:** Surfaced by a deep test of the repository and the site (18 September 2026). `https://ocom.uno/graph.jsonld` declares the prefix `"ocom": "https://ocom.uno/vocabulary#"` in its `@context` and uses it for two of its four node types: the 83 edges carry `"@type": "ocom:Reference"` and the governance candidates carry `"@type": "ocom:ReferencedConcept"`. Expanded, those are `https://ocom.uno/vocabulary#Reference` and `https://ocom.uno/vocabulary#ReferencedConcept`. The site defines neither: the vocabulary index answers 200 for any fragment because a fragment is not sent to the server, and the page carries no element with either identifier, while the term the first name suggests is published at `https://ocom.uno/vocabulary/reference#term`, which is a different URI. The other two node types in the same file, `https://schema.org/DefinedTerm` and `https://schema.org/DefinedTermSet`, are fully qualified and resolve to definitions.
+
+**Impact:** A client that expands the JSON-LD gets two types it cannot dereference, in a file the site publishes as the machine-readable form of its knowledge graph, and a reader who follows the expanded URI lands on a page that does not mention the term. The names also suggest a claim the specification does not make: `Reference` is a governed Core Vocabulary term with its own definition, and nothing states whether an edge of this graph is an instance of that term or an unrelated construct with the same name. `AO-057` records that these 83 edges carry neither an identifier nor a Relationship type; this entry records that the one type they do carry expands to nothing.
+
+**Recommendation:** Record only, because the answer is a decision about what the published graph asserts rather than an editorial fix. Two routes: bind the prefix to the term set, so `ocom:Reference` expands to the published Reference term and the graph asserts that an edge is an instance of it, or rename the two types to something the graph defines for itself and publish those definitions. Either changes what the projection claims, which is why this entry proposes neither.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the two types expand to URIs the site defines, or when the Chief Architect records that the graph's types are local names that assert nothing.
+
+**Architect Response:** *(pending)*
+
+**Related:** `Governance/Publication-Model.md`, `Meta/Reference.md`, `Meta/Relationship.md`, `AO-057`, `AO-054`, `AO-064`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1770,3 +1790,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 18 September 2026 | Added AO-073 (Constitution §6 is carried by no rule), AO-074 (four of fourteen Canonical Principles reach a normative clause and no principle-to-rule map exists), AO-075 (22 documents require Audit records to remain immutable and no tier defines one) and AO-076 (25 of the 182 mandatory requirements carry predicates no observation can fail). Found by a check of the specification's own logic over the canonical tiers. |
 | 0.1 | 18 September 2026 | AO-074: Status now Open in part, the principle-to-rule map it asks for exists as `Governance/Principle-Traceability.md`; a dated note records that the map found carriers for Principles 2, 9 and 11 in words this entry did not search, and that its central claim stands. AO-073 points at the map's row for Principle 6. |
 | 0.1 | 18 September 2026 | Added AO-077 (the compiled reading path is checked forward and never backward; three obligations were missing from Chapter 5 and are now compiled). A Numbering section records that AO-072 is reserved rather than missing. Found by a deep test of the repository and the site. |
+| 0.1 | 18 September 2026 | Added AO-078 (the published graph types its 83 edges and 7 governance candidates with a prefix that expands to URIs the site defines nowhere). Found by a deep test of the repository and the site. |
