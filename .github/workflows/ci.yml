@@ -159,7 +159,6 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-        with:
           fetch-depth: 0 # full history needed to verify Manifest commits are real ancestors
 
       - name: Manifest commits must resolve to real, reachable commits
