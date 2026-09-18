@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 17 September 2026
+**Last Updated:** 18 September 2026
 
 ---
 
@@ -93,6 +93,8 @@ This does not match the example structure given in the task ("Entry Point, Knowl
 Two items in the Definition of Done above remain open and are deliberately gated. Authoring the World Model document and rewriting `AI/Knowledge/*` are Layer 2 of `CAND-014`, routed through the `CAND-007` freeze-exception pipeline, which per `Standard Evolution Methodology.md` Rule 2 requires independent Reference Cases that do not yet exist. The Layer 1 Core integration, correcting `Knowledge.md`'s "independent of Memory Records" line and noting in `Memory/Memory Record.md` that Status is derived, is authorized separately and has not been performed. `FW-001` is untouched.
 
 **Disposition for v1.0 (16 September 2026):** the Layer 1 Core integration named above as not yet performed was performed on 11 September 2026 (`CAND-014` postscript). The Chief Architect's disposition, recorded the same day in `CAND-014`'s postscript: Layer 1 closes this Epic for the v1.0 claim; the World Model document and the `AI/Knowledge/*` rewrite, Layer 2, stay open and gated behind the `CAND-007` pipeline and are not required for v1.0; `FW-001` carries the same disposition. This is the explicit disposition Part 8 permits, and the last Part 8 item to carry one.
+
+**Correction note (18 September 2026):** the Documents affected and Definition of Done above do not carry the scope correction that `ADR-Candidates.md` `CAND-007` Section 3 binds to this Epic. `Architecture-Release-Review-v1.0.md` Part 2 added `Memory/Layered Memory.md` and `Memory/Retention.md` to this Epic on 27 July 2026, and the Freeze Decision repeats the addition in its own list of permitted changes, so both documents are part of this Epic's Definition of Done and are recorded here as such. Neither has been addressed: `Memory/Retention.md` still defines a Deleted state and requires a compliant implementation to support controlled deletion, against Constitution §4 and §6, and `Memory/Layered Memory.md` still describes layer demotion as movement of an existing record. The disposition above closed this Epic for the v1.0 claim without naming either. `AO-069` records the gap and states what moves it. This note does not reverse the disposition, which is the Chief Architect's to extend or to withdraw.
 
 ## EPIC-B — Object Model & Cross-Organization Consolidation
 
@@ -337,3 +339,4 @@ This is a backlog, not a decision. No specification document has been changed. N
 | 0.1 | 16 September 2026 | Recorded the EPIC-A disposition for v1.0 (Layer 1 closes the Epic; Layer 2 and `FW-001` not required for v1.0) and the Part 8 execution note stating that every item is met or dispositioned; two Part 5 rows and the Status paragraph updated. |
 | 0.1 | 16 September 2026 | Part 9: execution note recording which Stop List blocks the registers have lifted; EPIC-E note states how its Part 5 and Part 6 dependency on EPIC-A was met. Found by the dogfooding audit of Release v1.2.0. |
 | 0.1 | 17 September 2026 | EPIC-E note: the Requirement Register generator, the Alias File and the CI job exist (`tools/conformance/requirement_register.py`). |
+| 0.1 | 18 September 2026 | EPIC-A: correction note recording that the Definition-of-Done correction `CAND-007` Section 3 binds to this Epic, adding `Memory/Layered Memory.md` and `Memory/Retention.md`, was never written into the entry, and that the v1.0 disposition closed the Epic without naming either (`AO-069`). Found by a deep check of the architecture's internal logic. |

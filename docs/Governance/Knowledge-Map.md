@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 July 2026
+**Last Updated:** 18 September 2026
 
 ---
 
@@ -51,7 +51,7 @@ docs/
 
 Established relationships between foundational concepts, as currently stated in the specification:
 
-- **Object** (`Meta/Object.md`) is the universal abstraction. Meta declares 14 concepts as specializations of Object: Entity, Domain, Workflow, Event, Lifecycle, Agent, Tool, Prompt, Context, Knowledge, Memory Record, Policy, Registry, Contract.
+- **Object** (`Meta/Object.md`) is the universal abstraction. Meta declares 15 concepts as specializations of Object: Entity, Domain, Workflow, Event, Lifecycle, Agent, Tool, Prompt, Context, Knowledge, Memory Record, Policy, Registry, Contract, Organization.
 - **Entity** (`Models/Entity.md`) is explicitly a specialization of Object (cross-reference added during v0.1 stabilization).
 - **Relationship** (`Meta/Relationship.md`, `Models/Relationship.md`) is a governed, meaningful association — explicitly distinct from **Reference** (`Meta/Reference.md`), which carries no business meaning.
 - **Domain** (`Models/Domain.md`) governs one or more Entities; every Entity belongs to exactly one primary Domain.
@@ -114,3 +114,4 @@ Meta ─ Core ─ Models ─ Reference Architecture ─ Examples
 |----------|------|-------------|
 | 0.1 | 22 July 2026 | Initial map |
 | 0.1 | 22 July 2026 | Added cross-cutting Governance diagram |
+| 0.1 | 18 September 2026 | The Object specialization list read 14 concepts and omitted Organization, which `Meta/Object.md` gained on 25 July 2026 per `CAND-005`; corrected to 15 and the term added. |

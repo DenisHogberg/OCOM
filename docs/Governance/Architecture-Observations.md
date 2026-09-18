@@ -1546,6 +1546,66 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-069
+
+**Title:** The EPIC-A Definition-of-Done Correction Bound by `CAND-007` Section 3 Was Never Written Into the Backlog, and the Epic Was Dispositioned Closed for v1.0 Without It
+
+**Date observed:** 18 September 2026
+
+**Description:** Surfaced by a deep check of the architecture's internal logic (18 September 2026). `Governance/Architecture-Release-Review-v1.0.md` Part 2, finding 1 (27 July 2026) recorded that the question `AO-003` names for a Memory Record's Status recurs twice more, in two documents that no audit pass had covered: `Memory/Layered Memory.md:175-180` describes layer demotion as movement of an existing record ("Memory may move to a lower layer when: confidence decreases; evidence becomes invalid; retention expires; business rules require removal"), and `Memory/Retention.md:98-102` defines a Deleted retention state ("The record has been permanently removed in accordance with organizational or regulatory policy", "Deletion shall be auditable") whose Conformance clause at `:194` requires a compliant implementation to "support controlled deletion". The review routed both documents into EPIC-A as a Definition-of-Done correction, and `ADR-Candidates.md` `CAND-007` Section 3 carries that routing as a permitted change in the Freeze's own words: "Execution of `Master-Architecture-Backlog.md`'s existing Epics A–F, exactly as scoped there, including the `EPIC-A` Definition-of-Done correction named in `Architecture-Release-Review-v1.0.md` Part 2 (adding `Layered Memory.md` and `Retention.md`)." EPIC-A's Documents affected line in `Master-Architecture-Backlog.md` names four documents and neither of these two; the correction note added to that Epic with this entry records the binding, and changes nothing else. `AO-003` was Closed on 10 September 2026 by `CAND-014` (Option 4, Layer 1) for Status alone, and `Memory/Memory Record.md` was restated accordingly on 11 September 2026. `Memory/Layered Memory.md` and `Memory/Retention.md` carry Last Updated 20 July 2026, six days before the Constitution was adopted, and are unchanged. EPIC-A was then dispositioned closed for the v1.0 claim on 16 September 2026 on the strength of Layer 1.
+
+**Impact:** Constitution §4 requires Memory to be append-only and a Memory Entry to be immutable after creation, with corrections represented as new entries "never by modifying historical records"; §6 requires Knowledge and World Models to be reproducible from Memory. A retention model that permanently removes records cannot hold with either, and the removal is not an aside: it sits in a Conformance clause, so an implementation that deletes Memory Records satisfies `Retention.md` and violates the Constitution, while one that never deletes satisfies the Constitution and fails `Retention.md`'s Conformance. The obligation is real rather than theoretical, since erasure duties are imposed on organizations by law. The v1.0 readiness claim rests on EPIC-A being closed, and the Definition of Done that the Freeze Decision binds EPIC-A to was not met. All of this is establishable from the repository alone.
+
+**Recommendation:** Record only; the Freeze forbids changing the Memory model here, and this entry changes no normative text. Two things are in scope now and are done with this entry: the `CAND-007` Section 3 correction is written into EPIC-A so the Epic states its own Definition of Done, and the disposition question is put to the Chief Architect. If corroborated, a Reference Case drawn from an implementation under an erasure obligation should settle whether retention acts on Memory Records or on a projection of them, in the same shape `CAND-014` used for Status, and whether layer demotion moves a record or derives a view.
+
+**Status:** Open; not escalated to an ADR Candidate, because the question is a disposition on an existing Epic rather than a new Core question. It moves when the Chief Architect either extends the 16 September 2026 EPIC-A disposition to state why `Memory/Layered Memory.md` and `Memory/Retention.md` do not block v1.0, or reopens the Epic for them.
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Constitution.md` (§4, §6), `Memory/Retention.md`, `Memory/Layered Memory.md`, `Memory/Memory Record.md`, `Governance/Architecture-Release-Review-v1.0.md` (Part 2), `Governance/Master-Architecture-Backlog.md` (EPIC-A), `Governance/ADR-Candidates.md` (`CAND-007` Section 3, `CAND-014`), `AO-003`
+
+---
+
+## AO-070
+
+**Title:** Every Entity Specification Carries Three Constraint Vocabularies While the Meta Tier Defines One, and Invariant Is Defined Nowhere Above the Entity Tier
+
+**Date observed:** 18 September 2026
+
+**Description:** Surfaced by a deep check of the architecture's internal logic (18 September 2026). `Entities/Overview.md:45-65` requires every Entity specification to contain nineteen sections, three of which carry rules: Business Rules, Invariants and Constraints. The same document defines each of them locally, at `:121-139`: Business Rules "define the operational policies governing an Entity"; Invariants "define conditions that shall always remain true throughout the Entity lifecycle"; Constraints "define operational limitations, validation requirements, and compliance obligations applicable to an Entity". Above the Entity tier the corpus defines one such construct. `Meta/Constraint.md:33-37`: "A Constraint is a governed condition that restricts or requires specific characteristics, states, or behaviors", which "defines *what must remain true* rather than *how it is enforced*", the same test the Entity tier gives Invariants. The word Invariant appears nowhere in `Core/`, `Meta/`, `Models/` or `Language/`. Business Rules is defined once above the Entity tier, in `Models/Workflow.md:102-104`, where "Business Rules constrain Workflow execution", a different subject from an Entity's rules. The Entity-tier definition reaches for a third word, "operational policies", while Policy is a managed concept with its own document, `Meta/Policy.md`. Twenty-two of the twenty-four Entity documents carry all three sections, and the same class of rule appears under different headings: `Entities/AI-Agent/AI Agent.md` places "An AI Agent shall have exactly one Owner" under Business Rules and "Every AI Agent shall have a unique Identifier" under Invariants, although both are conditions that hold at all times, and neither is a workflow constraint.
+
+**Impact:** Three mandatory headings, one upstream construct, no stated relationship between them and no rule for which prevails when two disagree. Two implementations can classify the same rule differently and both conform. A conformance test derived from an Entity document cannot tell which section carries a requirement. Nothing checks the distinction either: the Requirement Register specified by `Governance/Conformance-Test-Suite.md` enumerates Statements from the twenty-two canonical documents named by Chapters 4 to 6 and does not reach the Entity tier at all, so the three headings the Entity tier mandates are enforced by no rule and derived by no tool.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should state whether Invariant and Business Rule are specializations of Constraint or separate constructs, place each definition at the tier that owns the term, and either give `Entities/Overview.md` a precedence rule or reduce the three sections to one. `AO-037` and `AO-038` record the same shape for Process and KPI: a construct used normatively below the tier that defines it, or not defined above that tier at all.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+
+**Architect Response:** *(pending)*
+
+**Related:** `Entities/Overview.md`, `Meta/Constraint.md`, `Meta/Policy.md`, `Models/Workflow.md`, `Governance/Conformance-Test-Suite.md`, `Governance/Requirement-Register.md`, `AO-037`, `AO-038`, `FW-009`
+
+---
+
+## AO-071
+
+**Title:** The Condition the Release Review Attached to the Stewardship Gap Has Occurred: the Requirement Set Is Now Enumerated and Nothing Records Who May Claim Conformance
+
+**Date observed:** 18 September 2026
+
+**Description:** Surfaced by a deep check of the architecture's internal logic (18 September 2026). `Governance/Architecture-Release-Review-v1.0.md` Part 2, finding 2 (27 July 2026) recorded that no stewardship model exists for the name OCOM or the phrase OCOM-compatible, with "nothing governing who may claim compatibility once EPIC-E's Test Suite exists". `CAND-007` Section 5 carries it as one of two named Freeze-exception candidates and states that filing it is separate, not-yet-authorized work. The condition that finding attached has now occurred: `Governance/Conformance-Test-Suite.md` specifies the suite, `CAND-002` (Decided 16 September 2026) defines the form a claimant's declaration takes, `Governance/Requirement-Register.md` enumerates the 335 Statements of the requirement set, and `tools/conformance/requirement_register.py` regenerates and checks it as a required status check. What the corpus says about the claim itself is one sentence, `Language/Conformance.md:151`: an implementation that fails a mandatory requirement "shall not claim conformance with the corresponding version of the OCOM Specification". `Governance/Concept-Paper-Profile-Conformance.md:116` states the consequence in its own words: the naming rule "binds only the honest". The repository's LICENSE is Apache-2.0, whose Section 6 grants no trademark rights, and no document records who may use the name or what follows a false claim. The sibling candidate named in the same section, the absence of a tamper-evidence guarantee for Memory and Evidence, is unchanged and is not the subject of this entry.
+
+**Impact:** The specification now publishes an enumerated requirement set and a declaration format, which is what makes a public conformance claim checkable by a third party. Nothing records who may make the claim. This is precisely the state the Release Review said would arrive when the Test Suite existed, and the record does not currently note that it has arrived.
+
+**Recommendation:** Record only, and note that this entry files nothing: `CAND-007` Section 5 reserves filing for a separate authorization, and this register does not grant it. The Chief Architect decides whether the stewardship question belongs to the Specification at all, given that `Core/Manifest.md` excludes business strategy from scope, or belongs to the publication rather than to the model.
+
+**Status:** Open; it moves when the Chief Architect either authorizes filing under `CAND-007` Section 5 or records that stewardship of the name is outside the Specification's scope.
+
+**Architect Response:** *(pending)*
+
+**Related:** `Governance/Architecture-Release-Review-v1.0.md` (Part 2), `Governance/ADR-Candidates.md` (`CAND-007` Section 5, `CAND-002`), `Governance/Conformance-Test-Suite.md`, `Governance/Concept-Paper-Profile-Conformance.md`, `Governance/Requirement-Register.md`, `Language/Conformance.md`, `LICENSE`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1582,3 +1642,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 16 September 2026 | AO-005 Status label aligned with the Entry Lifecycle (Escalated); AO-025 corroborated by the dogfooding audit of Release v1.2.0 with three further instances of Informative documents carrying their own shall-sentences. |
 | 0.1 | 17 September 2026 | AO-014: dated note recording that the v1.0 recompilation removed the Purpose widening and naming two Language-tier widenings the entry had not named. Found by the dogfooding audit of Release v1.3.0. |
 | 0.1 | 18 September 2026 | AO-046's Related list named `Models/Overview.md`, which has never existed; corrected to `Models/Model.md`, the document the entry discusses. Found by an error hunt over the corpus. |
+| 0.1 | 18 September 2026 | Added AO-069 (the EPIC-A Definition-of-Done correction bound by `CAND-007` Section 3 was never written into the Backlog, and `Memory/Retention.md`'s Deleted state and `Memory/Layered Memory.md`'s demotion text stand against Constitution §4 and §6), AO-070 (three constraint vocabularies at the Entity tier against one at Meta) and AO-071 (the stewardship condition the Release Review attached has occurred). Found by a deep check of the architecture's internal logic. |
