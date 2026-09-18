@@ -135,7 +135,7 @@ The second command proves the checksum file was signed by the maintainer's key; 
 ## 10. Verification
 
 - **Source:** The completed Manifest entry plus a live check of the published artifacts (steps 8–9), where reachable.
-- **Responsibility:** CDKO, as a post-release check; Chief Architect reviews.
+- **Responsibility:** CDKO, as a post-release check; Chief Architect reviews. Since 18 September 2026 the two Observatory records the site publishes about itself are recomputed by `tools/site/publication_health.py` in this repository, which fetches only public files and reproduces every figure those records carry; running it after a publication is how this step is now performed, and its output is the evidence.
 - **Result:** Either confirmation that the six authoritative-version questions (`Publication-Model.md`) are all answerable and consistent for this Release, or a logged discrepancy.
 - **Done when:** Someone with no prior context can start from the Release tag and answer all six questions in under a minute, per `Publication-Model.md`'s own bar — the exact test the original re-verification audit failed.
 
@@ -157,3 +157,4 @@ The second command proves the checksum file was signed by the maintainer's key; 
 | 0.1 | 20 August 2026 | Corrected on independent review: Status changed Informative → Draft, consistent with this document being a `Governance/` process document per `Documentation-Standards.md`'s own Status Taxonomy; Purpose's "imposes no new requirement" claim removed, since Step 6's annotated-tag rule is in fact new and is now stated as such |
 | 0.1 | 13 September 2026 | Step 6: release tags are SSH-signed from 13 September 2026 per `SECURITY.md` (signed-release policy, commit `d3c4e43`); earlier tags stay unsigned. |
 | 0.1 | 13 September 2026 | Step 7: release assets (archive of record built with `git archive`, `SHA256SUMS`, detached SSH signature `SHA256SUMS.sig`) required from 13 September 2026, with the verification commands. `.github/allowed_signers` widened to the `file` namespace on the same date so the signature on `SHA256SUMS` can be verified. |
+| 0.1 | 18 September 2026 | Step 10: the verification is performed with `tools/site/publication_health.py`, which recomputes the site's own Observatory records from the published site. |
