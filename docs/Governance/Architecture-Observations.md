@@ -1618,6 +1618,86 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-073
+
+**Title:** Constitution §6, Reconstructability, Is Restated Once and Carried by No Rule, so Nothing Obliges an Implementation to Be Able to Rebuild Anything
+
+**Date observed:** 18 September 2026
+
+**Description:** Surfaced by a check of the specification's own logic, run over the canonical tiers (18 September 2026). `Core/Constitution.md` Principle 6 requires that "Knowledge and World Models must always be reproducible from Memory without requiring access to the original external systems". Outside the Constitution, that requirement appears in the text of exactly one canonical document, `AI/Knowledge/Knowledge.md:35`, and appears there as a restatement inside a Definition rather than as an obligation (the only other occurrence anywhere is the editorial note added to `Memory/Retention.md` on 18 September 2026 under `AO-069`): "per Principle 6 it must be reproducible from Memory without requiring access to the original external systems". A search of `Core/`, `Meta/`, `Models/`, `Memory/`, `Language/`, `Lifecycles/` and `AI/` for any rule that would make a rebuild possible or checkable finds none: no Statement requires an implementation to retain what a derivation consumed, to record which Memory Records a piece of Knowledge was derived from, to keep a derivation reproducible across time, or to demonstrate a rebuild. `Governance/Requirement-Register.md` confirms the same from the other side: of the 182 mandatory requirements of Core Conformance, none carries the vocabulary of reproduction, derivation record or rebuild. The one document that restates the principle is outside every conformance level, which `AO-032` already records for the `AI/` and `Memory/` tiers.
+
+**Impact:** Principle 6 is what makes the Memory to Knowledge to World Model direction worth enforcing: without it, the derivation chain is a modelling convention rather than a guarantee, and the claim that projections are rebuildable from a governed source rests on nothing an assessor can test. An implementation can satisfy every mandatory requirement of Chapters 4 to 6, publish a conformance claim, and be unable to reproduce any of its Knowledge. The exposure is two sided: `AO-069` records that `Memory/Retention.md` permits permanent deletion of the records a rebuild would read, and this entry records that nothing requires the rebuild to be possible in the first place.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case drawn from an implementation that actually rebuilt Knowledge from Memory should state what had to be retained for the rebuild to succeed, and that finding should become a rule at the tier that owns derivation, with a Test kind in `Governance/Conformance-Test-Suite.md` that can fail. `AO-074` records the general form of this defect; this entry records the instance that carries the most weight.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when a rule exists at any tier whose violation is observable, or when the Chief Architect records that Principle 6 is a design commitment rather than an implementable obligation.
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Constitution.md` (§6), `AI/Knowledge/Knowledge.md`, `Memory/Memory Record.md`, `Memory/Retention.md`, `Governance/Requirement-Register.md`, `Governance/Conformance-Test-Suite.md`, `AO-032`, `AO-042`, `AO-069`, `AO-074`, `CAND-014`
+
+---
+
+## AO-074
+
+**Title:** Four of the Fourteen Canonical Principles Reach a Normative Clause, and No Document Maps a Principle to the Rules That Carry It
+
+**Date observed:** 18 September 2026
+
+**Description:** Surfaced by a check of the specification's own logic (18 September 2026). Every canonical document outside `Core/Constitution.md` was searched for the operative vocabulary of each Canonical Principle, with revision tables and editorial notes excluded so that a mention added by governance work does not count as machinery. Three principles have no occurrence at all outside the Constitution: 2 (Domain-Owned Identity: neither "identity belongs to" nor "operational domain rather than" appears anywhere), 9 (Domain-Neutral Core: "domain-specific" appears in no `Core/`, `Meta/` or `Models/` document) and 11 (Structural Isolation: "verifiably absent" and "exceed its defined responsibility" appear nowhere). Four appear in exactly one document each and never inside a clause that binds anything: 6, whose single occurrence is the Definition restatement `AO-073` records; 7 and 8, whose single occurrence is the Reserved Terms list of `Core/Terminology.md`, which exists to say they are undefined; and 13, whose single occurrence is `Core/Principles.md` Principle 6. Only four principles, 3, 4, 12 and 14, appear inside a sentence that carries "shall" anywhere in the corpus, and those sentences sit mostly in `Memory/` and `AI/`, which `AO-032` records as outside every conformance level. `Core/Principles.md` carries a second, differently numbered list of eleven Principles and states in one sentence that they "operate within, and shall not contradict, the Canonical Principles"; it maps none of them to a Canonical Principle, and eight of the eleven cite no Constitution section. Chapter 2 of the reading path compiles that second list verbatim, so the published Design Principles are the eleven while the Constitution publishes the fourteen.
+
+**Impact:** A reader cannot determine, from any document, which Canonical Principles bind an implementation and which are stated only in the Constitution, nor which rule carries a given principle. The practical consequence is measurable rather than rhetorical: an implementation can pass Core Conformance as `Governance/Requirement-Register.md` enumerates it while contradicting most of the Constitution, because the requirement set is drawn from `Meta/`, `Models/` and `Lifecycles/`, and the principles that would forbid that sit in tiers the conformance levels do not reach. The specification's strongest claim, that it is a constitutional model rather than a vocabulary, is the claim with the least machinery behind it.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should produce one traceability table, principle by principle, naming for each Canonical Principle the rules that carry it and the Test that can fail, and stating plainly which principles are design commitments with no implementable obligation. That table belongs with `Governance/Knowledge-Map.md` or beside the Requirement Register, not inside the Constitution, and it changes no rule. `AO-024` records the related defect inside the Constitution itself, that its Architectural Principles carry no marker distinguishing them from the Canonical ones.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when a principle-to-rule map exists, or when the Chief Architect records which principles are not meant to bind an implementation.
+
+**Architect Response:** *(pending)*
+
+**Related:** `Core/Constitution.md`, `Core/Principles.md`, `Core/Terminology.md` (Reserved Terms), `Specification/02 Design Principles.md`, `Governance/Requirement-Register.md`, `Governance/Knowledge-Map.md`, `AO-024`, `AO-032`, `AO-067`, `AO-068`, `AO-073`
+
+---
+
+## AO-075
+
+**Title:** Twenty-Two Documents Require Audit Records to Remain Immutable and No Tier Defines an Audit Record
+
+**Date observed:** 18 September 2026
+
+**Description:** Surfaced by a check of the specification's own logic (18 September 2026). The sentence "Audit records shall remain immutable." appears verbatim as a normative clause in 22 documents: 8 in `Meta/` (Classification, Constraint, Contract, Ownership, Policy, Reference, Registry, Relationship) and 14 in `AI/`. Two further occurrences are Governance records quoting it, `AO-036` among them. Six of those Meta documents carry an Auditability section, and "auditable" or "auditability" appears as an obligation in ten canonical documents. No document defines an Audit record. It is not among the Object types `Meta/Object.md` lists, it has no entry in `Core/Terminology.md`, and it is not in that document's Reserved Terms list, which is where the specification names the eleven terms it uses without defining. Nothing states what an Audit record contains, who owns it, whether it is a Memory Record, whether Constitution §4 immutability applies to it, or what makes an Object auditable.
+
+**Impact:** An obligation repeated 22 times cannot be satisfied or refuted, because its subject is undefined: two implementations can produce entirely different artifacts, or none, and both claim the clause. The clause also sits next to the specification's evidence story without connecting to it, so a reader can reasonably read Audit record as a synonym for Memory Record, which would place it under §4, or as an implementation log, which would place it outside the model entirely. `AO-036` records that this sentence is one of three that recur verbatim as template output; this entry records the separate defect, that the subject of the obligation is defined nowhere. The pattern matches `AO-021` for Evidence, `AO-037` for Process, `AO-038` for KPI and `AO-050` for Governance.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should either define Audit record at the tier that owns it, most plausibly as a Memory Record under §4 rather than as a new construct, which the Freeze would in any case place behind `CAND-007` Section 5, or remove the clause from the documents that carry it and rely on the Memory tier. `Core/Terminology.md` can meanwhile list the term among Reserved Terms so that a reader learns it is undefined rather than assuming a definition exists.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when Audit record is defined, listed as Reserved, or removed.
+
+**Architect Response:** *(pending)*
+
+**Related:** `Meta/Ownership.md`, `Meta/Policy.md`, `Meta/Registry.md`, `Meta/Classification.md`, `Meta/Constraint.md`, `Meta/Contract.md`, `Meta/Reference.md`, `Meta/Relationship.md`, `Core/Terminology.md`, `Memory/Memory Record.md`, `AO-021`, `AO-036`, `AO-037`, `AO-038`, `AO-050`
+
+---
+
+## AO-076
+
+**Title:** Twenty-Five of the 182 Mandatory Requirements of Core Conformance Carry Predicates That No Observation Can Fail
+
+**Date observed:** 18 September 2026
+
+**Description:** Surfaced by a check of the specification's own logic (18 September 2026), run over `Governance/Requirement-Register.md`, which enumerates the requirement set of Core Conformance as `Governance/Conformance-Test-Suite.md` specifies. Of the 182 mandatory Statements, 25 carry at least one predicate that names a quality rather than an observable state of a model: "remain technology independent" (24 Statements), "support governance" (13), "support interoperability" (4), "be extensible" (2), "be descriptive" (1), "be structured" (1). The distribution is systematic rather than incidental: exactly two per Meta document, one in the Design Principles section and one in the Conformance section, in all thirteen Meta documents plus `Meta/Object.md`'s single instance. `Conformance-Test-Suite.md` anticipates part of this with its fifth Test kind, Review, "for a Statement no mechanical procedure can decide", and with a Not Applicable outcome for "a Statement dispositioned Descriptive". Neither closes the gap: a reviewer asked whether Metadata "is extensible" has no observation that would justify Review Fail, so the outcome is settled before the review starts, and no document states who dispositions a Statement as Descriptive or on what grounds, so the escape hatch exists without a rule.
+
+**Impact:** Core Conformance is defined by Chapter 8 as support for all mandatory requirements of Chapters 4 to 6. One in seven of those requirements is met by assertion, and the assertion cannot be contradicted by any exported model, refusal record or reviewer judgment. A claimant who satisfies the 157 checkable Statements and asserts the 25 is indistinguishable from one who satisfies all 182, which weakens exactly the claim the Test Suite was built to make checkable. The finding is quantitative and reproducible: the register is generated, and the 25 rows are named by alias in the pull request that records this entry.
+
+**Recommendation:** Record only. If corroborated, a future Reference Case should propose one of three routes, none of which is available under the Freeze without Section 5: mark the quality predicates Descriptive in the Alias File under a rule that states who may do so; restate them at the tier that owns them as properties of the specification rather than obligations on an implementation; or replace each with an observable consequence, for example replacing "Metadata shall be extensible" with a requirement that an implementation accept an unknown Metadata key without loss. `AO-036` records that the same sentences are template output, and `AO-062` records that the requirement set was not enumerated until 16 September 2026; this entry records what the enumeration revealed about its content.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the 25 Statements carry a Test that can fail, or when the register records them as Descriptive under a stated rule.
+
+**Architect Response:** *(pending)*
+
+**Related:** `Governance/Requirement-Register.md`, `Governance/Requirement-Aliases.md`, `Governance/Conformance-Test-Suite.md`, `Specification/08 Conformance.md`, `Meta/Metadata.md`, `Meta/Identity.md`, `Meta/Classification.md`, `AO-036`, `AO-062`, `AO-032`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1657,3 +1737,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 18 September 2026 | Added AO-069 (the EPIC-A Definition-of-Done correction bound by `CAND-007` Section 3 was never written into the Backlog, and `Memory/Retention.md`'s Deleted state and `Memory/Layered Memory.md`'s demotion text stand against Constitution §4 and §6), AO-070 (three constraint vocabularies at the Entity tier against one at Meta) and AO-071 (the stewardship condition the Release Review attached has occurred). Found by a deep check of the architecture's internal logic. |
 | 0.1 | 18 September 2026 | AO-069: Chief Architect response recorded (the EPIC-A disposition is extended to `Memory/Layered Memory.md` and `Memory/Retention.md`, which do not block v1.0; the contradiction stays open), Status now Open in part. |
 | 0.1 | 18 September 2026 | AO-071: Reference Case `RC-011` recorded, filing authorized by the Chief Architect under `CAND-007` Section 5, Status now Escalated to `CAND-017`. |
+| 0.1 | 18 September 2026 | Added AO-073 (Constitution §6 is carried by no rule), AO-074 (four of fourteen Canonical Principles reach a normative clause and no principle-to-rule map exists), AO-075 (22 documents require Audit records to remain immutable and no tier defines one) and AO-076 (25 of the 182 mandatory requirements carry predicates no observation can fail). Found by a check of the specification's own logic over the canonical tiers. |
