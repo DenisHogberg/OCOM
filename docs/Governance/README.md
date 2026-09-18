@@ -16,6 +16,7 @@ This section describes how the OCOM Specification itself is maintained, reviewed
 - [Architecture Observations](Architecture-Observations.md) — architectural inconsistencies and ambiguities noticed but not resolved by the CDKO
 - [ADR Candidates](ADR-Candidates.md) — questions queued for a Chief Architect decision
 - [Knowledge Map](Knowledge-Map.md) — how the specification's sections and concepts relate to one another
+- [Principle Traceability](Principle-Traceability.md) — which rule carries each Canonical Principle, and which Test could fail (checked by `tools/governance/principle_traceability.py`)
 - [Documentation Standards](Documentation-Standards.md) — formatting and structural conventions used across the specification
 - [Development Readiness](Development-Readiness.md) — documentation-readiness assessment before development of each new module
 - [Release Readiness](Release-Readiness.md) — documentation-readiness assessment before each release
