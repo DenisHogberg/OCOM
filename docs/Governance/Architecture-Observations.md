@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 16 September 2026
+**Last Updated:** 18 September 2026
 
 ---
 
@@ -1102,7 +1102,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Architect Response:** *(pending)*
 
-**Related:** `Core/Manifest.md`, `Governance/Publication-Model.md`, `Meta/Overview.md`, `Models/Overview.md`, `Examples/Implementation-Case/Performance-Marketing-Operator.md`, AO-002, AO-017
+**Related:** `Core/Manifest.md`, `Governance/Publication-Model.md`, `Meta/Overview.md`, `Models/Model.md`, `Examples/Implementation-Case/Performance-Marketing-Operator.md`, AO-002, AO-017
 
 ---
 
@@ -1581,3 +1581,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 16 September 2026 | AO-062 answered in part by `Governance/Conformance-Test-Suite.md`: the requirement set is enumerated as a derived projection; the keyword separation stays open. |
 | 0.1 | 16 September 2026 | AO-005 Status label aligned with the Entry Lifecycle (Escalated); AO-025 corroborated by the dogfooding audit of Release v1.2.0 with three further instances of Informative documents carrying their own shall-sentences. |
 | 0.1 | 17 September 2026 | AO-014: dated note recording that the v1.0 recompilation removed the Purpose widening and naming two Language-tier widenings the entry had not named. Found by the dogfooding audit of Release v1.3.0. |
+| 0.1 | 18 September 2026 | AO-046's Related list named `Models/Overview.md`, which has never existed; corrected to `Models/Model.md`, the document the entry discusses. Found by an error hunt over the corpus. |
