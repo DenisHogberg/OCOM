@@ -6,7 +6,7 @@
 
 **Version:** 1.0
 
-**Last Updated:** 17 September 2026
+**Last Updated:** 18 September 2026
 
 ---
 
@@ -17,6 +17,8 @@ This chapter defines how Entities change over time. It sits between the structur
 ## Definition
 
 A Lifecycle is the complete set of States and permitted State Transitions that define the operational existence of an Entity. Every Entity **shall** have exactly one Lifecycle. A Lifecycle is a reusable operational model describing the allowed States and valid State Transitions of an Entity; it defines how an Entity evolves over time while preserving operational consistency.
+
+> **Editorial note (18 September 2026).** The source documents diverge on Lifecycle cardinality. `Models/Lifecycle.md` requires every Lifecycle to "belong to exactly one Entity"; `Lifecycles/Lifecycles.md` requires every Lifecycle to "be reusable by multiple Entities" and states that "Multiple Entities may share the same Lifecycle". This chapter states the Entity-side rule, that every Entity shall have exactly one Lifecycle, and the reuse sentence; it does not resolve the divergence, which is recorded as `AO-028`. No requirement changed.
 
 ## States
 
@@ -49,6 +51,7 @@ A Lifecycle conforms to this specification only if all mandatory requirements de
 | 0.2 | 22 July 2026 | Compiled reading path, approved by the Architecture Committee with editorial changes (`Specification/Committee Review Package.md`). |
 | 0.2 | 22 July 2026 | Committee Review: added an inline definition of "Reference Material" at first use, per committee direction; no source document changed. |
 | 1.0 | 17 September 2026 | "shall never", inherited verbatim from `Models/Domain.md`, normalized to "shall not" as the Committee Review of 22 July 2026 directed for Chapter 5; no requirement changed. Purpose no longer calls the Domains, Entities and Lifecycles sections non-normative (their Status fields decide, per `Documentation-Standards.md`); Definition, States, Transitions and Conformance restated from `Models/Lifecycle.md`, `Models/State.md` and `Lifecycles/Lifecycles.md` ("shall never" normalized to "shall not" as Chapter 5 did on 22 July 2026); Lifecycle Ownership now compiles `Models/Entity.md` and `Models/Domain.md` instead of an unsourced rule, and Events and Lifecycle compiles `Models/Event.md` and `Models/State.md`; Source line extended accordingly. |
+| 1.0 | 18 September 2026 | Editorial note added under Definition recording the Lifecycle cardinality divergence between `Models/Lifecycle.md` and `Lifecycles/Lifecycles.md`, as `AO-028` recommends; no requirement changed. |
 
 ---
 
