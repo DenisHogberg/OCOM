@@ -1359,6 +1359,44 @@ It does not move the scoping sentence into `Language/Conformance.md`, and it doe
 
 **Related Documents:** `AO-080`, `AO-014`, `AO-032`, `AO-051`, `CAND-002`, `CAND-017`, `CAND-018`, `Language/Conformance.md`, `Specification/08 Conformance.md`, `Governance/Conformance-Test-Suite.md`, `Governance/Requirement-Register.md`, `Governance/Principle-Traceability.md`
 
+## CAND-022 · ✅ Decided
+
+**Title:** Where the Evidence Register Is Published
+
+**Status:** ✅ Decided, 19 September 2026. The Chief Architect directed that the register stay in the repository and no longer be published on the site; the wording and the constraint below were prepared by the CDKO and adopted.
+
+**Owner:** Chief Architect (Decision recorded); each integration item separately authorized
+
+**Created:** 19 September 2026 · **Decided:** 19 September 2026 · **Decided by:** Chief Architect
+
+**Grounding:** `AO-083` (19 September 2026, machine-facing files with no source here); `AO-064` (a derived artifact nobody can recompute is a claim nobody can check); `Governance/Publication-Model.md` (tier 1 canonical source, tier 4 Convenience Representation); `Governance/Publication-Manifest.md`; `Governance/Release-Readiness.md`; `CAND-007` Section 3.
+
+### The question
+
+The Evidence Register separates what can be verified about the specification's use from what its owner declares and what does not exist. It was published at `ocom.uno/evidence-register` from 5 September 2026 and existed nowhere else: this repository referenced it from six documents and held none of its text. Two consequences followed. The record had no source, which is the defect `AO-083` closed for `llms.txt` earlier the same day and which mattered more here, because this register is the page every other claim of use on the site is checked against. And its most-quoted line was a ledger of three zeros, published on the surface an automated reader meets first, while the fourteen third-party records in the same document, REUSE, OpenSSF, the signed releases, the Zenodo DOIs, the Software Heritage archive, the Wikidata item, appeared in no machine-facing file at all. Where should the register live, and what should the site publish?
+
+**Decision:** **The Evidence Register becomes a document of this repository, `Governance/Evidence-Register.md`, versioned and reviewed like every other governance record and carried into each Zenodo deposit and Software Heritage archive. The site stops publishing it and stops publishing `/implementations`; `/evidence-register`, `/evidence-register.json`, `/implementation-status` and `/implementations` redirect permanently to the repository document, so no citation of those URLs breaks. Not one count changes: the zeros stand as recorded, the ladder still reads Owner declaration, and the NDA production use stays disclosed. The constraint that makes this a publication decision rather than a concealment is binding and part of the Decision: the site shall not assert, imply or allow to be inferred any adoption, validation, implementation or endorsement it does not have, and the absence of the ledger from the site is never a licence to claim the opposite. The third-party records the register holds move into `llms.txt`, where they are as checkable as the zeros were.**
+
+### Rationale
+
+1. It puts the record where the model says records belong. `Publication-Model.md` calls the repository the canonical source and the site a projection; a record that existed only as a projection had no source. Fixing that is the same act `AO-083` recorded for `llms.txt`, applied to the informative record that carries the most weight.
+2. It strengthens the record rather than weakening it. In the repository the register is versioned, reviewed through a pull request, checked by the metadata and link jobs, and archived under a DOI and a SWHID. On the site it was a hand-maintained page that nothing could reproduce.
+3. Nothing is withdrawn from the public. The document is public, the `README` links it, the old URLs redirect to it, and its contents are unchanged.
+4. What changes is which surface volunteers the ledger to an automated reader, and in what company. Order and placement are the publisher's editorial decision; the facts are not, and they stay put.
+5. The move is symmetrical. The site loses a ledger of what is absent and gains, in `llms.txt`, fourteen records of what is present, each with a date and a source. A reader who wants either can reach both.
+
+### Scope and the Architecture Freeze
+
+Filed under `CAND-007`. Section 4 holds: no Core concept, no Canonical Principle, no requirement, no canonical document changed. Creating a governance document and changing what the site publishes is documentation and publication work, which Section 3 permits.
+
+### What this Decision does not do
+
+It does not change a single figure in the register, and it does not authorize any claim of adoption, validation, implementation or endorsement, now or later: that constraint is part of the Decision and binds every page of the site. It does not withdraw the disclosure of production use under NDA. It does not remove the register from public view, and it does not make the evidence ladder easier to climb: step 2, step 3 and step 4 still require a named organization, a checked implementation and a disinterested reviewer respectively. It does not decide what other site-held informative records (`/why`, `/specification/how-to-review`, `/api`, `/observatory`) should do.
+
+**Next Action:** Two-step discipline. Step 1 is this Decision. Step 2, each item separately authorized and all executed on 19 September 2026: `Governance/Evidence-Register.md` created with the register's full content and current counts; `Publication-Model.md` tier 4 and `Governance/README.md` updated; `README.md` pointing at the repository document; `publication/llms.txt` carrying the third-party records and no longer the ledger line; the site's redirects, `sitemap.xml`, `discovery.json`, `resolve.json` and the pages that linked the register; `tools/site/publication_health.py` and its fixture no longer expecting `/evidence-register.json`; the Observatory records recomputed last, after every other change.
+
+**Related Documents:** `Governance/Evidence-Register.md`, `Governance/Publication-Model.md`, `Governance/Publication-Manifest.md`, `Governance/Release-Readiness.md`, `AO-083`, `AO-064`, `CAND-007`, `publication/README.md`
+
 ---
 
 # Revision History
@@ -1411,3 +1449,4 @@ It does not move the scoping sentence into `Language/Conformance.md`, and it doe
 | 0.1 | 19 September 2026 | CAND-019: postscript updated, every step 2 item is done and `AO-078` is Closed on the evidence the tool reports against the live site. |
 | 0.1 | 19 September 2026 | Added CAND-020 (which of two contradicting mandatory Statements a conformance claim is measured against) and CAND-021 (where the sentence that scopes Core Conformance lives), both Open, each carrying a proposed Decision; `AO-079` and `AO-080` are Escalated to them. |
 | 0.1 | 19 September 2026 | CAND-020 and CAND-021 Decided as drafted: a claimant is measured against `REQ-MODELS-LIFECYCLE-002` with `REQ-LIFECYCLES-004` dispositioned Descriptive, and the canonical definition of Core Conformance is `Language/Conformance.md`'s while the twenty-two-document enumeration is the suite's reading. |
+| 0.1 | 19 September 2026 | Added CAND-022 (where the Evidence Register is published) and recorded it Decided: the register becomes `Governance/Evidence-Register.md`, the site redirects the published URLs to it, no figure changes, and the site is bound not to assert adoption, validation or implementation it does not have. |

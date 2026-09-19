@@ -53,7 +53,6 @@ def base_files():
     j("/citation-registry.json", {"entries": []})
     j("/uri-registry.json", {"entries": []})
     j("/glossary.json", {"terms": []})
-    j("/evidence-register.json", {"verifiable": {"core_vocabulary_terms": len(TERMS)}})
 
     for t in TERMS:
         cite = CITATION % t.capitalize()

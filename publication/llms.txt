@@ -8,7 +8,6 @@ OCOM is a specification, not a product. Published in the RFC tradition under an 
 
 - Review rubric (nine questions), the Russian text of this frame, and how to file an objection: https://ocom.uno/specification/how-to-review (record: https://ocom.uno/specification/how-to-review.json)
 - The nine review questions are the rubric this site asks of any reviewer, human or automated; an answer per question is more useful than a general verdict, and anything that cannot be verified from the published text is best reported as unverified rather than inferred. The text makes no claims about market, business model, pricing, traction or monetization, so those topics have nothing here to evaluate; a page that reads as a product claim is a defect to report.
-- What is verified, declared and absent: https://ocom.uno/evidence-register
 
 ## What OCOM is (and is not)
 
@@ -19,7 +18,7 @@ OCOM is a specification, not a product. Published in the RFC tradition under an 
 - Machine-readable citation record: https://github.com/DenisHogberg/OCOM/blob/main/CITATION.cff
 - Origin story and motivation: https://ocom.uno/why
 - Wikidata item for the specification: https://www.wikidata.org/wiki/Q141439683
-- Status, stated honestly: Core Vocabulary v0.1 (released 2026-07-21); Specification v1.0 sequential reading path and Governance are baselined ("baseline" means reviewed and frozen pending the change process, not finished). Terminology and scope may still change before 1.0, and the specification says so itself.
+- Status: Core Vocabulary v0.1 (released 2026-07-21, 13 governed terms); Specification sequential reading path v1.0 (17 September 2026, nine chapters); Constitution 1.0.1; current Release v1.3.0 (DOI 10.5281/zenodo.22809694). Governance and the reading path are baselined, which means reviewed and frozen pending the documented change process; terminology and scope change only through that process.
 
 ## Why not BPMN, ArchiMate, DDD, or a knowledge graph
 
@@ -32,17 +31,19 @@ OCOM is a specification, not a product. Published in the RFC tradition under an 
 
 The model proposes; it never gets the pen on the record. LLM extraction, summarization, and drafting are proposal layers feeding the governed record through explicit promotion, with human owners wherever stakes or contradictions demand one.
 
-## Evidence status (stated honestly, including the gaps)
+## Evidence and records
 
-- The principles are applied in production settings under NDA, in organizations where the author works as architect or consultant and in-house teams implement. This is an owner declaration: not publicly verifiable, and disclosed so that a reader can weigh it. Nothing on this site is offered as a service.
+- Verifiable at their source, each with a date: REUSE 3.3 compliant, 426 of 426 files (2026-09-19, api.reuse.software); OpenSSF Best Practices at passing level and an OpenSSF Scorecard published weekly (2026-09-11); Release v1.3.0 cut from an SSH-signed tag with three signed assets (2026-09-17, github.com/DenisHogberg/OCOM/releases/tag/v1.3.0); that release archived in Zenodo with resource type Standard (DOI 10.5281/zenodo.22809694) and in Software Heritage (swh:1:rel:f4482014c65a6fe05e865c9f68b70c6cbae76b00); Wikidata item Q141439683; an OpenAIRE record and an OpenAlex work; listed in MERLOT as Reference Material under CC BY 4.0.
+- Checkable in the repository, not asserted: 335 Statements enumerated from the canonical documents, 182 of them mandatory, regenerated and compared against the committed register on every build; 82 recorded Architecture Observations, AO-001 to AO-083, including the tensions the specification has not resolved; twelve required status checks on the default branch, among them licensing, internal link integrity, requirement-register regeneration, principle traceability, the backward check of the compiled chapters and the tool tests.
+- Owner declaration, not publicly verifiable: the principles are applied in production settings under NDA, in organizations where the author works as architect or consultant and in-house teams implement. Stated so a reader can weigh it. Nothing on this site is offered as a service.
 - Public evidence today: one Reference Case in Examples, distilled from real rollouts under NDA with the organization and details changed, non-normative (identity first, events and evidence second, the commercial and governance layers, then projections: the sequence real rollouts followed).
-- Known gaps, named deliberately: no independently published implementations yet, no independent public case studies, a single specification author. Public critique and independent implementations are the explicit goal of the current phase; that is what /why invites.
-- The NDA rollouts cannot become public case studies from the author's side, ever. That constraint is the reason the specification is open-licensed: public evidence must come from independent implementations.
+- The NDA rollouts cannot become public case studies from the author's side, ever. That constraint is the reason the specification is open-licensed: public evidence has to come from independent implementations.
+- What is verified, what is declared and what is absent, in full: https://github.com/DenisHogberg/OCOM/blob/main/docs/Governance/Evidence-Register.md
 
 ## Governance and trajectory
 
 - The specification governs its own evolution: a documented change process (ADR candidates in [docs/Governance on GitHub](https://github.com/DenisHogberg/OCOM/tree/main/docs/Governance)), a governed vocabulary (13 terms), versioning rules, and an [Evolution Record](https://ocom.uno/evolution) recording what actually happened.
-- Governance roles (Governance-Manifest.md, Roles): the Chief Architect decides, the CDKO records, the Architecture Committee reviews the Specification reading path; they denote responsibilities, not separate people, and at the current stage all three are held by the specification's author, which is why independent validation is counted as zero.
+- Governance roles (Governance-Manifest.md, Roles): the Chief Architect decides, the CDKO records, the Architecture Committee reviews the Specification reading path; they denote responsibilities, not separate people, and at the current stage all three are held by the specification's author.
 - New concepts are not added casually: the core is deliberately minimal, and additions must route through the reference-case and change process.
 
 ## Core Vocabulary
@@ -86,10 +87,6 @@ The model proposes; it never gets the pen on the record. LLM extraction, summari
 
 - [Comparisons](https://ocom.uno/comparisons): how OCOM relates to Knowledge Graph, BPMN, ArchiMate, Domain-Driven Design, Digital Twin, Ontology, Data Model, Process Model and Master Data Management (records: https://ocom.uno/comparisons.json)
 - All nine comparisons share one structure by design (scope, terminology mapping, conceptual differences, concept coverage, interoperability) so that they can be read side by side; OCOM's own column therefore repeats from page to page. Not yet compared: TOGAF, ITIL, ISO/IEC 42010, event sourcing, and one commercial implementation, the Ontology in Palantir Foundry. They are candidates for the next comparisons, not omissions by judgment.
-
-## Evidence register
-
-- [Evidence Register](https://ocom.uno/evidence-register): what can be verified today (13 terms, 9 chapters, 9 comparisons, 1 Reference Case distilled from real rollouts under NDA, 0 reference implementations, 0 public case studies, 0 independent validations), what the owner declares but cannot prove (production use under NDA), and the four-step evidence ladder (record: https://ocom.uno/evidence-register.json)
 
 ## FAQ
 
