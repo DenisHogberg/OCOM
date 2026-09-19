@@ -38,7 +38,7 @@ The model proposes; it never gets the pen on the record. LLM extraction, summari
 - Owner declaration, not publicly verifiable: the principles are applied in production settings under NDA, in organizations where the author works as architect or consultant and in-house teams implement. Stated so a reader can weigh it. Nothing on this site is offered as a service.
 - Public evidence today: one Reference Case in Examples, distilled from real rollouts under NDA with the organization and details changed, non-normative (identity first, events and evidence second, the commercial and governance layers, then projections: the sequence real rollouts followed).
 - The NDA rollouts cannot become public case studies from the author's side, ever. That constraint is the reason the specification is open-licensed: public evidence has to come from independent implementations.
-- What is verified, what is declared and what is absent, in full: https://github.com/DenisHogberg/OCOM/blob/main/docs/Governance/Evidence-Register.md
+- What is verified, what is declared and what is absent, in full: https://ocom.uno/evidence-register
 
 ## Governance and trajectory
 
