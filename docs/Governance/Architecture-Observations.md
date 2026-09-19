@@ -1740,11 +1740,51 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only, because the answer is a decision about what the published graph asserts rather than an editorial fix. Two routes: bind the prefix to the term set, so `ocom:Reference` expands to the published Reference term and the graph asserts that an edge is an instance of it, or rename the two types to something the graph defines for itself and publish those definitions. Either changes what the projection claims, which is why this entry proposes neither.
 
-**Status:** Open in part. `CAND-019` (Decided 19 September 2026) answers what the names assert: they are local names of the publication, they create no governed term, and nothing claims that an edge is the governed term Reference. What stays open is the first half of this entry's condition, that the two types still expand to URIs the site defines nowhere, which is publication work the Decision's step 2 covers.
+**Status:** Closed. `CAND-019` (Decided 19 September 2026) answers what the names assert, and the publication work its step 2 names was done the same day: `graph.jsonld` binds the prefix `graph` to `https://ocom.uno/graph/names#`, that page defines every name the file coins, and `tools/site/publication_health.py` carries the row Coined names resolve, which reports 8 names checked and none missing against the live site.
 
 **Architect Response:** Chief Architect, 19 September 2026, recorded in `CAND-019`.
 
 **Related:** `Governance/Publication-Model.md`, `Meta/Reference.md`, `Meta/Relationship.md`, `AO-057`, `AO-054`, `AO-064`
+
+---
+
+## AO-079
+
+**Title:** The Enumerated Requirement Set of Core Conformance Contains a Pair No Implementation Can Satisfy
+
+**Date observed:** 19 September 2026
+
+**Description:** Surfaced by an adversarial re-check of the repository and the site (19 September 2026), and it sharpens `AO-028` from a divergence between tiers into a property of the conformance floor. `Governance/Requirement-Register.md` enumerates the requirement set of Core Conformance from the 22 documents Chapters 4 to 6 compile. Two of its mandatory Statements are `REQ-MODELS-LIFECYCLE-002` (`Models/Lifecycle.md`, Characteristics): "Every Lifecycle shall: belong to exactly one Entity; ..." and `REQ-LIFECYCLES-004` (`Lifecycles/Lifecycles.md`, Principles): "shall be reusable by multiple Entities". A Lifecycle that belongs to exactly one Entity is not reusable by multiple Entities, so no Lifecycle satisfies both, so no model satisfies every mandatory requirement of the set. `Specification/08 Conformance.md` defines Core Conformance as support for all mandatory requirements of Chapters 4 to 6, and the site publishes that definition, so the level as published is unattainable rather than merely hard. Neither alias carries a Disposition in `Governance/Requirement-Aliases.md`, and neither Statement names the other.
+
+**Impact:** This is the first defect found in the requirement set itself rather than in the machinery around it, and it is the kind a first serious implementer meets on day one. Until it is resolved, any conformance claim is a claim to have satisfied a set that cannot be satisfied, and the Test Suite would report a Fail on one of the two whichever way an implementation is built. `AO-028` records the divergence and recommends an editorial note in Chapter 6; that recommendation is not enough now that the two sentences sit in one enumerated set as equally mandatory.
+
+**Recommendation:** Record only, and escalate: the resolution is the one `AO-028` names, deciding whether Lifecycle means the reusable definition or the per-Entity progression, and it now has a consequence sharp enough to carry a Reference Case. Until then the honest interim is a Disposition on one of the two aliases in the Alias File, which `Governance/Conformance-Test-Suite.md` already provides for, recording that the pair is known and which of the two a claimant is measured against.
+
+**Status:** Open; not escalated to an ADR Candidate yet, because the underlying question is `AO-028`'s and the Freeze places a change to either document behind a Reference Case. It moves when a Disposition records which Statement binds, or when `AO-028` is decided.
+
+**Architect Response:** *(pending)*
+
+**Related:** `AO-028`, `AO-039`, `AO-032`, `AO-062`, `Governance/Requirement-Register.md`, `Governance/Requirement-Aliases.md`, `Governance/Conformance-Test-Suite.md`, `Models/Lifecycle.md`, `Lifecycles/Lifecycles.md`, `Specification/08 Conformance.md`
+
+---
+
+## AO-080
+
+**Title:** After CAND-018 the Sentence That Scopes Core Conformance Lives Only in a Text That States No Obligation
+
+**Date observed:** 19 September 2026
+
+**Description:** Surfaced by an adversarial re-check on 19 September 2026, hours after the Decision it concerns. `CAND-018` records that a compiled chapter states no obligation of its own and that the obligation lives in the canonical document. The sentence that scopes Core Conformance, "supports all mandatory requirements defined in Chapters 4 to 6", exists only in `Specification/08 Conformance.md`, a compiled chapter. Its canonical source says something else: `Language/Conformance.md`'s Core Conformance section reads "Supports all mandatory language requirements", and the words Chapters 4 to 6 appear nowhere in it. Three artifacts compute from the chapter's wording rather than the canonical one: `Governance/Conformance-Test-Suite.md` Section 1, `Governance/Requirement-Register.md`'s Purpose, and `Governance/Principle-Traceability.md`. `AO-014` records the neighbouring widening and `AO-032` records that the chapter's sentence is the only global statement; neither observes that a Decision has since removed the ground it stood on.
+
+**Impact:** The requirement set of 335 Statements, the Test Suite, the traceability map and every conformance claim measured against them rest on a sentence that, by a Decision of this repository, obliges nothing. Either the scoping sentence belongs in a canonical document, or Core Conformance is defined by a text the specification says is not normative, and a reviewer can put that question with one quotation from each side.
+
+**Recommendation:** Record only. The bounded fix is to place the scoping sentence in `Language/Conformance.md`, where the Core Conformance level is already defined, so that the chapter compiles it rather than originating it; that is a change to a canonical document and therefore needs its own Decision under `CAND-007`. `CAND-002` narrowed the same reading for profile declarations and `CAND-017` deferred the general question, so the three sit together and should be decided together.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the scoping sentence exists in a canonical document, or when the Chief Architect records that Chapter 8 originates it as an exception to `CAND-018`.
+
+**Architect Response:** *(pending)*
+
+**Related:** `CAND-018`, `CAND-002`, `CAND-017`, `AO-014`, `AO-032`, `AO-051`, `Language/Conformance.md`, `Specification/08 Conformance.md`, `Governance/Conformance-Test-Suite.md`, `Governance/Requirement-Register.md`, `Governance/Principle-Traceability.md`
 
 ---
 
@@ -1793,3 +1833,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 18 September 2026 | Added AO-078 (the published graph types its 83 edges and 7 governance candidates with a prefix that expands to URIs the site defines nowhere). Found by a deep test of the repository and the site. |
 | 0.1 | 19 September 2026 | AO-077 Escalated to `CAND-018` and AO-078 to `CAND-019`, both filed Open with a proposed Decision; AO-077 records a fourth instance, the subordination sentence missing from Chapter 02, corrected in the same change. |
 | 0.1 | 19 September 2026 | AO-077 and AO-078 Open in part with Architect Responses recorded in `CAND-018` and `CAND-019`; AO-071 Open in part, `CAND-017` having placed the right in the name outside the Specification and gated the claim rule on a second Reference Case. |
+| 0.1 | 19 September 2026 | Added AO-079 (the enumerated requirement set contains a pair no implementation can satisfy) and AO-080 (after CAND-018 the sentence that scopes Core Conformance lives only in a text that states no obligation). AO-078 Closed: CAND-019's publication work was done the same day. Found by an adversarial re-check of the site, the code and the architecture. |

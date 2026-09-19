@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 17 September 2026
+**Last Updated:** 19 September 2026
 
 ---
 
@@ -91,3 +91,4 @@ Per-document `Status` fields are authoritative; as a general guide:
 | 0.1 | 22 July 2026 | Initial snapshot |
 | 0.1 | 16 September 2026 | Currency note added (the tables record the 22 July 2026 state; current Release v1.2.0); the Section 9 sentence dated to the 11 September 2026 transcription; this Revision History table added, since `Governance/Documentation-Standards.md` requires one in every document. |
 | 0.1 | 17 September 2026 | Currency note extended: the Specification reading path is v1.0. |
+| 0.1 | 19 September 2026 | Currency note: the current Release is v1.3.0, corrected on 18 September 2026 in the same edit that left this row unwritten. |

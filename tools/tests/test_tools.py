@@ -146,6 +146,18 @@ class PrincipleTraceability(unittest.TestCase):
             self.assertEqual(code, 1, out)
             self.assertIn("does not carry", out)
 
+    def test_row_with_an_empty_quote_fails(self):
+        with Copy() as c:
+            doc = "docs/Governance/Principle-Traceability.md"
+            row = [l for l in c.read(doc).splitlines() if l.startswith("| `docs/")][0]
+            cells = row.split(" | ")
+            # a quote cell of two quotation marks parses as a row and strips to nothing, which is
+            # the fail-open: the row cites a file and a line and checks neither
+            c.edit(doc, row, " | ".join(cells[:-1]) + ' | "" |')
+            code, out = run(c.dir, TRACE, "--check")
+            self.assertEqual(code, 1, out)
+            self.assertIn("carries no quote", out)
+
     def test_absent_row_naming_a_document_fails(self):
         with Copy() as c:
             doc = "docs/Governance/Principle-Traceability.md"
@@ -210,6 +222,25 @@ class PublicationHealth(unittest.TestCase):
             code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
             self.assertNotEqual(code, 0, out)
             self.assertIn("Core Vocabulary Markdown", out)
+
+    def test_a_coined_name_outside_type_is_still_checked(self):
+        with fake_site.Fixture() as site:
+            self.healthy(site)
+            record = json.loads(site.files["/graph.jsonld"][1])
+            # a coined name in a value position rather than in @type: the row read @type only
+            record["@graph"][-1]["graph:undefinedProperty"] = "x"
+            site.files["/graph.jsonld"] = ("application/json", json.dumps(record))
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("Coined names resolve", out)
+
+    def test_missing_sitemap_is_a_failure(self):
+        with fake_site.Fixture() as site:
+            self.healthy(site)
+            del site.files["/sitemap.xml"]
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("sitemap.xml", out)
 
     def test_a_coined_name_that_expands_to_nothing_fails(self):
         with fake_site.Fixture() as site:

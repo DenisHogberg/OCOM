@@ -226,10 +226,10 @@ The practical effect is that the map cannot rot silently. An edit that moves a c
 
 ## Tool tests (added 18 September 2026)
 
-The job `Tool tests` runs `python3 tools/tests/test_tools.py`: eighteen cases, standard library only, no network. Seventeen of them break exactly one thing and assert that the tool exits non-zero and names what broke; the rest assert that the healthy corpus stays green.
+The job `Tool tests` runs `python3 tools/tests/test_tools.py`: twenty-two cases, standard library only, no network. Most of them break exactly one thing and assert that the tool exits non-zero and names what broke; the rest assert that the healthy corpus stays green.
 
 They exist because a review of the three tools on 18 September 2026 found six defects of one kind: the tool passed while doing no work. A presence row computed over an empty set reported ok having checked nothing. The JSON-LD leg of the citation rule compared nothing on every term, because the citation sits under `@graph` and a missing value counted as agreement. A traceability row that did not match the row pattern was dropped before the unparsable-row failure could fire, so a row naming a file that does not exist passed. An alias edited to a name already in use bound two Statements and both alias checks stayed green. A principle with two contradictory blocks passed a checker whose docstring promised exactly one. And the health tool's `--check` compared six of the eleven figures the record publishes.
 
-All six are fixed, and each one has a test that fails without the fix. The site tool is tested against an in-memory fixture (`tools/tests/fake_site.py`) that serves an ocom.uno-shaped site on loopback: a test removes an index, corrupts a citation inside `@graph`, deletes a projection or tampers with a published figure, and asserts the tool notices. Nothing in the suite touches the live site, and the whole run takes about six seconds.
+All six are fixed, and each one has a test that fails without the fix. The re-check of 19 September 2026 found four more of the same kind in the code written to fix them, and each of those has a test too. The site tool is tested against an in-memory fixture (`tools/tests/fake_site.py`) that serves an ocom.uno-shaped site on loopback: a test removes an index, corrupts a citation inside `@graph`, deletes a projection or tampers with a published figure, and asserts the tool notices. Nothing in the suite touches the live site, and the whole run takes about six seconds.
 
 This is the tenth required check on `main`.
