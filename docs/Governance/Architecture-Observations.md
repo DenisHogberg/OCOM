@@ -1760,7 +1760,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only, and escalate: the resolution is the one `AO-028` names, deciding whether Lifecycle means the reusable definition or the per-Entity progression, and it now has a consequence sharp enough to carry a Reference Case. Until then the honest interim is a Disposition on one of the two aliases in the Alias File, which `Governance/Conformance-Test-Suite.md` already provides for, recording that the pair is known and which of the two a claimant is measured against.
 
-**Status:** Open; not escalated to an ADR Candidate yet, because the underlying question is `AO-028`'s and the Freeze places a change to either document behind a Reference Case. It moves when a Disposition records which Statement binds, or when `AO-028` is decided.
+**Status:** Escalated to `CAND-020` (Which of Two Mandatory Statements About Lifecycle Cardinality a Conformance Claim Is Measured Against), filed Open on 19 September 2026 with a proposed Decision. The candidate holds the question of which Statement binds; the divergence itself remains `AO-028`'s and still waits for a Reference Case.
 
 **Architect Response:** *(pending)*
 
@@ -1780,7 +1780,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. The bounded fix is to place the scoping sentence in `Language/Conformance.md`, where the Core Conformance level is already defined, so that the chapter compiles it rather than originating it; that is a change to a canonical document and therefore needs its own Decision under `CAND-007`. `CAND-002` narrowed the same reading for profile declarations and `CAND-017` deferred the general question, so the three sit together and should be decided together.
 
-**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the scoping sentence exists in a canonical document, or when the Chief Architect records that Chapter 8 originates it as an exception to `CAND-018`.
+**Status:** Escalated to `CAND-021` (Where the Sentence That Scopes Core Conformance Lives), filed Open on 19 September 2026 with a proposed Decision. The candidate holds the question; whether the scoping sentence becomes canonical text is deferred there behind the same Reference Case `CAND-017` waits on.
 
 **Architect Response:** *(pending)*
 
@@ -1834,3 +1834,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 19 September 2026 | AO-077 Escalated to `CAND-018` and AO-078 to `CAND-019`, both filed Open with a proposed Decision; AO-077 records a fourth instance, the subordination sentence missing from Chapter 02, corrected in the same change. |
 | 0.1 | 19 September 2026 | AO-077 and AO-078 Open in part with Architect Responses recorded in `CAND-018` and `CAND-019`; AO-071 Open in part, `CAND-017` having placed the right in the name outside the Specification and gated the claim rule on a second Reference Case. |
 | 0.1 | 19 September 2026 | Added AO-079 (the enumerated requirement set contains a pair no implementation can satisfy) and AO-080 (after CAND-018 the sentence that scopes Core Conformance lives only in a text that states no obligation). AO-078 Closed: CAND-019's publication work was done the same day. Found by an adversarial re-check of the site, the code and the architecture. |
+| 0.1 | 19 September 2026 | AO-079 Escalated to `CAND-020` and AO-080 to `CAND-021`, both filed Open with a proposed Decision for the Chief Architect. |
