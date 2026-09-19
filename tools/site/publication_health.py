@@ -321,8 +321,11 @@ def graph_figures(site):
     graph = site.json("/graph.jsonld") or {}
     nodes = graph.get("@graph", [])
     terms = [n for n in nodes if n.get("@type") == "https://schema.org/DefinedTerm"]
-    concepts = [n for n in nodes if n.get("@type") == "ocom:ReferencedConcept"]
-    edges = {(n["from"], n["to"]) for n in nodes if n.get("@type") == "ocom:Reference" and n.get("from") and n.get("to")}
+    concepts = [n for n in nodes if str(n.get("@type", "")).endswith("ReferencedConcept")]
+    # An edge is a node that carries from and to. Matching on the type name tied this tool to
+    # one spelling of a name the publication coins for itself, which CAND-019 says is local and
+    # may be renamed; the shape is what the figures actually depend on.
+    edges = {(n["from"], n["to"]) for n in nodes if n.get("from") and n.get("to")}
     ids = {n["@id"] for n in nodes if n.get("@id")}
     def short(u):
         # A term node is published as https://ocom.uno/vocabulary/<slug>#term, so the name is the
@@ -353,6 +356,53 @@ def graph_figures(site):
     }
 
 
+def coined_names_row(site):
+    """CAND-019: a name a generated file coins expands to a URI that file's publisher defines.
+
+    The rule is checkable from the published file alone: read the @context, expand every prefixed
+    name the file uses, and ask the document behind each expansion whether it carries that name.
+    A prefix that resolves to a page with no such anchor is a name that expands to nothing, which
+    is the defect AO-078 records.
+    """
+    graph = site.json("/graph.jsonld") or {}
+    ctx = graph.get("@context") or {}
+    prefixes = {k: v for k, v in ctx.items() if isinstance(v, str) and (v.endswith("#") or v.endswith("/"))}
+    used = set()
+
+    def walk(value):
+        if isinstance(value, dict):
+            for k, v in value.items():
+                if k == "@type" and isinstance(v, str):
+                    used.add(v)
+                walk(v)
+        elif isinstance(value, list):
+            for v in value:
+                walk(v)
+    walk(graph.get("@graph", []))
+    for key, v in ctx.items():
+        target = v.get("@id") if isinstance(v, dict) else v
+        if isinstance(target, str) and ":" in target and not target.startswith("http"):
+            used.add(target)
+
+    missing, checked = [], 0
+    pages = {}
+    for name in sorted(used):
+        prefix, _, local = name.partition(":")
+        if prefix not in prefixes:
+            continue  # a fully qualified term, or a name this file does not coin
+        checked += 1
+        base = prefixes[prefix]
+        page = base.rstrip("#")
+        if page not in pages:
+            pages[page] = site.text(as_path(page)) or ""
+        body = pages[page]
+        if ('id="%s"' % local) not in body:
+            missing.append("%s expands to %s%s, which that document does not define" % (name, base, local))
+    return row("Coined names resolve",
+               "Every name the published graph coins in its own namespace expands to a URI whose document defines it, so a machine client that expands the JSON-LD is not handed a type or a property that answers with nothing (`CAND-019`).",
+               checked, missing)
+
+
 def projection_parity(site, slugs):
     spec = site.json("/specification.json") or {}
     chapters = spec.get("chapters", [])
@@ -379,6 +429,7 @@ def recompute(site, today):
     rows = presence_rows(site, slugs, entries)
     rows.append(citation_parity(site, slugs))
     rows.append(ownership_row(site, slugs))
+    rows.append(coined_names_row(site))
     resolver, printed, page_count = resolver_rows(site, entries)
     rows += [resolver, printed]
     figures = graph_figures(site)

@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 18 September 2026
+**Last Updated:** 19 September 2026
 
 ---
 
@@ -343,3 +343,6 @@ This is a backlog, not a decision. No specification document has been changed. N
 | 0.1 | 17 September 2026 | EPIC-E note: the Requirement Register generator, the Alias File and the CI job exist (`tools/conformance/requirement_register.py`). |
 | 0.1 | 18 September 2026 | EPIC-A: correction note recording that the Definition-of-Done correction `CAND-007` Section 3 binds to this Epic, adding `Memory/Layered Memory.md` and `Memory/Retention.md`, was never written into the entry, and that the v1.0 disposition closed the Epic without naming either (`AO-069`). Found by a deep check of the architecture's internal logic. |
 | 0.1 | 18 September 2026 | EPIC-A: the v1.0 disposition extended to the two Memory documents the Freeze bound to this Epic; they do not block the claim and the contradiction stays open as `AO-069`. |
+
+**Scope note (19 September 2026):** this Epic's Definition of Done is recorded executed, so `CAND-007` Section 7 requires a note before work enters it again. Three Decisions of 19 September 2026 add documentation-currency work here and no other kind: `CAND-018` (a chapter's Source line declares which of three forms it takes, and the Compiled Publication tier states where the obligation sits), `CAND-019` (the Projection tier states that a generated file's coined names are local, with two checkable rules) and `CAND-017` (Known Gaps records that stewardship of the name is outside this specification). None adds a Core concept, changes a requirement or reopens the Definition of Done; the pattern is `CAND-010`'s.
+| 0.1 | 19 September 2026 | EPIC-F: scope note recording that the three Decisions of 19 September 2026 add documentation-currency work to an Epic whose Definition of Done is executed, per `CAND-007` Section 7. |

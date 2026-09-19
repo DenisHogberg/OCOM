@@ -75,8 +75,14 @@ def base_files():
     edges = [("https://ocom.uno/vocabulary/object#term", "https://ocom.uno/vocabulary/identity#term"),
              ("https://ocom.uno/vocabulary/identity#term", "https://ocom.uno/vocabulary/object#term")]
     nodes = [{"@id": "https://ocom.uno/vocabulary/%s#term" % t, "@type": "https://schema.org/DefinedTerm"} for t in TERMS]
-    nodes += [{"@type": "ocom:Reference", "from": a, "to": b} for a, b in edges]
-    j("/graph.jsonld", {"@context": {"ocom": "https://ocom.uno/"}, "@graph": nodes})
+    nodes += [{"@type": "graph:Edge", "from": a, "to": b} for a, b in edges]
+    # the names this file coins live in the publication's own namespace and the page below
+    # defines them, which is what CAND-019 requires and what the Coined names resolve row checks
+    j("/graph.jsonld", {"@context": {"graph": "https://ocom.uno/graph/names#",
+                                     "from": {"@id": "graph:from", "@type": "@id"},
+                                     "to": {"@id": "graph:to", "@type": "@id"}},
+                        "@graph": nodes})
+    h("/graph/names", "<html><body><h3 id=\"Edge\">Edge</h3><h3 id=\"from\">from</h3><h3 id=\"to\">to</h3></body></html>")
 
     locs = "".join("<url><loc>https://ocom.uno%s</loc></url>" % p for p in ["/vocabulary/%s" % t for t in TERMS])
     f["/sitemap.xml"] = ("application/xml", "<urlset>%s</urlset>" % locs)
