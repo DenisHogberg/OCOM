@@ -88,7 +88,7 @@ A machine-generated representation of a single canonical document, produced by t
 
 ## 4. Convenience Representation
 
-The homepage, `/changelog`, and `/comparisons/*` pages, together with the site-held informative records (`/why`, `/evidence-register`, `/specification/how-to-review`, `/api`, `/observatory` and their JSON records, whose canonical record lives in the external Publication Engine, not in this repository) — informative, illustrative, explicitly not carrying independent normative weight, and not required to cite a versioned canonical source the way a Projection of a specific term is.
+The homepage, `/changelog`, and `/comparisons/*` pages, together with the site-held informative records (`/why`, `/specification/how-to-review`, `/api`, `/observatory` and their JSON records, whose canonical record lives in the external Publication Engine, not in this repository; the Evidence Register left this tier on 19 September 2026 and is now the canonical `Governance/Evidence-Register.md`, per `CAND-022`, with its published URLs redirecting there) — informative, illustrative, explicitly not carrying independent normative weight, and not required to cite a versioned canonical source the way a Projection of a specific term is.
 
 ## 5. Consumer Tool
 
@@ -138,3 +138,4 @@ An interactive, read-only tool published on the site (currently one instance: `o
 | 0.1 | 18 September 2026 | Release track current value updated to `v1.3.0` and the Specification Version cell of the authoritative-source table from `0.2` to `1.0`; both had been stale since the 17 September 2026 release. |
 | 0.1 | 19 September 2026 | Step 2 of three Decisions of the same day: the Compiled Publication tier states what a chapter carries and which form its Source line declares (`CAND-018`); the Projection tier states that a generated file's coined names are local and carries the two rules that follow (`CAND-019`); Known Gaps records that stewardship of the name is outside this specification (`CAND-017`). |
 | 0.1 | 19 September 2026 | Known Gaps: the machine-facing files the Publication Engine never generated now have canonical sources under `publication/` and a checker (`AO-083`); the Compiled Publication tier records that the backward check of `CAND-018`'s three forms is now a build-time check, with the first survey's figures. |
+| 0.1 | 19 September 2026 | Tier 4: the Evidence Register is no longer a site-held record. `CAND-022` moved it to `Governance/Evidence-Register.md`, where it is versioned, reviewed and archived with each Release; `ocom.uno/evidence-register` and `/implementations` redirect to it. |

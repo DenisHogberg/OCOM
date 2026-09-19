@@ -229,7 +229,9 @@ def citation_parity(site, slugs):
 
 def published_records(site, slugs):
     """Every published JSON record this tool can enumerate from the site's own indexes."""
-    paths = ["/ownership.json", "/resolve.json", "/comparisons.json", "/evidence-register.json",
+    # /evidence-register.json left this list on 19 September 2026: `CAND-022` moved the record to
+    # `Governance/Evidence-Register.md` in the repository and the published path now redirects there
+    paths = ["/ownership.json", "/resolve.json", "/comparisons.json",
              "/specification.json", "/governance-candidates.json", "/citation-registry.json",
              "/uri-registry.json", "/glossary.json"]
     paths += ["/vocabulary/%s.json" % s for s in slugs]

@@ -24,7 +24,7 @@ This is a snapshot, not a normative document. For the full history and forward-l
 
 ## Current Version
 
-**v0.1 Core Specification** — Released.
+**Core Vocabulary v0.1**, released 21 July 2026. **Specification reading path v1.0**, 17 September 2026. **Constitution 1.0.1**. **Current Release v1.3.0**. The four tracks are defined in [`Governance/Publication-Model.md`](Governance/Publication-Model.md) and the Release is recorded in [`Governance/Publication-Manifest.md`](Governance/Publication-Manifest.md); the tables below are the 22 July 2026 snapshot and are left as written.
 
 ## Completed Subsystems
 
