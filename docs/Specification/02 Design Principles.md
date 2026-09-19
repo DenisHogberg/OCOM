@@ -6,11 +6,13 @@
 
 **Version:** 1.0
 
-**Last Updated:** 17 September 2026
+**Last Updated:** 19 September 2026
 
 ---
 
 These principles are normative and apply to every model created using this specification.
+
+These Principles operate within, and **shall not** contradict, the Canonical Principles of the OCOM Constitution (`Core/Constitution.md`).
 
 ## 1. Organization Before Technology
 
@@ -68,6 +70,7 @@ All models created using this specification **shall** conform to these principle
 | 0.2 | 22 July 2026 | Committee Review: an earlier draft retitled Principle 9 to "Interpretability"; the Architecture Committee directed reversion to the source title, on the basis that retitling a sourced principle is an architectural judgment requiring an ADR, not an editorial choice. |
 | 0.2 | 4 September 2026 | Resynchronised with `Core/Principles.md` after Principle 11 (ADR CAND-003, 23 July 2026) and the Constitution cross-references in Principles 2 and 6 (CAND-006) were added to the source; editorial recompilation, no content of its own. |
 | 1.0 | 17 September 2026 | Version label 1.0; the one sentence that departed from `Core/Principles.md` (an editorial count of the principles) restated verbatim; content otherwise unchanged and verified verbatim against `Core/Principles.md` as of this date. |
+| 1.0 | 19 September 2026 | The subordination sentence of `Core/Principles.md`, "These Principles operate within, and shall not contradict, the Canonical Principles of the OCOM Constitution", was missing from a chapter whose Source line declares verbatim compilation; compiled now. Found by the survey that `CAND-018` rests on. No requirement changed in any source document. |
 
 ---
 

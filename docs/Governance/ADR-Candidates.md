@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 18 September 2026
+**Last Updated:** 19 September 2026
 
 ---
 
@@ -1148,15 +1148,23 @@ It does not decide any of `CAND-004`'s seven questions, which carry their own di
 
 ---
 
-## CAND-017
+## CAND-017 · ✅ Decided in part
 
 **Title:** Stewardship of the Name OCOM and the Phrase OCOM-compatible
 
-**Status:** Open. Filed 18 September 2026 as a `CAND-007` Section 5 Freeze exception, on the Chief Architect's authorization recorded in `AO-071`.
+**Status:** Decided in part, 19 September 2026, on the form `CAND-014` set for a candidate decided in one layer with the rest gated. The half about a condition on a public conformance claim is answered in principle and its text is deferred for want of a second Reference Case. The half about a right in the name is answered by placing it outside the Specification. Filed 18 September 2026 as a `CAND-007` Section 5 Freeze exception, on the Chief Architect's authorization recorded in `AO-071`.
 
-**Owner:** Chief Architect
+**Decision:** **The question splits at the line between a condition on a claim and a right in a name.**
 
-**Created:** 18 September 2026
+**First, the condition.** What a public claim of conformance shall be accompanied by is a condition on the claim, and the specification already states conditions of that kind: `Language/Conformance.md` tells an implementation that fails a mandatory requirement that it shall not claim conformance, and requires a claim to identify the version it is made against. A rule about what a claim carries therefore belongs inside the Specification, at the Language tier, beside those clauses. The text of that rule is not written by this Decision. It is gated on the second, independent Reference Case that `RC-011` itself names as missing, under the standard `Standard Evolution Methodology.md` states as Repeatability Before Standardization and that `CAND-009` applied to itself as a non-Core Freeze exception. The natural second case is the first conformance declaration published from outside this repository.
+
+**Second, the right.** Who owns the words OCOM and OCOM-compatible, and what follows when a claim is false, is a right in a name. This specification holds no such right and neither license it publishes under grants one: `LICENSE` is Apache-2.0, whose Section 6 withholds permission to use the Licensor's marks, and the specification text under `docs/` is CC BY 4.0, whose Section 2(b)(2) states that trademark rights are not licensed. Whether any instrument outside this repository could create such a right is a legal judgment that `Core/Manifest.md`'s Scope excludes from this specification, and this Decision does not make it. That half is outside the Specification and outside what an architecture decision can decide: it is work for counsel and for the publication, and a mark, if one is ever obtained, is held outside the specification.
+
+**Third, the register of declarations is declined.** `Language/Conformance.md`'s Independence clause and the same exclusion compiled into `Specification/08 Conformance.md` both rule out compliance programs and certification schemes, and `CAND-002` decided on 16 September 2026 that OCOM "defines no profile, approves none, certifies none, and keeps no list of them". Nothing recorded since reopens either, so a list of declarations published by OCOM would contradict two standing decisions rather than extend them.
+
+**Owner:** Chief Architect (Decision recorded); integration into any document awaits separate authorization.
+
+**Created:** 18 September 2026 · **Decided:** 19 September 2026 · **Decided by:** Chief Architect
 
 **Grounding:** `AO-071` and its Reference Case `RC-011`; `Architecture-Release-Review-v1.0.md` Part 2, finding 2 (27 July 2026); `CAND-007` Section 5; `CAND-002`; `Governance/Conformance-Test-Suite.md`; `Governance/Requirement-Register.md`; `Language/Conformance.md`; `Governance/Concept-Paper-Profile-Conformance.md`; `LICENSE`.
 
@@ -1185,9 +1193,89 @@ The options are not exclusive: 2 and 3 compose, and 1 can be recorded alongside 
 
 It proposes no Core change and asserts no Core Impact: `RC-011` records Core Impact None. It does not decide whether OCOM is a trademark, and it does not authorize any document edit. It does not touch `CAND-002`, whose declaration form it relies on, and it does not reopen `Language/Conformance.md`'s definition of conformance. It says nothing about the second Section 5 candidate, the tamper-evidence guarantee for Memory and Evidence, which stays unfiled.
 
-**Next Action:** Two-step discipline, as used for `CAND-003`, `CAND-005`, `CAND-006`, `CAND-009`, `CAND-014`, `CAND-015`, `CAND-001` and `CAND-016`. Step 1 is this filing: the question, the grounding and the options are recorded and `AO-071` is Escalated to this candidate. Step 2 is a Chief Architect Decision, taken on its own and recorded here; integration into any document is authorized separately after that. A second Reference Case, ideally the first conformance declaration from an independent implementation, is what would make the Decision rest on more than the publication's own state.
+**Next Action:** Two-step discipline. Step 1 is done by the Decision above. Step 2, each item requiring its own separate authorization: record in `Governance/Publication-Model.md` or in this register that stewardship of the name is outside the Specification, so a reader meets the boundary where the question arises; leave `Language/Conformance.md` untouched until the second Reference Case exists; and, when it does, draft the claim rule as a Statement the Requirement Register can enumerate and the Test Suite can decide with a Declaration Test. Nothing about a mark is repository work.
 
 **Related Documents:** `AO-071`, `RC-011`, `CAND-002`, `CAND-007`, `Governance/Architecture-Release-Review-v1.0.md`, `Governance/Conformance-Test-Suite.md`, `Governance/Requirement-Register.md`, `Governance/Concept-Paper-Profile-Conformance.md`, `Language/Conformance.md`, `Core/Manifest.md`, `LICENSE`
+
+---
+
+## CAND-018 · ✅ Decided
+
+**Title:** What a Compiled Chapter Carries From Its Sources, and Where the Obligation Sits
+
+**Status:** ✅ Decided, 19 September 2026. Filed the same day on the record of `AO-077`.
+
+**Owner:** Chief Architect
+
+**Created:** 19 September 2026 · **Decided:** 19 September 2026 · **Decided by:** Chief Architect
+
+**Grounding:** `AO-077` (18 September 2026); `Governance/Publication-Model.md` (Publication Layers, tiers 1 and 2); `Specification/01 Introduction.md`; the Source lines of the nine chapters; `AO-051`; `AO-032`; `CAND-002`.
+
+### The question
+
+May a compiled chapter of `docs/Specification` abridge the documents its Source line names, or must it carry every mandatory Statement of them, and where does the obligation sit when a chapter omits one?
+
+The corpus answers three different ways today. Two chapters, 00 and 03, declare "synthesized from" and state that they add no claims. Seven declare "compiled from", and one of those, Chapter 02, adds "verbatim". Nothing says what any of the three forms obliges. `AO-077` found three obligations missing from Chapter 5, which are now compiled; the survey behind this candidate found a fourth, in Chapter 02, whose Source line declares verbatim compilation while the chapter dropped `Core/Principles.md`'s subordination sentence. That one is corrected as editorial work by the change that files this candidate, because a chapter that declares verbatim compilation and abridges is a defect under every option below.
+
+**Decision:** **A compiled chapter may abridge the documents its Source line names, and states no obligation of its own. The obligation lives in the canonical document, which `Publication-Model.md` calls the normative text and which Chapter 1 already calls the normative source of truth, so an omission from a chapter is a defect of the reading path and never a discharge of the requirement. A chapter's Source line shall say which of the three forms already in use it takes: `synthesized from`, the chapter carries none of its sources' Statements as obligations; `compiled from`, the chapter carries them in summary and may abridge; `compiled from ... verbatim`, the chapter carries every mandatory Statement of the sections it names. No Statement's binding force changes, none is added and none is removed.**
+
+### Rationale
+
+1. The tiering already says it. `Publication-Model.md` records the Compiled Publication as derived from the Canonical Source, and Chapter 1 tells a reader that the granular documents are the normative source of truth. A chapter that could discharge an obligation by omitting it would make the derived tier authoritative over its own source.
+2. The requirement set is already computed from documents, not from chapters. `Governance/Requirement-Register.md` enumerates the Statements of the 22 canonical documents that Chapters 4 to 6 compile, and `tools/conformance/requirement_register.py` reads those chapters only for their Source lines. Under this Decision that stays true and becomes stated rather than implied.
+3. Full fidelity costs more than it buys. Chapters 04 and 06 declare in their own text that they summarize and that domain patterns live elsewhere; requiring every mandatory Statement would make the reading path a second copy of the corpus, which is the drift `AO-051` records, and a backward check at Statement granularity would still have caught only one of the three omissions `AO-077` found, because two were items inside a Statement's list.
+4. Declaring the form is the part that changes anything. Today a reader cannot tell an abridgement from a defect. After this Decision, a chapter that declares verbatim and abridges is a defect anyone can find, and a chapter that declares `compiled from` is honest about what it is.
+
+### Scope, and the Architecture Freeze
+
+Filed under `CAND-007`. Section 4 is untouched item by item: no new Core concept, no Constitution amendment, no change to Object, Memory, Evidence or the Knowledge derivation, and no requirement added, removed or reworded. The work this Decision authorizes is editorial and presentational work on `Specification/`, which Section 3 permits and `Master-Architecture-Backlog.md` EPIC-F already names. EPIC-F's Definition of Done is recorded executed, so Section 7 requires a scope note on that Epic before any document is edited, on the pattern `CAND-010` used.
+
+### What this Decision does not do
+
+It does not decide what "all mandatory requirements defined in Chapters 4 to 6" means for a conformance claim; `CAND-002` narrowed that reading for profile declarations only and `CAND-017` defers the general question. It does not build the backward check `AO-077` asks for, and it does not make one obligatory. It does not change any chapter's Status, which is `AO-051`'s question and is not decided here.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording the Decision, after which `AO-077` moves to Open in part with its Architect Response pointing here. Step 2, each item requiring its own separate authorization: the EPIC-F scope note; a sentence in `Publication-Model.md`'s Compiled Publication tier stating the rule; the three Source lines that do not yet state their form; and a survey of the remaining chapters against their sources, which is where a backward check would start if one is ever built.
+
+**Related Documents:** `AO-077`, `AO-051`, `AO-032`, `AO-062`, `CAND-002`, `CAND-007`, `CAND-010`, `Governance/Publication-Model.md`, `Governance/Requirement-Register.md`, `Governance/Master-Architecture-Backlog.md` (EPIC-F), `Specification/01 Introduction.md`, `Specification/02 Design Principles.md`
+
+---
+
+## CAND-019 · ✅ Decided
+
+**Title:** What the Published Graph's Prefixed Names Assert
+
+**Status:** ✅ Decided, 19 September 2026. Filed the same day on the record of `AO-078`.
+
+**Owner:** Chief Architect
+
+**Created:** 19 September 2026 · **Decided:** 19 September 2026 · **Decided by:** Chief Architect
+
+**Grounding:** `AO-078` (18 September 2026); `AO-057`; `AO-054`; `AO-045`; `AO-064`; `Meta/Reference.md`; `Meta/Relationship.md`; `Governance/Publication-Model.md` (Projection tier and Known Gaps); `https://ocom.uno/graph.jsonld` as published on 19 September 2026.
+
+### The question
+
+`graph.jsonld` declares `"ocom": "https://ocom.uno/vocabulary#"` and types its 83 edges `ocom:Reference` and its 7 governance candidates `ocom:ReferencedConcept`. Neither expands to anything the site defines. Behind the dangling URI sits the real question: does the publication assert that a cross reference between two term cards is an instance of the governed term Reference, defined in `Meta/Reference.md` and published at `https://ocom.uno/vocabulary/reference#term`? If it does, a generated file has decided that term cards are Objects. If it does not, the file borrows a governed term's name for something else, on the site that defines the term.
+
+**Decision:** **The prefixed names in the publication's generated files are local names of the publication. They assert nothing about the Core Vocabulary and they create no governed term: the publication does not claim that an edge of that graph is a Reference in the sense of `Meta/Reference.md`, and nothing in this repository establishes that it is. Two rules follow for the machine-readable files the publication produces. First, a name a generated file coins shall expand to a URI that file's own publisher defines, or the file shall use a fully qualified term from a vocabulary that defines it. Second, a generated file shall not reuse the name of a governed Core Vocabulary term for a local construct, because a reader cannot tell the borrowing from a claim.**
+
+### Rationale
+
+1. The specification cannot afford the other reading. If an edge were an instance of the governed term Reference, then term cards would be Objects and a projection would have settled a Core question, which `CAND-007` Section 4 and the Standard Evolution Methodology both place behind a Reference Case.
+2. The file already knows how to do this. Its other two node types are `https://schema.org/DefinedTerm` and `https://schema.org/DefinedTermSet`, fully qualified and resolvable. The defect is confined to the names the publication minted for itself.
+3. The rules are checkable, which is the test this repository applies to its own machinery. A row in `tools/site/publication_health.py` can fetch the graph, expand every prefixed name and fail when one resolves to nothing the publisher defines, with a negative test in `tools/tests/` beside the others.
+4. It leaves `AO-057` where it is. That entry records that the edges carry neither an identifier nor a Relationship type; this Decision says what their type does not assert and does not supply the missing one.
+
+### Scope, and the Architecture Freeze
+
+Filed under `CAND-007`. Section 4 is untouched: no Core concept is created or changed, and recording that a generated file's local names assert nothing removes nothing from the Core. The edits the Decision would authorize are to a generated file produced outside this repository and to this repository's own tooling and Governance records, which Section 3 permits as presentational and currency work under EPIC-F, subject to the same Section 7 scope note `CAND-018` needs.
+
+### What this Decision does not do
+
+It does not decide what an edge of the published graph is, which is `AO-057`'s question. It does not add a term, a type or a namespace to the Core Vocabulary. It does not change `Meta/Reference.md` or `Meta/Relationship.md`. It does not make the external Publication Engine regenerate anything: `FW-006` records that this repository cannot compel it, and the check proposed here reports the state rather than enforcing it.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording the Decision, after which `AO-078` moves to Open in part. Step 2, each item separately authorized: the EPIC-F scope note; the rule sentence in `Publication-Model.md`; the new row and its negative test in the health tool; and the regeneration of `graph.jsonld` itself, which is publication work and is verified by running the tool against the live site.
+
+**Related Documents:** `AO-078`, `AO-057`, `AO-054`, `AO-045`, `AO-064`, `FW-006`, `CAND-007`, `CAND-018`, `Governance/Publication-Model.md`, `tools/site/publication_health.py`, `tools/tests/fake_site.py`
 
 ---
 
@@ -1235,3 +1323,5 @@ It proposes no Core change and asserts no Core Impact: `RC-011` records Core Imp
 | 0.1 | 16 September 2026 | CAND-015: second postscript recording that six shall-sentences of `Domains/Common/Domain.md` have no counterpart in `Models/Domain.md`, contrary to the Decision's premise for those sentences; they bind nothing as the document is Informative. |
 | 0.1 | 18 September 2026 | CAND-014: postscript recording that the Chief Architect extended the v1.0 EPIC-A disposition to `Memory/Layered Memory.md` and `Memory/Retention.md`, with the contradiction left open as `AO-069`. |
 | 0.1 | 18 September 2026 | Added CAND-017 (Stewardship of the Name OCOM and the Phrase OCOM-compatible), Open, filed as a `CAND-007` Section 5 Freeze exception from `AO-071` and `RC-011`; CAND-007 gained a postscript recording that one of its two named Section 5 candidates is now filed. |
+| 0.1 | 19 September 2026 | Added CAND-018 (what a compiled chapter carries from its sources) and CAND-019 (what the published graph's prefixed names assert), both Open, each carrying a proposed Decision text for the Chief Architect to record or to change; `AO-077` and `AO-078` are Escalated to them. |
+| 0.1 | 19 September 2026 | CAND-017 Decided in part: a condition on a public conformance claim is inside scope at the Language tier with its text gated on a second Reference Case, a right in the name is outside the Specification, and a register of declarations is declined. CAND-018 and CAND-019 Decided as filed. |

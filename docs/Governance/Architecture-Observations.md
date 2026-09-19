@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 18 September 2026
+**Last Updated:** 19 September 2026
 
 ---
 
@@ -1618,7 +1618,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only, and note that this entry files nothing: `CAND-007` Section 5 reserves filing for a separate authorization, and this register does not grant it. The Chief Architect decides whether the stewardship question belongs to the Specification at all, given that `Core/Manifest.md` excludes business strategy from scope, or belongs to the publication rather than to the model.
 
-**Status:** Escalated to `CAND-017` (Stewardship of the Name OCOM and the Phrase OCOM-compatible), filed 18 September 2026 as a `CAND-007` Section 5 Freeze exception. The candidate now holds the question and the Architect Response to it is recorded there.
+**Status:** Open in part. `CAND-017` (Decided in part, 19 September 2026) records that the right in the name is outside the Specification, which is one of the two conditions this entry named. The other half, what a public claim of conformance shall carry, is inside scope at the Language tier and its text is gated on a second, independent Reference Case, so this entry stays open until one exists.
 
 **Architect Response:** Chief Architect, 18 September 2026. Filing authorized under `CAND-007` Section 5. The condition the Release Review attached has occurred, the question does not fit inside any existing Epic by that review's own statement, and it is therefore escalated through the pipeline rather than absorbed into ordinary Backlog work. Two limits are recorded with the authorization: it authorizes the filing and no document change, and the Core Impact of the case is None, so nothing here reaches Object, Memory, Evidence or the Knowledge derivation that Section 4 protects. The second candidate named in Section 5, the absence of a tamper-evidence guarantee for Memory and Evidence, is not filed by this authorization and stays where Section 5 left it.
 
@@ -1714,15 +1714,15 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Date observed:** 18 September 2026
 
-**Description:** Surfaced by a deep test of the repository and the site (18 September 2026). The traceability check run on 17 September 2026 for the v1.0 recompilation, and the discipline the chapters record in their Revision Histories, both run in one direction: every sentence of a chapter is traced to a sentence of a source document. Nothing runs the other way, from each mandatory Statement of a source document to the chapter that compiles it. Three obligations were therefore missing from `Specification/05 Object Model.md` while every sentence it carried traced correctly: the ninth item of `Models/Entity.md`'s "Every Entity shall" list ("be governed by the rules of this specification"), the fifth of its prohibitions ("have ambiguous meaning"), and all four prohibitions of `Models/Relationship.md:122-128`. They are compiled into the chapter by the change that records this entry. `Governance/Requirement-Register.md` enumerates the Statements of the 22 canonical documents, so the raw material for a backward check exists; nothing consumes it that way.
+**Description:** Surfaced by a deep test of the repository and the site (18 September 2026). The traceability check run on 17 September 2026 for the v1.0 recompilation, and the discipline the chapters record in their Revision Histories, both run in one direction: every sentence of a chapter is traced to a sentence of a source document. Nothing runs the other way, from each mandatory Statement of a source document to the chapter that compiles it. Three obligations were therefore missing from `Specification/05 Object Model.md` while every sentence it carried traced correctly: the ninth item of `Models/Entity.md`'s "Every Entity shall" list ("be governed by the rules of this specification"), the fifth of its prohibitions ("have ambiguous meaning"), and all four prohibitions of `Models/Relationship.md:122-128`. They are compiled into the chapter by the change that records this entry. A fourth instance was found on 19 September 2026 while preparing `CAND-018` and is corrected by the change that files it: `Specification/02 Design Principles.md`, whose Source line declares verbatim compilation, did not carry `Core/Principles.md`'s subordination sentence, "These Principles operate within, and shall not contradict, the Canonical Principles of the OCOM Constitution". `Governance/Requirement-Register.md` enumerates the Statements of the 22 canonical documents, so the raw material for a backward check exists; nothing consumes it that way.
 
 **Impact:** A reader of the published reading path, which the site presents as the way into the specification, could satisfy every requirement the chapter states and still miss a mandatory prohibition the canonical source carries. The gap is not visible to any check the repository runs: the forward trace passes, the publication-metadata job compares versions and dates, and the Requirement Register is derived from the canonical documents rather than from the chapters, so a Statement missing from a chapter changes nothing it computes. Three instances were found in one chapter by reading; how many the other eight chapters carry is unknown.
 
 **Recommendation:** Record only. The mechanical form of the check is available and cheap: for each chapter, the Source line names its documents, and every mandatory Statement of those documents should be represented in the chapter, which a human can review as a list of candidates rather than a pass or fail. If corroborated, a future Reference Case should state whether a compiled chapter is required to carry every mandatory Statement of its sources or is permitted to abridge them, because the chapters currently do both without saying which.
 
-**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when a backward check exists, or when the Chief Architect records that a chapter may abridge its sources and says on what rule.
+**Status:** Open in part. `CAND-018` (Decided 19 September 2026) answers where the obligation sits: a chapter may abridge, states no obligation of its own, and an omission from it is a defect of the reading path rather than a discharge. What stays open is the other half of this entry's condition, the backward check, which does not exist and which the Decision does not make obligatory.
 
-**Architect Response:** *(pending)*
+**Architect Response:** Chief Architect, 19 September 2026, recorded in `CAND-018`. The four instances this entry names are corrected; the question of whether any check runs from source to chapter is separate from the rule and remains open.
 
 **Related:** `Specification/05 Object Model.md`, `Models/Entity.md`, `Models/Relationship.md`, `Governance/Requirement-Register.md`, `Governance/Conformance-Test-Suite.md`, `AO-032`, `AO-051`, `AO-062`
 
@@ -1740,9 +1740,9 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only, because the answer is a decision about what the published graph asserts rather than an editorial fix. Two routes: bind the prefix to the term set, so `ocom:Reference` expands to the published Reference term and the graph asserts that an edge is an instance of it, or rename the two types to something the graph defines for itself and publish those definitions. Either changes what the projection claims, which is why this entry proposes neither.
 
-**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the two types expand to URIs the site defines, or when the Chief Architect records that the graph's types are local names that assert nothing.
+**Status:** Open in part. `CAND-019` (Decided 19 September 2026) answers what the names assert: they are local names of the publication, they create no governed term, and nothing claims that an edge is the governed term Reference. What stays open is the first half of this entry's condition, that the two types still expand to URIs the site defines nowhere, which is publication work the Decision's step 2 covers.
 
-**Architect Response:** *(pending)*
+**Architect Response:** Chief Architect, 19 September 2026, recorded in `CAND-019`.
 
 **Related:** `Governance/Publication-Model.md`, `Meta/Reference.md`, `Meta/Relationship.md`, `AO-057`, `AO-054`, `AO-064`
 
@@ -1791,3 +1791,5 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 18 September 2026 | AO-074: Status now Open in part, the principle-to-rule map it asks for exists as `Governance/Principle-Traceability.md`; a dated note records that the map found carriers for Principles 2, 9 and 11 in words this entry did not search, and that its central claim stands. AO-073 points at the map's row for Principle 6. |
 | 0.1 | 18 September 2026 | Added AO-077 (the compiled reading path is checked forward and never backward; three obligations were missing from Chapter 5 and are now compiled). A Numbering section records that AO-072 is reserved rather than missing. Found by a deep test of the repository and the site. |
 | 0.1 | 18 September 2026 | Added AO-078 (the published graph types its 83 edges and 7 governance candidates with a prefix that expands to URIs the site defines nowhere). Found by a deep test of the repository and the site. |
+| 0.1 | 19 September 2026 | AO-077 Escalated to `CAND-018` and AO-078 to `CAND-019`, both filed Open with a proposed Decision; AO-077 records a fourth instance, the subordination sentence missing from Chapter 02, corrected in the same change. |
+| 0.1 | 19 September 2026 | AO-077 and AO-078 Open in part with Architect Responses recorded in `CAND-018` and `CAND-019`; AO-071 Open in part, `CAND-017` having placed the right in the name outside the Specification and gated the claim rule on a second Reference Case. |
