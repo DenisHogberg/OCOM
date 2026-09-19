@@ -1283,15 +1283,15 @@ It does not decide what an edge of the published graph is, which is `AO-057`'s q
 
 ---
 
-## CAND-020
+## CAND-020 · ✅ Decided
 
 **Title:** Which of Two Mandatory Statements About Lifecycle Cardinality a Conformance Claim Is Measured Against
 
-**Status:** Open. Filed 19 September 2026 on the record of `AO-079`. The Decision text below is proposed and is not recorded.
+**Status:** ✅ Decided, 19 September 2026, on the record of `AO-079`. The wording was prepared by the CDKO and adopted without change; the choice between the options recorded below was delegated to that recommendation and taken on it.
 
-**Owner:** Chief Architect
+**Owner:** Chief Architect (Decision recorded); each integration item separately authorized
 
-**Created:** 19 September 2026 · **Decided:** *(pending)*
+**Created:** 19 September 2026 · **Decided:** 19 September 2026 · **Decided by:** Chief Architect
 
 **Grounding:** `AO-079` (19 September 2026); `AO-028` (5 September 2026); `Models/Lifecycle.md` (Characteristics); `Lifecycles/Lifecycles.md` (Principles); `Governance/Requirement-Register.md`; `Governance/Requirement-Aliases.md`; `Governance/Conformance-Test-Suite.md` Sections 1, 2 and 3; `Specification/06 Lifecycle Model.md`; `CAND-015`.
 
@@ -1299,9 +1299,7 @@ It does not decide what an edge of the published graph is, which is `AO-057`'s q
 
 Two mandatory Statements of the requirement set contradict each other. `REQ-MODELS-LIFECYCLE-002`, from `Models/Lifecycle.md`, requires every Lifecycle to "belong to exactly one Entity". `REQ-LIFECYCLES-004`, from `Lifecycles/Lifecycles.md`, requires every Lifecycle to "be reusable by multiple Entities". Both documents are inside the twenty-two that Chapters 4 to 6 compile, and `Specification/08 Conformance.md` defines Core Conformance as support for all mandatory requirements of those chapters, so the published level cannot be attained by any model. Which Statement binds a claimant while `AO-028`, which records the underlying divergence, waits for the Reference Case that would settle it?
 
-### Proposed Decision, for the Chief Architect to record or to change
-
-**A claimant is measured against `REQ-MODELS-LIFECYCLE-002`. `REQ-LIFECYCLES-004` carries the Disposition Descriptive in `Governance/Requirement-Aliases.md`, with the note that it states the design intent of the reusable lifecycle patterns rather than an obligation on a Lifecycle in a conforming model, and a Test on it reports Not Applicable, which `Governance/Conformance-Test-Suite.md` already defines for a Statement dispositioned Descriptive. This settles which Statement binds and settles nothing else: no canonical document changes, both sentences stand as written, and `AO-028`'s question, whether Lifecycle names the reusable definition or the per-Entity progression, stays open and still needs a Reference Case.**
+**Decision:** **A claimant is measured against `REQ-MODELS-LIFECYCLE-002`. `REQ-LIFECYCLES-004` carries the Disposition Descriptive in `Governance/Requirement-Aliases.md`, with the note that it states the design intent of the reusable lifecycle patterns rather than an obligation on a Lifecycle in a conforming model, and a Test on it reports Not Applicable, which `Governance/Conformance-Test-Suite.md` already defines for a Statement dispositioned Descriptive. This settles which Statement binds and settles nothing else: no canonical document changes, both sentences stand as written, and `AO-028`'s question, whether Lifecycle names the reusable definition or the per-Entity progression, stays open and still needs a Reference Case.**
 
 ### Rationale
 
@@ -1324,15 +1322,15 @@ It does not decide `AO-028`. It does not say that a Lifecycle may not be reusabl
 
 ---
 
-## CAND-021
+## CAND-021 · ✅ Decided
 
 **Title:** Where the Sentence That Scopes Core Conformance Lives
 
-**Status:** Open. Filed 19 September 2026 on the record of `AO-080`. The Decision text below is proposed and is not recorded.
+**Status:** ✅ Decided, 19 September 2026, on the record of `AO-080`. The wording was prepared by the CDKO and adopted without change; the choice between the options recorded below was delegated to that recommendation and taken on it.
 
-**Owner:** Chief Architect
+**Owner:** Chief Architect (Decision recorded); each integration item separately authorized
 
-**Created:** 19 September 2026 · **Decided:** *(pending)*
+**Created:** 19 September 2026 · **Decided:** 19 September 2026 · **Decided by:** Chief Architect
 
 **Grounding:** `AO-080` (19 September 2026); `CAND-018` (Decided 19 September 2026); `CAND-002`; `Language/Conformance.md` (Conformance Levels); `Specification/08 Conformance.md`; `Governance/Conformance-Test-Suite.md` Section 1; `Governance/Requirement-Register.md`; `Governance/Principle-Traceability.md`; `AO-014`; `AO-032`.
 
@@ -1340,9 +1338,7 @@ It does not decide `AO-028`. It does not say that a Lifecycle may not be reusabl
 
 `Language/Conformance.md`, the canonical document, defines the level as "Supports all mandatory language requirements". `Specification/08 Conformance.md`, a compiled chapter, defines it as "supports all mandatory requirements defined in Chapters 4 to 6". `CAND-018` decided that a compiled chapter states no obligation of its own, so the second sentence now originates nothing, while the requirement set, the Test Suite and the traceability map all compute from it. Where does the scoping sentence live?
 
-### Proposed Decision, for the Chief Architect to record or to change
-
-**The canonical definition of Core Conformance is the one in `Language/Conformance.md`. Chapter 8's sentence names where those requirements are found and originates nothing, consistently with `CAND-018`. The enumeration in `Governance/Requirement-Register.md`, the twenty-two documents Chapters 4 to 6 compile, is the operative reading adopted for the Conformance Test Suite and for claims measured by it, which `Conformance-Test-Suite.md` Section 1 already records for itself, and every artifact that computes from it shall say so rather than citing the chapter as the origin. Whether that reading becomes canonical text in `Language/Conformance.md` is deferred: it is a change to a canonical document, it is the same question `CAND-002` narrowed for profile declarations and `CAND-017` deferred for public claims, and it waits on the same second Reference Case.**
+**Decision:** **The canonical definition of Core Conformance is the one in `Language/Conformance.md`. Chapter 8's sentence names where those requirements are found and originates nothing, consistently with `CAND-018`. The enumeration in `Governance/Requirement-Register.md`, the twenty-two documents Chapters 4 to 6 compile, is the operative reading adopted for the Conformance Test Suite and for claims measured by it, which `Conformance-Test-Suite.md` Section 1 already records for itself, and every artifact that computes from it shall say so rather than citing the chapter as the origin. Whether that reading becomes canonical text in `Language/Conformance.md` is deferred: it is a change to a canonical document, it is the same question `CAND-002` narrowed for profile declarations and `CAND-017` deferred for public claims, and it waits on the same second Reference Case.**
 
 ### Rationale
 
@@ -1414,3 +1410,4 @@ It does not move the scoping sentence into `Language/Conformance.md`, and it doe
 | 0.1 | 19 September 2026 | CAND-017, CAND-018 and CAND-019: postscripts recording the step 2 items done the same day (the EPIC-F scope note, the two tier rules and the Known Gaps entry) and naming what each leaves open. |
 | 0.1 | 19 September 2026 | CAND-019: postscript updated, every step 2 item is done and `AO-078` is Closed on the evidence the tool reports against the live site. |
 | 0.1 | 19 September 2026 | Added CAND-020 (which of two contradicting mandatory Statements a conformance claim is measured against) and CAND-021 (where the sentence that scopes Core Conformance lives), both Open, each carrying a proposed Decision; `AO-079` and `AO-080` are Escalated to them. |
+| 0.1 | 19 September 2026 | CAND-020 and CAND-021 Decided as drafted: a claimant is measured against `REQ-MODELS-LIFECYCLE-002` with `REQ-LIFECYCLES-004` dispositioned Descriptive, and the canonical definition of Core Conformance is `Language/Conformance.md`'s while the twenty-two-document enumeration is the suite's reading. |

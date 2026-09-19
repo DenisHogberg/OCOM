@@ -20,7 +20,7 @@
 
 # Purpose
 
-This file is the Requirement Register that Section 2 of `Conformance-Test-Suite.md` specifies: every Statement derived by rule from the documents Chapters 4, 5 and 6 of the reading path compile, each with its class and its content-addressed identity. It is a derived artifact in the sense `AO-064` uses and adds nothing to the documents it reads; a Statement is what its source document says, nothing more. Aliases and Dispositions live in `Requirement-Aliases.md`, the one hand-written file of the suite.
+This file is the Requirement Register that Section 2 of `Conformance-Test-Suite.md` specifies: every Statement derived by rule from the documents Chapters 4, 5 and 6 of the reading path compile, with a stable alias, the tier its keyword sets and the identity of its text. Core Conformance itself is defined by `Language/Conformance.md`; this enumeration is the reading adopted for the suite, per `CAND-021` of 19 September 2026, and the chapters name where the requirements are found rather than originating them.
 
 ---
 

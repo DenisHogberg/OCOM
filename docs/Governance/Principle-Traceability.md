@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 18 September 2026
+**Last Updated:** 19 September 2026
 
 ---
 
@@ -47,7 +47,7 @@ The **verdict** follows from the carriers, not from intent:
 - **reserved**: the principle rests on a term the specification itself records as undefined.
 - **no occurrence**: the principle appears nowhere outside the Constitution.
 
-**In conformance scope** answers a narrower question. `Specification/08 Conformance.md` defines Core Conformance as support for all mandatory requirements of Chapters 4 to 6, and `Governance/Requirement-Register.md` enumerates those requirements from the twenty-two documents those chapters compile. A binding rule in `Memory/`, `Language/`, `AI/`, `Domains/` or `Entities/` binds nothing at any conformance level, which `AO-032` records. A row therefore says **yes** only when a binding carrier sits inside those twenty-two documents.
+**In conformance scope** answers a narrower question. `Language/Conformance.md` defines Core Conformance as support for all mandatory language requirements, `Specification/08 Conformance.md` names where those requirements are found, and `Governance/Requirement-Register.md` enumerates them from the twenty-two documents Chapters 4 to 6 compile, which `CAND-021` records as the reading adopted for the suite. A binding rule in `Memory/`, `Language/`, `AI/`, `Domains/` or `Entities/` binds nothing at any conformance level, which `AO-032` records. A row therefore says **yes** only when a binding carrier sits inside those twenty-two documents.
 
 Where a carrier is a Statement of the Requirement Register, the row names its alias, so the rule, the Test and the claim share one identifier.
 
@@ -403,3 +403,4 @@ Three things follow, none of them decided here. A profile is the existing mechan
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 18 September 2026 | First table, produced by fourteen independent passes over the canonical tiers, each adversarially verified, per the recommendation of `AO-074`. Checked by `tools/governance/principle_traceability.py`. |
+| 0.1 | 19 September 2026 | How to Read It now cites `Language/Conformance.md` for the definition of Core Conformance and names the twenty-two-document enumeration as the suite's reading, per `CAND-021`. |
