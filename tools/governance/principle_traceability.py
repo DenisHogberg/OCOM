@@ -153,6 +153,9 @@ def check():
                 failures.append("Principle %d: %s has no line %s" % (n, path, lineno))
                 continue
             text = quote.strip().strip('"')
+            if not text:
+                failures.append("Principle %d: %s:%s carries no quote, so nothing is checked" % (n, path, lineno))
+                continue
             if text not in source:
                 failures.append("Principle %d: %s:%s does not carry %r" % (n, path, lineno, text[:60]))
             if kind == "absent":

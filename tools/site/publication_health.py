@@ -278,7 +278,10 @@ def resolver_rows(site, entries):
                    2 * len(entries), missing)
 
     printed, unregistered = set(), []
-    sitemap = site.text("/sitemap.xml") or ""
+    sitemap = site.text("/sitemap.xml")
+    if not sitemap:
+        raise SystemExit("cannot read %s/sitemap.xml: the printed-identifier row harvests from the "
+                         "pages it lists, so an empty page list would report a pass over nothing" % site.base)
     pages = [as_path(u) for u in re.findall(r"<loc>([^<]+)</loc>", sitemap)]
     label = re.compile(r"(?:class=\"(?:attr|k)\"[^>]*>|<dt[^>]*>)\s*(?:Identifier|Record|URI|Document ID)\s*<")
     value = re.compile(r"([A-Za-z][A-Za-z0-9:.\-]{4,60})")
@@ -321,7 +324,8 @@ def graph_figures(site):
     graph = site.json("/graph.jsonld") or {}
     nodes = graph.get("@graph", [])
     terms = [n for n in nodes if n.get("@type") == "https://schema.org/DefinedTerm"]
-    concepts = [n for n in nodes if str(n.get("@type", "")).endswith("ReferencedConcept")]
+    # like edges, a referenced concept is recognised by what it carries: a definition elsewhere
+    concepts = [n for n in nodes if n.get("definedAt") or str(n.get("@type", "")).endswith("ReferencedConcept")]
     # An edge is a node that carries from and to. Matching on the type name tied this tool to
     # one spelling of a name the publication coins for itself, which CAND-019 says is local and
     # may be renamed; the shape is what the figures actually depend on.
@@ -368,16 +372,25 @@ def coined_names_row(site):
     ctx = graph.get("@context") or {}
     prefixes = {k: v for k, v in ctx.items() if isinstance(v, str) and (v.endswith("#") or v.endswith("/"))}
     used = set()
+    known = tuple(p + ":" for p in prefixes)
 
     def walk(value):
+        """Collect every prefixed name, wherever it sits.
+
+        Reading @type alone saw 8 of the names this file uses: a prefixed name can also be an @id,
+        a value of a property, or an item of a list, and a check that looks in one position reports
+        a count that sounds complete and is not.
+        """
         if isinstance(value, dict):
             for k, v in value.items():
-                if k == "@type" and isinstance(v, str):
-                    used.add(v)
+                if isinstance(k, str) and k.startswith(known):
+                    used.add(k)
                 walk(v)
         elif isinstance(value, list):
             for v in value:
                 walk(v)
+        elif isinstance(value, str) and value.startswith(known):
+            used.add(value)
     walk(graph.get("@graph", []))
     for key, v in ctx.items():
         target = v.get("@id") if isinstance(v, dict) else v
@@ -524,8 +537,11 @@ def main(argv):
     live_p = site.json("/observatory/publication-health.json") or {}
     diffs = []
     # Compare every figure the record publishes, not a chosen six: a check that reads six of
-    # eleven fields passes while the record is wrong in the other five.
-    skip = {"checkedAt", "computedBy", "notes", "missingReverseEdges", "projectionParity", "carriedForward"}
+    # eleven fields passes while the record is wrong in the other five. Four keys are compared
+    # separately or not at all, and each for a reason: checkedAt and computedBy are stamps rather
+    # than figures, notes is prose, and projectionParity is compared field by field below.
+    # missingReverseEdges is a list and is compared here like any other value.
+    skip = {"checkedAt", "computedBy", "notes", "projectionParity", "carriedForward"}
     for key in sorted(set(health) | set(live_h)):
         if key in skip:
             continue
