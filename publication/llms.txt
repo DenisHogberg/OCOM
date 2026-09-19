@@ -18,7 +18,7 @@ OCOM is a specification, not a product. Published in the RFC tradition under an 
 - Machine-readable citation record: https://github.com/DenisHogberg/OCOM/blob/main/CITATION.cff
 - Origin story and motivation: https://ocom.uno/why
 - Wikidata item for the specification: https://www.wikidata.org/wiki/Q141439683
-- Status: Core Vocabulary v0.1 (released 2026-07-21, 13 governed terms); Specification sequential reading path v1.0 (17 September 2026, nine chapters); Constitution 1.0.1; current Release v1.3.0 (DOI 10.5281/zenodo.22809694). Governance and the reading path are baselined, which means reviewed and frozen pending the documented change process; terminology and scope change only through that process.
+- Status: current Release v1.3.0 (17 September 2026, DOI 10.5281/zenodo.22809694); Specification sequential reading path v1.0, nine chapters; Constitution 1.0.1; Core Vocabulary of 13 governed terms, released 2026-07-21. Governance and the reading path are baselined, which means reviewed and frozen pending the documented change process; terminology and scope change only through that process.
 
 ## Why not BPMN, ArchiMate, DDD, or a knowledge graph
 
