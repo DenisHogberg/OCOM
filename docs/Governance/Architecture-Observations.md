@@ -1618,7 +1618,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only, and note that this entry files nothing: `CAND-007` Section 5 reserves filing for a separate authorization, and this register does not grant it. The Chief Architect decides whether the stewardship question belongs to the Specification at all, given that `Core/Manifest.md` excludes business strategy from scope, or belongs to the publication rather than to the model.
 
-**Status:** Escalated to `CAND-017` (Stewardship of the Name OCOM and the Phrase OCOM-compatible), filed 18 September 2026 as a `CAND-007` Section 5 Freeze exception. The candidate now holds the question and the Architect Response to it is recorded there.
+**Status:** Open in part. `CAND-017` (Decided in part, 19 September 2026) records that the right in the name is outside the Specification, which is one of the two conditions this entry named. The other half, what a public claim of conformance shall carry, is inside scope at the Language tier and its text is gated on a second, independent Reference Case, so this entry stays open until one exists.
 
 **Architect Response:** Chief Architect, 18 September 2026. Filing authorized under `CAND-007` Section 5. The condition the Release Review attached has occurred, the question does not fit inside any existing Epic by that review's own statement, and it is therefore escalated through the pipeline rather than absorbed into ordinary Backlog work. Two limits are recorded with the authorization: it authorizes the filing and no document change, and the Core Impact of the case is None, so nothing here reaches Object, Memory, Evidence or the Knowledge derivation that Section 4 protects. The second candidate named in Section 5, the absence of a tamper-evidence guarantee for Memory and Evidence, is not filed by this authorization and stays where Section 5 left it.
 
@@ -1720,9 +1720,9 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. The mechanical form of the check is available and cheap: for each chapter, the Source line names its documents, and every mandatory Statement of those documents should be represented in the chapter, which a human can review as a list of candidates rather than a pass or fail. If corroborated, a future Reference Case should state whether a compiled chapter is required to carry every mandatory Statement of its sources or is permitted to abridge them, because the chapters currently do both without saying which.
 
-**Status:** Escalated to `CAND-018` (What a Compiled Chapter Carries From Its Sources, and Where the Obligation Sits), filed Open on 19 September 2026. The candidate holds the question and carries a proposed Decision; the Architect Response to this entry is recorded there when the Decision is taken.
+**Status:** Open in part. `CAND-018` (Decided 19 September 2026) answers where the obligation sits: a chapter may abridge, states no obligation of its own, and an omission from it is a defect of the reading path rather than a discharge. What stays open is the other half of this entry's condition, the backward check, which does not exist and which the Decision does not make obligatory.
 
-**Architect Response:** *(pending)*
+**Architect Response:** Chief Architect, 19 September 2026, recorded in `CAND-018`. The four instances this entry names are corrected; the question of whether any check runs from source to chapter is separate from the rule and remains open.
 
 **Related:** `Specification/05 Object Model.md`, `Models/Entity.md`, `Models/Relationship.md`, `Governance/Requirement-Register.md`, `Governance/Conformance-Test-Suite.md`, `AO-032`, `AO-051`, `AO-062`
 
@@ -1740,9 +1740,9 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only, because the answer is a decision about what the published graph asserts rather than an editorial fix. Two routes: bind the prefix to the term set, so `ocom:Reference` expands to the published Reference term and the graph asserts that an edge is an instance of it, or rename the two types to something the graph defines for itself and publish those definitions. Either changes what the projection claims, which is why this entry proposes neither.
 
-**Status:** Escalated to `CAND-019` (What the Published Graph's Prefixed Names Assert), filed Open on 19 September 2026. The candidate holds the question and carries a proposed Decision; the Architect Response to this entry is recorded there when the Decision is taken.
+**Status:** Open in part. `CAND-019` (Decided 19 September 2026) answers what the names assert: they are local names of the publication, they create no governed term, and nothing claims that an edge is the governed term Reference. What stays open is the first half of this entry's condition, that the two types still expand to URIs the site defines nowhere, which is publication work the Decision's step 2 covers.
 
-**Architect Response:** *(pending)*
+**Architect Response:** Chief Architect, 19 September 2026, recorded in `CAND-019`.
 
 **Related:** `Governance/Publication-Model.md`, `Meta/Reference.md`, `Meta/Relationship.md`, `AO-057`, `AO-054`, `AO-064`
 
@@ -1792,3 +1792,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 18 September 2026 | Added AO-077 (the compiled reading path is checked forward and never backward; three obligations were missing from Chapter 5 and are now compiled). A Numbering section records that AO-072 is reserved rather than missing. Found by a deep test of the repository and the site. |
 | 0.1 | 18 September 2026 | Added AO-078 (the published graph types its 83 edges and 7 governance candidates with a prefix that expands to URIs the site defines nowhere). Found by a deep test of the repository and the site. |
 | 0.1 | 19 September 2026 | AO-077 Escalated to `CAND-018` and AO-078 to `CAND-019`, both filed Open with a proposed Decision; AO-077 records a fourth instance, the subordination sentence missing from Chapter 02, corrected in the same change. |
+| 0.1 | 19 September 2026 | AO-077 and AO-078 Open in part with Architect Responses recorded in `CAND-018` and `CAND-019`; AO-071 Open in part, `CAND-017` having placed the right in the name outside the Specification and gated the claim rule on a second Reference Case. |
