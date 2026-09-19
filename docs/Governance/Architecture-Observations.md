@@ -1208,6 +1208,8 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Status:** Open; not escalated (single review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
 
+**Note (19 September 2026):** `CAND-018` sharpened this entry rather than closing it. A compiled chapter now states no obligation of its own by Decision, while the nine chapters carry 38 occurrences of shall between them and the site publishes them under the heading Normative Specification. The tension this entry records is therefore no longer an inference from two sentences; it is the difference between what a Decision says the chapters are and what they look like to a reader.
+
 **Architect Response:** *(pending)*
 
 **Related:** `Specification/01 Introduction.md`, `Specification/02 Design Principles.md`, `Governance/Documentation-Standards.md`, `Governance/Publication-Model.md`, `AO-049`
@@ -1702,6 +1704,8 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the 25 Statements carry a Test that can fail, or when the register records them as Descriptive under a stated rule.
 
+**Note (19 September 2026):** the second half of that condition now has an instance and still has no rule. `CAND-020` recorded the first Descriptive disposition in `Governance/Requirement-Aliases.md`, for `REQ-LIFECYCLES-004`, and nothing states who may record one, on what evidence, or how a claimant is told. This entry asked for the rule before the mechanism was used; it was used first.
+
 **Architect Response:** *(pending)*
 
 **Related:** `Governance/Requirement-Register.md`, `Governance/Requirement-Aliases.md`, `Governance/Conformance-Test-Suite.md`, `Specification/08 Conformance.md`, `Meta/Metadata.md`, `Meta/Identity.md`, `Meta/Classification.md`, `AO-036`, `AO-062`, `AO-032`
@@ -1788,6 +1792,26 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-081
+
+**Title:** The Canonical Definition of Core Conformance Is About the OCOM Language, and the Set It Is Measured Over Contains No Language Document
+
+**Date observed:** 19 September 2026
+
+**Description:** Surfaced by an architecture check run after the decisions of 19 September 2026, and it is the question `CAND-021` answered halfway. That Decision records that the canonical definition of Core Conformance is the one in `Language/Conformance.md`, and that the enumeration of twenty-two documents is the reading adopted for the Conformance Test Suite. Read the two together and they name different subjects. `Language/Conformance.md` says of itself, in Purpose, that it "defines the conformance requirements for implementations of the OCOM Language", and its Core Conformance level reads "Supports all mandatory language requirements". The Language tier is ten documents: Conformance, Identifier Syntax, Namespace, Notation, Overview, Schema, Serialization, Syntax, Validation and Vocabulary. The set the suite measures is thirteen `Meta/` documents, eight `Models/` documents and `Lifecycles/Lifecycles.md`, and `grep -c "| \`Language/" docs/Governance/Requirement-Register.md` returns 0: not one Language document is in it. So the canonical sentence, read as it is written, scopes the level to a tier the enumeration excludes entirely, and the enumeration measures two tiers the canonical sentence does not mention.
+
+**Impact:** An implementer who follows `CAND-021` to the canonical definition is told to support all mandatory language requirements and finds a register that contains none of them; one who follows the register is measured on Meta and Models and never meets a Language requirement. The mismatch is not a difference of wording between a chapter and its source, which is what `AO-080` recorded and `CAND-021` closed, but a difference of subject between the definition and the measurement. Every conformance claim made today rests on the second while citing the first.
+
+**Recommendation:** Record only. If corroborated, a Reference Case drawn from a real conformance attempt should settle which subject Core Conformance has: the Language, in which case the requirement set is the Language tier and the present register measures something else that needs its own name; or the model, in which case `Language/Conformance.md` is the wrong home for the definition and the scoping sentence belongs where the model is defined. `CAND-021` deferred the canonical-text question behind the same Reference Case `CAND-017` waits on, and this entry is the sharpest reason to want it.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the definition and the measured set name the same subject, or when the Chief Architect records that the Language tier's conformance section governs a claim about the model.
+
+**Architect Response:** *(pending)*
+
+**Related:** `CAND-021`, `CAND-018`, `CAND-002`, `CAND-017`, `AO-080`, `AO-032`, `AO-014`, `Language/Conformance.md`, `Specification/08 Conformance.md`, `Governance/Requirement-Register.md`, `Governance/Conformance-Test-Suite.md`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1836,3 +1860,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 19 September 2026 | Added AO-079 (the enumerated requirement set contains a pair no implementation can satisfy) and AO-080 (after CAND-018 the sentence that scopes Core Conformance lives only in a text that states no obligation). AO-078 Closed: CAND-019's publication work was done the same day. Found by an adversarial re-check of the site, the code and the architecture. |
 | 0.1 | 19 September 2026 | AO-079 Escalated to `CAND-020` and AO-080 to `CAND-021`, both filed Open with a proposed Decision for the Chief Architect. |
 | 0.1 | 19 September 2026 | AO-079 and AO-080 Open in part, with Architect Responses recorded in `CAND-020` and `CAND-021`: the conformance floor is attainable again and the scoping sentence has a canonical owner, while the divergence and the canonical-text question stay open. |
+| 0.1 | 19 September 2026 | Added AO-081 (the canonical definition of Core Conformance is about the Language and the measured set contains no Language document). AO-076 notes the first Descriptive disposition, recorded before the rule it asked for; AO-051 notes that CAND-018 sharpened it. |
