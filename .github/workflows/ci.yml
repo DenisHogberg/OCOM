@@ -347,9 +347,46 @@ jobs:
       - name: Every claim in Principle-Traceability.md resolves
         run: python3 tools/governance/principle_traceability.py --check
 
+  compilation-survey:
+    name: Compiled chapters carry what they declare
+    # The register checks the reading path forward: every sentence a chapter carries traces to a
+    # canonical document. AO-077 recorded that nothing checked the other direction, and three
+    # obligations of Models/Entity.md and Models/Relationship.md were missing from Chapter 5 for
+    # weeks with the forward check green. CAND-018 says only the verbatim form is a completeness
+    # claim, so that is what this job enforces: a chapter declaring "compiled from ... verbatim"
+    # must carry every mandatory Statement of the documents it names. Abridgement by the other
+    # two forms is permitted and only counted, which the census prints.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Every verbatim chapter carries its sources
+        run: python3 tools/conformance/compilation_survey.py --check
+
+  published-sources:
+    name: Published sources are readable by machines
+    # publication/ holds the canonical text of the files ocom.uno serves that nothing else here
+    # reproduces. Comparing them against the live site needs the network and is therefore not a
+    # CI job; what is checked here needs no network: a source file must exist for every published
+    # path the index names, and it must not write a bare URL against a sentence period, because a
+    # harvester takes the punctuation with it. llms.txt published https://ocom.uno/why. that way,
+    # and every machine that read the file asked the site for a page that does not exist.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Sources exist and carry no glued URLs
+        run: python3 tools/site/published_source_parity.py --lint
+
   tool-tests:
     name: Tool tests
-    # The three tools are the machinery a published standard leans on, and the way such a tool
+    # The five tools are the machinery a published standard leans on, and the way such a tool
     # fails is by passing when it did no work: a presence row over an empty set, a citation leg
     # that compared nothing, a table row the parser dropped, an alias bound to two Statements.
     # Every case in tools/tests is a deliberately broken input the tool must exit non-zero on,
@@ -362,7 +399,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Negative tests for the three tools
+      - name: Negative tests for the tools
         run: python3 tools/tests/test_tools.py
 
   reuse-compliance:

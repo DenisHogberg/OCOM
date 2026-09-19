@@ -16,6 +16,13 @@ path = "docs/**"
 SPDX-FileCopyrightText = "2026 Denis Petrenko"
 SPDX-License-Identifier = "CC-BY-4.0"
 
+# The canonical copies of the files ocom.uno serves and nothing here generates: the same
+# licence as the specification text they describe, since that is what they are made of.
+[[annotations]]
+path = "publication/**"
+SPDX-FileCopyrightText = "2026 Denis Petrenko"
+SPDX-License-Identifier = "CC-BY-4.0"
+
 # Adapted from the Contributor Covenant, which is itself CC BY 4.0.
 [[annotations]]
 path = "CODE_OF_CONDUCT.md"
