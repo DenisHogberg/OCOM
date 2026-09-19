@@ -12,7 +12,7 @@
 
 **Status:** Informative
 
-**Last Updated:** 17 September 2026
+**Last Updated:** 19 September 2026
 
 ---
 
@@ -356,7 +356,7 @@ The append-only Alias File that Section 2 of `Conformance-Test-Suite.md` specifi
 | REQ-LIFECYCLES-001 | `97a8d56c63319545e068e2352cd0c2568e7d827f55c7d4341eb7c579c09691ec` | `Lifecycles/Lifecycles.md` | Principles | 17 September 2026 |  | first population |
 | REQ-LIFECYCLES-002 | `9746ca104ce2c350cec36250714a15345d3e452a2495761b26c483cd9f629024` | `Lifecycles/Lifecycles.md` | Principles | 17 September 2026 |  | first population |
 | REQ-LIFECYCLES-003 | `e382475878161d0cfc53f70059d2a11c98ac37be14e6d50af0a074801c726784` | `Lifecycles/Lifecycles.md` | Principles | 17 September 2026 |  | first population |
-| REQ-LIFECYCLES-004 | `5999ad8dde4cb681e678f808152357ee825a0390dfad1dbbdd4b250923bd5067` | `Lifecycles/Lifecycles.md` | Principles | 17 September 2026 |  | first population |
+| REQ-LIFECYCLES-004 | `5999ad8dde4cb681e678f808152357ee825a0390dfad1dbbdd4b250923bd5067` | `Lifecycles/Lifecycles.md` | Principles | 17 September 2026 | Descriptive | states the design intent of the reusable lifecycle patterns, not an obligation on a Lifecycle in a conforming model; a claimant is measured against `REQ-MODELS-LIFECYCLE-002` per `CAND-020`, 19 September 2026 |
 | REQ-LIFECYCLES-005 | `425060d5a95a976721b0a79edb8da94a337c718aaf9540ae44a1de6227db4a2b` | `Lifecycles/Lifecycles.md` | Principles | 17 September 2026 |  | first population |
 | REQ-LIFECYCLES-006 | `62fc62173bbeca3ff9bc062ff8b2820da7f737f9f9a010375fad69deafb7c6c7` | `Lifecycles/Lifecycles.md` | Relationship to Entities | 17 September 2026 |  | first population |
 | REQ-LIFECYCLES-007 | `20a3b3a855777f5c4c3348132e3385e2ff2483becd20d52bd96d6fe1470c6050` | `Lifecycles/Lifecycles.md` | Relationship to Entities | 17 September 2026 |  | first population |
