@@ -26,6 +26,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import fake_site  # noqa: E402  (the fixture lives beside this file)
 
 REGISTER = "tools/conformance/requirement_register.py"
+SURVEY = "tools/conformance/compilation_survey.py"
+PARITY = "tools/site/published_source_parity.py"
 TRACE = "tools/governance/principle_traceability.py"
 HEALTH = "tools/site/publication_health.py"
 
@@ -42,7 +44,7 @@ class Copy:
 
     def __enter__(self):
         self.dir = pathlib.Path(tempfile.mkdtemp(prefix="ocom-test-"))
-        for name in ("docs", "tools"):
+        for name in ("docs", "tools", "publication"):
             shutil.copytree(ROOT / name, self.dir / name, symlinks=True)
         return self
 
@@ -166,6 +168,84 @@ class PrincipleTraceability(unittest.TestCase):
             code, out = run(c.dir, TRACE, "--check")
             self.assertEqual(code, 1, out)
             self.assertIn("absent", out)
+
+
+class CompilationSurvey(unittest.TestCase):
+    """`CAND-018` makes only the verbatim form a completeness claim, so only it is enforced."""
+
+    def test_current_chapters_pass(self):
+        code, out = run(ROOT, SURVEY, "--check")
+        self.assertEqual(code, 0, out)
+        self.assertIn("0 failure(s)", out)
+
+    def test_verbatim_chapter_missing_a_statement_fails(self):
+        with Copy() as c:
+            # Chapter 2 declares "compiled from `Core/Principles.md`, verbatim", so a mandatory
+            # Statement the source gains and the chapter does not carry is a defect of the chapter
+            c.edit("docs/Core/Principles.md", "\n# Revision History",
+                   "\n# Late Addition\n\nEvery Principle shall be restated in the reading path.\n\n---\n\n# Revision History")
+            code, out = run(c.dir, SURVEY, "--check")
+            self.assertEqual(code, 1, out)
+            self.assertIn("declares verbatim but does not carry", out)
+
+    def test_chapter_without_a_source_line_fails(self):
+        with Copy() as c:
+            chapter = "docs/Specification/07 Governance.md"
+            text = c.read(chapter)
+            c.write(chapter, text[:text.rindex("*Source:")])
+            code, out = run(c.dir, SURVEY, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("carries no Source line", out)
+
+    def test_census_reports_the_abridgement_it_permits(self):
+        code, out = run(ROOT, SURVEY, "--census")
+        self.assertEqual(code, 0, out)
+        # a permitted abridgement still has to be visible as a number
+        row = [l for l in out.splitlines() if l.startswith("04 Meta Model")][0]
+        self.assertGreater(int(row.split()[-1]), 0, row)
+
+
+class PublishedSourceParity(unittest.TestCase):
+    """The site serves files nothing else in this repository can reproduce."""
+
+    def test_current_sources_lint_clean(self):
+        code, out = run(ROOT, PARITY, "--lint")
+        self.assertEqual(code, 0, out)
+
+    def test_url_glued_to_a_sentence_period_fails(self):
+        with Copy() as c:
+            c.edit("publication/llms.txt", "- Origin story and motivation: https://ocom.uno/why\n",
+                   "- Origin story and motivation: https://ocom.uno/why.\n")
+            code, out = run(c.dir, PARITY, "--lint")
+            self.assertEqual(code, 1, out)
+            self.assertIn("harvester", out)
+
+    def test_an_index_naming_nothing_cannot_pass(self):
+        with Copy() as c:
+            text = c.read("publication/README.md")
+            c.write("publication/README.md", "\n".join(l for l in text.splitlines() if not l.startswith("| `http")))
+            code, out = run(c.dir, PARITY, "--lint")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("lists no published file", out)
+
+    def test_published_copy_that_drifts_is_reported(self):
+        with Copy() as c:
+            served = (c.dir / "publication" / "llms.txt").read_text(encoding="utf-8")
+            with fake_site.Fixture({"/llms.txt": ("text/plain; charset=utf-8", served)}) as site:
+                code, out = run(c.dir, PARITY, "--check", "--base", site.base)
+                self.assertEqual(code, 0, out)
+            drifted = served.replace("- Origin story and motivation:", "- Origin story:", 1)
+            with fake_site.Fixture({"/llms.txt": ("text/plain; charset=utf-8", drifted)}) as site:
+                code, out = run(c.dir, PARITY, "--check", "--base", site.base)
+                self.assertEqual(code, 1, out)
+                self.assertIn("differs from", out)
+
+    def test_a_published_path_that_disappears_fails(self):
+        with Copy() as c:
+            with fake_site.Fixture({}) as site:
+                code, out = run(c.dir, PARITY, "--check", "--base", site.base)
+                self.assertEqual(code, 1, out)
+                self.assertIn("answered 404", out)
 
 
 class PublicationHealth(unittest.TestCase):

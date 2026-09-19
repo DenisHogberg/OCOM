@@ -226,10 +226,48 @@ The practical effect is that the map cannot rot silently. An edit that moves a c
 
 ## Tool tests (added 18 September 2026)
 
-The job `Tool tests` runs `python3 tools/tests/test_tools.py`: twenty-two cases, standard library only, no network. Most of them break exactly one thing and assert that the tool exits non-zero and names what broke; the rest assert that the healthy corpus stays green.
+The job `Tool tests` runs `python3 tools/tests/test_tools.py`: thirty-one cases, standard library only, no network. Most of them break exactly one thing and assert that the tool exits non-zero and names what broke; the rest assert that the healthy corpus stays green.
 
 They exist because a review of the three tools on 18 September 2026 found six defects of one kind: the tool passed while doing no work. A presence row computed over an empty set reported ok having checked nothing. The JSON-LD leg of the citation rule compared nothing on every term, because the citation sits under `@graph` and a missing value counted as agreement. A traceability row that did not match the row pattern was dropped before the unparsable-row failure could fire, so a row naming a file that does not exist passed. An alias edited to a name already in use bound two Statements and both alias checks stayed green. A principle with two contradictory blocks passed a checker whose docstring promised exactly one. And the health tool's `--check` compared six of the eleven figures the record publishes.
 
 All six are fixed, and each one has a test that fails without the fix. The re-check of 19 September 2026 found four more of the same kind in the code written to fix them, and each of those has a test too. The site tool is tested against an in-memory fixture (`tools/tests/fake_site.py`) that serves an ocom.uno-shaped site on loopback: a test removes an index, corrupts a citation inside `@graph`, deletes a projection or tampers with a published figure, and asserts the tool notices. Nothing in the suite touches the live site, and the whole run takes about six seconds.
 
 This is the tenth required check on `main`.
+
+## Compiled chapters carry what they declare (added 19 September 2026)
+
+The job `Compiled chapters carry what they declare` runs
+`tools/conformance/compilation_survey.py --check`, standard-library Python,
+no network. The register checks the reading path forward: every sentence a
+chapter carries traces to a canonical document. `AO-077` recorded that nothing
+checked the other direction, and three obligations of `Models/Entity.md` and
+`Models/Relationship.md` had been missing from Chapter 5 for weeks while the
+forward check stayed green.
+
+`CAND-018` decides what the other direction may find. A chapter's Source line
+declares one of three forms, and only `compiled from ... verbatim` is a
+completeness claim, so only that form is a gate here: a chapter declaring it
+must carry every mandatory Statement of the documents it names. The other two
+forms are measured and printed, because an abridgement is permitted and its
+size is still worth knowing. The tool also fails closed on a chapter with no
+Source line or one that declares no form at all.
+
+This is the eleventh required check on `main`.
+
+## Published sources are readable by machines (added 19 September 2026)
+
+The job `Published sources are readable by machines` runs
+`tools/site/published_source_parity.py --lint`. `publication/` holds the
+canonical text of the files ocom.uno serves that nothing else in this
+repository generates: `llms.txt` is the only one today. Comparing those files
+with the live site needs the network and is therefore not a CI job, for the
+reason `publication_health.py` is not one either. What this job checks needs no
+network: every published path the index names has a source file, and no source
+file writes a bare URL against a sentence period, comma or semicolon.
+
+That last rule exists because the file failed it. `llms.txt` published
+`https://ocom.uno/why.` at the end of a sentence, and every machine that
+harvested URLs from it asked the site for a page that does not exist. `AO-083`
+records the instance and the directory that closes it.
+
+This is the twelfth required check on `main`.
