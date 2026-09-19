@@ -211,6 +211,18 @@ class PublicationHealth(unittest.TestCase):
             self.assertNotEqual(code, 0, out)
             self.assertIn("Core Vocabulary Markdown", out)
 
+    def test_a_coined_name_that_expands_to_nothing_fails(self):
+        with fake_site.Fixture() as site:
+            self.healthy(site)
+            record = json.loads(site.files["/graph.jsonld"][1])
+            # the defect AO-078 records: a type in the publication's own namespace that the
+            # document behind that namespace does not define
+            record["@graph"][-1]["@type"] = "graph:Undefined"
+            site.files["/graph.jsonld"] = ("application/json", json.dumps(record))
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("Coined names resolve", out)
+
     def test_a_published_figure_that_drifts_is_reported(self):
         with fake_site.Fixture() as site:
             health, pub = self.healthy(site)
