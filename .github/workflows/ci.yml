@@ -366,6 +366,25 @@ jobs:
       - name: Every verbatim chapter carries its sources
         run: python3 tools/conformance/compilation_survey.py --check
 
+  test-catalogue:
+    name: Test Catalogue is derived, not written
+    # Conformance-Test-Suite.md Section 3 requires every mandatory and recommended Statement to
+    # have exactly one Test of one of five kinds. Test-Catalogue.md is that binding, generated
+    # from the register and the alias file and never edited by hand, so a moved sentence breaks
+    # its own row instead of silently keeping a Test that no longer matches it. The rules that
+    # assign a kind are printed in the document, and they send a Statement to Review as soon as
+    # any part of it is beyond an export's reach: 66 of the 182 mandatory Statements carry a
+    # mechanical kind and 116 do not, which the census states rather than hides.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Catalogue matches a regeneration
+        run: python3 tools/conformance/test_catalogue.py --check
+
   published-sources:
     name: Published sources are readable by machines
     # publication/ holds the canonical text of the files ocom.uno serves that nothing else here

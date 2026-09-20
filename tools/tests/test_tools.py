@@ -27,6 +27,7 @@ import fake_site  # noqa: E402  (the fixture lives beside this file)
 
 REGISTER = "tools/conformance/requirement_register.py"
 SURVEY = "tools/conformance/compilation_survey.py"
+CATALOGUE = "tools/conformance/test_catalogue.py"
 PARITY = "tools/site/published_source_parity.py"
 TRACE = "tools/governance/principle_traceability.py"
 HEALTH = "tools/site/publication_health.py"
@@ -203,6 +204,51 @@ class CompilationSurvey(unittest.TestCase):
         # a permitted abridgement still has to be visible as a number
         row = [l for l in out.splitlines() if l.startswith("04 Meta Model")][0]
         self.assertGreater(int(row.split()[-1]), 0, row)
+
+
+class TestCatalogue(unittest.TestCase):
+    """The binding of Statements to Tests is derived, so it has to break when a source sentence moves."""
+
+    def test_current_catalogue_is_up_to_date(self):
+        code, out = run(ROOT, CATALOGUE, "--check")
+        self.assertEqual(code, 0, out)
+
+    def test_changed_statement_breaks_the_catalogue(self):
+        with Copy() as c:
+            c.edit("docs/Models/Event.md", "An Event shall never be modified after creation.",
+                   "An Event shall not be modified after it is created.")
+            code, out = run(c.dir, CATALOGUE, "--check")
+            self.assertNotEqual(code, 0, out)
+
+    def test_a_behaviour_item_keeps_a_list_out_of_presence(self):
+        with Copy() as c:
+            sys.path.insert(0, str(c.dir / "tools" / "conformance"))
+            code, out = run(c.dir, CATALOGUE, "--census")
+            self.assertEqual(code, 0, out)
+            # Meta/Object.md's Design Principles list carries "remain technology independent"
+            doc = run(c.dir, CATALOGUE, "--write")[0]
+            self.assertEqual(doc, 0)
+            text = (c.dir / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
+            row = [l for l in text.splitlines() if l.startswith("| REQ-META-OBJECT-001 |")][0]
+            self.assertTrue(row.rstrip().endswith("Review |"), row)
+
+    def test_an_organizational_obligation_is_not_mechanical(self):
+        with Copy() as c:
+            run(c.dir, CATALOGUE, "--write")
+            text = (c.dir / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
+            rows = [l for l in text.splitlines() if l.startswith("| REQ-META-IDENTITY-005 |")]
+            self.assertTrue(rows, "the Statement this test names is gone from the register")
+            self.assertTrue(rows[0].rstrip().endswith("Review |"), rows[0])
+
+    def test_a_statement_without_an_alias_fails_closed(self):
+        with Copy() as c:
+            aliases = "docs/Governance/Requirement-Aliases.md"
+            text = c.read(aliases)
+            rows = [l for l in text.splitlines() if l.startswith("| REQ-")]
+            c.write(aliases, text.replace(rows[0] + "\n", ""))
+            code, out = run(c.dir, CATALOGUE, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("no alias", out)
 
 
 class PublishedSourceParity(unittest.TestCase):
