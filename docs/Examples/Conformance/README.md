@@ -59,23 +59,30 @@ Standard library only, no network, a few seconds.
 
 # What the Result Says, and What It Does Not
 
-At the commit that records this document: 188 mandatory Tests, 37 Pass, 0 Fail, 151 awaiting a
+At the commit that records this document: 188 mandatory Tests, 40 Pass, 0 Fail, 148 awaiting a
 named reviewer or evidence this export does not carry. **Core Conformance is not established**,
 and that is the correct answer rather than a disappointing one: Section 3 establishes it when
 every mandatory Test is Pass or Review Pass, a model alone cannot produce a Review Pass, and this
 example has no reviewer. An implementation plus a reviewer can.
 
-The 151 are not a defect of the tool. 116 of them are Statements the Test Catalogue sends to
+The 148 are not a defect of the tool. 116 of them are Statements the Test Catalogue sends to
 Review because no export can settle them, such as "Identity shall remain stable throughout the
 Object's existence", which needs a history rather than a snapshot. The rest are prohibitions whose
 evidence an export does not carry, and one Statement whose list items are not separated in its
 source document, so the elements cannot be read out of it at all.
 
-What the 37 do say is worth having, and no artifact in this repository said it before: every
+What the 40 do say is worth having, and no artifact in this repository said it before: every
 Relationship in this model carries an identifier, a source, a target and a type; every Policy
 carries an identifier, a name, a purpose, a scope and an effective date; every recorded State
-change is one the Lifecycle permits; no identity is used by two records. Those are machine
-verdicts on a real file, and a reader can break the file and watch them turn to Fail.
+change is one the Lifecycle permits; every State of every Lifecycle is reachable from its initial
+State; no Entity type is governed by two Domains; no governed record is without an owner; no
+identity is used by two records. Those are machine verdicts on a real file, and a reader can break
+the file and watch them turn to Fail, which is what twenty negative tests assert.
+
+A compound Statement is never passed on part of itself. `A Lifecycle shall never: contain multiple
+initial States; contain unreachable States; contain undefined Transitions; permit ambiguous State
+progression` is checked on its first three parts and reported pending on the fourth, because no
+export settles ambiguity. The report names which part is missing rather than rounding up.
 
 ---
 
