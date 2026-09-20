@@ -44,10 +44,18 @@ CLAIM_DOC = "Language/Conformance.md"
 # An obligation on the adopting organization's own process, not on anything a model can carry.
 ORGANIZATION = re.compile(r"^(an? )?organizations?\b", re.I)
 # A predicate whose truth is a judgement: no export settles "appropriate" or "sufficient".
-JUDGEMENT = re.compile(r"\b(appropriate|adequate|sufficient|relevant|meaningful|conflicting|clear|understandable|as needed|where applicable|business semantics|technology independent)\b", re.I)
+JUDGEMENT = re.compile(r"\b(appropriate|adequate|sufficient|relevant|meaningful|conflicting|clear|understandable|as needed|where applicable|business semantics|technology independent|implementation technolog(?:y|ies))\b", re.I)
 FORBIDS = re.compile(r"shall not|shall never|must not|may not|never be|remain immutable|remains immutable|immutable after", re.I)
 ABOUT_STATE = re.compile(r"\btransitions?\b|state change|initial state|terminal state|permitted state|exactly one (valid )?state|occupy .* state", re.I)
+CARDINALITY = re.compile(r"exactly one|one and only one|one or more|at least one|no more than|only one", re.I)
 REQUIRES = re.compile(r"shall:|shall define|shall have|shall possess|shall contain|shall include|shall carry|shall specify|shall record|shall reference|shall assign|shall exist|shall be assigned", re.I)
+
+SECTION_3_EXAMPLES = [
+    ("Presence", "Models/Entity.md", "Every Entity shall"),
+    ("Invariant", "Models/Event.md", "Every Event shall"),
+    ("Transition", "Models/Lifecycle.md", "Every Lifecycle shall"),
+    ("Review", "Models/Entity.md", "Identity shall not depend on implementation technology"),
+]
 
 PROCEDURE = {
     "Presence": "For every instance of the Object type the Statement names, the Representation Map resolves each required element; the Test passes when every instance resolves every one of them.",
@@ -119,24 +127,31 @@ def kind_of(text):
     if ABOUT_STATE.search(body):
         return "Transition"
     if REQUIRES.search(body):
+        if CARDINALITY.search(body):
+            return "Review"       # Presence proves a value is there, never that there is one of it
         return "Presence"
     return "Review"
 
 
 def statements():
-    """(alias, document, section, class, text, kind) for every mandatory and recommended Statement."""
+    """(alias, document, section, class, text, kind, disposition) per mandatory or recommended Statement."""
     aliases = rr.read_aliases()
-    out = []
+    out, seen = [], {}
     for path in rr.requirement_set():
         for section, cls, text, identity in rr.statements(path):
             if cls not in ("mandatory", "recommended"):
                 continue
             record = aliases.get(identity)
             alias = record[0] if isinstance(record, (tuple, list)) else record
+            disposition = record[1] if isinstance(record, (tuple, list)) and len(record) > 1 else ""
             if alias is None:
                 raise SystemExit("no alias for a %s Statement in %s (%s); run requirement_register.py --check-aliases"
                                  % (cls, path, section))
-            out.append((alias, path, section, cls, text, kind_of(text)))
+            if alias in seen:
+                raise SystemExit("alias %s is bound to two Statements (%s and %s); one alias, one Test"
+                                 % (alias, seen[alias], "%s (%s)" % (path, section)))
+            seen[alias] = "%s (%s)" % (path, section)
+            out.append((alias, path, section, cls, text, kind_of(text), disposition))
     if not out:
         raise SystemExit("no Statements found; a catalogue over nothing cannot be checked")
     return out
@@ -153,6 +168,11 @@ def claim_clauses():
     for section, cls, text, _ in rr.statements(CLAIM_DOC):
         if cls == "mandatory" and section in CLAIM_SECTIONS:
             out.append((section, re.sub(r"\s+", " ", text).strip()))
+    missing = [s for s in CLAIM_SECTIONS if not any(sec == s for sec, _ in out)]
+    if missing:
+        raise SystemExit("%s carries no mandatory clause under %s; Section 3 binds Declaration Tests to "
+                         "those sections, so a renamed heading would delete a Test silently"
+                         % (CLAIM_DOC, ", ".join(missing)))
     if not out:
         raise SystemExit("%s yielded no claim clause; the Declaration kind would have nothing to test" % CLAIM_DOC)
     return out
@@ -162,7 +182,7 @@ def render(today):
     rows = statements()
     claims = claim_clauses()
     counts = {}
-    for _, _, _, _, _, kind in rows:
+    for _, _, _, _, _, kind, _ in rows:
         counts[kind] = counts.get(kind, 0) + 1
     mandatory = [r for r in rows if r[3] == "mandatory"]
     mech = len([r for r in mandatory if r[5] != "Review"])
@@ -252,6 +272,32 @@ def render(today):
     out.append("")
     out.append("---")
     out.append("")
+    out.append("# Where This Generator Disagrees With Section 3")
+    out.append("")
+    out.append("`Conformance-Test-Suite.md` Section 3 prints one worked example per kind. Those examples are "
+               "what this generator is measured against, and it does not match all of them. The disagreement "
+               "is printed rather than resolved quietly, because the rules above are stricter than the "
+               "examples: a Statement whose list contains an item no export can settle is sent to Review even "
+               "when Section 3 shows it under a mechanical kind.")
+    out.append("")
+    out.append("| Section 3 shows | Statement | This generator assigns | |")
+    out.append("|---|---|---|---|")
+    for shown, document, quote in SECTION_3_EXAMPLES:
+        found = [r for r in rows if r[1] == document and r[4].startswith(quote)]
+        assigned = found[0][5] if found else "(no Statement matches)"
+        alias = found[0][0] if found else ""
+        mark = "agrees" if assigned == shown else "differs"
+        out.append("| %s | %s, `%s` | %s | %s |" % (shown, alias or quote[:40], document, assigned, mark))
+    out.append("")
+    out.append("Where it differs, the cause is the same in both cases: the example Statement is a stem with a "
+               "list, and one item of that list names a behaviour. `be governed by the rules of this "
+               "specification` and `remain immutable after creation` are not fields an export carries, so a "
+               "Presence or Invariant Test over the whole list would report Pass having checked the items "
+               "around them. Either the rules here are too strict or the examples are aspirational; this "
+               "document does not decide which, and records the disagreement so that a reader can.")
+    out.append("")
+    out.append("---")
+    out.append("")
     out.append("# What Each Kind Does")
     out.append("")
     out.append("| Kind | Reads | Procedure |")
@@ -263,10 +309,11 @@ def render(today):
     out.append("")
     out.append("# Tests Bound to Register Statements")
     out.append("")
-    out.append("| Alias | Document | Section | Class | Kind |")
-    out.append("|---|---|---|---|---|")
-    for alias, path, section, cls, _, kind in rows:
-        out.append("| %s | `%s` | %s | %s | %s |" % (alias, path, section, cls, kind))
+    out.append("| Alias | Document | Section | Class | Kind | Disposition |")
+    out.append("|---|---|---|---|---|---|")
+    for alias, path, section, cls, _, kind, disposition in rows:
+        out.append("| %s | `%s` | %s | %s | %s | %s |"
+                   % (alias, path, section.replace("|", "\\|"), cls, kind, disposition.replace("|", "\\|")))
     out.append("")
     out.append("---")
     out.append("")
@@ -277,7 +324,7 @@ def render(today):
     out.append("| Test | Section | Clause |")
     out.append("|---|---|---|")
     for i, (section, text) in enumerate(claims, 1):
-        out.append("| DECL-%03d | %s | %s |" % (i, section, text.replace("|", "\\|")))
+        out.append("| DECL-%03d | %s | %s |" % (i, section.replace("|", "\\|"), text.replace("|", "\\|")))
     out.append("")
     out.append("---")
     out.append("")
@@ -322,7 +369,9 @@ def main(argv):
         current = DOC.read_text(encoding="utf-8")
         # the Last Updated line and the Revision History date are the only fields a regeneration
         # is allowed to differ in, since they record when the file was written, not what it says
-        norm = lambda s: re.sub(r"\*\*Last Updated:\*\* .*", "", re.sub(r"\| 0\.1 \| [^|]+ \|", "| 0.1 | date |", s))
+        def norm(s):
+            s = re.sub(r"(?m)^\*\*Last Updated:\*\* \d{1,2} [A-Z][a-z]+ \d{4}$", "**Last Updated:** date", s)
+            return re.sub(r"(?m)^\| 0\.1 \| \d{1,2} [A-Z][a-z]+ \d{4} \|", "| 0.1 | date |", s)
         if norm(current) != norm(text):
             print("FAIL the committed catalogue differs from a regeneration; run --write")
             return 1
