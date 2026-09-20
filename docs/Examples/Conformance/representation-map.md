@@ -56,6 +56,7 @@ that needs it fails rather than passing over an absence.
 | Event | collection | `events` |
 | State | collection | `lifecycles[].states` |
 | Lifecycle | collection | `lifecycles` |
+| Transition | collection | `lifecycles[].transitions` |
 | Workflow | collection | `workflows` |
 | Model | collection | `models` |
 | Ownership | collection | `ownership` |
@@ -107,6 +108,8 @@ that needs it fails rather than passing over an absence.
 | Event.event type | field | `type` |
 | Event.timestamp | field | `occurred_at` |
 | Event.subject | field | `subject` |
+| Event.origin | field | `source` |
+| Event.source | field | `source` |
 | State.name | field | `name` |
 | State.meaning | field | `meaning` |
 | State.entity | field | `entity` |
@@ -118,6 +121,9 @@ that needs it fails rather than passing over an absence.
 | Lifecycle.state transitions | field | `transitions` |
 | Lifecycle.transitions | field | `transitions` |
 | Lifecycle.terminal states | field | `terminal_states` |
+| Transition.from | field | `from` |
+| Transition.to | field | `to` |
+| Transition.trigger | field | `trigger` |
 | Workflow.identifier | field | `id` |
 | Workflow.name | field | `name` |
 | Workflow.purpose | field | `purpose` |

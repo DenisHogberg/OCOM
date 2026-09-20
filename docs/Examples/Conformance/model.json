@@ -81,7 +81,7 @@
         }
       ],
       "lifecycle": "LC-ITEM",
-      "state": "On Loan"
+      "state": "Overdue"
     },
     {
       "id": "LOAN-2026-08-0431",
@@ -89,7 +89,7 @@
       "type": "Loan",
       "meaning": "One lending of one Item to one Patron.",
       "domain": "DOM-LENDING",
-      "owner": "OWN-DOM-LENDING",
+      "owner": "OWN-LOAN-2026-08-0431",
       "classification": "Loan",
       "metadata": {
         "due_on": "2026-09-05"
@@ -107,7 +107,7 @@
         }
       ],
       "lifecycle": "LC-LOAN",
-      "state": "Open"
+      "state": "Overdue"
     }
   ],
   "lifecycles": [
@@ -340,6 +340,20 @@
       "owned_object": "DOM-LENDING",
       "responsibility_scope": "Lending rules, loan records and the items in circulation.",
       "effective_date": "2024-01-08"
+    },
+    {
+      "id": "OWN-LOAN-2026-08-0431",
+      "owner": "Circulation Desk",
+      "owned_object": "LOAN-2026-08-0431",
+      "responsibility_scope": "The loan record, its due date and its closure.",
+      "effective_date": "2026-08-08"
+    },
+    {
+      "id": "OWN-REG-ITEMS",
+      "owner": "Riverside Branch",
+      "owned_object": "REG-ITEMS",
+      "responsibility_scope": "The authoritative list of copies held by the branch.",
+      "effective_date": "2024-01-08"
     }
   ],
   "classifications": [
@@ -420,7 +434,7 @@
       "registered_object_types": [
         "Item"
       ],
-      "owner": "OWN-DOM-LENDING"
+      "owner": "OWN-REG-ITEMS"
     }
   ],
   "events": [
@@ -430,7 +444,8 @@
       "occurred_at": "2026-08-08T10:12:00Z",
       "subject": "LIB-000198",
       "from_state": "Available",
-      "to_state": "On Loan"
+      "to_state": "On Loan",
+      "source": "WF-OPEN-LOAN"
     },
     {
       "id": "EVT-0002",
@@ -438,7 +453,8 @@
       "occurred_at": "2026-08-08T10:12:00Z",
       "subject": "LOAN-2026-08-0431",
       "from_state": null,
-      "to_state": "Open"
+      "to_state": "Open",
+      "source": "WF-OPEN-LOAN"
     },
     {
       "id": "EVT-0003",
@@ -446,7 +462,17 @@
       "occurred_at": "2026-09-06T00:00:00Z",
       "subject": "LOAN-2026-08-0431",
       "from_state": "Open",
-      "to_state": "Overdue"
+      "to_state": "Overdue",
+      "source": "Scheduled Process"
+    },
+    {
+      "id": "EVT-0004",
+      "type": "Due date passed",
+      "occurred_at": "2026-09-06T00:00:00Z",
+      "subject": "LIB-000198",
+      "from_state": "On Loan",
+      "to_state": "Overdue",
+      "source": "Scheduled Process"
     }
   ],
   "workflows": [

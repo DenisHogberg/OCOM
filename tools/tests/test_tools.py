@@ -15,6 +15,7 @@ would have caught none of the six.
 """
 import json
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -231,7 +232,7 @@ class TestCatalogue(unittest.TestCase):
             self.assertEqual(doc, 0)
             text = (c.dir / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
             row = [l for l in text.splitlines() if l.startswith("| REQ-META-OBJECT-001 |")][0]
-            self.assertTrue(row.rstrip().endswith("Review |"), row)
+            self.assertEqual([c.strip() for c in row.strip().strip("|").split("|")][4], "Review", row)
 
     def test_an_organizational_obligation_is_not_mechanical(self):
         with Copy() as c:
@@ -239,7 +240,29 @@ class TestCatalogue(unittest.TestCase):
             text = (c.dir / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
             rows = [l for l in text.splitlines() if l.startswith("| REQ-META-IDENTITY-005 |")]
             self.assertTrue(rows, "the Statement this test names is gone from the register")
-            self.assertTrue(rows[0].rstrip().endswith("Review |"), rows[0])
+            self.assertEqual([c.strip() for c in rows[0].strip().strip("|").split("|")][4], "Review", rows[0])
+
+    def test_a_renamed_claim_section_does_not_delete_a_test(self):
+        with Copy() as c:
+            c.edit("docs/Language/Conformance.md", "# Version Conformance", "# Versioning Conformance")
+            code, out = run(c.dir, CATALOGUE, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("Version Conformance", out)
+
+    def test_hand_written_content_in_the_catalogue_is_caught(self):
+        with Copy() as c:
+            doc = "docs/Governance/Test-Catalogue.md"
+            text = c.read(doc)
+            c.write(doc, text.replace("| REQ-META-OBJECT-003 |", "| REQ-META-OBJECT-003-EDITED |", 1))
+            code, out = run(c.dir, CATALOGUE, "--check")
+            self.assertNotEqual(code, 0, out)
+
+    def test_the_disagreement_with_section_3_is_printed(self):
+        text = (ROOT / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
+        self.assertIn("Where This Generator Disagrees With Section 3", text)
+        block = text.split("Where This Generator Disagrees With Section 3")[1].split("# What Each Kind Does")[0]
+        self.assertIn("differs", block)
+        self.assertIn("agrees", block)
 
     def test_a_statement_without_an_alias_fails_closed(self):
         with Copy() as c:
@@ -263,11 +286,76 @@ class Validator(unittest.TestCase):
                    "--statement", "%s/conformance-statement.md" % self.EX)
 
     def test_the_example_passes_what_it_claims(self):
+        # the exact numbers, not a substring a validator doing no work would also satisfy
         code, out = self.run_on(ROOT)
         self.assertEqual(code, 0, out)
-        self.assertIn("Fail 0", out)
+        m = re.search(r"mandatory (\d+): Pass (\d+), Fail (\d+), pending (\d+)", out)
+        self.assertIsNotNone(m, out)
+        total, passed, failed, pending = (int(x) for x in m.groups())
+        self.assertEqual(failed, 0, out)
+        self.assertGreaterEqual(passed, 30, "the suite stopped deciding things: %s" % out)
+        self.assertEqual(passed + failed + pending, total, out)
         # a model alone never establishes Core Conformance: Review Pass needs a reviewer
         self.assertIn("not established", out)
+
+    def test_an_identity_reused_inside_one_collection_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][2]["id"] = model["entities"][0]["id"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_an_empty_mapped_collection_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["relationships"] = []
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_falsy_field_does_not_satisfy_presence(self):
+        for empty in (False, "", "null", [], "  "):
+            with Copy() as c:
+                model = json.loads(c.read("%s/model.json" % self.EX))
+                for rel in model["relationships"]:
+                    rel["type"] = empty
+                c.write("%s/model.json" % self.EX, json.dumps(model))
+                code, out = self.run_on(c.dir)
+                self.assertNotIn("Fail 0", out, "a field holding %r passed as present" % (empty,))
+
+    def test_a_dangling_lifecycle_reference_is_not_silently_skipped(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["lifecycle"] = "LC-NOWHERE"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_events_no_lifecycle_resolves_for_are_not_counted_as_checked(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for e in model["events"]:
+                e["subject"] = "UNKNOWN-1"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            report = c.dir / (self.EX + "/report.md")
+            code2, out2 = run(c.dir, VALIDATE, "--model", "%s/model.json" % self.EX,
+                              "--map", "%s/representation-map.md" % self.EX,
+                              "--statement", "%s/conformance-statement.md" % self.EX,
+                              "--report", str(report))
+            row = [l for l in report.read_text(encoding="utf-8").splitlines()
+                   if l.startswith("| REQ-LIFECYCLES-003 ")][0]
+            self.assertIn("pending", row, row)
+
+    def test_a_descriptive_disposition_is_not_applicable(self):
+        code, out = run(ROOT, VALIDATE, "--model", "%s/model.json" % self.EX,
+                        "--map", "%s/representation-map.md" % self.EX,
+                        "--statement", "%s/conformance-statement.md" % self.EX,
+                        "--report", "/tmp/ocom-disposition.md")
+        self.assertEqual(code, 0, out)
+        row = [l for l in open("/tmp/ocom-disposition.md") if l.startswith("| REQ-LIFECYCLES-004 ")][0]
+        self.assertIn("Not Applicable", row, row)
 
     def test_a_missing_required_field_fails_its_test(self):
         with Copy() as c:
