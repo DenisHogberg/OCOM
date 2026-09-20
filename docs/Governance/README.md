@@ -43,4 +43,5 @@ The eleven documents above form the 22 July 2026 baseline. The following were ad
 - [Master Architecture Backlog: From Audit to OCOM v1.0](Master-Architecture-Backlog.md)
 - [Publication Manifest](Publication-Manifest.md)
 - [Publication Model](Publication-Model.md)
+- [Evidence Register](Evidence-Register.md) — what is verified, what is declared and what is absent, stated honestly (`CAND-022`)
 - [Release Workflow](Release-Workflow.md)

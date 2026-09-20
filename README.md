@@ -44,7 +44,6 @@ The specification governs its own evolution. Its core is frozen under an Archite
 | [Specification reading path](https://ocom.uno/specification) | Chapters 1 to 8 compiled from the canonical sources in this repository |
 | [Core Vocabulary](https://ocom.uno/vocabulary) | The 13 governed terms, each published as HTML, JSON, JSON-LD and Markdown |
 | [How to review](https://ocom.uno/specification/how-to-review) | The nine questions a reviewer, human or automated, is asked to answer |
-| [Evidence Register](https://ocom.uno/evidence-register) | What is verified, what is declared, and what is absent, stated honestly |
 | [Knowledge API](https://ocom.uno/api) | `/api/v1`: terms, resolver, explain, neighbors, graph, governance |
 | [llms.txt](https://ocom.uno/llms.txt) | The machine-readable entry point for AI agents |
 | [Why I wrote it](https://ocom.uno/why) | The origin and the motivation, in the author's words |
@@ -55,8 +54,8 @@ Prefer the repository? Start with [`docs/README.md`](docs/README.md), then [`doc
 
 - [Constitution v1.0.1](docs/Core/Constitution.md): the canonical principles, amended only through an RFC-like process.
 - [Architecture Freeze](docs/Governance/ADR-Candidates.md) (ADR Candidate CAND-007): no new Core concept, no reworded Canonical Principle, until the freeze is lifted through the change process.
-- [ADR Candidates](docs/Governance/ADR-Candidates.md): 19 recorded decisions and proposals, CAND-001 to CAND-019.
-- [Architecture Observations](docs/Governance/Architecture-Observations.md): 77 recorded tensions, AO-001 to AO-078 with 072 reserved, including the ones the specification's own site found when it audited itself and the ones its own logic check found.
+- [ADR Candidates](docs/Governance/ADR-Candidates.md): 22 recorded decisions and proposals, CAND-001 to CAND-022.
+- [Architecture Observations](docs/Governance/Architecture-Observations.md): 82 recorded tensions, AO-001 to AO-083 with 072 reserved, including the ones the specification's own site found when it audited itself and the ones its own logic check found.
 - [Standard Evolution Methodology](docs/Governance/Standard%20Evolution%20Methodology.md): how a Reference Case becomes an observation, a candidate and, eventually, a change.
 
 Found something the text gets wrong? Open a [Reference Case](.github/ISSUE_TEMPLATE/reference-case.md). Found two rules that contradict each other? Open an [Architecture Observation](.github/ISSUE_TEMPLATE/architecture-observation.md). Found a page on ocom.uno that disagrees with the file it names as its source? Open a [Projection defect](.github/ISSUE_TEMPLATE/projection-defect.md).
@@ -91,14 +90,14 @@ Everything normative is Markdown under `docs/`. There is no code in this reposit
 
 - Core Vocabulary v0.1: released 21 July 2026 with 12 terms; Organization was added on 25 July 2026 through ADR CAND-005, bringing the set to 13. The 0.1 label did not change on either date, and the [Publication Manifest](docs/Governance/Publication-Manifest.md) records that.
 - Specification v1.0 reading path and Governance: baseline. Baseline means reviewed and frozen pending the change process, not finished.
-- Constitution v1.0: adopted through ADR CAND-006; Architecture Freeze in force through CAND-007.
-- Evidence: one Reference Case published; reference implementations, verified implementations and independent validations all stand at zero, and the [Evidence Register](https://ocom.uno/evidence-register) says so.
+- Constitution v1.0.1: adopted as v1.0 through ADR CAND-006 and amended once since; Architecture Freeze in force through CAND-007.
+- Evidence: one Reference Case published; reference implementations, verified implementations and independent validations all stand at zero, and the [Evidence Register](docs/Governance/Evidence-Register.md) says so, alongside the fourteen third-party records that do exist.
 
 See [`ROADMAP.md`](ROADMAP.md) for what is done, what is open and what is under exploration, and [`CHANGELOG.md`](CHANGELOG.md) for the record of changes.
 
 ## Cite
 
-The concept DOI always resolves to the most recent archived version. GitHub also offers "Cite this repository" from [`CITATION.cff`](CITATION.cff). Software Heritage archives the repository independently of GitHub and of Zenodo; release `v1.2.0` is addressable there as [`swh:1:rel:78eb36465ed18b3bf8f2d0948712537a7a51ae89`](https://archive.softwareheritage.org/swh:1:rel:78eb36465ed18b3bf8f2d0948712537a7a51ae89).
+The concept DOI always resolves to the most recent archived version. GitHub also offers "Cite this repository" from [`CITATION.cff`](CITATION.cff). Software Heritage archives the repository independently of GitHub and of Zenodo; release `v1.3.0` is addressable there as [`swh:1:rel:f4482014c65a6fe05e865c9f68b70c6cbae76b00`](https://archive.softwareheritage.org/swh:1:rel:f4482014c65a6fe05e865c9f68b70c6cbae76b00).
 
 > Petrenko, D. (2026). OCOM: the Object-Centric Operating Model specification. <https://ocom.uno>. <https://doi.org/10.5281/zenodo.21510450>. CC BY 4.0.
 
@@ -115,4 +114,4 @@ Read [`CONTRIBUTING.md`](CONTRIBUTING.md), [`GOVERNANCE.md`](GOVERNANCE.md) and 
 
 ## Disclaimer
 
-OCOM is an early-stage specification. The v0.1 Core is released; Governance and the Specification v1.0 reading path are baseline, which means reviewed and frozen pending the approved change process, not that the specification is finished. Terminology, structure and scope may still change through that process before v1.0. Content is provided as is, without warranty.
+OCOM is published as a specification, not as software. The Core Vocabulary is at v0.1, the Specification reading path at v1.0, and Governance is baseline, which means reviewed and frozen pending the approved change process, not that the specification is finished. Terminology, structure and scope may still change through that process. Content is provided as is, without warranty.
