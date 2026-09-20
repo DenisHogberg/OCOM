@@ -244,6 +244,14 @@ jobs:
               "docs/Specification/Committee Review Package.md",
               "docs/Governance/Requirement-Register.md",
               "docs/Governance/Requirement-Aliases.md",
+              # Two artifacts of a suite run, not documents of this specification. The report is
+              # produced by tools/conformance/validate.py and is append-only per
+              # Conformance-Test-Suite.md Section 4; the Conformance Statement is an example of
+              # what an implementation publishes about itself, and Language/Conformance.md:145
+              # leaves its format to the implementation. Giving either an OCOM metadata block
+              # would make it a worse example of the thing it is.
+              "docs/Examples/Conformance/report.md",
+              "docs/Examples/Conformance/conformance-statement.md",
           }
           pats = {
               "Document ID": re.compile(r"^\*\*Document ID:\*\*", re.M),
