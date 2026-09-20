@@ -16,3 +16,4 @@ Full specification: [Examples](Overview.md)
 
 - [iGaming/](iGaming/)
 - [Implementation-Case/](Implementation-Case/) — a single anonymized Reference Case of a real OCOM rollout
+- [Conformance/](Conformance/) — one complete model, its Representation Map and the Test Report the suite produces from them

@@ -28,6 +28,7 @@ import fake_site  # noqa: E402  (the fixture lives beside this file)
 REGISTER = "tools/conformance/requirement_register.py"
 SURVEY = "tools/conformance/compilation_survey.py"
 CATALOGUE = "tools/conformance/test_catalogue.py"
+VALIDATE = "tools/conformance/validate.py"
 PARITY = "tools/site/published_source_parity.py"
 TRACE = "tools/governance/principle_traceability.py"
 HEALTH = "tools/site/publication_health.py"
@@ -249,6 +250,68 @@ class TestCatalogue(unittest.TestCase):
             code, out = run(c.dir, CATALOGUE, "--check")
             self.assertNotEqual(code, 0, out)
             self.assertIn("no alias", out)
+
+
+class Validator(unittest.TestCase):
+    """The suite has to notice a broken export, or its Pass rows mean nothing."""
+
+    EX = "docs/Examples/Conformance"
+
+    def run_on(self, root):
+        return run(root, VALIDATE, "--model", "%s/model.json" % self.EX,
+                   "--map", "%s/representation-map.md" % self.EX,
+                   "--statement", "%s/conformance-statement.md" % self.EX)
+
+    def test_the_example_passes_what_it_claims(self):
+        code, out = self.run_on(ROOT)
+        self.assertEqual(code, 0, out)
+        self.assertIn("Fail 0", out)
+        # a model alone never establishes Core Conformance: Review Pass needs a reviewer
+        self.assertIn("not established", out)
+
+    def test_a_missing_required_field_fails_its_test(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for r in model["relationships"]:
+                del r["type"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertEqual(code, 0, out)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_state_change_the_lifecycle_forbids_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["events"].append({"id": "EVT-BAD", "type": "Invented", "occurred_at": "2026-09-09T00:00:00Z",
+                                    "subject": "LIB-000198", "from_state": "Available", "to_state": "Withdrawn"})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_reused_identity_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["policies"][0]["id"] = model["entities"][0]["id"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_map_that_declares_nothing_cannot_pass(self):
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            text = c.read(path)
+            c.write(path, "\n".join(l for l in text.splitlines() if not l.startswith("| ") or "collection" not in l))
+            code, out = self.run_on(c.dir)
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("declares no type", out)
+
+    def test_an_undeclared_specification_version_fails_its_declaration(self):
+        with Copy() as c:
+            path = "%s/conformance-statement.md" % self.EX
+            text = c.read(path)
+            c.write(path, text.replace("**Supported specification version:** 1.0", "**Supported specification version:**"))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
 
 
 class PublishedSourceParity(unittest.TestCase):
