@@ -1,0 +1,502 @@
+{
+  "export": {
+    "produced_by": "OCOM reference export, library lending example",
+    "produced_on": "2026-09-20",
+    "specification_version": "1.0",
+    "note": "One encoding of one model. The OCOM Specification prescribes no serialization (Language/Serialization.md, Independence); this file exists so that the Conformance Test Suite can be run end to end against something. The Representation Map beside it is what makes the test format-independent."
+  },
+  "domains": [
+    {
+      "id": "DOM-LENDING",
+      "name": "Lending",
+      "purpose": "Governs the items a branch lends and the loans that connect them to patrons.",
+      "owner": "OWN-DOM-LENDING",
+      "entity_types": [
+        "Patron",
+        "Item",
+        "Loan"
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "id": "P-10432",
+      "name": "Patron P-10432",
+      "type": "Patron",
+      "meaning": "A registered borrower of the Riverside Branch.",
+      "domain": "DOM-LENDING",
+      "owner": "OWN-P-10432",
+      "classification": "Individual",
+      "metadata": {
+        "registered_on": "2023-06-02",
+        "branch": "Riverside"
+      },
+      "attributes": [
+        {
+          "name": "membership_number",
+          "meaning": "The number printed on the card.",
+          "data_type": "string"
+        },
+        {
+          "name": "standing",
+          "meaning": "Whether the patron may borrow.",
+          "data_type": "enumeration",
+          "constraints": [
+            "good",
+            "suspended"
+          ]
+        }
+      ],
+      "lifecycle": "LC-PATRON",
+      "state": "Registered"
+    },
+    {
+      "id": "LIB-000198",
+      "name": "Item LIB-000198",
+      "type": "Item",
+      "meaning": "One physical copy held by the Riverside Branch.",
+      "domain": "DOM-LENDING",
+      "owner": "OWN-LIB-000198",
+      "classification": "Book",
+      "metadata": {
+        "title": "The Tartar Steppe",
+        "author": "Dino Buzzati",
+        "edition": "2nd"
+      },
+      "attributes": [
+        {
+          "name": "accession_number",
+          "meaning": "Assigned once per physical copy.",
+          "data_type": "string"
+        },
+        {
+          "name": "condition",
+          "meaning": "Physical condition as last inspected.",
+          "data_type": "enumeration",
+          "constraints": [
+            "good",
+            "worn",
+            "damaged"
+          ]
+        }
+      ],
+      "lifecycle": "LC-ITEM",
+      "state": "On Loan"
+    },
+    {
+      "id": "LOAN-2026-08-0431",
+      "name": "Loan LOAN-2026-08-0431",
+      "type": "Loan",
+      "meaning": "One lending of one Item to one Patron.",
+      "domain": "DOM-LENDING",
+      "owner": "OWN-DOM-LENDING",
+      "classification": "Loan",
+      "metadata": {
+        "due_on": "2026-09-05"
+      },
+      "attributes": [
+        {
+          "name": "borrowed_on",
+          "meaning": "When the Item left the branch.",
+          "data_type": "date"
+        },
+        {
+          "name": "renewals",
+          "meaning": "How many times the loan was extended.",
+          "data_type": "integer"
+        }
+      ],
+      "lifecycle": "LC-LOAN",
+      "state": "Open"
+    }
+  ],
+  "lifecycles": [
+    {
+      "id": "LC-ITEM",
+      "entity": "LIB-000198",
+      "initial_state": "Available",
+      "states": [
+        {
+          "name": "Available",
+          "meaning": "Held by the branch and free to lend.",
+          "entity": "LIB-000198",
+          "lifecycle": "LC-ITEM"
+        },
+        {
+          "name": "On Loan",
+          "meaning": "Out with a patron under an open Loan.",
+          "entity": "LIB-000198",
+          "lifecycle": "LC-ITEM"
+        },
+        {
+          "name": "Overdue",
+          "meaning": "Out with a patron past the due date.",
+          "entity": "LIB-000198",
+          "lifecycle": "LC-ITEM"
+        },
+        {
+          "name": "Returned",
+          "meaning": "Back at the branch, not yet reshelved.",
+          "entity": "LIB-000198",
+          "lifecycle": "LC-ITEM"
+        },
+        {
+          "name": "Lost",
+          "meaning": "Declared lost and not expected back.",
+          "entity": "LIB-000198",
+          "lifecycle": "LC-ITEM"
+        },
+        {
+          "name": "Withdrawn",
+          "meaning": "Removed from the collection.",
+          "entity": "LIB-000198",
+          "lifecycle": "LC-ITEM"
+        }
+      ],
+      "terminal_states": [
+        "Withdrawn"
+      ],
+      "transitions": [
+        {
+          "from": "Available",
+          "to": "On Loan",
+          "trigger": "Loan opened"
+        },
+        {
+          "from": "On Loan",
+          "to": "Returned",
+          "trigger": "Item returned"
+        },
+        {
+          "from": "On Loan",
+          "to": "Overdue",
+          "trigger": "Due date passed"
+        },
+        {
+          "from": "Overdue",
+          "to": "Returned",
+          "trigger": "Item returned late"
+        },
+        {
+          "from": "Returned",
+          "to": "Available",
+          "trigger": "Item reshelved"
+        },
+        {
+          "from": "On Loan",
+          "to": "Lost",
+          "trigger": "Declared lost"
+        },
+        {
+          "from": "Overdue",
+          "to": "Lost",
+          "trigger": "Declared lost"
+        },
+        {
+          "from": "Lost",
+          "to": "Withdrawn",
+          "trigger": "Written off"
+        }
+      ]
+    },
+    {
+      "id": "LC-PATRON",
+      "entity": "P-10432",
+      "initial_state": "Registered",
+      "states": [
+        {
+          "name": "Registered",
+          "meaning": "A member in good standing, may borrow.",
+          "entity": "P-10432",
+          "lifecycle": "LC-PATRON"
+        },
+        {
+          "name": "Suspended",
+          "meaning": "A member who may not borrow.",
+          "entity": "P-10432",
+          "lifecycle": "LC-PATRON"
+        },
+        {
+          "name": "Closed",
+          "meaning": "Membership ended, or the loan is settled.",
+          "entity": "P-10432",
+          "lifecycle": "LC-PATRON"
+        }
+      ],
+      "terminal_states": [
+        "Closed"
+      ],
+      "transitions": [
+        {
+          "from": "Registered",
+          "to": "Suspended",
+          "trigger": "Standing withdrawn"
+        },
+        {
+          "from": "Suspended",
+          "to": "Registered",
+          "trigger": "Standing restored"
+        },
+        {
+          "from": "Registered",
+          "to": "Closed",
+          "trigger": "Membership ended"
+        },
+        {
+          "from": "Suspended",
+          "to": "Closed",
+          "trigger": "Membership ended"
+        }
+      ]
+    },
+    {
+      "id": "LC-LOAN",
+      "entity": "LOAN-2026-08-0431",
+      "initial_state": "Open",
+      "states": [
+        {
+          "name": "Open",
+          "meaning": "The loan is running.",
+          "entity": "LOAN-2026-08-0431",
+          "lifecycle": "LC-LOAN"
+        },
+        {
+          "name": "Overdue",
+          "meaning": "Out with a patron past the due date.",
+          "entity": "LOAN-2026-08-0431",
+          "lifecycle": "LC-LOAN"
+        },
+        {
+          "name": "Closed",
+          "meaning": "Membership ended, or the loan is settled.",
+          "entity": "LOAN-2026-08-0431",
+          "lifecycle": "LC-LOAN"
+        }
+      ],
+      "terminal_states": [
+        "Closed"
+      ],
+      "transitions": [
+        {
+          "from": "Open",
+          "to": "Overdue",
+          "trigger": "Due date passed"
+        },
+        {
+          "from": "Open",
+          "to": "Closed",
+          "trigger": "Item returned"
+        },
+        {
+          "from": "Overdue",
+          "to": "Closed",
+          "trigger": "Item returned late"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "REL-LOAN-0431-PATRON",
+      "source": "LOAN-2026-08-0431",
+      "target": "P-10432",
+      "type": "BorrowedBy",
+      "cardinality": "one to one"
+    },
+    {
+      "id": "REL-LOAN-0431-ITEM",
+      "source": "LOAN-2026-08-0431",
+      "target": "LIB-000198",
+      "type": "Lends",
+      "cardinality": "one to one"
+    }
+  ],
+  "references": [
+    {
+      "id": "REF-ITEM-CATALOGUE",
+      "source": "LIB-000198",
+      "target": "CAT-9780857426291",
+      "direction": "outbound"
+    }
+  ],
+  "ownership": [
+    {
+      "id": "OWN-LIB-000198",
+      "owner": "Riverside Branch",
+      "owned_object": "LIB-000198",
+      "responsibility_scope": "Condition and availability of the copy, not its use while on loan.",
+      "effective_date": "2024-03-11"
+    },
+    {
+      "id": "OWN-P-10432",
+      "owner": "Membership Desk",
+      "owned_object": "P-10432",
+      "responsibility_scope": "Registration record and standing.",
+      "effective_date": "2023-06-02"
+    },
+    {
+      "id": "OWN-DOM-LENDING",
+      "owner": "Riverside Branch",
+      "owned_object": "DOM-LENDING",
+      "responsibility_scope": "Lending rules, loan records and the items in circulation.",
+      "effective_date": "2024-01-08"
+    }
+  ],
+  "classifications": [
+    {
+      "id": "CLS-BOOK",
+      "name": "Book",
+      "type": "Item medium"
+    },
+    {
+      "id": "CLS-INDIVIDUAL",
+      "name": "Individual",
+      "type": "Patron kind"
+    },
+    {
+      "id": "CLS-LOAN",
+      "name": "Loan",
+      "type": "Transaction kind"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "CAP-LEND",
+      "name": "Lend an Item",
+      "purpose": "Open a Loan connecting a Patron to an available Item."
+    },
+    {
+      "id": "CAP-RETURN",
+      "name": "Accept a return",
+      "purpose": "Close a Loan and return the Item to circulation."
+    }
+  ],
+  "policies": [
+    {
+      "id": "POL-LOAN-PERIOD",
+      "name": "Loan period",
+      "purpose": "Bound how long an Item may be held.",
+      "scope": "DOM-LENDING",
+      "effective_date": "2024-01-08",
+      "rule": "An Item is due 28 days after the Loan opens."
+    },
+    {
+      "id": "POL-SUSPEND",
+      "name": "Suspension on loss",
+      "purpose": "Protect the collection.",
+      "scope": "DOM-LENDING",
+      "effective_date": "2024-01-08",
+      "rule": "A Patron with a Lost Item moves to Suspended."
+    }
+  ],
+  "contracts": [
+    {
+      "id": "CTR-INTERLIBRARY",
+      "name": "Interlibrary lending agreement",
+      "purpose": "Govern loans of items held by another branch.",
+      "parties": [
+        "Riverside Branch",
+        "Central Library"
+      ],
+      "effective_date": "2025-02-01",
+      "scope": "Items held by either branch and lent across them."
+    }
+  ],
+  "constraints": [
+    {
+      "id": "CON-ONE-OPEN-LOAN",
+      "name": "One open Loan per Item",
+      "expression": "count(Loan where state = Open and item = <Item>) <= 1",
+      "applies_to": "Item",
+      "purpose": "Keep a copy from being lent twice at the same time."
+    }
+  ],
+  "registries": [
+    {
+      "id": "REG-ITEMS",
+      "name": "Item registry",
+      "purpose": "The authoritative list of copies held by the branch.",
+      "scope": "DOM-LENDING",
+      "registered_object_types": [
+        "Item"
+      ],
+      "owner": "OWN-DOM-LENDING"
+    }
+  ],
+  "events": [
+    {
+      "id": "EVT-0001",
+      "type": "Loan opened",
+      "occurred_at": "2026-08-08T10:12:00Z",
+      "subject": "LIB-000198",
+      "from_state": "Available",
+      "to_state": "On Loan"
+    },
+    {
+      "id": "EVT-0002",
+      "type": "Loan opened",
+      "occurred_at": "2026-08-08T10:12:00Z",
+      "subject": "LOAN-2026-08-0431",
+      "from_state": null,
+      "to_state": "Open"
+    },
+    {
+      "id": "EVT-0003",
+      "type": "Due date passed",
+      "occurred_at": "2026-09-06T00:00:00Z",
+      "subject": "LOAN-2026-08-0431",
+      "from_state": "Open",
+      "to_state": "Overdue"
+    }
+  ],
+  "workflows": [
+    {
+      "id": "WF-OPEN-LOAN",
+      "name": "Open a loan",
+      "purpose": "Move an available Item to On Loan and open a Loan record.",
+      "transitions": [
+        {
+          "entity": "LIB-000198",
+          "from": "Available",
+          "to": "On Loan"
+        }
+      ],
+      "inputs": [
+        "LIB-000198",
+        "P-10432"
+      ],
+      "outputs": [
+        "LOAN-2026-08-0431"
+      ]
+    },
+    {
+      "id": "WF-RETURN",
+      "name": "Accept a return",
+      "purpose": "Close the Loan and return the Item to circulation.",
+      "transitions": [
+        {
+          "entity": "LIB-000198",
+          "from": "On Loan",
+          "to": "Returned"
+        }
+      ],
+      "inputs": [
+        "LIB-000198",
+        "P-10432"
+      ],
+      "outputs": [
+        "LOAN-2026-08-0431"
+      ]
+    }
+  ],
+  "models": [
+    {
+      "id": "MOD-LENDING",
+      "name": "Library lending model",
+      "purpose": "The operating model of the Riverside Branch's lending service.",
+      "domains": [
+        "DOM-LENDING"
+      ]
+    }
+  ]
+}

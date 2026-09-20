@@ -27,6 +27,8 @@ import fake_site  # noqa: E402  (the fixture lives beside this file)
 
 REGISTER = "tools/conformance/requirement_register.py"
 SURVEY = "tools/conformance/compilation_survey.py"
+CATALOGUE = "tools/conformance/test_catalogue.py"
+VALIDATE = "tools/conformance/validate.py"
 PARITY = "tools/site/published_source_parity.py"
 TRACE = "tools/governance/principle_traceability.py"
 HEALTH = "tools/site/publication_health.py"
@@ -203,6 +205,113 @@ class CompilationSurvey(unittest.TestCase):
         # a permitted abridgement still has to be visible as a number
         row = [l for l in out.splitlines() if l.startswith("04 Meta Model")][0]
         self.assertGreater(int(row.split()[-1]), 0, row)
+
+
+class TestCatalogue(unittest.TestCase):
+    """The binding of Statements to Tests is derived, so it has to break when a source sentence moves."""
+
+    def test_current_catalogue_is_up_to_date(self):
+        code, out = run(ROOT, CATALOGUE, "--check")
+        self.assertEqual(code, 0, out)
+
+    def test_changed_statement_breaks_the_catalogue(self):
+        with Copy() as c:
+            c.edit("docs/Models/Event.md", "An Event shall never be modified after creation.",
+                   "An Event shall not be modified after it is created.")
+            code, out = run(c.dir, CATALOGUE, "--check")
+            self.assertNotEqual(code, 0, out)
+
+    def test_a_behaviour_item_keeps_a_list_out_of_presence(self):
+        with Copy() as c:
+            sys.path.insert(0, str(c.dir / "tools" / "conformance"))
+            code, out = run(c.dir, CATALOGUE, "--census")
+            self.assertEqual(code, 0, out)
+            # Meta/Object.md's Design Principles list carries "remain technology independent"
+            doc = run(c.dir, CATALOGUE, "--write")[0]
+            self.assertEqual(doc, 0)
+            text = (c.dir / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
+            row = [l for l in text.splitlines() if l.startswith("| REQ-META-OBJECT-001 |")][0]
+            self.assertTrue(row.rstrip().endswith("Review |"), row)
+
+    def test_an_organizational_obligation_is_not_mechanical(self):
+        with Copy() as c:
+            run(c.dir, CATALOGUE, "--write")
+            text = (c.dir / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
+            rows = [l for l in text.splitlines() if l.startswith("| REQ-META-IDENTITY-005 |")]
+            self.assertTrue(rows, "the Statement this test names is gone from the register")
+            self.assertTrue(rows[0].rstrip().endswith("Review |"), rows[0])
+
+    def test_a_statement_without_an_alias_fails_closed(self):
+        with Copy() as c:
+            aliases = "docs/Governance/Requirement-Aliases.md"
+            text = c.read(aliases)
+            rows = [l for l in text.splitlines() if l.startswith("| REQ-")]
+            c.write(aliases, text.replace(rows[0] + "\n", ""))
+            code, out = run(c.dir, CATALOGUE, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("no alias", out)
+
+
+class Validator(unittest.TestCase):
+    """The suite has to notice a broken export, or its Pass rows mean nothing."""
+
+    EX = "docs/Examples/Conformance"
+
+    def run_on(self, root):
+        return run(root, VALIDATE, "--model", "%s/model.json" % self.EX,
+                   "--map", "%s/representation-map.md" % self.EX,
+                   "--statement", "%s/conformance-statement.md" % self.EX)
+
+    def test_the_example_passes_what_it_claims(self):
+        code, out = self.run_on(ROOT)
+        self.assertEqual(code, 0, out)
+        self.assertIn("Fail 0", out)
+        # a model alone never establishes Core Conformance: Review Pass needs a reviewer
+        self.assertIn("not established", out)
+
+    def test_a_missing_required_field_fails_its_test(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for r in model["relationships"]:
+                del r["type"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertEqual(code, 0, out)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_state_change_the_lifecycle_forbids_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["events"].append({"id": "EVT-BAD", "type": "Invented", "occurred_at": "2026-09-09T00:00:00Z",
+                                    "subject": "LIB-000198", "from_state": "Available", "to_state": "Withdrawn"})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_reused_identity_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["policies"][0]["id"] = model["entities"][0]["id"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_map_that_declares_nothing_cannot_pass(self):
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            text = c.read(path)
+            c.write(path, "\n".join(l for l in text.splitlines() if not l.startswith("| ") or "collection" not in l))
+            code, out = self.run_on(c.dir)
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("declares no type", out)
+
+    def test_an_undeclared_specification_version_fails_its_declaration(self):
+        with Copy() as c:
+            path = "%s/conformance-statement.md" % self.EX
+            text = c.read(path)
+            c.write(path, text.replace("**Supported specification version:** 1.0", "**Supported specification version:**"))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
 
 
 class PublishedSourceParity(unittest.TestCase):
