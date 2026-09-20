@@ -200,39 +200,142 @@ def presence(test, text, model, types, fields):
     return "Pass", "%d %s record(s) carry %s" % (len(recs), subject, ", ".join(elements))
 
 
+def transition_predicate(text, model, lifecycles):
+    """Each Statement gets the procedure its own predicate asks for, or none.
+
+    A single catch-all answered every Transition Statement with "every recorded State change is
+    permitted", so "Transitions shall be explicitly defined" was reported Pass on the strength of a
+    check it does not make. One procedure per predicate, and a predicate with no procedure is
+    pending rather than passed.
+    """
+    low = text.lower()
+
+    if "initial state" in low:
+        bad = [lc["id"] for lc in lifecycles.values() if not lc.get("initial_state")]
+        if bad:
+            return "Fail", "no initial State: %s" % ", ".join(bad)
+        if "one and only one" in low or "one initial" in low:
+            multiple = [lc["id"] for lc in lifecycles.values() if isinstance(lc.get("initial_state"), list)]
+            if multiple:
+                return "Fail", "more than one initial State: %s" % ", ".join(multiple)
+        outside = [lc["id"] for lc in lifecycles.values()
+                   if lc.get("initial_state") not in [s.get("name") for s in lc.get("states", [])]]
+        if outside:
+            return "Fail", "initial State is not one of the Lifecycle's States: %s" % ", ".join(outside)
+        return "Pass", "%d Lifecycle(s) define exactly one initial State, each among their own States" % len(lifecycles)
+
+    if "exactly one" in low and "state" in low:
+        entities = model.get("entities", [])
+        if not entities:
+            return "Fail", "the export carries no Entity"
+        bad = []
+        for e in entities:
+            state = e.get("state")
+            lc = lifecycles.get(e.get("lifecycle"))
+            if not isinstance(state, str) or not state:
+                bad.append("%s occupies no single State" % e.get("id"))
+            elif lc and state not in [s.get("name") for s in lc.get("states", [])]:
+                bad.append("%s is in %s, which its Lifecycle does not define" % (e.get("id"), state))
+        return ("Fail", "; ".join(bad[:3])) if bad else \
+               ("Pass", "%d Entities each occupy exactly one State defined by their Lifecycle" % len(entities))
+
+    if "explicitly defined" in low or "define valid state transitions" in low or "define permitted" in low:
+        bad = []
+        for lc in lifecycles.values():
+            transitions = lc.get("transitions") or []
+            if not transitions:
+                bad.append("%s defines no Transition" % lc["id"])
+                continue
+            names = [s.get("name") for s in lc.get("states", [])]
+            for tr in transitions:
+                if not tr.get("from") or not tr.get("to"):
+                    bad.append("%s has a Transition with no from or to" % lc["id"])
+                elif tr["from"] not in names or tr["to"] not in names:
+                    bad.append("%s: %s to %s names a State the Lifecycle does not define" % (lc["id"], tr["from"], tr["to"]))
+        return ("Fail", "; ".join(bad[:3])) if bad else \
+               ("Pass", "%d Lifecycle(s) define %d Transitions, every endpoint a State they declare"
+                % (len(lifecycles), sum(len(lc.get("transitions") or []) for lc in lifecycles.values())))
+
+    if "terminal" in low:
+        permitted = {}
+        for lc in lifecycles.values():
+            for tr in lc.get("transitions", []):
+                permitted.setdefault(lc["entity"], []).append(tr["from"])
+        left = []
+        for lc in lifecycles.values():
+            for terminal in lc.get("terminal_states", []):
+                if terminal in permitted.get(lc["entity"], []):
+                    left.append("%s: %s is terminal and has an outgoing Transition" % (lc["id"], terminal))
+        return ("Fail", "; ".join(left[:3])) if left else \
+               ("Pass", "no terminal State is left in %d Lifecycle(s)" % len(lifecycles))
+
+    if "prohibit undefined" in low or "only perform" in low or "permitted by the lifecycle" in low:
+        events = model.get("events", [])
+        if not events:
+            return None, "the export carries no event history, so no recorded State change can be checked"
+        permitted = {}
+        for lc in lifecycles.values():
+            for tr in lc.get("transitions", []):
+                permitted.setdefault(lc["entity"], set()).add((tr["from"], tr["to"]))
+        bad = []
+        for e in events:
+            subject, before = e.get("subject"), e.get("from_state")
+            if before is None or subject not in permitted:
+                continue
+            if (before, e.get("to_state")) not in permitted[subject]:
+                bad.append("%s: %s to %s" % (e.get("id"), before, e.get("to_state")))
+        return ("Fail", "State change the Lifecycle does not permit: %s" % "; ".join(bad[:3])) if bad else \
+               ("Pass", "%d recorded State change(s), every one permitted by the Lifecycle"
+                % len([e for e in events if e.get("from_state")]))
+
+    if "belong to exactly one entity" in low:
+        bad = [lc["id"] for lc in lifecycles.values()
+               if not isinstance(lc.get("entity"), str) or not lc.get("entity")]
+        return ("Fail", "no single Entity: %s" % ", ".join(bad)) if bad else \
+               ("Pass", "%d Lifecycle(s) each belong to exactly one Entity" % len(lifecycles))
+
+    if "operational state" in low or "one or more state" in low:
+        bad = [lc["id"] for lc in lifecycles.values() if len(lc.get("states") or []) < 2]
+        return ("Fail", "fewer than two States: %s" % ", ".join(bad)) if bad else \
+               ("Pass", "%d Lifecycle(s) define %d States between them"
+                % (len(lifecycles), sum(len(lc.get("states") or []) for lc in lifecycles.values())))
+
+    return None, "no procedure is bound to this predicate; a reviewer decides it"
+
+
 def transition(test, text, model, types, fields):
+    """Every part of the Statement gets its own procedure, and one unanswered part makes it pending.
+
+    A stem with a list states several requirements at once. Answering it with the procedure for
+    whichever phrase matched first reports Pass on the strength of a check the other items never
+    received, which is the same defect as passing a Presence list over an item nothing resolves.
+    """
     lifecycles = {lc["id"]: lc for lc in model.get("lifecycles", [])}
     if not lifecycles:
         return "Fail", "the export carries no Lifecycle"
-    low = text.lower()
-    if "initial state" in low:
-        bad = [lc["id"] for lc in lifecycles.values() if not lc.get("initial_state")]
-        return ("Fail", "no initial State: %s" % ", ".join(bad)) if bad else ("Pass", "%d Lifecycle(s) define one initial State" % len(lifecycles))
-    if "exactly one" in low and "state" in low:
-        bad = [e["id"] for e in model.get("entities", []) if not isinstance(e.get("state"), str)]
-        return ("Fail", "not in exactly one State: %s" % ", ".join(bad)) if bad else ("Pass", "%d Entities occupy exactly one State" % len(model.get("entities", [])))
-    events = model.get("events", [])
-    if not events:
-        return None, "the export carries no event history, so no recorded State change can be checked"
-    permitted = {}
-    for lc in lifecycles.values():
-        for t in lc.get("transitions", []):
-            permitted.setdefault(lc["entity"], set()).add((t["from"], t["to"]))
-    bad = []
-    for e in events:
-        subject = e.get("subject")
-        if e.get("from_state") is None or subject not in permitted:
-            continue
-        if (e["from_state"], e["to_state"]) not in permitted[subject]:
-            bad.append("%s: %s to %s" % (e.get("id"), e["from_state"], e["to_state"]))
-    if bad:
-        return "Fail", "State change the Lifecycle does not permit: %s" % "; ".join(bad[:3])
-    return "Pass", "%d recorded State change(s), every one permitted" % len([e for e in events if e.get("from_state")])
+    parts = [i.strip(" .;") for i in re.split(r"[;,]", text.split(":", 1)[1]) if i.strip(" .;")] \
+        if ":" in text else [text]
+    outcomes, reasons, unanswered = [], [], []
+    for part in parts:
+        outcome, reason = transition_predicate(part, model, lifecycles)
+        if outcome is None:
+            unanswered.append(part[:60])
+        else:
+            outcomes.append(outcome)
+            reasons.append(reason)
+    if "Fail" in outcomes:
+        return "Fail", "; ".join(r for o, r in zip(outcomes, reasons) if o == "Fail")[:200]
+    if unanswered:
+        return None, "no procedure is bound to %d of this Statement's %d parts (%s); a reviewer decides it" \
+                     % (len(unanswered), len(parts), unanswered[0])
+    return "Pass", "; ".join(reasons)[:200]
 
 
-def invariant(test, text, model, types, fields):
+def invariant_predicate(text, model, types, lifecycles):
+    """One prohibition, one procedure, or none. Never a verdict borrowed from another check."""
     low = text.lower()
-    if "identity" in low and ("reused" in low or "not be reused" in low):
+
+    if "identity" in low and "reused" in low:
         seen, dupes = {}, []
         for name, paths in types.items():
             for path, rec in instances(model, paths):
@@ -242,8 +345,103 @@ def invariant(test, text, model, types, fields):
                 if ident in seen and seen[ident] != path:
                     dupes.append(ident)
                 seen[ident] = path
-        return ("Fail", "identity used by two records: %s" % ", ".join(sorted(set(dupes))[:3])) if dupes else ("Pass", "%d identities, none reused" % len(seen))
+        return ("Fail", "identity used by two records: %s" % ", ".join(sorted(set(dupes))[:3])) if dupes else \
+               ("Pass", "%d identities, none reused across collections" % len(seen))
+
+    if "ownership" in low and ("never be undefined" in low or "not be undefined" in low):
+        governed = [(p, r) for p in ("entities", "domains") for r in model.get(p, [])]
+        bad = [r.get("id") for _, r in governed if not r.get("owner")]
+        return ("Fail", "no owner: %s" % ", ".join(str(b) for b in bad[:3])) if bad else \
+               ("Pass", "%d governed records each name an owner" % len(governed))
+
+    if "primary governance" in low and "shared" in low:
+        bad, seen = [], {}
+        for e in model.get("entities", []):
+            domain = e.get("domain")
+            if isinstance(domain, list) and len(domain) > 1:
+                bad.append("%s names %d primary Domains" % (e.get("id"), len(domain)))
+        for d in model.get("domains", []):
+            for name in d.get("entity_types", []):
+                if name in seen and seen[name] != d["id"]:
+                    bad.append("%s is governed by %s and %s" % (name, seen[name], d["id"]))
+                seen[name] = d["id"]
+        return ("Fail", "; ".join(bad[:3])) if bad else \
+               ("Pass", "%d Entities each name one primary Domain, and no Entity type is governed twice"
+                % len(model.get("entities", [])))
+
+    if "multiple initial state" in low:
+        bad = [lc["id"] for lc in lifecycles.values() if isinstance(lc.get("initial_state"), list)]
+        return ("Fail", "more than one initial State: %s" % ", ".join(bad)) if bad else \
+               ("Pass", "%d Lifecycle(s), none with more than one initial State" % len(lifecycles))
+
+    if "unreachable state" in low:
+        bad = []
+        for lc in lifecycles.values():
+            names = [s.get("name") for s in lc.get("states", [])]
+            reached, frontier = {lc.get("initial_state")}, [lc.get("initial_state")]
+            while frontier:
+                here = frontier.pop()
+                for tr in lc.get("transitions", []):
+                    if tr.get("from") == here and tr.get("to") not in reached:
+                        reached.add(tr["to"])
+                        frontier.append(tr["to"])
+            unreachable = [n for n in names if n not in reached]
+            if unreachable:
+                bad.append("%s: %s" % (lc["id"], ", ".join(unreachable)))
+        return ("Fail", "States no Transition reaches from the initial State: %s" % "; ".join(bad[:3])) if bad else \
+               ("Pass", "every State of %d Lifecycle(s) is reachable from its initial State" % len(lifecycles))
+
+    if "undefined transition" in low or "undefined state transition" in low:
+        bad = []
+        for lc in lifecycles.values():
+            names = [s.get("name") for s in lc.get("states", [])]
+            for tr in lc.get("transitions", []):
+                if tr.get("from") not in names or tr.get("to") not in names:
+                    bad.append("%s: %s to %s" % (lc["id"], tr.get("from"), tr.get("to")))
+        for wf in model.get("workflows", []):
+            for tr in wf.get("transitions", []):
+                lc = next((l for l in lifecycles.values() if l.get("entity") == tr.get("entity")), None)
+                if lc and (tr.get("from"), tr.get("to")) not in {(x.get("from"), x.get("to")) for x in lc.get("transitions", [])}:
+                    bad.append("%s performs %s to %s, which %s does not define" % (wf.get("id"), tr.get("from"), tr.get("to"), lc["id"]))
+        return ("Fail", "; ".join(bad[:3])) if bad else \
+               ("Pass", "no Transition in %d Lifecycle(s) or %d Workflow(s) names an undefined State"
+                % (len(lifecycles), len(model.get("workflows", []))))
+
+    if "violate entity lifecycle" in low or "violate lifecycle" in low:
+        bad = []
+        for wf in model.get("workflows", []):
+            for tr in wf.get("transitions", []):
+                lc = next((l for l in lifecycles.values() if l.get("entity") == tr.get("entity")), None)
+                if lc is None:
+                    bad.append("%s acts on %s, which has no Lifecycle" % (wf.get("id"), tr.get("entity")))
+                elif (tr.get("from"), tr.get("to")) not in {(x.get("from"), x.get("to")) for x in lc.get("transitions", [])}:
+                    bad.append("%s: %s to %s is not in %s" % (wf.get("id"), tr.get("from"), tr.get("to"), lc["id"]))
+        return ("Fail", "; ".join(bad[:3])) if bad else \
+               ("Pass", "%d Workflow(s) perform only Transitions their Entity's Lifecycle defines"
+                % len(model.get("workflows", [])))
+
     return None, "deciding this prohibition needs evidence the export does not carry (a history, or a refusal record)"
+
+
+def invariant(test, text, model, types, fields):
+    """As with Transition, every part of a compound prohibition is answered or the Statement is pending."""
+    lifecycles = {lc["id"]: lc for lc in model.get("lifecycles", [])}
+    parts = [i.strip(" .;") for i in re.split(r"[;,]", text.split(":", 1)[1]) if i.strip(" .;")] \
+        if "never:" in text or "shall not:" in text else [text]
+    outcomes, reasons, unanswered = [], [], []
+    for part in parts:
+        outcome, reason = invariant_predicate(part, model, types, lifecycles)
+        if outcome is None:
+            unanswered.append(part[:60])
+        else:
+            outcomes.append(outcome)
+            reasons.append(reason)
+    if "Fail" in outcomes:
+        return "Fail", "; ".join(r for o, r in zip(outcomes, reasons) if o == "Fail")[:200]
+    if unanswered:
+        return None, ("deciding %d of this Statement's %d parts needs evidence the export does not carry (%s)"
+                      % (len(unanswered), len(parts), unanswered[0]))
+    return "Pass", "; ".join(reasons)[:200]
 
 
 def declaration(clause, statement):

@@ -296,6 +296,97 @@ class Validator(unittest.TestCase):
             code, out = self.run_on(c.dir)
             self.assertNotIn("Fail 0", out)
 
+    def test_a_lifecycle_with_no_transitions_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["lifecycles"][0]["transitions"] = []
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_state_outside_its_lifecycle_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["state"] = "Invented"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_an_initial_state_the_lifecycle_does_not_define_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["lifecycles"][0]["initial_state"] = "Nowhere"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_transition_out_of_a_terminal_state_is_reported(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            lc = model["lifecycles"][0]
+            lc["transitions"].append({"from": lc["terminal_states"][0], "to": "Available", "trigger": "Invented"})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            report = json.dumps(out)
+            self.assertNotIn("Fail 0", out, report)
+
+    def test_a_compound_statement_is_not_passed_on_one_of_its_parts(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            # REQ-MODELS-LIFECYCLE-002 requires a Lifecycle to belong to exactly one Entity and to
+            # define an initial State and operational States; breaking only the first must fail it
+            for lc in model["lifecycles"]:
+                lc["entity"] = ""
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_an_unreachable_state_is_found(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            lc = model["lifecycles"][0]
+            lc["states"].append({"name": "Orphan", "meaning": "reachable by nothing",
+                                 "entity": lc["entity"], "lifecycle": lc["id"]})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_an_object_without_an_owner_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["owner"] = ""
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_an_entity_type_governed_by_two_domains_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["domains"].append({"id": "DOM-SECOND", "name": "Second", "purpose": "overlap",
+                                     "owner": "OWN-DOM-LENDING", "entity_types": ["Item"]})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_workflow_outside_its_lifecycle_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["workflows"][0]["transitions"] = [{"entity": "LIB-000198", "from": "Available", "to": "Lost"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_compound_prohibition_is_pending_not_passed(self):
+        # REQ-MODELS-LIFECYCLE-012 forbids four things and one of them, ambiguous State
+        # progression, no export settles: the Statement must not be reported Pass on the other three
+        code, out = run(ROOT, VALIDATE, "--model", "%s/model.json" % self.EX,
+                        "--map", "%s/representation-map.md" % self.EX,
+                        "--statement", "%s/conformance-statement.md" % self.EX, "--report", "/tmp/ocom-compound.md")
+        self.assertEqual(code, 0, out)
+        row = [l for l in open("/tmp/ocom-compound.md") if l.startswith("| REQ-MODELS-LIFECYCLE-012 ")][0]
+        self.assertIn("pending", row)
+        self.assertIn("parts", row)
+
     def test_a_map_that_declares_nothing_cannot_pass(self):
         with Copy() as c:
             path = "%s/representation-map.md" % self.EX
