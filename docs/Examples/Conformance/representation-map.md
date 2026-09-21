@@ -34,6 +34,8 @@ own.
 
 # How to Read a Row
 
+A row `Integrity.method` names the method by which records demonstrate they are unaltered, and a row `Type.integrity` names the field that carries the demonstration on each record of that type. `sha256-canonical-json` is SHA-256 over the record's canonical JSON with the demonstration field removed, keys sorted, no whitespace, UTF-8; it is the one method `tools/conformance/validate.py` verifies, and a map declaring another method sends the Integrity Tests to a reviewer.
+
 A row of kind `collection` names where instances of an OCOM type live in the export: one or more
 top-level keys, or a path of the form `parent[].child` for instances nested inside another
 collection. A row of kind `field` names the field those instances carry for one element of the
@@ -46,8 +48,8 @@ that needs it fails rather than passing over an absence.
 
 | OCOM type | Kind | Where it is in this export |
 |---|---|---|
-| Object | collection | `entities`, `domains`, `relationships`, `references`, `events`, `policies`, `contracts`, `capabilities`, `registries`, `classifications`, `constraints`, `workflows`, `models` |
-| Identity | collection | `entities`, `domains`, `relationships`, `references`, `events`, `policies`, `contracts`, `capabilities`, `registries`, `classifications`, `constraints`, `workflows`, `models` |
+| Object | collection | `entities`, `domains`, `relationships`, `references`, `events`, `policies`, `contracts`, `capabilities`, `registries`, `classifications`, `constraints`, `workflows`, `models`, `audit_records`, `evidence_records` |
+| Identity | collection | `entities`, `domains`, `relationships`, `references`, `events`, `policies`, `contracts`, `capabilities`, `registries`, `classifications`, `constraints`, `workflows`, `models`, `audit_records`, `evidence_records` |
 | Metadata | collection | `entities` |
 | Entity | collection | `entities` |
 | Domain | collection | `domains` |
@@ -66,6 +68,8 @@ that needs it fails rather than passing over an absence.
 | Contract | collection | `contracts` |
 | Constraint | collection | `constraints` |
 | Registry | collection | `registries` |
+| Audit record | collection | `audit_records` |
+| Evidence record | collection | `evidence_records` |
 | Organization | collection | *(not represented: this export models one branch's lending service and carries no Organization records)* |
 
 ---
@@ -189,6 +193,12 @@ that needs it fails rather than passing over an absence.
 | Domain.entity types | field | `entity_types` |
 | Domain.owner | field | `owner` |
 | Registry.scope | field | `scope` |
+| Audit record.identity | field | `id` |
+| Audit record.integrity | field | `digest` |
+| Evidence record.identity | field | `id` |
+| Evidence record.integrity | field | `digest` |
+| Event.integrity | field | `digest` |
+| Integrity.method | field | `sha256-canonical-json` |
 
 ---
 

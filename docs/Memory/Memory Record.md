@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 11 September 2026
+**Last Updated:** 21 September 2026
 
 ---
 
@@ -99,6 +99,14 @@ A Memory Record may represent:
 - Exception
 
 Additional types may be introduced by future specifications.
+
+---
+
+# Audit Record
+
+An Audit Record is a Memory Record whose subject is a governance action on an Object: its creation, modification or retirement, an approval, a change of Ownership or Classification, or the application of a Policy.
+
+Wherever this specification states that Audit records shall remain immutable, the clause is satisfied by Constitution Principle 4 together with the Conformance clause of this document that requires an implementation to be able to demonstrate that a Memory Record has not been altered. It requires nothing further of an implementation. Audit Record is defined here by reference to Memory Record and is not a term of the Core Vocabulary (`CAND-024`).
 
 ---
 
@@ -253,7 +261,10 @@ A compliant implementation shall:
 - support evidence references;
 - support confidence assessment;
 - preserve audit history;
-- comply with governance policies.
+- comply with governance policies;
+- be able to demonstrate, to a party holding a Memory Record together with its identity and nothing else, that the record has not been altered since its creation.
+
+The last clause names a property and no mechanism. Content-addressed identity and hash chaining are two mechanisms that satisfy it; an implementation that satisfies it another way conforms. It is stated identically for Evidence Records in `Evidence Overlay.md`, and it is what makes the immutability this document requires a checkable property rather than an assertion (`CAND-024`).
 
 ---
 
@@ -266,3 +277,4 @@ A compliant implementation shall:
 | 0.1 | 27 July 2026 | Changed Evidence section from "may reference" to "shall reference at least one Evidence Record" — per Constitution §3 and ARCH-002 (Step 0, Decision 2) |
 | 0.1 | 5 September 2026 | Added a terminology note: Memory Entry (Constitution paragraph 4) and Memory Record are one concept per Step 0 Decision 1; rename pending, tracked as GAP-004. No requirement changed. |
 | 0.1 | 11 September 2026 | Status moved out of Mandatory Attributes and restated as a derived projection computed from the append-only sequence for a subject, per the resolution of `AO-003` as its Option B, decided in `CAND-014`. Integration of that decision's Layer 1 only; no other attribute, section or requirement changed. |
+| 0.1 | 21 September 2026 | Conformance gains the integrity guarantee and an Audit Record section defines the subject of the clause "Audit records shall remain immutable" by reference to Memory Record, per `CAND-024` (Decided 21 September 2026). `AO-075` closes. |

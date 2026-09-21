@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 5 September 2026
+**Last Updated:** 21 September 2026
 
 ---
 
@@ -28,9 +28,13 @@ Evidence Overlay enables explainability, traceability, and verification of retai
 
 ---
 
-# Reserved Sections
+# Definition
 
-Definition, the Source and Reliability attributes, Independence, and Conformance for Evidence Overlay are reserved for a future version of this specification.
+An Evidence Record is the retained account of why a Memory Record holds its value: what was observed or asserted, from which source, and how reliable that source was judged to be at the time.
+
+Evidence explains; it does not decide.
+
+A Memory Record without Evidence is a belief, and Constitution Principle 3 does not permit a retained belief without traceable Evidence.
 
 ---
 
@@ -64,6 +68,12 @@ Every Evidence Record shall define:
 - Related Memory Record
 - Description
 - Created Date
+- Source
+- Reliability
+
+Source is the origin of the Evidence, named as one of the Evidence Sources this document lists, with an identifier of the specific origin where one exists and the value unknown source where it does not.
+
+Reliability is the recorded judgement of the source's reliability at the time of recording, on a scale the organization defines and declares, together with the actor who recorded the judgement. Reliability is a property of the Evidence; Confidence, which summarises it across the Evidence a Memory Record references, is defined in `Confidence.md`.
 
 ---
 
@@ -132,6 +142,31 @@ An Evidence Record is never altered after creation; there is no previous value o
 
 ---
 
+# Independence
+
+Evidence is independent of:
+
+- the Memory Record it supports, which may gain new Evidence without changing;
+- Metadata, which Constitution Principle 3 forbids merging with Evidence;
+- Confidence, which Evidence explains and does not replace;
+- implementation technology.
+
+---
+
+# Conformance
+
+A compliant implementation shall:
+
+- implement the mandatory attributes;
+- preserve an Evidence Record unaltered after creation, and represent corrections as new Evidence Records;
+- support every Evidence Source this document lists, including unknown source;
+- record Source and Reliability together with the actor who recorded them;
+- be able to demonstrate, to a party holding an Evidence Record together with its identity and nothing else, that the record has not been altered since its creation.
+
+The last clause names a property and no mechanism. Content-addressed identity and hash chaining are two mechanisms that satisfy it; an implementation that satisfies it another way conforms. It is stated identically for Memory Records in `Memory Record.md`.
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -141,3 +176,4 @@ An Evidence Record is never altered after creation; there is no previous value o
 | 0.1 | 27 July 2026 | Added "be append-only" to Design Principles and a new Immutability section explicitly stating that an Evidence Record is immutable after creation and corrections are new Evidence Records; rewrote Auditability to remove previous-value/new-value language — per Constitution §4 and ARCH-006 |
 | 0.1 | 27 July 2026 | Added "unknown source" to Evidence Sources — per Constitution §3 and ARCH-002 (Step 0, Decision 2) |
 | 0.1 | 5 September 2026 | Relationship to Memory Record: "may reference one or more" changed to "shall reference at least one Evidence Record, and may reference more than one", propagating ARCH-002 (Step 0, Decision 2), already applied to `Memory Record.md` on 27 July 2026 and to this document's Evidence Sources section ("the complete absence of an Evidence Record is never permitted"). |
+| 0.1 | 21 September 2026 | The four sections reserved since 21 July 2026 are written, per `CAND-023` (Decided 21 September 2026): Definition; Source and Reliability added to the Mandatory Attributes; Independence; Conformance. The Conformance section carries the integrity guarantee of `CAND-024`. `FW-001` closes. |
