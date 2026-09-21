@@ -73,7 +73,7 @@
 | REQ-META-CLASSIFICATION-013 | `Meta/Classification.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CLASSIFICATION-014 | `Meta/Classification.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CLASSIFICATION-015 | `Meta/Classification.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-CLASSIFICATION-016 | `Meta/Classification.md` | Integrity | mandatory | Pass | 3 audit record record(s) carry a demonstration that verifies (sha256-canonical-json) |
+| REQ-META-CLASSIFICATION-016 | `Meta/Classification.md` | Integrity | mandatory | Pass | 3 audit record record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-META-CLASSIFICATION-017 | `Meta/Classification.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-RELATIONSHIP-001 | `Meta/Relationship.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-RELATIONSHIP-002 | `Meta/Relationship.md` | Presence | mandatory | Pass | 2 relationship record(s) carry identifier, source object, target object, relationship type |
@@ -83,7 +83,7 @@
 | REQ-META-RELATIONSHIP-013 | `Meta/Relationship.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-RELATIONSHIP-014 | `Meta/Relationship.md` | Review | recommended | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-RELATIONSHIP-015 | `Meta/Relationship.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-RELATIONSHIP-016 | `Meta/Relationship.md` | Integrity | mandatory | Pass | 3 audit record record(s) carry a demonstration that verifies (sha256-canonical-json) |
+| REQ-META-RELATIONSHIP-016 | `Meta/Relationship.md` | Integrity | mandatory | Pass | 3 audit record record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-META-RELATIONSHIP-017 | `Meta/Relationship.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-REFERENCE-001 | `Meta/Reference.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-REFERENCE-002 | `Meta/Reference.md` | Presence | mandatory | Pass | 1 reference record(s) carry source object, target object, direction |
@@ -94,7 +94,7 @@
 | REQ-META-REFERENCE-014 | `Meta/Reference.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-REFERENCE-015 | `Meta/Reference.md` | Review | recommended | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-REFERENCE-016 | `Meta/Reference.md` | Review | recommended | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-REFERENCE-017 | `Meta/Reference.md` | Integrity | mandatory | Pass | 3 audit record record(s) carry a demonstration that verifies (sha256-canonical-json) |
+| REQ-META-REFERENCE-017 | `Meta/Reference.md` | Integrity | mandatory | Pass | 3 audit record record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-META-REFERENCE-018 | `Meta/Reference.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CAPABILITY-002 | `Meta/Capability.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CAPABILITY-003 | `Meta/Capability.md` | Presence | mandatory | Pass | 2 capability record(s) carry identifier, name, purpose |
@@ -113,7 +113,7 @@
 | REQ-META-POLICY-017 | `Meta/Policy.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-POLICY-018 | `Meta/Policy.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-POLICY-019 | `Meta/Policy.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-POLICY-020 | `Meta/Policy.md` | Integrity | mandatory | Pass | 3 audit record record(s) carry a demonstration that verifies (sha256-canonical-json) |
+| REQ-META-POLICY-020 | `Meta/Policy.md` | Integrity | mandatory | Pass | 3 audit record record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-META-POLICY-021 | `Meta/Policy.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CONTRACT-001 | `Meta/Contract.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CONTRACT-002 | `Meta/Contract.md` | Presence | mandatory | Pass | 1 contract record(s) carry identifier, purpose, participants, scope, effective date |
@@ -121,7 +121,7 @@
 | REQ-META-CONTRACT-013 | `Meta/Contract.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CONTRACT-014 | `Meta/Contract.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CONTRACT-016 | `Meta/Contract.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-CONTRACT-017 | `Meta/Contract.md` | Integrity | mandatory | Pass | 3 audit record record(s) carry a demonstration that verifies (sha256-canonical-json) |
+| REQ-META-CONTRACT-017 | `Meta/Contract.md` | Integrity | mandatory | Pass | 3 audit record record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-META-CONTRACT-018 | `Meta/Contract.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CONSTRAINT-002 | `Meta/Constraint.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CONSTRAINT-003 | `Meta/Constraint.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
@@ -134,7 +134,7 @@
 | REQ-META-CONSTRAINT-017 | `Meta/Constraint.md` | Presence | mandatory | pending | the Statement's subject is not a type the Representation Map declares |
 | REQ-META-CONSTRAINT-018 | `Meta/Constraint.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CONSTRAINT-019 | `Meta/Constraint.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-CONSTRAINT-020 | `Meta/Constraint.md` | Integrity | mandatory | Pass | 3 audit record record(s) carry a demonstration that verifies (sha256-canonical-json) |
+| REQ-META-CONSTRAINT-020 | `Meta/Constraint.md` | Integrity | mandatory | Pass | 3 audit record record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-META-CONSTRAINT-021 | `Meta/Constraint.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-OWNERSHIP-001 | `Meta/Ownership.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-OWNERSHIP-002 | `Meta/Ownership.md` | Presence | mandatory | pending | the Statement's subject is not a type the Representation Map declares |
@@ -150,7 +150,7 @@
 | REQ-META-OWNERSHIP-019 | `Meta/Ownership.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-OWNERSHIP-020 | `Meta/Ownership.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-OWNERSHIP-021 | `Meta/Ownership.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-OWNERSHIP-022 | `Meta/Ownership.md` | Integrity | mandatory | Pass | 3 audit record record(s) carry a demonstration that verifies (sha256-canonical-json) |
+| REQ-META-OWNERSHIP-022 | `Meta/Ownership.md` | Integrity | mandatory | Pass | 3 audit record record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-META-OWNERSHIP-023 | `Meta/Ownership.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-REGISTRY-001 | `Meta/Registry.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-REGISTRY-002 | `Meta/Registry.md` | Presence | mandatory | Pass | 1 registry record(s) carry identifier, name, purpose, registry scope, registered object types, ownership |
@@ -163,7 +163,7 @@
 | REQ-META-REGISTRY-013 | `Meta/Registry.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-REGISTRY-014 | `Meta/Registry.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-REGISTRY-015 | `Meta/Registry.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-REGISTRY-016 | `Meta/Registry.md` | Integrity | mandatory | Pass | 3 audit record record(s) carry a demonstration that verifies (sha256-canonical-json) |
+| REQ-META-REGISTRY-016 | `Meta/Registry.md` | Integrity | mandatory | Pass | 3 audit record record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-META-REGISTRY-017 | `Meta/Registry.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-MODEL-001 | `Models/Model.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-MODEL-002 | `Models/Model.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
@@ -206,11 +206,11 @@
 | REQ-MODELS-EVENT-001 | `Models/Event.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-EVENT-002 | `Models/Event.md` | Presence | mandatory | Pass | 4 event record(s) carry identifier, each distinct |
 | REQ-MODELS-EVENT-003 | `Models/Event.md` | Presence | mandatory | pending | the Statement states a condition rather than an element (time at which it occurred); a reviewer decides it |
-| REQ-MODELS-EVENT-004 | `Models/Event.md` | Integrity | mandatory | Pass | 4 event record(s) carry a demonstration that verifies (sha256-canonical-json) |
+| REQ-MODELS-EVENT-004 | `Models/Event.md` | Integrity | mandatory | Pass | 4 event record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-MODELS-EVENT-005 | `Models/Event.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-EVENT-008 | `Models/Event.md` | Invariant | mandatory | pending | deciding this prohibition needs evidence the export does not carry (a history, or a refusal record) |
 | REQ-MODELS-EVENT-009 | `Models/Event.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-MODELS-EVENT-010 | `Models/Event.md` | Integrity | mandatory | Pass | 4 event record(s) carry a demonstration that verifies (sha256-canonical-json) |
+| REQ-MODELS-EVENT-010 | `Models/Event.md` | Integrity | mandatory | Pass | 4 event record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-MODELS-EVENT-011 | `Models/Event.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-EVENT-012 | `Models/Event.md` | Review | recommended | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-EVENT-013 | `Models/Event.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |

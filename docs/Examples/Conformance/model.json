@@ -439,44 +439,40 @@
   ],
   "events": [
     {
-      "id": "EVT-0001",
       "type": "Loan opened",
       "occurred_at": "2026-08-08T10:12:00Z",
       "subject": "LIB-000198",
       "from_state": "Available",
       "to_state": "On Loan",
       "source": "WF-OPEN-LOAN",
-      "digest": "2e9502aecc25a27ede8561e81537499d623b7428b5b720d13df135b9b7056a81"
+      "id": "ebfd2544e4c6ec239b78a5e54aa78c1ec64cd3510c08e6adf8faabf54240653a"
     },
     {
-      "id": "EVT-0002",
       "type": "Loan opened",
       "occurred_at": "2026-08-08T10:12:00Z",
       "subject": "LOAN-2026-08-0431",
       "from_state": null,
       "to_state": "Open",
       "source": "WF-OPEN-LOAN",
-      "digest": "d27f6b9207a29283d85820dc99726a1232f5cc72ac437105a7f52ee06175930f"
+      "id": "e72038007542545b8af8e79cb5f5f77aea92f5b93b4eebca646dca3407a2a3fa"
     },
     {
-      "id": "EVT-0003",
       "type": "Due date passed",
       "occurred_at": "2026-09-06T00:00:00Z",
       "subject": "LOAN-2026-08-0431",
       "from_state": "Open",
       "to_state": "Overdue",
       "source": "Scheduled Process",
-      "digest": "e9fefa34771300e6c55f2ddf3960bec80fac1dd6c8bb697b0321f025b0a436eb"
+      "id": "bc33635e5c39c0cd675501cefb27438e49bef4bf425ef1821ac9e5eb7f6ffad4"
     },
     {
-      "id": "EVT-0004",
       "type": "Due date passed",
       "occurred_at": "2026-09-06T00:00:00Z",
       "subject": "LIB-000198",
       "from_state": "On Loan",
       "to_state": "Overdue",
       "source": "Scheduled Process",
-      "digest": "d59b610146a6750199da5c26d89f28bba517e1c71cd3b172319cabd58f0021f8"
+      "id": "fc5852e8e9ed2e3d9051e84624b62a5aef84050c4d863f5b041074e6d730e208"
     }
   ],
   "workflows": [
@@ -531,52 +527,52 @@
   ],
   "audit_records": [
     {
-      "id": "AUD-0001",
       "type": "Decision",
       "subject": "LIB-000198",
       "value": "Ownership assigned to OWN-LIB-000198",
-      "layer": "operational",
+      "layer": "Persistent",
       "evidence": [
         "EVD-0001"
       ],
       "created_at": "2024-03-11T09:00:00Z",
       "creator": "Branch Manager",
       "governance_policy": "POL-LOAN-PERIOD",
-      "digest": "b640c3c0a37c5520f8804cd44fa097c9ae9062799c737164a6bb4f4a5e51aa38"
+      "label": "AUD-0001",
+      "id": "58350249dd24cc1dc554b2dfa6aaf112e896ed12d87b450aa5e44f0096fafa60"
     },
     {
-      "id": "AUD-0002",
       "type": "Decision",
       "subject": "LIB-000198",
       "value": "Classification assigned: CLS-BOOK",
-      "layer": "operational",
+      "layer": "Persistent",
       "evidence": [
         "EVD-0002"
       ],
       "created_at": "2024-03-11T09:05:00Z",
       "creator": "Cataloguer",
       "governance_policy": "POL-LOAN-PERIOD",
-      "digest": "632f7d88316279bb7ad9a2ccc44770cb62bf23f1f6257342ef76a5d8fdff630f"
+      "label": "AUD-0002",
+      "id": "11312963601185379dfdc852d7d27d9fdc379f5899989f650e7d8310351cfa61"
     },
     {
-      "id": "AUD-0003",
       "type": "Decision",
       "subject": "P-10432",
       "value": "Ownership assigned to OWN-P-10432",
-      "layer": "operational",
+      "layer": "Persistent",
       "evidence": [
         "EVD-0003"
       ],
       "created_at": "2023-06-02T10:30:00Z",
       "creator": "Membership Desk",
       "governance_policy": "POL-SUSPEND",
-      "digest": "14342927c0a4f5e5c4e10bee06eb463101213f98cc71930c3bbe66d2143c5728"
+      "label": "AUD-0003",
+      "id": "4a9e8ee2ba7193d5aa68d82a3a34933b591c09b2a1c2b0b8659caeb363b7d950"
     }
   ],
   "evidence_records": [
     {
       "id": "EVD-0001",
-      "related_memory_record": "AUD-0001",
+      "related_memory_record": "58350249dd24cc1dc554b2dfa6aaf112e896ed12d87b450aa5e44f0096fafa60",
       "description": "Accession slip signed at intake.",
       "created_date": "2024-03-11",
       "source": "human verification",
@@ -585,12 +581,11 @@
         "scale": "branch three-level",
         "value": "high",
         "recorded_by": "Branch Manager"
-      },
-      "digest": "72955e564db51eea42d352e61587bd134481c879d4f7b098dd05f939003197fc"
+      }
     },
     {
       "id": "EVD-0002",
-      "related_memory_record": "AUD-0002",
+      "related_memory_record": "11312963601185379dfdc852d7d27d9fdc379f5899989f650e7d8310351cfa61",
       "description": "Catalogue rule: physical monographs are Books.",
       "created_date": "2024-03-11",
       "source": "business rules",
@@ -599,12 +594,11 @@
         "scale": "branch three-level",
         "value": "high",
         "recorded_by": "Cataloguer"
-      },
-      "digest": "6bfcfa8e2c84957cc86b53ae9cb0846f130fa3464eac0e503dfe121be910d877"
+      }
     },
     {
       "id": "EVD-0003",
-      "related_memory_record": "AUD-0003",
+      "related_memory_record": "4a9e8ee2ba7193d5aa68d82a3a34933b591c09b2a1c2b0b8659caeb363b7d950",
       "description": "Registration form countersigned.",
       "created_date": "2023-06-02",
       "source": "human verification",
@@ -613,8 +607,7 @@
         "scale": "branch three-level",
         "value": "medium",
         "recorded_by": "Membership Desk"
-      },
-      "digest": "fd29cbbc1e47380cdb259273987437f3b0f5fff3e6baaa683137f73b53e399a7"
+      }
     }
   ]
 }

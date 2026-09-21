@@ -138,7 +138,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 | `docs/Memory/Overview.md:48` | binding rule |   | Memory shall preserve evidence. |
 | `docs/Memory/Confidence.md:35` | binding rule |   | Confidence is metadata associated with a Memory Record and shall not replace evidence or business validation. |
 | `docs/Memory/Evidence Overlay.md:37` | restatement |   | A Memory Record without Evidence is a belief, and Constitution Principle 3 does not permit a retained belief without traceable Evidence. |
-| `docs/Core/Terminology.md:265` | reserved |   | **Evidence** (Canonical Principle 3): Definition reserved in `Memory/Evidence Overlay.md`; tracked as `AO-021` and `AO-053`. |
+| `docs/Core/Terminology.md:265` | restatement |   | An Evidence Record is the retained account of why a Memory Record holds its value: what was observed or asserted, from which source, and how reliable that source was judged to be at the time. |
 
 **Test:** A Presence Test failing on any exported Memory Record with no reference to an Evidence Record (`Memory/Memory Record.md:189`). It cannot run under Core Conformance, because no `Memory/` Statement is in the requirement set; it becomes runnable only under a Profile Declaration whose Included Set adds the two Memory documents.
 
@@ -161,7 +161,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 | `docs/Memory/Overview.md:46` | binding rule |   | Memory shall be append-only. |
 | `docs/Memory/Memory Record.md:260` | binding rule |  | never modify a Memory Record after creation, and represent corrections as new Memory Records; |
 | `docs/Memory/Evidence Overlay.md:46` | binding rule |  | be append-only; |
-| `docs/Memory/Retention.md:196` | binding rule |  | preserve audit history; |
+| `docs/Memory/Retention.md:198` | binding rule |  | preserve audit history; |
 | `docs/Memory/Memory Record.md:265` | binding rule |   | be able to demonstrate, to a party holding a Memory Record together with its identity and nothing else, that the record has not been altered since its creation. |
 
 **Test:** An Invariant Test over Events: export the model, correct an already-exported Event, re-export, and fail when an identifier from the first export carries different content in the second or when the correction produced no additional Event (REQ-MODELS-EVENT-010, REQ-MODELS-EVENT-011). The same Test over Memory Records can fail only outside Core Conformance.

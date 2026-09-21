@@ -117,7 +117,10 @@ def instances(model, paths):
                         seen.add(id(sub))
                         out.append((p, sub))
         else:
-            for rec in model.get(p, []):
+            coll = model.get(p, [])
+            if not isinstance(coll, list) or any(not isinstance(rec, dict) for rec in coll):
+                raise SystemExit("the export's %s is not a list of records, so nothing in it can be checked" % p)
+            for rec in coll:
                 if id(rec) not in seen:
                     seen.add(id(rec))
                     out.append((p, rec))
@@ -515,11 +518,12 @@ def invariant_predicate(text, r, lifecycles, by_entity):
         types_field, _ = r.field("domain", "entity types")
         if types_field is None:
             return None, "the Representation Map binds no field to Domain.entity types, so no overlap could be read"
-        for _, d in r.records("domain"):
+        for path, d in r.records("domain"):
+            ident = r.identity_of(path, d)
             for name in d.get(types_field) or []:
-                if name in seen and seen[name] != d.get("id"):
-                    bad.append("%s is governed by %s and %s" % (name, seen[name], d.get("id")))
-                seen[name] = d.get("id")
+                if name in seen and seen[name] != ident:
+                    bad.append("%s is governed by %s and %s" % (name, seen[name], ident))
+                seen[name] = ident
         return ("Fail", "; ".join(bad[:3])) if bad else \
                ("Pass", "%d Entities each name one primary Domain, and no Entity type is governed twice"
                 % len(r.records("entity")))
@@ -615,7 +619,7 @@ def dangling_references(r):
     if not known:
         return ["the export declares no identity, so no reference could be resolved"], 0
     external = set(r.types.get("reference") or [])
-    skip_keys = {"id", "type", "name", "purpose", "meaning", "note", "rule", "expression",
+    skip_keys = {"id", "type", "name", "label", "purpose", "meaning", "note", "rule", "expression",
                  "trigger", "responsibility_scope", "data_type", "state", "initial_state"}
     # what a reference looks like is read off this export's own identities rather than assumed:
     # an export whose identities all carry a separator is one where a bare word is not a reference
@@ -634,8 +638,8 @@ def dangling_references(r):
                 item = item.strip()
                 if " " in item:
                     continue   # a sentence is not a reference
-                if needs_separator and "-" not in item and "_" not in item:
-                    continue   # not shaped like an identity this export declares
+                if needs_separator and "-" not in item and "_" not in item and not re.fullmatch(r"[0-9a-f]{64}", item):
+                    continue   # not shaped like an identity this export declares (a content address is)
                 if re.match(r"^\d{4}-\d{2}-\d{2}([T ]|$)", item):
                     continue   # a date carries separators and names nothing
                 examined += 1
@@ -645,15 +649,33 @@ def dangling_references(r):
     return sorted(set(out)), examined
 
 
-INTEGRITY_METHOD = "sha256-canonical-json"
+# The demonstration clause 1 of CAND-024 asks for is to a party holding the record and its
+# identity and nothing else. A digest stored inside the record shows that the record matches its
+# own digest, which is consistency of the export and not evidence that nothing changed: alter the
+# record, recompute the digest, and the export verifies again. An identity that IS the digest of
+# the content is different: alter the content and the identity changes, so the holder of the old
+# identity can tell. The tool therefore verifies both methods and passes only the second.
+CONTENT_ADDRESSED = "content-addressed-identity"
+SELF_CONTAINED = "sha256-canonical-json"
+METHODS = (CONTENT_ADDRESSED, SELF_CONTAINED)
 
 
 def canonical_digest(record, field):
-    """The one demonstration method this tool can verify: SHA-256 over the record's canonical
-    JSON with the demonstration field itself removed, keys sorted, no whitespace, UTF-8."""
+    """SHA-256 over the record's JSON with `field` removed: keys sorted, separators without
+    whitespace, non-ASCII kept as is, UTF-8, numbers as Python's json module writes them. This is
+    a stated encoding, not RFC 8785 canonical JSON; a map that declares this method commits to it."""
     body = {k: v for k, v in record.items() if k != field}
     text = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def erased_records(r):
+    """Identities named by an erasure record, per Memory/Retention.md's Deleted state, read
+    through the map: `Erasure` is the collection and `Erasure.erased record` the field."""
+    field, _ = r.field("erasure", "erased record")
+    if not r.types.get("erasure") or field is None:
+        return set()
+    return {rec.get(field) for _, rec in r.records("erasure") if rec.get(field)}
 
 
 def integrity(test, text, r):
@@ -667,27 +689,43 @@ def integrity(test, text, r):
         subject = subject_of(text, r.types) or pathlib.Path(test["document"]).stem.lower()
     if not r.types.get(subject):
         return None, "the Representation Map declares no %s records, so no demonstration could be verified" % subject
-    method = r.fields.get("integrity.method")
+    method = (r.fields.get("integrity.method") or "").strip()
     if not method:
         return None, "the Representation Map declares no demonstration method (Integrity.method); a reviewer verifies the demonstration"
+    if method not in METHODS:
+        return None, "the declared method %s is not one this tool can verify; a reviewer verifies the demonstration" % method
     field, _ = r.field(subject, "integrity")
     if field is None:
         return None, "the Representation Map binds no field to %s.integrity, so no demonstration could be read" % subject
-    if method != INTEGRITY_METHOD:
-        return None, "the declared method %s is not one this tool can verify; a reviewer verifies the demonstration" % method
     records = r.records(subject)
     if not records:
         return "Fail", "the export carries no %s record" % subject
-    bad = []
+    erased = erased_records(r)
+    bad, skipped = [], 0
     for path, rec in records:
+        ident = r.identity_of(path, rec)
+        if ident in erased:
+            skipped += 1          # an erased record no longer verifies by design; Retention.md says what its demonstration means
+            continue
         claimed = rec.get(field)
         if is_absent(claimed):
-            bad.append("%s carries no demonstration" % rec.get("id", "?"))
+            bad.append("%s carries no demonstration" % (ident or "?"))
         elif claimed != canonical_digest(rec, field):
-            bad.append("%s does not verify" % rec.get("id", "?"))
+            bad.append("%s does not verify" % (ident or "?"))
     if bad:
         return "Fail", "%d of %d %s record(s) fail their demonstration: %s" % (len(bad), len(records), subject, "; ".join(bad[:3]))
-    return "Pass", "%d %s record(s) carry a demonstration that verifies (%s)" % (len(records), subject, method)
+    note = "" if not skipped else ", %d erased record(s) excluded as Retention.md's Deleted state provides" % skipped
+    if method == SELF_CONTAINED:
+        return None, ("%d %s record(s) match their own digest%s. That shows the export is consistent and not that a "
+                      "record is unaltered: alter the record, recompute the digest, and it matches again. Clause 1 of "
+                      "CAND-024 asks for a demonstration to a party holding only the record and its identity, which "
+                      "content-addressed identity provides; a reviewer decides whether this digest is anchored elsewhere"
+                      % (len(records) - skipped, subject, note))
+    identity_field, _ = r.field(subject, "identity")
+    if identity_field != field:
+        return None, ("%s declares content-addressed identity but binds %s.integrity to %s rather than to its identity field "
+                      "%s, so the identity does not address the content" % (subject, subject, field, identity_field))
+    return "Pass", "%d %s record(s) are identified by the digest of their own content, so an altered record is a different record%s" % (len(records) - skipped, subject, note)
 
 
 def declaration(clause, statement):

@@ -343,10 +343,16 @@ class Validator(unittest.TestCase):
             sys.path.insert(0, str(c.dir / "tools" / "conformance"))
             import importlib, validate as V
             importlib.reload(V)
-            for coll in renamed.values():
-                for rec in (coll if isinstance(coll, list) else []):
-                    if isinstance(rec, dict) and "x_digest" in rec:
-                        rec["x_digest"] = V.canonical_digest(rec, "x_digest")
+            # content addresses are computed over the keys, so an implementation that spells its
+            # export differently computes its own addresses; references follow the new addresses
+            old_new = {}
+            for coll in ("x_audit_records", "x_events"):
+                for rec in renamed.get(coll, []):
+                    before = rec.get("x_id")
+                    rec["x_id"] = V.canonical_digest(rec, "x_id")
+                    old_new[before] = rec["x_id"]
+            for ev in renamed.get("x_evidence_records", []):
+                ev["x_related_memory_record"] = old_new.get(ev.get("x_related_memory_record"), ev.get("x_related_memory_record"))
             c.write("%s/model.json" % self.EX, json.dumps(renamed))
 
             lines = []
@@ -404,12 +410,86 @@ class Validator(unittest.TestCase):
             c.write("%s/model.json" % self.EX, json.dumps(model))
             self.assertEqual(self.integrity_rows(c.dir).get("REQ-MODELS-EVENT-010"), "Fail")
 
+    def test_a_re_addressed_record_is_a_different_record(self):
+        """Alter a record and recompute its content address: it verifies, because it is a new
+        record, and every reference to the old identity dangles, which is how the holder of the
+        old identity learns that the record they held is gone."""
+        with Copy() as c:
+            sys.path.insert(0, str(c.dir / "tools" / "conformance"))
+            import importlib, validate as V
+            importlib.reload(V)
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            rec = model["audit_records"][0]
+            old_id = rec["id"]
+            rec["value"] = "Ownership assigned to somebody else"
+            rec["id"] = V.canonical_digest(rec, "id")
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            report = c.dir / (self.EX + "/report.md")
+            run(c.dir, VALIDATE, "--model", "%s/model.json" % self.EX, "--map", "%s/representation-map.md" % self.EX,
+                "--statement", "%s/conformance-statement.md" % self.EX, "--report", str(report))
+            text = report.read_text(encoding="utf-8")
+            self.assertIn("| REQ-META-OWNERSHIP-022 |", text)
+            self.assertIn("Pass", [l for l in text.splitlines() if l.startswith("| REQ-META-OWNERSHIP-022 |")][0])
+            self.assertIn(old_id, text.split("## Reference Integrity")[1].split("## Results")[0])
+
+    def test_a_self_contained_digest_is_pending_not_passed(self):
+        with Copy() as c:
+            sys.path.insert(0, str(c.dir / "tools" / "conformance"))
+            import importlib, validate as V
+            importlib.reload(V)
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for rec in model["audit_records"]:
+                rec["id"] = rec["label"]
+                rec["digest"] = V.canonical_digest(rec, "digest")
+            for ev in model["evidence_records"]:
+                ev["related_memory_record"] = [r["id"] for r in model["audit_records"] if r["label"] == ev["related_memory_record"] or True][0]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            path = "%s/representation-map.md" % self.EX
+            text = c.read(path).replace("| Integrity.method | method | `content-addressed-identity` |", "| Integrity.method | method | `sha256-canonical-json` |")
+            text = text.replace("| Audit record.integrity | field | `id` |", "| Audit record.integrity | field | `digest` |")
+            c.write(path, text)
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "pending", rows)
+
     def test_a_missing_demonstration_is_pending_not_passed(self):
         with Copy() as c:
             path = "%s/representation-map.md" % self.EX
             c.write(path, "\n".join(l for l in c.read(path).splitlines() if not l.startswith("| Integrity.method")) + "\n")
             rows = self.integrity_rows(c.dir)
             self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "pending", rows)
+
+    def test_an_erased_record_is_excluded_from_the_demonstration(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            erased = model["audit_records"][0]["id"]
+            model["audit_records"][0]["value"] = "[erased]"
+            model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND", "created_at": "2026-09-21T00:00:00Z"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path).replace("| Registry | collection | `registries` |", "| Registry | collection | `registries` |\n| Erasure | collection | `erasures` |") .replace("| Integrity.method |", "| Erasure.erased record | field | `record` |\n| Integrity.method |"))
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Pass", rows)
+
+    def test_a_domain_identity_renamed_with_the_map_still_finds_the_overlap(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for dom in model["domains"]:
+                dom["dom_key"] = dom.pop("id")
+            model["domains"].append({"dom_key": "DOM-SECOND", "name": "Second", "purpose": "overlap", "owner": "OWN-DOM-LENDING", "entity_types": ["Item"]})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path).replace("| Domain.identifier | field | `id` |", "| Domain.identifier | field | `dom_key` |\n| Domain.identity | field | `dom_key` |"))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_collection_that_is_not_a_list_of_records_fails_closed(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["audit_records"] = {"not": "a list"}
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("not a list of records", out)
 
     def test_the_catalogue_binds_immutability_to_integrity(self):
         text = (ROOT / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")

@@ -101,6 +101,8 @@ A Memory Record is never altered. Where law or organizational policy requires th
 
 Deleted means this and nothing else. Reconstructability, Constitution Principle 6, holds for everything except the erased content, which is the purpose of the erasure.
 
+The preserved demonstration shows what the record's content was at creation. A party holding the erased record learns from it that the content has been erased, not that it is intact; a conformance test that verifies demonstrations excludes a record named by an erasure record rather than failing it.
+
 Deletion shall be auditable.
 
 > **Resolution note (21 September 2026).** The editorial note of 18 September 2026 recorded that this state, and the Conformance clause "support controlled deletion", stood against Constitution Principles 4 and 6 (`AO-069`). `CAND-024` (Decided 21 September 2026) restates the state as an erasure that preserves the record and is itself recorded, so it no longer stands against either Principle. `AO-069` closes.
@@ -206,3 +208,4 @@ A compliant implementation shall:
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 18 September 2026 | Editorial note added under Deleted recording that this document's Deleted state and its controlled-deletion Conformance clause stand against Constitution §4 and §6, per `AO-069`; no requirement changed. |
 | 0.1 | 21 September 2026 | Deleted restated as an erasure that makes content irrecoverable while preserving the record's identity, creation time, creator and demonstration of integrity, recorded as a new Memory Record; the Conformance item "support controlled deletion" replaced accordingly, per `CAND-024` (Decided 21 September 2026). The editorial note of 18 September is replaced by a resolution note. `AO-069` closes. |
+| 0.1 | 21 September 2026 | Deleted: one sentence added stating what the preserved demonstration means after erasure (it shows the content at creation; a holder learns the record was erased), found by running the Integrity Test kind against an erased record; recorded as a postscript to `CAND-024`. |
