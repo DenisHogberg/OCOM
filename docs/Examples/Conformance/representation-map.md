@@ -182,6 +182,13 @@ that needs it fails rather than passing over an absence.
 | Registry.registered object types | field | `registered_object_types` |
 | Workflow.required inputs | field | `inputs` |
 | Workflow.expected outputs | field | `outputs` |
+| Workflow.transitions | field | `transitions` |
+| Transition.entity | field | `entity` |
+| Event.from state | field | `from_state` |
+| Event.to state | field | `to_state` |
+| Domain.entity types | field | `entity_types` |
+| Domain.owner | field | `owner` |
+| Registry.scope | field | `scope` |
 
 ---
 

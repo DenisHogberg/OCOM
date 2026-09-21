@@ -76,10 +76,9 @@ source document, so the elements cannot be read out of it at all.
 What the 37 do say is worth having, and no artifact in this repository said it before: every
 Relationship in this model carries an identifier, a source, a target and a type; every Policy
 carries an identifier, a name, a purpose, a scope and an effective date; every recorded State
-change is one the Lifecycle permits; every State of every Lifecycle is reachable from its initial
-State; no Entity type is governed by two Domains; no governed record is without an owner; no
+change is one the Lifecycle permits; no Entity type is governed by two Domains; no governed record is without an owner; no
 identity is used by two records. Those are machine verdicts on a real file, and a reader can break
-the file and watch them turn to Fail, which is what twenty-six negative tests assert.
+the file and watch them turn to Fail, which is what thirty-two negative tests assert, including one that renames every field in the export and in the map together and requires every verdict to stay the same.
 
 A compound Statement is never passed on part of itself. `A Lifecycle shall never: contain multiple
 initial States; contain unreachable States; contain undefined Transitions; permit ambiguous State

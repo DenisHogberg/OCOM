@@ -28,7 +28,7 @@
 
 ## Reference Integrity
 
-Every identity-shaped field resolves to a record the export declares.
+63 field value(s) were resolved against the 32 identities this export declares, and every one of them names a record it carries. Fields holding prose, and a Reference's target, which may legitimately name another system, are not resolved.
 
 ---
 
@@ -37,7 +37,7 @@ Every identity-shaped field resolves to a record the export declares.
 | Test | Document | Kind | Class | Outcome | Why |
 |---|---|---|---|---|---|
 | REQ-META-OBJECT-001 | `Meta/Object.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-OBJECT-003 | `Meta/Object.md` | Presence | mandatory | Pass | 24 object record(s) carry identity |
+| REQ-META-OBJECT-003 | `Meta/Object.md` | Presence | mandatory | Pass | 24 object record(s) carry identity, each distinct |
 | REQ-META-OBJECT-004 | `Meta/Object.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-OBJECT-008 | `Meta/Object.md` | Review | recommended | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-OBJECT-009 | `Meta/Object.md` | Review | recommended | pending | awaiting a named reviewer, per the kind this Test carries |
@@ -185,7 +185,7 @@ Every identity-shaped field resolves to a record the export declares.
 | REQ-MODELS-ENTITY-012 | `Models/Entity.md` | Presence | mandatory | Pass | 2 relationship record(s) carry source, target, type, cardinality |
 | REQ-MODELS-ENTITY-014 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-DOMAIN-001 | `Models/Domain.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-MODELS-DOMAIN-002 | `Models/Domain.md` | Presence | mandatory | Pass | 1 domain record(s) carry identifier |
+| REQ-MODELS-DOMAIN-002 | `Models/Domain.md` | Presence | mandatory | Pass | 1 domain record(s) carry identifier, each distinct |
 | REQ-MODELS-DOMAIN-003 | `Models/Domain.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-DOMAIN-004 | `Models/Domain.md` | Presence | mandatory | Pass | 1 domain record(s) carry operational responsibility |
 | REQ-MODELS-DOMAIN-005 | `Models/Domain.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
@@ -204,7 +204,7 @@ Every identity-shaped field resolves to a record the export declares.
 | REQ-MODELS-RELATIONSHIP-012 | `Models/Relationship.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-RELATIONSHIP-013 | `Models/Relationship.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-EVENT-001 | `Models/Event.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-MODELS-EVENT-002 | `Models/Event.md` | Presence | mandatory | Pass | 4 event record(s) carry identifier |
+| REQ-MODELS-EVENT-002 | `Models/Event.md` | Presence | mandatory | Pass | 4 event record(s) carry identifier, each distinct |
 | REQ-MODELS-EVENT-003 | `Models/Event.md` | Presence | mandatory | pending | the Statement states a condition rather than an element (time at which it occurred); a reviewer decides it |
 | REQ-MODELS-EVENT-004 | `Models/Event.md` | Invariant | mandatory | pending | deciding this prohibition needs evidence the export does not carry (a history, or a refusal record) |
 | REQ-MODELS-EVENT-005 | `Models/Event.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
