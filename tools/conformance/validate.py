@@ -18,6 +18,7 @@ Pass or Review Pass, which is Section 3's criterion and not this tool's.
 Standard library only, no network.
 """
 import argparse
+import hashlib
 import json
 import pathlib
 import re
@@ -85,7 +86,9 @@ def load_map(path):
             continue
         types[cells[0].lower()] = [w.strip().strip("`") for w in where.split(",")]
     for cells in read_table(path, "| OCOM element | Kind | Field in the export |"):
-        if len(cells) < 3 or cells[1] != "field":
+        # a row of kind method names how records demonstrate integrity; it is read like a field
+        # binding but its value is a method name, not a field of the export
+        if len(cells) < 3 or cells[1] not in ("field", "method"):
             continue
         fields[cells[0].lower()] = cells[2].strip("`")
     if not types:
@@ -642,6 +645,51 @@ def dangling_references(r):
     return sorted(set(out)), examined
 
 
+INTEGRITY_METHOD = "sha256-canonical-json"
+
+
+def canonical_digest(record, field):
+    """The one demonstration method this tool can verify: SHA-256 over the record's canonical
+    JSON with the demonstration field itself removed, keys sorted, no whitespace, UTF-8."""
+    body = {k: v for k, v in record.items() if k != field}
+    text = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def integrity(test, text, r):
+    """Verify the demonstration an implementation declares for the records a Statement calls
+    immutable. The suite verifies a demonstration and never supplies one, so an export that
+    declares none is pending, not passed (`Conformance-Test-Suite.md` Section 3)."""
+    low = text.lower()
+    if "audit record" in low:
+        subject = "audit record"
+    else:
+        subject = subject_of(text, r.types) or pathlib.Path(test["document"]).stem.lower()
+    if not r.types.get(subject):
+        return None, "the Representation Map declares no %s records, so no demonstration could be verified" % subject
+    method = r.fields.get("integrity.method")
+    if not method:
+        return None, "the Representation Map declares no demonstration method (Integrity.method); a reviewer verifies the demonstration"
+    field, _ = r.field(subject, "integrity")
+    if field is None:
+        return None, "the Representation Map binds no field to %s.integrity, so no demonstration could be read" % subject
+    if method != INTEGRITY_METHOD:
+        return None, "the declared method %s is not one this tool can verify; a reviewer verifies the demonstration" % method
+    records = r.records(subject)
+    if not records:
+        return "Fail", "the export carries no %s record" % subject
+    bad = []
+    for path, rec in records:
+        claimed = rec.get(field)
+        if is_absent(claimed):
+            bad.append("%s carries no demonstration" % rec.get("id", "?"))
+        elif claimed != canonical_digest(rec, field):
+            bad.append("%s does not verify" % rec.get("id", "?"))
+    if bad:
+        return "Fail", "%d of %d %s record(s) fail their demonstration: %s" % (len(bad), len(records), subject, "; ".join(bad[:3]))
+    return "Pass", "%d %s record(s) carry a demonstration that verifies (%s)" % (len(records), subject, method)
+
+
 def declaration(clause, statement):
     low = clause.lower()
     if "specification version" in low:
@@ -690,6 +738,8 @@ def main(argv):
             outcome, reason = transition(test, text, r)
         elif kind == "Invariant":
             outcome, reason = invariant(test, text, r)
+        elif kind == "Integrity":
+            outcome, reason = integrity(test, text, r)
         else:
             outcome, reason = None, "no procedure is bound to this kind"
         results.append({**test, "outcome": outcome, "reason": reason, "text": text})

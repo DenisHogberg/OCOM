@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 19 September 2026
+**Last Updated:** 21 September 2026
 
 ---
 
@@ -1568,9 +1568,9 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only; the Freeze forbids changing the Memory model here, and this entry changes no normative text. Two things are in scope now and are done with this entry: the `CAND-007` Section 3 correction is written into EPIC-A so the Epic states its own Definition of Done, and the disposition question is put to the Chief Architect. If corroborated, a Reference Case drawn from an implementation under an erasure obligation should settle whether retention acts on Memory Records or on a projection of them, in the same shape `CAND-014` used for Status, and whether layer demotion moves a record or derives a view.
 
-**Status:** Open in part. The v1.0 question is answered by the Architect Response below, recorded 18 September 2026: the two documents do not block the v1.0 claim. The contradiction itself stays open and moves the way every other Memory-tier tension moves, through a Reference Case per Standard Evolution Methodology Rules 1 and 2, gated by `CAND-007`.
+**Status:** Closed, 21 September 2026. `CAND-024` restated `Memory/Retention.md`'s Deleted state as an erasure that preserves the record's identity, creation time, creator and demonstration of integrity and is itself recorded as a new Memory Record, so it no longer stands against Constitution Principles 4 and 6. The EPIC-A disposition of 18 September 2026 on `Memory/Layered Memory.md` is unchanged by this closure.
 
-**Architect Response:** Chief Architect, 18 September 2026. The `EPIC-A` disposition of 16 September 2026 is extended to cover both documents, and the Epic stays closed for the v1.0 claim. Three things make that the honest reading rather than a convenient one. The tension is now recorded rather than concealed: this entry states it, the Epic carries the correction, and each of the two documents carries a dated editorial note naming it, so a reader who lands on `Memory/Retention.md` alone sees it there. Its correction is not available under the Freeze: `CAND-007` Section 4 forbids redesigning Memory without Section 5, and deciding whether retention acts on Memory Records or on a projection of them is exactly the question `CAND-014` answered for Status with a Reference Case behind it, which this one does not yet have. And the v1.0 bar is a documentation bar, not a claim that no tension remains: 61 other observations are open under the same rule. What this disposition does not do is call the contradiction harmless. An implementation reading `Memory/Retention.md` alone can still satisfy a Conformance clause that Constitution §4 forbids, and until a Reference Case settles it, the Release body and `Release-Readiness.md` disclose it in those words.
+**Architect Response:** Chief Architect, 18 September 2026 (disposition, as recorded above) and 21 September 2026: the contradiction is resolved by `CAND-024`, decided and integrated the same day.
 
 **Related:** `Core/Constitution.md` (§4, §6), `Memory/Retention.md`, `Memory/Layered Memory.md`, `Memory/Memory Record.md`, `Governance/Architecture-Release-Review-v1.0.md` (Part 2), `Governance/Master-Architecture-Backlog.md` (EPIC-A), `Governance/ADR-Candidates.md` (`CAND-007` Section 3, `CAND-014`), `AO-003`
 
@@ -1682,9 +1682,9 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If corroborated, a future Reference Case should either define Audit record at the tier that owns it, most plausibly as a Memory Record under §4 rather than as a new construct, which the Freeze would in any case place behind `CAND-007` Section 5, or remove the clause from the documents that carry it and rely on the Memory tier. `Core/Terminology.md` can meanwhile list the term among Reserved Terms so that a reader learns it is undefined rather than assuming a definition exists.
 
-**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when Audit record is defined, listed as Reserved, or removed.
+**Status:** Closed, 21 September 2026. `Memory/Memory Record.md` defines Audit Record by reference: a Memory Record whose subject is a governance action on an Object. The clause "Audit records shall remain immutable" now has a subject in all twenty-two documents, and its eight instances in the mandatory Core Conformance set are decidable by the Integrity Test kind `CAND-024` added to the suite.
 
-**Architect Response:** *(pending)*
+**Architect Response:** Chief Architect, 21 September 2026: defined by reference, no new Core Vocabulary term, per `CAND-024`.
 
 **Related:** `Meta/Ownership.md`, `Meta/Policy.md`, `Meta/Registry.md`, `Meta/Classification.md`, `Meta/Constraint.md`, `Meta/Contract.md`, `Meta/Reference.md`, `Meta/Relationship.md`, `Core/Terminology.md`, `Memory/Memory Record.md`, `AO-021`, `AO-036`, `AO-037`, `AO-038`, `AO-050`
 
@@ -1848,6 +1848,36 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Related:** `publication/README.md`, `publication/llms.txt`, `tools/site/published_source_parity.py`, `Governance/Publication-Model.md`, `Governance/Publication-Manifest.md`, `AO-064`, `FW-006`
 
+## AO-084
+
+**Title:** Immutability Is Required in Twenty-Two Documents and Provable in None, and the Specification's Own Publication Is the First Instance
+
+**Date observed:** 21 September 2026
+
+**Description:** Surfaced by an evaluation of the specification from the seat of an enterprise operations director (20 September 2026), whose risk lens asked the question an auditor asks: what do you count as evidence, and how would you show a record has not changed. Constitution Principle 4 says Memory is append-only and a Memory Entry is immutable after creation; `Memory/Memory Record.md` and `Memory/Evidence Overlay.md` restate it and record a timestamp and an actor at creation; twenty-two canonical documents carry the clause "Audit records shall remain immutable". No clause anywhere requires an implementation to be able to demonstrate that a record is unaltered. `Governance/Architecture-Release-Review-v1.0.md` Part 2, finding 3 (27 July 2026) named this exactly: "immutable" is an assertion, not a checkable property, and it is a guarantee-shaped gap rather than a mechanism mandate. `CAND-007` Section 5 carries it as the second of two named Freeze-exception candidates and, since 18 September 2026, as the one still unfiled. This entry records the Reference Case that makes it concrete and the Chief Architect's authorization to file it, given in the working session of 21 September 2026 on the same terms as the authorization of 18 September for `AO-071`.
+
+| Field | Content |
+|---|---|
+| **Reference Case** | RC-012: The Record That Says It Is Immutable Cannot Show It |
+| **Purpose** | Establish, from published material alone, whether any record this specification or its publication produces can demonstrate to a party that holds only the record and its identity that it has not been altered since creation, which is what Constitution Principle 4 requires of Memory and what an auditor requires of an audit trail. |
+| **Expressive Coverage** | Memory Record and Evidence Record express the records, and their Auditability sections express the trail: timestamp and actor at creation, corrections as new records, the append-only sequence as the audit trail itself. Nothing in `Memory/`, `Meta/` or `Models/` expresses a demonstration that a record is unaltered; the concept is not defined, reserved or forbidden. |
+| **Boundary Conditions** | Four, each checked on 21 September 2026. (1) `Memory/Memory Record.md` Definition and Conformance, and `Memory/Evidence Overlay.md` Immutability, require that a record never be altered, and no clause requires an implementation to be able to show it was not. (2) The publication's own records reach the same edge: `specification.json`, the two Observatory records, `Governance/Test-Catalogue.md` and the Test Report at `docs/Examples/Conformance/report.md`, which `Conformance-Test-Suite.md` Section 4 makes append-only, carry no digest, signature or chain; `tools/site/publication_health.py --check` detects drift by recomputing, which proves agreement with a recomputation and not absence of alteration. (3) `Memory/Retention.md` defines a Deleted state that `AO-069` records as standing against Principles 4 and 6, and no text says what an erasure preserves. (4) The clause "Audit records shall remain immutable" stands in twenty-two documents while Audit record is defined nowhere, which `AO-075` records; eight of those clauses sit in the mandatory set of Core Conformance. |
+| **Boundary Tags** | `structural-integrity`, `external-attestation`. |
+| **External Assurance** | Two instances, recorded with their weakness. The first is the publication's own artifacts, drawn by their author and reproducible by any reader from the five records named above. The second is an implementation: `OCOM-Reader`, `docs/architecture/ADR-007-memory-before-knowledge.md`, gives every Memory Entry a content-hash identity and supersedes rather than edits, a mechanism that implementation had to invent because the Specification is silent, which is the second standing trigger `CAND-007` Section 5 names, contact with an implementation revealing what the contract does not say. Both instances trace to the same author, and that is the weakness; what makes them evidence is that one is a published record anyone can inspect and the other is code that runs. |
+| **Architectural Observations** | This entry (`AO-084`); `AO-069` and `AO-075` name two of its four boundary conditions. |
+| **Core Impact** | Possible, and bounded. The guarantee sits at the recording layer, which `Governance/Architecture-Principles.md` Principle 2 excepts from the algorithm-freedom rule for exactly this case: "the process of recording provenance may carry minimal normative constraints where their absence would make a guarantee unfalsifiable". It changes no Canonical Principle, no Meta Object and no Entity type; it adds a property the Memory tier must be able to demonstrate, and it names no mechanism. |
+| **Decision** | Escalated to two ADR Candidates, `CAND-023` (Evidence defined, closing `FW-001`) and `CAND-024` (the integrity guarantee, an Audit record by reference, and what erasure preserves), both filed as `CAND-007` Section 5 Freeze exceptions on the Chief Architect's authorization of 21 September 2026. Filing changes no document. |
+
+**Impact:** For an implementer, "immutable" is today a promise they make and nothing they can show; two implementations can both claim it and one can be lying. For a regulated adopter, the specification offers an audit trail that an auditor cannot verify from the records alone, and an evidence layer whose Definition is reserved for a future version while the specification's own identity statement leads with the word. For the specification's own publication, the records that describe it can be recomputed but not proven, so a reader who finds them consistent has learned that they agree with a program, not that nobody changed them. The enterprise evaluation that surfaced this scored the risk lens 3 of 10 and named this as the reason.
+
+**Recommendation:** Escalate, as recorded in the Decision row, and keep the two questions apart: what Evidence is (`CAND-023`) and what an implementation must be able to demonstrate about a record (`CAND-024`). The second is the Freeze exception proper. Both are filed with a proposed Decision for the Chief Architect and neither edits a canonical document until decided and separately integrated, per the two-step discipline.
+
+**Status:** Closed, 21 September 2026. Both candidates it escalated are decided and integrated: `CAND-023` wrote the four reserved sections of `Memory/Evidence Overlay.md`, and `CAND-024` placed the integrity guarantee in the Memory tier, defined Audit Record by reference and restated erasure. `Conformance-Test-Suite.md` Section 3 carries the Integrity kind, which can return Fail, and `tools/conformance/validate.py` implements it against a declared demonstration. The first boundary condition, the publication's own records carrying no demonstration, is narrowed rather than closed: the example export now carries one, the site's records do not yet.
+
+**Architect Response:** Chief Architect, 21 September 2026. Filing authorized under `CAND-007` Section 5 on the same terms as for `AO-071`; both candidates decided as drafted the same day, with integration authorized alongside.
+
+**Related:** `CAND-023`, `CAND-024`, `CAND-007`, `AO-069`, `AO-075`, `AO-064`, `Core/Constitution.md` Principles 3, 4 and 6, `Memory/Memory Record.md`, `Memory/Evidence Overlay.md`, `Memory/Retention.md`, `Governance/Architecture-Release-Review-v1.0.md` Part 2, `Governance/Architecture-Principles.md` Principle 2, `Governance/Conformance-Test-Suite.md` Section 4, `Governance/Evidence-Register.md`
+
 ---
 
 # Revision History
@@ -1901,3 +1931,5 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 19 September 2026 | Added AO-081 (the canonical definition of Core Conformance is about the Language and the measured set contains no Language document). AO-076 notes the first Descriptive disposition, recorded before the rule it asked for; AO-051 notes that CAND-018 sharpened it. |
 | 0.1 | 19 September 2026 | AO-077 Closed: the backward check exists as `tools/conformance/compilation_survey.py` and a required CI job, and a dated note records what the first survey measured across all nine chapters. |
 | 0.1 | 19 September 2026 | Added AO-082 (two canonical documents enumerate what every Entity shall do, with different items) and AO-083 (the site serves machine-facing files this repository does not source; `llms.txt` published a URL that does not resolve). AO-083 Closed by the same change. |
+| 0.1 | 21 September 2026 | Added AO-084 (immutability is required in twenty-two documents and provable in none; the publication's own records are the first instance), with Reference Case `RC-012`; the Chief Architect authorized filing under `CAND-007` Section 5 and the entry is Escalated to `CAND-023` and `CAND-024`. |
+| 0.1 | 21 September 2026 | AO-069, AO-075 and AO-084 Closed: `CAND-023` and `CAND-024` decided as drafted and integrated the same day. Retention's Deleted state is an erasure that preserves the record, Audit Record is defined by reference, the integrity guarantee is in the Memory tier and the suite has a Test kind that can fail it. |

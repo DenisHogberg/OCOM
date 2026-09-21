@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Memory tier, per `CAND-023` and `CAND-024` (both Decided 21 September 2026 as `CAND-007` Section 5 Freeze exceptions, on Reference Case `RC-012`): `Memory/Evidence Overlay.md` carries the Definition, Source, Reliability, Independence and Conformance sections reserved since 21 July 2026; `Memory/Memory Record.md` and `Memory/Evidence Overlay.md` require an implementation to be able to demonstrate that a record is unaltered, naming no mechanism; `Memory/Memory Record.md` defines Audit Record by reference; `Memory/Retention.md`'s Deleted state is an erasure that preserves the record. `Governance/Conformance-Test-Suite.md` gains the Integrity Test kind. Constitution 1.0.1 and Core Vocabulary 0.1 unchanged; `AO-069`, `AO-075`, `AO-084` and `FW-001` closed.
+
 ## v1.3.0 (17 September 2026)
 
 - Specification reading path 1.0: the nine chapters of `docs/Specification/` recompiled against the canonical documents as they stand on 17 September 2026. Chapter 1 now carries `Core/Manifest.md`'s sections verbatim, including the whole Normative Language section; Chapters 3 and 4 add Organization to the specializations of Object; Chapter 5 compiles the `CAND-016` specialization sentence and replaces an unsourced sentence about Domains with `Models/Domain.md`'s governance rules; Chapter 6 is restated from `Models/Lifecycle.md`, `Models/State.md`, `Lifecycles/Lifecycles.md`, `Models/Entity.md`, `Models/Domain.md` and `Models/Event.md` and no longer calls the Domains and Entities sections non-normative; Chapter 8's Purpose follows `Language/Conformance.md`; every chapter gains a Revision History and a Last Updated field (GAP-007 closed for the chapters). Constitution 1.0.1 and Core Vocabulary 0.1 unchanged.

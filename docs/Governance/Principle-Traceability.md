@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 19 September 2026
+**Last Updated:** 21 September 2026
 
 ---
 
@@ -133,11 +133,11 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 
 | Carrier | Kind | Alias | Quote |
 |---|---|---|---|
-| `docs/Memory/Memory Record.md:189` | binding rule |   | A Memory Record shall reference at least one Evidence Record. |
-| `docs/Memory/Evidence Overlay.md:100` | binding rule |   | Confidence shall not exist without supporting Evidence. |
+| `docs/Memory/Memory Record.md:197` | binding rule |  | A Memory Record shall reference at least one Evidence Record. |
+| `docs/Memory/Evidence Overlay.md:110` | binding rule |  | Confidence shall not exist without supporting Evidence. |
 | `docs/Memory/Overview.md:48` | binding rule |   | Memory shall preserve evidence. |
 | `docs/Memory/Confidence.md:35` | binding rule |   | Confidence is metadata associated with a Memory Record and shall not replace evidence or business validation. |
-| `docs/Memory/Evidence Overlay.md:33` | reserved |   | Definition, the Source and Reliability attributes, Independence, and Conformance for Evidence Overlay are reserved for a future version of this specification. |
+| `docs/Memory/Evidence Overlay.md:37` | restatement |   | A Memory Record without Evidence is a belief, and Constitution Principle 3 does not permit a retained belief without traceable Evidence. |
 | `docs/Core/Terminology.md:265` | reserved |   | **Evidence** (Canonical Principle 3): Definition reserved in `Memory/Evidence Overlay.md`; tracked as `AO-021` and `AO-053`. |
 
 **Test:** A Presence Test failing on any exported Memory Record with no reference to an Evidence Record (`Memory/Memory Record.md:189`). It cannot run under Core Conformance, because no `Memory/` Statement is in the requirement set; it becomes runnable only under a Profile Declaration whose Included Set adds the two Memory documents.
@@ -159,9 +159,10 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 | `docs/Models/Event.md:97` | binding rule | REQ-MODELS-EVENT-010 | An Event shall never be modified after creation. |
 | `docs/Models/Event.md:99` | binding rule | REQ-MODELS-EVENT-011 | Corrections shall be represented by new Events. |
 | `docs/Memory/Overview.md:46` | binding rule |   | Memory shall be append-only. |
-| `docs/Memory/Memory Record.md:252` | binding rule |   | never modify a Memory Record after creation, and represent corrections as new Memory Records; |
-| `docs/Memory/Evidence Overlay.md:42` | binding rule |   | be append-only; |
-| `docs/Memory/Retention.md:194` | binding rule |   | preserve audit history; |
+| `docs/Memory/Memory Record.md:260` | binding rule |  | never modify a Memory Record after creation, and represent corrections as new Memory Records; |
+| `docs/Memory/Evidence Overlay.md:46` | binding rule |  | be append-only; |
+| `docs/Memory/Retention.md:196` | binding rule |  | preserve audit history; |
+| `docs/Memory/Memory Record.md:265` | binding rule |   | be able to demonstrate, to a party holding a Memory Record together with its identity and nothing else, that the record has not been altered since its creation. |
 
 **Test:** An Invariant Test over Events: export the model, correct an already-exported Event, re-export, and fail when an identifier from the first export carries different content in the second or when the correction produced no additional Event (REQ-MODELS-EVENT-010, REQ-MODELS-EVENT-011). The same Test over Memory Records can fail only outside Core Conformance.
 
@@ -203,7 +204,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 |---|---|---|---|
 | `docs/AI/Knowledge/Knowledge.md:35` | restatement |   | it must be reproducible from Memory without requiring access to the original external systems |
 | `docs/Core/Terminology.md:266` | reserved |   | **World Model** (Canonical Principles 5 and 6): its relationship to Memory and Knowledge is decided by `CAND-014` Layer 1; the document itself is Layer 2 and not yet authored. |
-| `docs/Memory/Memory Record.md:160` | definition |   | Status is a derived projection, not a stored attribute of a Memory Record |
+| `docs/Memory/Memory Record.md:168` | definition |  | Status is a derived projection, not a stored attribute of a Memory Record |
 
 **Test:** No Test of any kind can fail today. An Invariant Test would read a derivation record linking each Knowledge item to the Memory Records it was computed from, and no Statement requires one to exist; a Declaration Test asking a claimant to assert reconstructability would be unfalsifiable rather than a test.
 
@@ -404,3 +405,4 @@ Three things follow, none of them decided here. A profile is the existing mechan
 |----------|------|-------------|
 | 0.1 | 18 September 2026 | First table, produced by fourteen independent passes over the canonical tiers, each adversarially verified, per the recommendation of `AO-074`. Checked by `tools/governance/principle_traceability.py`. |
 | 0.1 | 19 September 2026 | How to Read It now cites `Language/Conformance.md` for the definition of Core Conformance and names the twenty-two-document enumeration as the suite's reading, per `CAND-021`. |
+| 0.1 | 21 September 2026 | Memory-tier line references re-pointed after `CAND-023` and `CAND-024` were integrated; the Principle 3 row that recorded Evidence's Definition as reserved now carries the Definition itself; Principle 4 gains the integrity guarantee of `Memory Record.md` as a binding-rule carrier. |

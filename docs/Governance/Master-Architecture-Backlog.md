@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 19 September 2026
+**Last Updated:** 21 September 2026
 
 ---
 
@@ -86,7 +86,7 @@ This does not match the example structure given in the task ("Entry Point, Knowl
 
 **Related AO/ADR:** `AO-003`; analysis already complete in `Concept-Paper-Knowledge-vs-World-Model.md` and `Architecture-Discussion-Knowledge-vs-World-Model.md` (Decision Readiness: **Yes**, per that document's own Part 8) — no ADR Candidate had been filed for the actual choice among its four options as of 27 July 2026; `CAND-014` was filed and decided on 10 September 2026, see Execution status below.
 
-**Definition of Done:** an ADR Candidate is filed and decided for the Knowledge/World Model split; `AI/Knowledge/*` no longer contradicts §5/§6/§3; a World Model document exists with at least a Definition and a stated relationship to Knowledge and Memory; `AO-003` is resolved as part of the same decision (the Discussion document already frames it as the same question at a smaller scale); `FW-001`'s reserved sections are written only as needed to support the decision, not before.
+**Definition of Done:** an ADR Candidate is filed and decided for the Knowledge/World Model split; `AI/Knowledge/*` no longer contradicts §5/§6/§3; a World Model document exists with at least a Definition and a stated relationship to Knowledge and Memory; `AO-003` is resolved as part of the same decision (the Discussion document already frames it as the same question at a smaller scale); `FW-001`'s reserved sections are written only as needed to support the decision, not before. *(21 September 2026: written ahead of this Epic by `CAND-023`, on the ground `AO-084` records; Layer 2 inherits them.)*
 
 **Execution status (11 September 2026):** the decision step of this Epic is complete. `CAND-014` was filed and decided on 10 September 2026, adopting Option 4: three layers by time horizon, where Memory records what happened, Knowledge holds stable rules and meaning and is changed only through a rule-change process that is itself logged in Memory, and World Model holds a subject's current state, computed only. `AO-003` is closed by the same decision, resolved as its own Option B: Status is a derived projection, not a stored Memory Record field.
 
@@ -347,3 +347,4 @@ This is a backlog, not a decision. No specification document has been changed. N
 | 0.1 | 18 September 2026 | EPIC-A: the v1.0 disposition extended to the two Memory documents the Freeze bound to this Epic; they do not block the claim and the contradiction stays open as `AO-069`. |
 
 | 0.1 | 19 September 2026 | EPIC-F: scope note recording that the three Decisions of 19 September 2026 add documentation-currency work to an Epic whose Definition of Done is executed, per `CAND-007` Section 7. |
+| 0.1 | 21 September 2026 | EPIC-A note: `FW-001`'s reserved sections were written ahead of this Epic by `CAND-023`; Layer 2 inherits them. |
