@@ -181,6 +181,12 @@ def check():
     if unparsed:
         failures.append("%d principle heading(s) whose block does not parse: check the field order and the table" % unparsed)
 
+    # a carrier-shaped line that no table contains is a claim nobody checked. One sat after a
+    # block's Note on 21 September 2026 and the count stayed at 71 while the file held 72.
+    shaped = len([l for l in doc.splitlines() if ROW.match(l)])
+    if shaped != rows_checked:
+        failures.append("%d carrier-shaped row(s) sit outside a table and were not checked" % (shaped - rows_checked))
+
     for f in failures:
         print("FAIL %s" % f)
     print("%d principle blocks, %d carrier rows checked, %d failure(s)" % (len(blocks), rows_checked, len(failures)))

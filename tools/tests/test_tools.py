@@ -163,6 +163,17 @@ class PrincipleTraceability(unittest.TestCase):
             self.assertEqual(code, 1, out)
             self.assertIn("carries no quote", out)
 
+    def test_a_carrier_row_outside_its_table_is_not_silently_dropped(self):
+        with Copy() as c:
+            doc = "docs/Governance/Principle-Traceability.md"
+            text = c.read(doc)
+            i = text.index("## Principle 5:")
+            stray = "| `docs/Models/Event.md:97` | binding rule | REQ-MODELS-EVENT-010 | An Event shall never be modified after creation. |\n\n"
+            c.write(doc, text[:i] + stray + text[i:])
+            code, out = run(c.dir, TRACE, "--check")
+            self.assertEqual(code, 1, out)
+            self.assertIn("outside a table", out)
+
     def test_absent_row_naming_a_document_fails(self):
         with Copy() as c:
             doc = "docs/Governance/Principle-Traceability.md"
@@ -329,6 +340,13 @@ class Validator(unittest.TestCase):
                 return value
 
             renamed = {("x_" + k if k != "export" else k): rename(v) for k, v in model.items()}
+            sys.path.insert(0, str(c.dir / "tools" / "conformance"))
+            import importlib, validate as V
+            importlib.reload(V)
+            for coll in renamed.values():
+                for rec in (coll if isinstance(coll, list) else []):
+                    if isinstance(rec, dict) and "x_digest" in rec:
+                        rec["x_digest"] = V.canonical_digest(rec, "x_digest")
             c.write("%s/model.json" % self.EX, json.dumps(renamed))
 
             lines = []
@@ -362,6 +380,41 @@ class Validator(unittest.TestCase):
             c.write("%s/model.json" % self.EX, json.dumps(model))
             code, out = self.run_on(c.dir)
             self.assertNotIn("Fail 0", out)
+
+    def integrity_rows(self, root):
+        return {a: o for a, o in self.outcomes(root).items()
+                if a in ("REQ-META-OWNERSHIP-022", "REQ-MODELS-EVENT-010", "REQ-MODELS-EVENT-004")}
+
+    def test_integrity_demonstrations_verify_on_the_example(self):
+        rows = self.integrity_rows(ROOT)
+        self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Pass", rows)
+        self.assertEqual(rows.get("REQ-MODELS-EVENT-010"), "Pass", rows)
+
+    def test_an_altered_audit_record_fails_its_demonstration(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["audit_records"][0]["value"] = "Ownership assigned to somebody else"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.integrity_rows(c.dir).get("REQ-META-OWNERSHIP-022"), "Fail")
+
+    def test_an_altered_event_fails_its_demonstration(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["events"][0]["occurred_at"] = "2026-08-09T10:12:00Z"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.integrity_rows(c.dir).get("REQ-MODELS-EVENT-010"), "Fail")
+
+    def test_a_missing_demonstration_is_pending_not_passed(self):
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, "\n".join(l for l in c.read(path).splitlines() if not l.startswith("| Integrity.method")) + "\n")
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "pending", rows)
+
+    def test_the_catalogue_binds_immutability_to_integrity(self):
+        text = (ROOT / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
+        row = [l for l in text.splitlines() if l.startswith("| REQ-META-OWNERSHIP-022 |")][0]
+        self.assertEqual([x.strip() for x in row.strip().strip("|").split("|")][4], "Integrity", row)
 
     def test_a_zero_does_not_satisfy_presence(self):
         with Copy() as c:
