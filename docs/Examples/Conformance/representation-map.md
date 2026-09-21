@@ -34,6 +34,8 @@ own.
 
 # How to Read a Row
 
+A row of kind `method`, `Integrity.method`, names the method by which records demonstrate they are unaltered, and a row `Type.integrity` of kind `field` names the field that carries the demonstration on each record of that type. `content-addressed-identity` means the record's identity field holds the SHA-256 of the record's own content (its JSON with the identity field removed, keys sorted, no whitespace, UTF-8; a stated encoding, not RFC 8785), so an altered record is a different record and a party holding the old identity can tell. It is the one method `tools/conformance/validate.py` passes. A record that merely carries its own digest (`sha256-canonical-json`) is verified and reported pending, because matching one's own digest shows consistency and not that nothing changed. Audit Records in this export carry a `label` beside the content address, for reading; Evidence Records keep a readable identity: a Memory Record's content includes the Evidence it references and an Evidence Record names its Memory Record, so the two cannot both be content-addressed, and the Evidence side names the Memory Record by its content address.
+
 A row of kind `collection` names where instances of an OCOM type live in the export: one or more
 top-level keys, or a path of the form `parent[].child` for instances nested inside another
 collection. A row of kind `field` names the field those instances carry for one element of the
@@ -46,8 +48,8 @@ that needs it fails rather than passing over an absence.
 
 | OCOM type | Kind | Where it is in this export |
 |---|---|---|
-| Object | collection | `entities`, `domains`, `relationships`, `references`, `events`, `policies`, `contracts`, `capabilities`, `registries`, `classifications`, `constraints`, `workflows`, `models` |
-| Identity | collection | `entities`, `domains`, `relationships`, `references`, `events`, `policies`, `contracts`, `capabilities`, `registries`, `classifications`, `constraints`, `workflows`, `models` |
+| Object | collection | `entities`, `domains`, `relationships`, `references`, `events`, `policies`, `contracts`, `capabilities`, `registries`, `classifications`, `constraints`, `workflows`, `models`, `audit_records`, `evidence_records` |
+| Identity | collection | `entities`, `domains`, `relationships`, `references`, `events`, `policies`, `contracts`, `capabilities`, `registries`, `classifications`, `constraints`, `workflows`, `models`, `audit_records`, `evidence_records` |
 | Metadata | collection | `entities` |
 | Entity | collection | `entities` |
 | Domain | collection | `domains` |
@@ -56,6 +58,7 @@ that needs it fails rather than passing over an absence.
 | Event | collection | `events` |
 | State | collection | `lifecycles[].states` |
 | Lifecycle | collection | `lifecycles` |
+| Transition | collection | `lifecycles[].transitions` |
 | Workflow | collection | `workflows` |
 | Model | collection | `models` |
 | Ownership | collection | `ownership` |
@@ -65,6 +68,8 @@ that needs it fails rather than passing over an absence.
 | Contract | collection | `contracts` |
 | Constraint | collection | `constraints` |
 | Registry | collection | `registries` |
+| Audit record | collection | `audit_records` |
+| Evidence record | collection | `evidence_records` |
 | Organization | collection | *(not represented: this export models one branch's lending service and carries no Organization records)* |
 
 ---
@@ -107,6 +112,8 @@ that needs it fails rather than passing over an absence.
 | Event.event type | field | `type` |
 | Event.timestamp | field | `occurred_at` |
 | Event.subject | field | `subject` |
+| Event.origin | field | `source` |
+| Event.source | field | `source` |
 | State.name | field | `name` |
 | State.meaning | field | `meaning` |
 | State.entity | field | `entity` |
@@ -118,6 +125,9 @@ that needs it fails rather than passing over an absence.
 | Lifecycle.state transitions | field | `transitions` |
 | Lifecycle.transitions | field | `transitions` |
 | Lifecycle.terminal states | field | `terminal_states` |
+| Transition.from | field | `from` |
+| Transition.to | field | `to` |
+| Transition.trigger | field | `trigger` |
 | Workflow.identifier | field | `id` |
 | Workflow.name | field | `name` |
 | Workflow.purpose | field | `purpose` |
@@ -176,6 +186,19 @@ that needs it fails rather than passing over an absence.
 | Registry.registered object types | field | `registered_object_types` |
 | Workflow.required inputs | field | `inputs` |
 | Workflow.expected outputs | field | `outputs` |
+| Workflow.transitions | field | `transitions` |
+| Transition.entity | field | `entity` |
+| Event.from state | field | `from_state` |
+| Event.to state | field | `to_state` |
+| Domain.entity types | field | `entity_types` |
+| Domain.owner | field | `owner` |
+| Registry.scope | field | `scope` |
+| Audit record.identity | field | `id` |
+| Audit record.integrity | field | `id` |
+| Evidence record.identity | field | `id` |
+| Audit record.label | field | `label` |
+| Event.integrity | field | `id` |
+| Integrity.method | method | `content-addressed-identity` |
 
 ---
 

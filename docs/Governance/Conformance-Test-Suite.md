@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 19 September 2026
+**Last Updated:** 21 September 2026
 
 ---
 
@@ -52,7 +52,7 @@ Core Conformance is defined by `Language/Conformance.md`, which states it as sup
 
 # 3. Tests
 
-A Test binds one Statement to one procedure with one pass criterion. Every mandatory and recommended Statement has exactly one Test; an optional Statement has a Test that applies only when the Conformance Statement claims the capability. A Test has one of five kinds, recorded beside the alias.
+A Test binds one Statement to one procedure with one pass criterion. Every mandatory and recommended Statement has exactly one Test; an optional Statement has a Test that applies only when the Conformance Statement claims the capability. A Test has one of six kinds, recorded beside the alias.
 
 | Kind | What it decides | Input read | Example Statement |
 |---|---|---|---|
@@ -60,9 +60,10 @@ A Test binds one Statement to one procedure with one pass criterion. Every manda
 | Invariant | that a prohibited condition never occurs in the exported model, or that the implementation refuses it where it exposes a refusal record | exported model, refusal record | "Every Event shall: ... remain immutable after creation" (`Models/Event.md`) |
 | Transition | that every recorded State change is a transition the Lifecycle permits and that a terminal State is not left | exported model | "Every Lifecycle shall: ... define permitted State Transitions" (`Models/Lifecycle.md`) |
 | Declaration | that the Conformance Statement declares what a claim clause requires to be declared | Conformance Statement | "An implementation shall identify the specification version against which conformance is claimed" (`Language/Conformance.md`, compiled by Chapter 8) |
+| Integrity | that a record the implementation claims immutable carries a demonstration that it is unaltered, and that the demonstration verifies against the record as exported | exported model, Representation Map (which declares the demonstration's method and where each record carries it) | "Audit records shall remain immutable." (`Meta/Ownership.md`) |
 | Review | that a reviewer has examined the evidence and recorded a judgment, for a Statement no mechanical procedure can decide | reviewer record | "Identity shall not depend on implementation technology" (`Models/Entity.md`) |
 
-A Test's outcome is Pass, Fail, Not Applicable (an optional capability not claimed, or a Statement dispositioned Descriptive; the first such disposition is `REQ-LIFECYCLES-004`, recorded by `CAND-020` on 19 September 2026 because it and `REQ-MODELS-LIFECYCLE-002` cannot both be satisfied, which `AO-079` records), or Review Pass and Review Fail for the fifth kind. The wording in the Example column is the Statement text at the commit that records this document; the register, not this table, is the reference.
+A Test's outcome is Pass, Fail, Not Applicable (an optional capability not claimed, or a Statement dispositioned Descriptive; the first such disposition is `REQ-LIFECYCLES-004`, recorded by `CAND-020` on 19 September 2026 because it and `REQ-MODELS-LIFECYCLE-002` cannot both be satisfied, which `AO-079` records), or Review Pass and Review Fail for the Review kind. An Integrity Test whose export declares no demonstration is pending rather than passed: the suite verifies a demonstration, it does not supply one. The wording in the Example column is the Statement text at the commit that records this document; the register, not this table, is the reference.
 
 The suite reports an implementation as passing Core Conformance when every mandatory Test is Pass or Review Pass; a Review Pass is a named reviewer's recorded judgment that the Statement is met, and Chapter 8's own criterion, support for all mandatory requirements, is not altered by it. One Fail on a mandatory Test is Non-Conformance and Chapter 8's clause applies: "it shall not claim conformance with the corresponding version of this specification", while "partial support may be documented without a conformance claim". Recommended and optional outcomes are reported and do not affect the Core claim.
 
@@ -100,3 +101,4 @@ It does not verify behaviour beyond what the exported artifacts and the Conforma
 | 0.1 | 16 September 2026 | After the dogfooding audit of Release v1.2.0: the derivation rule states that a colon stem absorbs its list across a blank line and that the identity uses the level-one heading; the keyword list is declared wider than `Core/Manifest.md`'s; the register is called a derived artifact rather than a Projection-tier record; the Purpose states that the document's rules bind the suite, not implementations; Chapter 8's Non-Conformance clause is quoted. Counts unchanged. |
 | 0.1 | 17 September 2026 | Section 2: identity concatenation and text normalization stated; Tooling paragraph added. Section 7: the generator, the Alias File and the CI job exist; the Representation Map validator and the first report remain. |
 | 0.1 | 19 September 2026 | Section 1 cites `Language/Conformance.md` as the definition of Core Conformance and names the enumeration as this suite's reading (`CAND-021`); Section 3 records the first Descriptive disposition (`CAND-020`). |
+| 0.1 | 21 September 2026 | Section 3 gains a sixth Test kind, Integrity, per `CAND-024` (Decided 21 September 2026): a record the implementation claims immutable carries a demonstration that it is unaltered, and the suite verifies it against the exported record. It is the kind that can return Fail on immutability, which no earlier kind could. |

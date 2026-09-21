@@ -15,6 +15,7 @@ would have caught none of the six.
 """
 import json
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -162,6 +163,17 @@ class PrincipleTraceability(unittest.TestCase):
             self.assertEqual(code, 1, out)
             self.assertIn("carries no quote", out)
 
+    def test_a_carrier_row_outside_its_table_is_not_silently_dropped(self):
+        with Copy() as c:
+            doc = "docs/Governance/Principle-Traceability.md"
+            text = c.read(doc)
+            i = text.index("## Principle 5:")
+            stray = "| `docs/Models/Event.md:97` | binding rule | REQ-MODELS-EVENT-010 | An Event shall never be modified after creation. |\n\n"
+            c.write(doc, text[:i] + stray + text[i:])
+            code, out = run(c.dir, TRACE, "--check")
+            self.assertEqual(code, 1, out)
+            self.assertIn("outside a table", out)
+
     def test_absent_row_naming_a_document_fails(self):
         with Copy() as c:
             doc = "docs/Governance/Principle-Traceability.md"
@@ -231,7 +243,7 @@ class TestCatalogue(unittest.TestCase):
             self.assertEqual(doc, 0)
             text = (c.dir / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
             row = [l for l in text.splitlines() if l.startswith("| REQ-META-OBJECT-001 |")][0]
-            self.assertTrue(row.rstrip().endswith("Review |"), row)
+            self.assertEqual([c.strip() for c in row.strip().strip("|").split("|")][4], "Review", row)
 
     def test_an_organizational_obligation_is_not_mechanical(self):
         with Copy() as c:
@@ -239,7 +251,29 @@ class TestCatalogue(unittest.TestCase):
             text = (c.dir / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
             rows = [l for l in text.splitlines() if l.startswith("| REQ-META-IDENTITY-005 |")]
             self.assertTrue(rows, "the Statement this test names is gone from the register")
-            self.assertTrue(rows[0].rstrip().endswith("Review |"), rows[0])
+            self.assertEqual([c.strip() for c in rows[0].strip().strip("|").split("|")][4], "Review", rows[0])
+
+    def test_a_renamed_claim_section_does_not_delete_a_test(self):
+        with Copy() as c:
+            c.edit("docs/Language/Conformance.md", "# Version Conformance", "# Versioning Conformance")
+            code, out = run(c.dir, CATALOGUE, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("Version Conformance", out)
+
+    def test_hand_written_content_in_the_catalogue_is_caught(self):
+        with Copy() as c:
+            doc = "docs/Governance/Test-Catalogue.md"
+            text = c.read(doc)
+            c.write(doc, text.replace("| REQ-META-OBJECT-003 |", "| REQ-META-OBJECT-003-EDITED |", 1))
+            code, out = run(c.dir, CATALOGUE, "--check")
+            self.assertNotEqual(code, 0, out)
+
+    def test_the_disagreement_with_section_3_is_printed(self):
+        text = (ROOT / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
+        self.assertIn("Where This Generator Disagrees With Section 3", text)
+        block = text.split("Where This Generator Disagrees With Section 3")[1].split("# What Each Kind Does")[0]
+        self.assertIn("differs", block)
+        self.assertIn("agrees", block)
 
     def test_a_statement_without_an_alias_fails_closed(self):
         with Copy() as c:
@@ -263,11 +297,304 @@ class Validator(unittest.TestCase):
                    "--statement", "%s/conformance-statement.md" % self.EX)
 
     def test_the_example_passes_what_it_claims(self):
+        # the exact numbers, not a substring a validator doing no work would also satisfy
         code, out = self.run_on(ROOT)
         self.assertEqual(code, 0, out)
-        self.assertIn("Fail 0", out)
+        m = re.search(r"mandatory (\d+): Pass (\d+), Fail (\d+), pending (\d+)", out)
+        self.assertIsNotNone(m, out)
+        total, passed, failed, pending = (int(x) for x in m.groups())
+        self.assertEqual(failed, 0, out)
+        self.assertGreaterEqual(passed, 30, "the suite stopped deciding things: %s" % out)
+        self.assertEqual(passed + failed + pending, total, out)
         # a model alone never establishes Core Conformance: Review Pass needs a reviewer
         self.assertIn("not established", out)
+
+    def outcomes(self, root):
+        """Every alias and its outcome, from a fresh run in `root`."""
+        out = pathlib.Path(tempfile.mkdtemp()) / "r.md"
+        code, printed = run(root, VALIDATE, "--model", "%s/model.json" % self.EX,
+                            "--map", "%s/representation-map.md" % self.EX,
+                            "--statement", "%s/conformance-statement.md" % self.EX, "--report", str(out))
+        self.assertEqual(code, 0, printed)
+        rows = {}
+        for line in out.read_text(encoding="utf-8").splitlines():
+            if line.startswith("| REQ-") or line.startswith("| DECL-"):
+                cells = [c.strip() for c in line.strip().strip("|").split("|")]
+                rows[cells[0]] = cells[4]
+        shutil.rmtree(out.parent, ignore_errors=True)
+        return rows
+
+    def test_renaming_every_field_and_the_map_changes_nothing(self):
+        """The suite prescribes no format, so an export that spells everything differently and
+        says so in its Representation Map must score exactly the same. This is the property four
+        hard-coded key reads quietly broke, each while every other test stayed green."""
+        baseline = self.outcomes(ROOT)
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+
+            def rename(value):
+                if isinstance(value, dict):
+                    return {("x_" + k if k != "export" else k): rename(v) for k, v in value.items()}
+                if isinstance(value, list):
+                    return [rename(v) for v in value]
+                return value
+
+            renamed = {("x_" + k if k != "export" else k): rename(v) for k, v in model.items()}
+            sys.path.insert(0, str(c.dir / "tools" / "conformance"))
+            import importlib, validate as V
+            importlib.reload(V)
+            # content addresses are computed over the keys, so an implementation that spells its
+            # export differently computes its own addresses; references follow the new addresses
+            old_new = {}
+            for coll in ("x_audit_records", "x_events"):
+                for rec in renamed.get(coll, []):
+                    before = rec.get("x_id")
+                    rec["x_id"] = V.canonical_digest(rec, "x_id")
+                    old_new[before] = rec["x_id"]
+            for ev in renamed.get("x_evidence_records", []):
+                ev["x_related_memory_record"] = old_new.get(ev.get("x_related_memory_record"), ev.get("x_related_memory_record"))
+            c.write("%s/model.json" % self.EX, json.dumps(renamed))
+
+            lines = []
+            for line in c.read("%s/representation-map.md" % self.EX).splitlines():
+                cells = [x.strip() for x in line.strip().strip("|").split("|")] if line.startswith("| ") else []
+                if len(cells) == 3 and cells[1] == "collection" and cells[2].startswith("`"):
+                    paths = []
+                    for path in cells[2].split(","):
+                        path = path.strip().strip("`")
+                        if "[]." in path:
+                            parent, child = path.split("[].", 1)
+                            paths.append("`x_%s[].x_%s`" % (parent, child))
+                        else:
+                            paths.append("`x_%s`" % path)
+                    line = "| %s | collection | %s |" % (cells[0], ", ".join(paths))
+                elif len(cells) == 3 and cells[1] == "field" and cells[2].startswith("`"):
+                    line = "| %s | field | `x_%s` |" % (cells[0], cells[2].strip("`"))
+                lines.append(line)
+            c.write("%s/representation-map.md" % self.EX, "\n".join(lines) + "\n")
+
+            after = self.outcomes(c.dir)
+        differing = {a: (baseline.get(a), after.get(a)) for a in baseline if baseline[a] != after.get(a)}
+        self.assertEqual(differing, {},
+                         "renaming the export and its map changed %d verdict(s): %s"
+                         % (len(differing), list(differing.items())[:4]))
+
+    def test_a_repeated_value_fails_a_uniqueness_statement(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["events"][1]["id"] = model["events"][0]["id"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def integrity_rows(self, root):
+        return {a: o for a, o in self.outcomes(root).items()
+                if a in ("REQ-META-OWNERSHIP-022", "REQ-MODELS-EVENT-010", "REQ-MODELS-EVENT-004")}
+
+    def test_integrity_demonstrations_verify_on_the_example(self):
+        rows = self.integrity_rows(ROOT)
+        self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Pass", rows)
+        self.assertEqual(rows.get("REQ-MODELS-EVENT-010"), "Pass", rows)
+
+    def test_an_altered_audit_record_fails_its_demonstration(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["audit_records"][0]["value"] = "Ownership assigned to somebody else"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.integrity_rows(c.dir).get("REQ-META-OWNERSHIP-022"), "Fail")
+
+    def test_an_altered_event_fails_its_demonstration(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["events"][0]["occurred_at"] = "2026-08-09T10:12:00Z"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.integrity_rows(c.dir).get("REQ-MODELS-EVENT-010"), "Fail")
+
+    def test_a_re_addressed_record_is_a_different_record(self):
+        """Alter a record and recompute its content address: it verifies, because it is a new
+        record, and every reference to the old identity dangles, which is how the holder of the
+        old identity learns that the record they held is gone."""
+        with Copy() as c:
+            sys.path.insert(0, str(c.dir / "tools" / "conformance"))
+            import importlib, validate as V
+            importlib.reload(V)
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            rec = model["audit_records"][0]
+            old_id = rec["id"]
+            rec["value"] = "Ownership assigned to somebody else"
+            rec["id"] = V.canonical_digest(rec, "id")
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            report = c.dir / (self.EX + "/report.md")
+            run(c.dir, VALIDATE, "--model", "%s/model.json" % self.EX, "--map", "%s/representation-map.md" % self.EX,
+                "--statement", "%s/conformance-statement.md" % self.EX, "--report", str(report))
+            text = report.read_text(encoding="utf-8")
+            self.assertIn("| REQ-META-OWNERSHIP-022 |", text)
+            self.assertIn("Pass", [l for l in text.splitlines() if l.startswith("| REQ-META-OWNERSHIP-022 |")][0])
+            self.assertIn(old_id, text.split("## Reference Integrity")[1].split("## Results")[0])
+
+    def test_a_self_contained_digest_is_pending_not_passed(self):
+        with Copy() as c:
+            sys.path.insert(0, str(c.dir / "tools" / "conformance"))
+            import importlib, validate as V
+            importlib.reload(V)
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for rec in model["audit_records"]:
+                rec["id"] = rec["label"]
+                rec["digest"] = V.canonical_digest(rec, "digest")
+            for ev in model["evidence_records"]:
+                ev["related_memory_record"] = [r["id"] for r in model["audit_records"] if r["label"] == ev["related_memory_record"] or True][0]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            path = "%s/representation-map.md" % self.EX
+            text = c.read(path).replace("| Integrity.method | method | `content-addressed-identity` |", "| Integrity.method | method | `sha256-canonical-json` |")
+            text = text.replace("| Audit record.integrity | field | `id` |", "| Audit record.integrity | field | `digest` |")
+            c.write(path, text)
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "pending", rows)
+
+    def test_a_missing_demonstration_is_pending_not_passed(self):
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, "\n".join(l for l in c.read(path).splitlines() if not l.startswith("| Integrity.method")) + "\n")
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "pending", rows)
+
+    def test_an_erased_record_is_excluded_from_the_demonstration(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            erased = model["audit_records"][0]["id"]
+            model["audit_records"][0]["value"] = "[erased]"
+            model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND", "created_at": "2026-09-21T00:00:00Z"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path).replace("| Registry | collection | `registries` |", "| Registry | collection | `registries` |\n| Erasure | collection | `erasures` |") .replace("| Integrity.method |", "| Erasure.erased record | field | `record` |\n| Integrity.method |"))
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Pass", rows)
+
+    def test_a_domain_identity_renamed_with_the_map_still_finds_the_overlap(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for dom in model["domains"]:
+                dom["dom_key"] = dom.pop("id")
+            model["domains"].append({"dom_key": "DOM-SECOND", "name": "Second", "purpose": "overlap", "owner": "OWN-DOM-LENDING", "entity_types": ["Item"]})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path).replace("| Domain.identifier | field | `id` |", "| Domain.identifier | field | `dom_key` |\n| Domain.identity | field | `dom_key` |"))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_collection_that_is_not_a_list_of_records_fails_closed(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["audit_records"] = {"not": "a list"}
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("not a list of records", out)
+
+    def test_the_catalogue_binds_immutability_to_integrity(self):
+        text = (ROOT / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
+        row = [l for l in text.splitlines() if l.startswith("| REQ-META-OWNERSHIP-022 |")][0]
+        self.assertEqual([x.strip() for x in row.strip().strip("|").split("|")][4], "Integrity", row)
+
+    def test_a_zero_does_not_satisfy_presence(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for rel in model["relationships"]:
+                rel["type"] = 0
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_list_of_absences_does_not_satisfy_presence(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            # Contract.participants is list-valued and a Presence Test does check it, unlike
+            # Entity.attributes, whose Statement carries a behaviour item and goes to Review
+            for contract in model["contracts"]:
+                contract["parties"] = [None, ""]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_two_lifecycles_with_one_identifier_fail(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["lifecycles"][1]["id"] = model["lifecycles"][0]["id"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_dangling_references_are_found_whatever_the_identifier_looks_like(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for e in model["entities"]:
+                e["owner"] = "does-not-exist"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            report = c.dir / (self.EX + "/report.md")
+            run(c.dir, VALIDATE, "--model", "%s/model.json" % self.EX,
+                "--map", "%s/representation-map.md" % self.EX,
+                "--statement", "%s/conformance-statement.md" % self.EX, "--report", str(report))
+            text = report.read_text(encoding="utf-8")
+            self.assertIn("does-not-exist", text)
+
+    def test_an_identity_reused_inside_one_collection_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][2]["id"] = model["entities"][0]["id"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_an_empty_mapped_collection_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["relationships"] = []
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_falsy_field_does_not_satisfy_presence(self):
+        for empty in (False, "", "null", [], "  "):
+            with Copy() as c:
+                model = json.loads(c.read("%s/model.json" % self.EX))
+                for rel in model["relationships"]:
+                    rel["type"] = empty
+                c.write("%s/model.json" % self.EX, json.dumps(model))
+                code, out = self.run_on(c.dir)
+                self.assertNotIn("Fail 0", out, "a field holding %r passed as present" % (empty,))
+
+    def test_a_dangling_lifecycle_reference_is_not_silently_skipped(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["lifecycle"] = "LC-NOWHERE"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_events_no_lifecycle_resolves_for_are_not_counted_as_checked(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for e in model["events"]:
+                e["subject"] = "UNKNOWN-1"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            report = c.dir / (self.EX + "/report.md")
+            code2, out2 = run(c.dir, VALIDATE, "--model", "%s/model.json" % self.EX,
+                              "--map", "%s/representation-map.md" % self.EX,
+                              "--statement", "%s/conformance-statement.md" % self.EX,
+                              "--report", str(report))
+            row = [l for l in report.read_text(encoding="utf-8").splitlines()
+                   if l.startswith("| REQ-LIFECYCLES-003 ")][0]
+            self.assertIn("pending", row, row)
+
+    def test_a_descriptive_disposition_is_not_applicable(self):
+        code, out = run(ROOT, VALIDATE, "--model", "%s/model.json" % self.EX,
+                        "--map", "%s/representation-map.md" % self.EX,
+                        "--statement", "%s/conformance-statement.md" % self.EX,
+                        "--report", "/tmp/ocom-disposition.md")
+        self.assertEqual(code, 0, out)
+        row = [l for l in open("/tmp/ocom-disposition.md") if l.startswith("| REQ-LIFECYCLES-004 ")][0]
+        self.assertIn("Not Applicable", row, row)
 
     def test_a_missing_required_field_fails_its_test(self):
         with Copy() as c:
@@ -295,6 +622,97 @@ class Validator(unittest.TestCase):
             c.write("%s/model.json" % self.EX, json.dumps(model))
             code, out = self.run_on(c.dir)
             self.assertNotIn("Fail 0", out)
+
+    def test_a_lifecycle_with_no_transitions_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["lifecycles"][0]["transitions"] = []
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_state_outside_its_lifecycle_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["state"] = "Invented"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_an_initial_state_the_lifecycle_does_not_define_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["lifecycles"][0]["initial_state"] = "Nowhere"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_transition_out_of_a_terminal_state_is_reported(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            lc = model["lifecycles"][0]
+            lc["transitions"].append({"from": lc["terminal_states"][0], "to": "Available", "trigger": "Invented"})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            report = json.dumps(out)
+            self.assertNotIn("Fail 0", out, report)
+
+    def test_a_compound_statement_is_not_passed_on_one_of_its_parts(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            # REQ-MODELS-LIFECYCLE-002 requires a Lifecycle to belong to exactly one Entity and to
+            # define an initial State and operational States; breaking only the first must fail it
+            for lc in model["lifecycles"]:
+                lc["entity"] = ""
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_an_unreachable_state_is_found(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            lc = model["lifecycles"][0]
+            lc["states"].append({"name": "Orphan", "meaning": "reachable by nothing",
+                                 "entity": lc["entity"], "lifecycle": lc["id"]})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_an_object_without_an_owner_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["owner"] = ""
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_an_entity_type_governed_by_two_domains_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["domains"].append({"id": "DOM-SECOND", "name": "Second", "purpose": "overlap",
+                                     "owner": "OWN-DOM-LENDING", "entity_types": ["Item"]})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_workflow_outside_its_lifecycle_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["workflows"][0]["transitions"] = [{"entity": "LIB-000198", "from": "Available", "to": "Lost"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_compound_prohibition_is_pending_not_passed(self):
+        # REQ-MODELS-LIFECYCLE-012 forbids four things and one of them, ambiguous State
+        # progression, no export settles: the Statement must not be reported Pass on the other three
+        code, out = run(ROOT, VALIDATE, "--model", "%s/model.json" % self.EX,
+                        "--map", "%s/representation-map.md" % self.EX,
+                        "--statement", "%s/conformance-statement.md" % self.EX, "--report", "/tmp/ocom-compound.md")
+        self.assertEqual(code, 0, out)
+        row = [l for l in open("/tmp/ocom-compound.md") if l.startswith("| REQ-MODELS-LIFECYCLE-012 ")][0]
+        self.assertIn("pending", row)
+        self.assertIn("parts", row)
 
     def test_a_map_that_declares_nothing_cannot_pass(self):
         with Copy() as c:

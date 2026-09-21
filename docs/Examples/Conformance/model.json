@@ -81,7 +81,7 @@
         }
       ],
       "lifecycle": "LC-ITEM",
-      "state": "On Loan"
+      "state": "Overdue"
     },
     {
       "id": "LOAN-2026-08-0431",
@@ -89,7 +89,7 @@
       "type": "Loan",
       "meaning": "One lending of one Item to one Patron.",
       "domain": "DOM-LENDING",
-      "owner": "OWN-DOM-LENDING",
+      "owner": "OWN-LOAN-2026-08-0431",
       "classification": "Loan",
       "metadata": {
         "due_on": "2026-09-05"
@@ -107,7 +107,7 @@
         }
       ],
       "lifecycle": "LC-LOAN",
-      "state": "Open"
+      "state": "Overdue"
     }
   ],
   "lifecycles": [
@@ -340,6 +340,20 @@
       "owned_object": "DOM-LENDING",
       "responsibility_scope": "Lending rules, loan records and the items in circulation.",
       "effective_date": "2024-01-08"
+    },
+    {
+      "id": "OWN-LOAN-2026-08-0431",
+      "owner": "Circulation Desk",
+      "owned_object": "LOAN-2026-08-0431",
+      "responsibility_scope": "The loan record, its due date and its closure.",
+      "effective_date": "2026-08-08"
+    },
+    {
+      "id": "OWN-REG-ITEMS",
+      "owner": "Riverside Branch",
+      "owned_object": "REG-ITEMS",
+      "responsibility_scope": "The authoritative list of copies held by the branch.",
+      "effective_date": "2024-01-08"
     }
   ],
   "classifications": [
@@ -420,33 +434,45 @@
       "registered_object_types": [
         "Item"
       ],
-      "owner": "OWN-DOM-LENDING"
+      "owner": "OWN-REG-ITEMS"
     }
   ],
   "events": [
     {
-      "id": "EVT-0001",
       "type": "Loan opened",
       "occurred_at": "2026-08-08T10:12:00Z",
       "subject": "LIB-000198",
       "from_state": "Available",
-      "to_state": "On Loan"
+      "to_state": "On Loan",
+      "source": "WF-OPEN-LOAN",
+      "id": "ebfd2544e4c6ec239b78a5e54aa78c1ec64cd3510c08e6adf8faabf54240653a"
     },
     {
-      "id": "EVT-0002",
       "type": "Loan opened",
       "occurred_at": "2026-08-08T10:12:00Z",
       "subject": "LOAN-2026-08-0431",
       "from_state": null,
-      "to_state": "Open"
+      "to_state": "Open",
+      "source": "WF-OPEN-LOAN",
+      "id": "e72038007542545b8af8e79cb5f5f77aea92f5b93b4eebca646dca3407a2a3fa"
     },
     {
-      "id": "EVT-0003",
       "type": "Due date passed",
       "occurred_at": "2026-09-06T00:00:00Z",
       "subject": "LOAN-2026-08-0431",
       "from_state": "Open",
-      "to_state": "Overdue"
+      "to_state": "Overdue",
+      "source": "Scheduled Process",
+      "id": "bc33635e5c39c0cd675501cefb27438e49bef4bf425ef1821ac9e5eb7f6ffad4"
+    },
+    {
+      "type": "Due date passed",
+      "occurred_at": "2026-09-06T00:00:00Z",
+      "subject": "LIB-000198",
+      "from_state": "On Loan",
+      "to_state": "Overdue",
+      "source": "Scheduled Process",
+      "id": "fc5852e8e9ed2e3d9051e84624b62a5aef84050c4d863f5b041074e6d730e208"
     }
   ],
   "workflows": [
@@ -497,6 +523,91 @@
       "domains": [
         "DOM-LENDING"
       ]
+    }
+  ],
+  "audit_records": [
+    {
+      "type": "Decision",
+      "subject": "LIB-000198",
+      "value": "Ownership assigned to OWN-LIB-000198",
+      "layer": "Persistent",
+      "evidence": [
+        "EVD-0001"
+      ],
+      "created_at": "2024-03-11T09:00:00Z",
+      "creator": "Branch Manager",
+      "governance_policy": "POL-LOAN-PERIOD",
+      "label": "AUD-0001",
+      "id": "58350249dd24cc1dc554b2dfa6aaf112e896ed12d87b450aa5e44f0096fafa60"
+    },
+    {
+      "type": "Decision",
+      "subject": "LIB-000198",
+      "value": "Classification assigned: CLS-BOOK",
+      "layer": "Persistent",
+      "evidence": [
+        "EVD-0002"
+      ],
+      "created_at": "2024-03-11T09:05:00Z",
+      "creator": "Cataloguer",
+      "governance_policy": "POL-LOAN-PERIOD",
+      "label": "AUD-0002",
+      "id": "11312963601185379dfdc852d7d27d9fdc379f5899989f650e7d8310351cfa61"
+    },
+    {
+      "type": "Decision",
+      "subject": "P-10432",
+      "value": "Ownership assigned to OWN-P-10432",
+      "layer": "Persistent",
+      "evidence": [
+        "EVD-0003"
+      ],
+      "created_at": "2023-06-02T10:30:00Z",
+      "creator": "Membership Desk",
+      "governance_policy": "POL-SUSPEND",
+      "label": "AUD-0003",
+      "id": "4a9e8ee2ba7193d5aa68d82a3a34933b591c09b2a1c2b0b8659caeb363b7d950"
+    }
+  ],
+  "evidence_records": [
+    {
+      "id": "EVD-0001",
+      "related_memory_record": "58350249dd24cc1dc554b2dfa6aaf112e896ed12d87b450aa5e44f0096fafa60",
+      "description": "Accession slip signed at intake.",
+      "created_date": "2024-03-11",
+      "source": "human verification",
+      "source_identifier": "intake slip 2024-0311-07",
+      "reliability": {
+        "scale": "branch three-level",
+        "value": "high",
+        "recorded_by": "Branch Manager"
+      }
+    },
+    {
+      "id": "EVD-0002",
+      "related_memory_record": "11312963601185379dfdc852d7d27d9fdc379f5899989f650e7d8310351cfa61",
+      "description": "Catalogue rule: physical monographs are Books.",
+      "created_date": "2024-03-11",
+      "source": "business rules",
+      "source_identifier": "catalogue rule 4",
+      "reliability": {
+        "scale": "branch three-level",
+        "value": "high",
+        "recorded_by": "Cataloguer"
+      }
+    },
+    {
+      "id": "EVD-0003",
+      "related_memory_record": "4a9e8ee2ba7193d5aa68d82a3a34933b591c09b2a1c2b0b8659caeb363b7d950",
+      "description": "Registration form countersigned.",
+      "created_date": "2023-06-02",
+      "source": "human verification",
+      "source_identifier": "registration 2023-0602-12",
+      "reliability": {
+        "scale": "branch three-level",
+        "value": "medium",
+        "recorded_by": "Membership Desk"
+      }
     }
   ]
 }

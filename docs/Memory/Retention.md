@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 18 September 2026
+**Last Updated:** 21 September 2026
 
 ---
 
@@ -97,11 +97,15 @@ Archived records remain accessible but are excluded from normal operational work
 
 ## Deleted
 
-The record has been permanently removed in accordance with organizational or regulatory policy.
+A Memory Record is never altered. Where law or organizational policy requires that retained content no longer be recoverable, an implementation shall make the content of the affected record irrecoverable while preserving the record's identity, its creation time and creator, and its demonstration of integrity, and shall record the erasure as a new Memory Record naming what was erased and under which policy.
+
+Deleted means this and nothing else. Reconstructability, Constitution Principle 6, holds for everything except the erased content, which is the purpose of the erasure.
+
+The preserved demonstration shows what the record's content was at creation. A party holding the erased record learns from it that the content has been erased, not that it is intact; a conformance test that verifies demonstrations excludes a record named by an erasure record rather than failing it.
 
 Deletion shall be auditable.
 
-> **Editorial note (18 September 2026).** Constitution §4 requires Memory to be append-only and a Memory Entry to be immutable after creation, and §6 requires Knowledge and World Models to be reproducible from Memory. This Deleted state, and the Conformance clause below that requires a compliant implementation to "support controlled deletion", stand against both. The divergence is recorded as `AO-069` and carries a Chief Architect disposition of 18 September 2026: it is disclosed, its correction is a Memory-model change gated behind `CAND-007` Section 5 and a Reference Case, and it does not block the v1.0 claim. This note changes no requirement.
+> **Resolution note (21 September 2026).** The editorial note of 18 September 2026 recorded that this state, and the Conformance clause "support controlled deletion", stood against Constitution Principles 4 and 6 (`AO-069`). `CAND-024` (Decided 21 September 2026) restates the state as an erasure that preserves the record and is itself recorded, so it no longer stands against either Principle. `AO-069` closes.
 
 ---
 
@@ -193,7 +197,7 @@ A compliant implementation shall:
 - support retention state transitions;
 - preserve audit history;
 - support archival;
-- support controlled deletion.
+- support erasure as the Deleted state defines it, preserving the record's identity, creation time, creator and demonstration of integrity, and recording the erasure as a new Memory Record.
 
 ---
 
@@ -203,3 +207,5 @@ A compliant implementation shall:
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 18 September 2026 | Editorial note added under Deleted recording that this document's Deleted state and its controlled-deletion Conformance clause stand against Constitution §4 and §6, per `AO-069`; no requirement changed. |
+| 0.1 | 21 September 2026 | Deleted restated as an erasure that makes content irrecoverable while preserving the record's identity, creation time, creator and demonstration of integrity, recorded as a new Memory Record; the Conformance item "support controlled deletion" replaced accordingly, per `CAND-024` (Decided 21 September 2026). The editorial note of 18 September is replaced by a resolution note. `AO-069` closes. |
+| 0.1 | 21 September 2026 | Deleted: one sentence added stating what the preserved demonstration means after erasure (it shows the content at creation; a holder learns the record was erased), found by running the Integrity Test kind against an erased record; recorded as a postscript to `CAND-024`. |
