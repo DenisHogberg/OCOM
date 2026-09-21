@@ -129,14 +129,21 @@ EMPTY_STRINGS = {"", "null", "none", "n/a", "-", "tbd"}
 
 
 def is_absent(value):
-    """Structural emptiness. false and 0 are values a field can legitimately hold nowhere in this
-    vocabulary, and a string reading "null" is an absence written down."""
+    """Structural emptiness, all the way down.
+
+    No element of this vocabulary is satisfied by false, by zero or by the word null, and a list
+    whose every member is one of those is a list of absences rather than a value.
+    """
     if value is None or isinstance(value, bool):
         return True
+    if isinstance(value, (int, float)):
+        return value == 0
     if isinstance(value, str):
         return value.strip().lower() in EMPTY_STRINGS
-    if isinstance(value, (list, dict, tuple, set)):
-        return len(value) == 0
+    if isinstance(value, dict):
+        return not value or all(is_absent(v) for v in value.values())
+    if isinstance(value, (list, tuple, set)):
+        return not value or all(is_absent(v) for v in value)
     return False
 
 
@@ -272,17 +279,35 @@ def presence(test, text, r):
                 break
     if missing:
         return "Fail", "; ".join(missing[:4])
+    # a Statement asking for a unique value is not established by the value being there
+    unique_note = ""
+    if re.search(r"\bunique\b", text, re.I):
+        for element in elements:
+            name, _ = r.field(subject, element)
+            if name is None:
+                continue
+            values = [rec.get(name) for _, rec in records]
+            repeated = [v for v in set(values) if values.count(v) > 1]
+            if repeated:
+                return "Fail", "%s is not unique across %s: %s" % (element, subject, ", ".join(str(x) for x in repeated[:3]))
+        unique_note = ", each distinct"
     note = "" if not borrowed else " (%s)" % "; ".join(borrowed)
-    return "Pass", "%d %s record(s) carry %s%s" % (len(records), subject, ", ".join(elements), note)
+    return "Pass", "%d %s record(s) carry %s%s%s" % (len(records), subject, ", ".join(elements), unique_note, note)
 
 
 def lifecycle_index(r):
     """Lifecycles by identity, and the Lifecycle each Entity names, both read through the map."""
-    lifecycles = {}
+    lifecycles, collisions = {}, []
     for _, lc in r.records("lifecycle"):
         ident = r.value(lc, "lifecycle", "identifier") or lc.get("id")
-        if ident:
-            lifecycles[ident] = lc
+        if not ident:
+            collisions.append("a Lifecycle carries no identifier")
+            continue
+        if ident in lifecycles:
+            collisions.append("two Lifecycles carry the identifier %s" % ident)
+        lifecycles[ident] = lc
+    if collisions:
+        lifecycles["__collisions__"] = collisions
     by_entity = {}
     for _, e in r.records("entity"):
         ident = r.value(e, "entity", "identity") or e.get("id")
@@ -380,8 +405,8 @@ def transition_predicate(text, r, lifecycles, by_entity):
         compared, bad, unresolved = 0, [], []
         for _, e in events:
             subject = r.value(e, "event", "subject")
-            before = e.get("from_state")
-            after = e.get("to_state")
+            before = r.value(e, "event", "from state")
+            after = r.value(e, "event", "to state")
             if before is None:
                 continue
             named = by_entity.get(subject)
@@ -439,6 +464,8 @@ def combine(parts, run_one):
 
 def transition(test, text, r):
     lifecycles, by_entity = lifecycle_index(r)
+    if "__collisions__" in lifecycles:
+        return "Fail", "; ".join(lifecycles["__collisions__"][:3])
     if not lifecycles:
         return "Fail", "the export carries no Lifecycle"
     return combine(compound(text), lambda part: transition_predicate(part, r, lifecycles, by_entity))
@@ -448,6 +475,8 @@ def invariant_predicate(text, r, lifecycles, by_entity):
     low = text.lower()
 
     if "identity" in low and "reused" in low:
+        if not r.all_records():
+            return "Fail", "the export carries no record, so no identity could be compared"
         counts = {}
         for path, rec in r.all_records():
             ident = r.identity_of(path, rec)
@@ -458,23 +487,33 @@ def invariant_predicate(text, r, lifecycles, by_entity):
                ("Pass", "%d identities, each carried by exactly one record" % len(counts))
 
     if "ownership" in low and ("never be undefined" in low or "not be undefined" in low):
-        governed = r.records("entity") + r.records("domain")
+        governed = [("entity", rec) for _, rec in r.records("entity")] + \
+                   [("domain", rec) for _, rec in r.records("domain")]
+        if not governed:
+            return "Fail", "the export carries no governed record, so no Ownership could be checked"
         bad = []
-        for _, rec in governed:
-            owner = rec.get(r.field("entity", "owner")[0] or "owner")
-            if is_absent(owner):
+        for type_name, rec in governed:
+            field, _ = r.field(type_name, "owner")
+            if field is None:
+                return None, "the Representation Map binds no field to %s.owner" % type_name
+            if is_absent(rec.get(field)):
                 bad.append(str(rec.get("id")))
         return ("Fail", "no owner: %s" % ", ".join(bad[:3])) if bad else \
                ("Pass", "%d governed records each name an owner" % len(governed))
 
     if "primary governance" in low and "shared" in low:
+        if not r.records("entity"):
+            return "Fail", "the export carries no Entity"
         bad, seen = [], {}
         for _, e in r.records("entity"):
             domain = r.value(e, "entity", "domain")
             if isinstance(domain, list) and len(domain) > 1:
                 bad.append("%s names %d primary Domains" % (e.get("id"), len(domain)))
+        types_field, _ = r.field("domain", "entity types")
+        if types_field is None:
+            return None, "the Representation Map binds no field to Domain.entity types, so no overlap could be read"
         for _, d in r.records("domain"):
-            for name in d.get("entity_types", []):
+            for name in d.get(types_field) or []:
                 if name in seen and seen[name] != d.get("id"):
                     bad.append("%s is governed by %s and %s" % (name, seen[name], d.get("id")))
                 seen[name] = d.get("id")
@@ -528,45 +567,79 @@ def invariant_predicate(text, r, lifecycles, by_entity):
 
 
 def workflow_violations(r, lifecycles, by_entity):
+    """Every step a Workflow records, read through the map, against the Lifecycle it acts on.
+
+    The map is the only thing that knows where a Workflow keeps its steps. Reading them by the
+    literal key `transitions` passed an export that calls them anything else, having looked at
+    nothing, which is the defect this engine was refactored to remove and kept in one corner.
+    """
+    steps_field, _ = r.field("workflow", "transitions")
+    if steps_field is None:
+        return ["the Representation Map binds no field to Workflow.transitions, so no Workflow step could be read"]
+    from_field, _ = r.field("transition", "from")
+    to_field, _ = r.field("transition", "to")
+    entity_field, _ = r.field("transition", "entity")
     bad = []
     for _, wf in r.records("workflow"):
-        for tr in wf.get("transitions", []) or []:
-            entity = tr.get("entity")
+        for tr in wf.get(steps_field) or []:
+            entity = tr.get(entity_field or "entity")
             lc = lifecycles.get(by_entity.get(entity))
             if lc is None:
                 bad.append("%s acts on %s, for which no Lifecycle resolves" % (wf.get("id"), entity))
-            elif (tr.get("from"), tr.get("to")) not in set(transitions_of(r, lc)):
+            elif (tr.get(from_field or "from"), tr.get(to_field or "to")) not in set(transitions_of(r, lc)):
                 bad.append("%s: %s to %s is not a Transition of %s's Lifecycle"
-                           % (wf.get("id"), tr.get("from"), tr.get("to"), entity))
+                           % (wf.get("id"), tr.get(from_field or "from"), tr.get(to_field or "to"), entity))
     return bad
 
 
 def invariant(test, text, r):
     lifecycles, by_entity = lifecycle_index(r)
+    if "__collisions__" in lifecycles:
+        return "Fail", "; ".join(lifecycles["__collisions__"][:3])
     parts = compound(text) if ("never:" in text or "shall not:" in text) else [text]
     return combine(parts, lambda part: invariant_predicate(part, r, lifecycles, by_entity))
 
 
 def dangling_references(r):
-    """Every id-valued field that names an identity the export does not declare.
+    """Every value that names something, and whether the export declares it.
 
-    No Statement binds this check, so it is reported as an observation rather than a Test outcome:
-    a report that verified every field of every record while the fields point at nothing would be
-    true and useless.
+    The first version of this check asked whether a string looked like one of the example's
+    identifiers, which answered nothing for an export that writes identifiers any other way and
+    still printed that every reference resolved. It now asks the only question worth asking, over
+    every scalar and every member of every list: is this value an identity this export declares?
     """
     known = set(r.ids())
-    external = set(p for p in r.types.get("reference") or [])
-    out = []
+    if not known:
+        return ["the export declares no identity, so no reference could be resolved"], 0
+    external = set(r.types.get("reference") or [])
+    skip_keys = {"id", "type", "name", "purpose", "meaning", "note", "rule", "expression",
+                 "trigger", "responsibility_scope", "data_type", "state", "initial_state"}
+    # what a reference looks like is read off this export's own identities rather than assumed:
+    # an export whose identities all carry a separator is one where a bare word is not a reference
+    separated = sum(1 for i in known if "-" in i or "_" in i)
+    needs_separator = separated > len(known) / 2
+    out, examined = [], 0
     for path, rec in r.all_records():
         if path in external:
             continue          # a Reference may legitimately name a target in another system
         for key, value in rec.items():
-            if not isinstance(value, str) or not value or value in known:
+            if key in skip_keys:
                 continue
-            if re.match(r"^[A-Z][A-Z0-9-]{2,}$", value) and key not in ("id", "type", "name"):
-                out.append("%s %s.%s names %s, which the export does not declare"
-                           % (path, rec.get("id", "?"), key, value))
-    return sorted(set(out))
+            for item in (value if isinstance(value, list) else [value]):
+                if not isinstance(item, str) or not item.strip():
+                    continue
+                item = item.strip()
+                if " " in item:
+                    continue   # a sentence is not a reference
+                if needs_separator and "-" not in item and "_" not in item:
+                    continue   # not shaped like an identity this export declares
+                if re.match(r"^\d{4}-\d{2}-\d{2}([T ]|$)", item):
+                    continue   # a date carries separators and names nothing
+                examined += 1
+                if item not in known:
+                    out.append("%s %s.%s names %s, which the export does not declare"
+                               % (path, rec.get("id", "?"), key, item))
+    return sorted(set(out)), examined
 
 
 def declaration(clause, statement):
@@ -673,7 +746,7 @@ def main(argv):
     lines.append("")
     lines.append("## Reference Integrity")
     lines.append("")
-    dangling = dangling_references(r)
+    dangling, examined = dangling_references(r)
     if dangling:
         lines.append("%d field(s) name an identity the export does not declare. No Statement binds this "
                      "check, so it is an observation and not a Test outcome, but a model whose owner, "
@@ -683,7 +756,10 @@ def main(argv):
         for d in dangling[:20]:
             lines.append("- %s" % d)
     else:
-        lines.append("Every identity-shaped field resolves to a record the export declares.")
+        lines.append("%d field value(s) were resolved against the %d identities this export declares, and "
+                     "every one of them names a record it carries. Fields holding prose, and a Reference's "
+                     "target, which may legitimately name another system, are not resolved."
+                     % (examined, len(r.ids())))
     lines.append("")
     lines.append("---")
     lines.append("")

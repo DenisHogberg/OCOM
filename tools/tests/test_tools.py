@@ -298,6 +298,112 @@ class Validator(unittest.TestCase):
         # a model alone never establishes Core Conformance: Review Pass needs a reviewer
         self.assertIn("not established", out)
 
+    def outcomes(self, root):
+        """Every alias and its outcome, from a fresh run in `root`."""
+        out = pathlib.Path(tempfile.mkdtemp()) / "r.md"
+        code, printed = run(root, VALIDATE, "--model", "%s/model.json" % self.EX,
+                            "--map", "%s/representation-map.md" % self.EX,
+                            "--statement", "%s/conformance-statement.md" % self.EX, "--report", str(out))
+        self.assertEqual(code, 0, printed)
+        rows = {}
+        for line in out.read_text(encoding="utf-8").splitlines():
+            if line.startswith("| REQ-") or line.startswith("| DECL-"):
+                cells = [c.strip() for c in line.strip().strip("|").split("|")]
+                rows[cells[0]] = cells[4]
+        shutil.rmtree(out.parent, ignore_errors=True)
+        return rows
+
+    def test_renaming_every_field_and_the_map_changes_nothing(self):
+        """The suite prescribes no format, so an export that spells everything differently and
+        says so in its Representation Map must score exactly the same. This is the property four
+        hard-coded key reads quietly broke, each while every other test stayed green."""
+        baseline = self.outcomes(ROOT)
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+
+            def rename(value):
+                if isinstance(value, dict):
+                    return {("x_" + k if k != "export" else k): rename(v) for k, v in value.items()}
+                if isinstance(value, list):
+                    return [rename(v) for v in value]
+                return value
+
+            renamed = {("x_" + k if k != "export" else k): rename(v) for k, v in model.items()}
+            c.write("%s/model.json" % self.EX, json.dumps(renamed))
+
+            lines = []
+            for line in c.read("%s/representation-map.md" % self.EX).splitlines():
+                cells = [x.strip() for x in line.strip().strip("|").split("|")] if line.startswith("| ") else []
+                if len(cells) == 3 and cells[1] == "collection" and cells[2].startswith("`"):
+                    paths = []
+                    for path in cells[2].split(","):
+                        path = path.strip().strip("`")
+                        if "[]." in path:
+                            parent, child = path.split("[].", 1)
+                            paths.append("`x_%s[].x_%s`" % (parent, child))
+                        else:
+                            paths.append("`x_%s`" % path)
+                    line = "| %s | collection | %s |" % (cells[0], ", ".join(paths))
+                elif len(cells) == 3 and cells[1] == "field" and cells[2].startswith("`"):
+                    line = "| %s | field | `x_%s` |" % (cells[0], cells[2].strip("`"))
+                lines.append(line)
+            c.write("%s/representation-map.md" % self.EX, "\n".join(lines) + "\n")
+
+            after = self.outcomes(c.dir)
+        differing = {a: (baseline.get(a), after.get(a)) for a in baseline if baseline[a] != after.get(a)}
+        self.assertEqual(differing, {},
+                         "renaming the export and its map changed %d verdict(s): %s"
+                         % (len(differing), list(differing.items())[:4]))
+
+    def test_a_repeated_value_fails_a_uniqueness_statement(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["events"][1]["id"] = model["events"][0]["id"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_zero_does_not_satisfy_presence(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for rel in model["relationships"]:
+                rel["type"] = 0
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_a_list_of_absences_does_not_satisfy_presence(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            # Contract.participants is list-valued and a Presence Test does check it, unlike
+            # Entity.attributes, whose Statement carries a behaviour item and goes to Review
+            for contract in model["contracts"]:
+                contract["parties"] = [None, ""]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_two_lifecycles_with_one_identifier_fail(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["lifecycles"][1]["id"] = model["lifecycles"][0]["id"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotIn("Fail 0", out)
+
+    def test_dangling_references_are_found_whatever_the_identifier_looks_like(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for e in model["entities"]:
+                e["owner"] = "does-not-exist"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            report = c.dir / (self.EX + "/report.md")
+            run(c.dir, VALIDATE, "--model", "%s/model.json" % self.EX,
+                "--map", "%s/representation-map.md" % self.EX,
+                "--statement", "%s/conformance-statement.md" % self.EX, "--report", str(report))
+            text = report.read_text(encoding="utf-8")
+            self.assertIn("does-not-exist", text)
+
     def test_an_identity_reused_inside_one_collection_fails(self):
         with Copy() as c:
             model = json.loads(c.read("%s/model.json" % self.EX))
