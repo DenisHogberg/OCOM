@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 18 September 2026
+**Last Updated:** 21 September 2026
 
 ---
 
@@ -108,3 +108,4 @@ Consciously deferred decisions. Not documentation debt.
 | 0.1 | 18 September 2026 | FW-006 narrowed: the site's Observatory records are recomputable from this repository and the Specification projection names its source commit; the gap itself stays open. |
 | 0.1 | 18 September 2026 | GAP-005 named `Compliance/Overview.md`, a path that does not resolve; corrected to `Domains/Compliance/Overview.md`. Every `Last Updated` field that contradicted its own newest revision row was aligned with it (fourteen documents), and a step in the publication-metadata job now checks that. Found by an error hunt over the corpus. |
 | 0.1 | 18 September 2026 | Added FW-010 (an Entity's Domain is named "primary" above the Entity tier and "governing" at it). Found by a deep check of the architecture's internal logic. |
+| 0.1 | 21 September 2026 | `FW-001`: noted that `CAND-023`, filed under `CAND-007` Section 5 on the ground `AO-084` records, proposes writing the four reserved sections now; the disposition of 16 September 2026 stands until that candidate is decided. |
