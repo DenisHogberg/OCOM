@@ -8,4 +8,4 @@
 
 **Supported extensions:** none
 
-**Known limitations:** carries no Organization record; records demonstrate integrity by sha256-canonical-json only; carries an event history for State changes only, so Statements about persistence over time cannot be decided from it.
+**Known limitations:** carries no Organization record; Audit Records and Events demonstrate integrity by content-addressed identity, Evidence Records carry no demonstration; carries an event history for State changes only, so Statements about persistence over time cannot be decided from it.
