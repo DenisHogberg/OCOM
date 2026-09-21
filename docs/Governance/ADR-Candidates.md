@@ -537,6 +537,8 @@ Two candidates already meet this bar today, named in Section 1: the "OCOM"/"OCOM
 
 **Postscript (18 September 2026):** the first of those two is now filed. `AO-071` records that the condition the Release Review attached to it has occurred, the Chief Architect authorized filing under this Section on 18 September 2026, and the question moved to `CAND-017` with `RC-011` as its Reference Case. The authorization covers the filing and no document change. The second candidate, the tamper-evidence guarantee, is untouched by it and stays unfiled.
 
+**Postscript (21 September 2026):** the second is now filed too. `AO-084` records the Reference Case `RC-012`, the Chief Architect authorized filing under this Section on 21 September 2026 on the same terms, and the question moved to `CAND-024`, with the Evidence definition it depends on filed beside it as `CAND-023`. Both are Open; the authorization covers the filing and no document change.
+
 A second, standing trigger: real contact with an independent implementation attempt (Milestone 4 in `Architecture-Release-Review-v1.0.md` Part 9) revealing the contract is not buildable as specified. This is the category of evidence Green Team (`Architecture-Release-Review-v1.0.md` Part 7) identified as the legitimate next test of the architecture — it is a valid Freeze-exception trigger precisely because it is evidence from outside the same two-party process that produced the Freeze decision itself.
 
 ## 6. How New Proposals Are Evaluated
@@ -1397,6 +1399,92 @@ It does not change a single figure in the register, and it does not authorize an
 
 **Related Documents:** `Governance/Evidence-Register.md`, `Governance/Publication-Model.md`, `Governance/Publication-Manifest.md`, `Governance/Release-Readiness.md`, `AO-083`, `AO-064`, `CAND-007`, `publication/README.md`
 
+## CAND-023 · 🟡 Open, filed as a Freeze exception
+
+**Title:** Evidence Is Defined
+
+**Status:** Open, filed 21 September 2026 under `CAND-007` Section 5 on the Chief Architect's authorization recorded in `AO-084`; Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 21 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** `AO-084` and its Reference Case `RC-012`; `FW-001` (`Governance/Documentation-Debt.md`); `Memory/Evidence Overlay.md` (Reserved Sections, Evidence Sources, Auditability); `Memory/Memory Record.md` (Evidence); `Core/Constitution.md` Principle 3; `Core/Manifest.md` (Abstract); `Governance/Evidence-Register.md`; `CAND-014`; `Master-Architecture-Backlog.md` EPIC-A.
+
+### The question
+
+Evidence is the fourth word of the specification's identity statement, "identity, ownership, lifecycle and evidence", and the subject of Canonical Principle 3, Evidence Before Belief. `Memory/Evidence Overlay.md` reserves its Definition, its Source and Reliability attributes, its Independence and its Conformance for a future version, since the v0.1 release candidate review of 21 July 2026 (`FW-001`), and the disposition of 16 September 2026 writes them only as Layer 2 of `CAND-014` needs them. Every Memory Record shall reference at least one Evidence Record, and nothing says what an Evidence Record must contain beyond an identifier, a reference, a description and a date, nor how its reliability is to be recorded. An adopter's auditor who asks what the specification counts as evidence finds a reservation. Should the four sections be written now, ahead of EPIC-A, and on what text?
+
+**Proposed Decision:** **The four reserved sections of `Memory/Evidence Overlay.md` are written now, as a Freeze exception, in the following form; EPIC-A Layer 2 inherits them rather than waiting for them.**
+
+- *Definition.* An Evidence Record is the retained account of why a Memory Record holds its value: what was observed or asserted, from which source, and how reliable that source was judged to be at the time. Evidence explains; it does not decide. A Memory Record without Evidence is a belief, and Principle 3 does not permit a retained belief without traceable Evidence.
+- *Source*, a mandatory attribute: the origin of the Evidence, named as one of the Evidence Sources this document lists, with an identifier of the specific origin where one exists, and the value unknown source where it does not.
+- *Reliability*, a mandatory attribute: the recorded judgement of the source's reliability at the time of recording, on a scale the organization defines and declares, together with the actor who recorded the judgement. Reliability is a property of the Evidence; Confidence, which summarises it across the Evidence a Memory Record references, stays where `Memory/Confidence.md` puts it.
+- *Independence.* Evidence is independent of the Memory Record it supports, which may gain new Evidence without changing; of Metadata, which Principle 3 forbids merging with it; of Confidence, which it explains and does not replace; and of implementation technology.
+- *Conformance.* A compliant implementation shall implement the mandatory attributes; preserve an Evidence Record unaltered after creation and represent corrections as new Evidence Records; support every Evidence Source this document lists, including unknown source; record Source and Reliability with the actor who recorded them; and, once `CAND-024` is decided, be able to demonstrate that an Evidence Record has not been altered.
+
+### Rationale
+
+1. The gap is now visible from outside. The enterprise evaluation of 20 September 2026 scored the risk lens 3 of 10 and named the reserved Definition as its first decisive finding. `FW-001`'s disposition was written before that evaluation and answered a different question, whether v1.0 needed the sections; this candidate answers whether an adopter does.
+2. Nothing here is new. Every element of the proposed text is already in the document in another place: the Evidence Sources list, the Auditability actor, the Immutability section, the Relationship to Confidence. The proposal states what the document already implies, in the sections that were reserved for it.
+3. It keeps EPIC-A whole. Layer 2 of `CAND-014` needs Evidence defined in order to say what guarantees Knowledge inherits; writing the definition first gives that Layer a stated input instead of a reservation to fill on the way.
+4. It costs one Freeze exception, which `AO-084`'s Reference Case grounds, and it is the smaller of the two candidates that case escalates.
+
+### Scope and the Architecture Freeze
+
+Filed under `CAND-007` Section 5, with filing authorized on 21 September 2026. Section 4 holds: no Canonical Principle is reworded, no Meta Object is added, Object, Memory, Evidence and Knowledge keep their shape; four reserved sections of one Memory-tier document are written. Rule 1 of `Standard Evolution Methodology.md` is met with a margin it does not require for a document completion: `RC-012` supplies the case and the Reader's `ADR-007` a second, implementation-side instance.
+
+### What this Decision does not do
+
+It does not decide what an implementation must be able to demonstrate about a record; that is `CAND-024`. It does not define Audit record. It does not change `Memory/Confidence.md` or move Confidence. It does not touch the Constitution. It does not close `AO-084`, which waits on both candidates.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision on the proposed text, adopting, amending or declining it. Step 2, separately authorized: the four sections written into `Memory/Evidence Overlay.md` with a Revision History row citing this candidate; `FW-001` closed in `Documentation-Debt.md`; `Requirement-Register.md` and `Test-Catalogue.md` regenerated, since the new Conformance clause adds Statements; `AO-084` narrowed.
+
+**Related Documents:** `AO-084`, `AO-021`, `CAND-024`, `CAND-014`, `CAND-007`, `FW-001`, `Memory/Evidence Overlay.md`, `Memory/Memory Record.md`, `Memory/Confidence.md`, `Core/Constitution.md`, `Governance/Evidence-Register.md`
+
+---
+
+## CAND-024 · 🟡 Open, filed as a Freeze exception
+
+**Title:** What an Implementation Must Be Able to Show About a Record: an Integrity Guarantee for Memory and Evidence, an Audit Record, and What Erasure Preserves
+
+**Status:** Open, filed 21 September 2026 under `CAND-007` Section 5 on the Chief Architect's authorization recorded in `AO-084`; Decision pending. This is the second of the two Freeze-exception candidates `CAND-007` Section 1 named on 27 July 2026, and the one its Section 5 postscript of 18 September 2026 recorded as still unfiled. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 21 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** `AO-084` and its Reference Case `RC-012`; `AO-069`; `AO-075`; `Governance/Architecture-Release-Review-v1.0.md` Part 2, finding 3 (27 July 2026); `CAND-007` Sections 1 and 5; `Governance/Architecture-Principles.md` Principle 2; `Core/Constitution.md` Principles 4 and 6; `Memory/Memory Record.md`; `Memory/Evidence Overlay.md`; `Memory/Retention.md`; `Governance/Conformance-Test-Suite.md` Sections 3 and 4; `OCOM-Reader` `ADR-007`.
+
+### The question
+
+Constitution Principle 4 makes Memory append-only and a Memory Entry immutable after creation, and twenty-two canonical documents require that Audit records remain immutable. No clause requires an implementation to be able to show that a record is unaltered, so two implementations can both claim immutability and a reader cannot tell which one is lying; the Release Review called this "an assertion, not a checkable property" on 27 July 2026. Around that gap sit two others the register already holds: Audit record is defined nowhere (`AO-075`), and `Memory/Retention.md`'s Deleted state stands against Principles 4 and 6 (`AO-069`) because nothing says what an erasure preserves. What must an implementation be able to demonstrate about a record, what is an Audit record, and what does erasure keep?
+
+**Proposed Decision:** **Three clauses, at the Memory tier, naming a property each and a mechanism in none.**
+
+1. *The guarantee.* A compliant implementation shall be able to demonstrate, to a party holding a Memory Record or an Evidence Record together with its identity and nothing else, that the record has not been altered since its creation. The Specification names no mechanism. Content-addressed identity and hash chaining are two that satisfy the clause; an implementation that satisfies it another way conforms.
+2. *The Audit record.* An Audit record is a Memory Record whose subject is a governance action on an Object: its creation, modification or retirement, an approval, a change of Ownership or Classification, the application of a Policy. The clause "Audit records shall remain immutable", wherever it stands, is satisfied by Principle 4 together with clause 1 and requires nothing further of an implementation. No new term enters the Core Vocabulary; the definition is by reference to Memory Record.
+3. *Erasure.* A Memory Record is never altered. Where law or organizational policy requires that retained content no longer be recoverable, an implementation shall make the content of the affected record irrecoverable while preserving the record's identity, its timestamp and actor, and its demonstration under clause 1, and shall record the erasure as a new Memory Record naming what was erased and under which policy. `Memory/Retention.md`'s Deleted state means this and nothing else. Reconstructability, Principle 6, holds for everything except the erased content, which is the purpose of the erasure.
+
+### Rationale
+
+1. It is a guarantee, not a mechanism, which is the only form the corpus permits it to take. Architecture Principle 2 frees every internal algorithm and excepts exactly one thing: "the process of recording provenance may carry minimal normative constraints where their absence would make a guarantee unfalsifiable". Without clause 1, immutable is unfalsifiable; with it, the Test Suite can fail an implementation.
+2. It closes two open observations by reference rather than by addition. `AO-075` asked for Audit record to be defined, listed as Reserved, or removed; clause 2 defines it as a Memory Record with a named subject, so the twenty-two clauses acquire a subject and the eight of them in the mandatory Core Conformance set become decidable. `AO-069` recorded the Deleted state against Principles 4 and 6; clause 3 says what an erasure preserves, so Deleted stops contradicting append-only and Reconstructability keeps its meaning.
+3. It answers the regulated adopter. An auditor asks for a demonstration and a lawyer asks for erasure; today the corpus offers a promise to the first and a contradiction to the second. The enterprise evaluation of 20 September 2026 named both as decisive.
+4. An implementation has already had to invent it. The Reader's `ADR-007` gives each Memory Entry a content-hash identity and supersedes rather than edits, because the Specification gave it no property to satisfy. That is the second standing trigger `CAND-007` Section 5 names for breaking the Freeze.
+
+### Scope and the Architecture Freeze
+
+Filed under `CAND-007` Section 5, with filing authorized on 21 September 2026. Section 4 holds: no Canonical Principle is reworded, no Meta Object is added, the Memory → Knowledge → World Model direction is untouched, and Object, Memory, Evidence and Knowledge keep their shape. Three clauses are added to Memory-tier documents, each stating a property. `Standard Evolution Methodology.md` Rule 1 is met by `RC-012` and the Reader's `ADR-007`; Rule 2, Repeatability Before Standardization, is the Chief Architect's judgement here: two instances exist, both traceable to the same author, one of them code that runs. If that is judged insufficient, the form `CAND-017` set is available, deciding the guarantee in principle and gating its text on an independent implementation's report.
+
+### What this Decision does not do
+
+It does not mandate hashing, signing, a ledger or any storage technology. It does not define Evidence; that is `CAND-023`. It does not add a Core Vocabulary term: Audit record is defined by reference to Memory Record. It does not decide what personal data is or which law applies; it states what an erasure keeps, so that any erasure policy can be applied without breaking the record. It does not touch the Constitution.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision on the three clauses, adopting, amending or declining each. Step 2, separately authorized: clause 1 written into the Conformance sections of `Memory/Memory Record.md` and `Memory/Evidence Overlay.md`; clause 2 written into `Memory/Memory Record.md` as a named Memory Type or a section of its own; clause 3 replacing the Deleted section of `Memory/Retention.md` and its Conformance item "support controlled deletion"; `Governance/Conformance-Test-Suite.md` Section 3 gains a sixth Test kind, Integrity, whose procedure obtains the demonstration clause 1 requires and can return Fail; `tools/conformance/validate.py` gains the procedure and `Test-Catalogue.md` is regenerated; `AO-069` and `AO-075` close; `AO-084` closes when both candidates are integrated.
+
+**Related Documents:** `AO-084`, `AO-069`, `AO-075`, `AO-064`, `CAND-023`, `CAND-007`, `CAND-014`, `Governance/Architecture-Release-Review-v1.0.md`, `Governance/Architecture-Principles.md`, `Core/Constitution.md`, `Memory/Memory Record.md`, `Memory/Evidence Overlay.md`, `Memory/Retention.md`, `Governance/Conformance-Test-Suite.md`, `Governance/Evidence-Register.md`
+
 ---
 
 # Revision History
@@ -1450,3 +1538,4 @@ It does not change a single figure in the register, and it does not authorize an
 | 0.1 | 19 September 2026 | Added CAND-020 (which of two contradicting mandatory Statements a conformance claim is measured against) and CAND-021 (where the sentence that scopes Core Conformance lives), both Open, each carrying a proposed Decision; `AO-079` and `AO-080` are Escalated to them. |
 | 0.1 | 19 September 2026 | CAND-020 and CAND-021 Decided as drafted: a claimant is measured against `REQ-MODELS-LIFECYCLE-002` with `REQ-LIFECYCLES-004` dispositioned Descriptive, and the canonical definition of Core Conformance is `Language/Conformance.md`'s while the twenty-two-document enumeration is the suite's reading. |
 | 0.1 | 19 September 2026 | Added CAND-022 (where the Evidence Register is published) and recorded it Decided: the register becomes `Governance/Evidence-Register.md`, the site redirects the published URLs to it, no figure changes, and the site is bound not to assert adoption, validation or implementation it does not have. |
+| 0.1 | 21 September 2026 | Added CAND-023 (Evidence defined: the four reserved sections of `Memory/Evidence Overlay.md`) and CAND-024 (an integrity guarantee for Memory and Evidence, an Audit record by reference, and what erasure preserves), both filed Open as `CAND-007` Section 5 Freeze exceptions on the authorization `AO-084` records, each with a proposed Decision for the Chief Architect. `CAND-007` Section 5 carries a postscript that its second named candidate is now filed. |
