@@ -257,6 +257,25 @@ class TestCatalogue(unittest.TestCase):
             self.assertTrue(rows, "the Statement this test names is gone from the register")
             self.assertEqual([c.strip() for c in rows[0].strip().strip("|").split("|")][4], "Review", rows[0])
 
+    def test_the_census_columns_sum_to_the_catalogue(self):
+        """The Census counted the six claim clauses as register Statements, so its columns summed to
+        214 and 188 against the 208 and 182 the same document states."""
+        text = (ROOT / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
+        census = text[text.index("# Census"):text.index("Of the ")]
+        rows = re.findall(r"(?m)^\| (\w+) \| (\d+) \| (\d+) \|$", census)
+        self.assertEqual(len(rows), 6, rows)
+        self.assertEqual(sum(int(r[1]) for r in rows), 208)
+        self.assertEqual(sum(int(r[2]) for r in rows), 182)
+
+    def test_a_census_that_does_not_add_up_stops_the_generator(self):
+        with Copy() as c:
+            path = "tools/conformance/test_catalogue.py"
+            c.write(path, c.read(path).replace('out.append("| Declaration | %d | %d |" % (counts.get("Declaration", 0),',
+                                               'out.append("| Declaration | %d | %d |" % (99 + counts.get("Declaration", 0),'))
+            code, out = run(c.dir, CATALOGUE, "--write")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("Census that does not add up", out)
+
     def test_a_renamed_claim_section_does_not_delete_a_test(self):
         with Copy() as c:
             c.edit("docs/Language/Conformance.md", "# Version Conformance", "# Versioning Conformance")
