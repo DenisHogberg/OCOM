@@ -486,9 +486,9 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If corroborated, a future Reference Case should state whether Ownership is mandatory for every managed Object or only for Entities, and align the Chapter 4 conformance sentence with its characteristic list.
 
-**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2) Independently corroborated by an external logic audit of commit 37c986a (5 September 2026), per Standard Evolution Methodology Rule 2; still awaiting a Reference Case. 22 September 2026: the cardinality half, one responsible owner beside multiple Owners, is filed as `CAND-025` with a proposed reading, accountability singular and responsibility plural, under `EPIC-B`; the modality half, shall against should and where applicable, stays here.
+**Status:** Closed in part, 22 September 2026. The cardinality half is closed: `CAND-025` (Decided 22 September 2026) reads `Models/Entity.md`'s one responsible owner and `Meta/Ownership.md`'s multiple Owners as one rule at two tiers, accountability singular and responsibility plural, both documents now say so, and the suite counts it. The modality half stands: `Meta/Object.md` says should, `Meta/Ownership.md`'s Conformance says where applicable, `Core/Principles.md` says ownership shall never be implicit, and Chapter 4's Conformance sentence still omits Ownership; it was independently corroborated by the external logic audit of commit 37c986a (5 September 2026) and awaits a Reference Case as before.
 
-**Architect Response:** *(pending)*
+**Architect Response:** Chief Architect, 22 September 2026: `CAND-025` decided as drafted; the modality half is not decided by it.
 
 **Related:** `Meta/Object.md`, `Meta/Ownership.md`, `Models/Entity.md`, `Specification/04 Meta Model.md`, `Core/Principles.md`
 
@@ -1890,9 +1890,9 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record, and propose the smallest closure for the Chief Architect: one sentence in `Memory/Retention.md`'s Deleted state, "An erasure record shall name a Policy the organization has declared and the actor who issued it, and an implementation shall refuse an erasure record that names neither", and one Presence check in the suite over erasure records for the policy and the actor, so that the exclusion an erasure record grants is granted only by a record that can itself be checked. If adopted, it is a postscript to `CAND-024`, not a new candidate: it says what clause 3's erasure record must carry to do what clause 3 says it does.
 
-**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the Chief Architect adopts or declines the proposed sentence as a postscript to `CAND-024`, or when a Reference Case shows an erasure issued under no declared policy.
+**Status:** Closed, 22 September 2026. The Chief Architect adopted the proposed closure as a postscript to `CAND-024`: `Memory/Retention.md`'s Deleted state requires an erasure record to name a Policy the organization has declared and the actor who issued it, and an implementation to refuse one that names neither. `tools/conformance/validate.py` grants the Integrity exclusion only to an erasure record whose Policy the export declares and whose actor is named, verifies the records the other erasure records name like any other, and reports every erasure record in the report's Erasure Records section; a negative test covers the erasure record that names nothing.
 
-**Architect Response:** *(pending)*
+**Architect Response:** Chief Architect, 22 September 2026: adopted as a postscript to `CAND-024`, not as a new candidate.
 
 **Related:** `CAND-024`, `AO-069`, `AO-084`, `Memory/Retention.md`, `Memory/Write-back Governance.md`, `Meta/Policy.md`, `Governance/Conformance-Test-Suite.md`, `tools/conformance/validate.py`
 
@@ -1953,3 +1953,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 21 September 2026 | AO-069, AO-075 and AO-084 Closed: `CAND-023` and `CAND-024` decided as drafted and integrated the same day. Retention's Deleted state is an erasure that preserves the record, Audit Record is defined by reference, the integrity guarantee is in the Memory tier and the suite has a Test kind that can fail it. |
 | 0.1 | 21 September 2026 | AO-069 narrowed from Closed to Closed in part: `CAND-024` resolved the Retention half and the `Memory/Layered Memory.md` half stays open. AO-084's closure states that only content-addressed identity passes the Integrity kind. |
 | 0.1 | 22 September 2026 | Added AO-085 (an erasure record excludes a record from integrity verification and nothing says who may issue one), from the enterprise evaluation of 22 September 2026, with a proposed one-sentence closure for the Chief Architect. AO-015 notes its cardinality half filed as `CAND-025`; AO-009 notes `CAND-026`'s scope declaration. |
+| 0.1 | 22 September 2026 | AO-015 Closed in part (the cardinality half, by `CAND-025`; the modality half stands). AO-085 Closed (its closure adopted as a postscript to `CAND-024`: an erasure record names a declared Policy and its actor, and the suite grants the Integrity exclusion only to such a record). |

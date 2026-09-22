@@ -1,6 +1,6 @@
 # Test Report
 
-**Run on:** 20 September 2026
+**Run on:** 22 September 2026
 
 **Implementation:** OCOM reference export, library lending example
 
@@ -17,18 +17,24 @@
 | | Count |
 |---|---|
 | Mandatory Tests | 187 |
-| Pass | 47 |
+| Pass | 48 |
 | Fail | 0 |
-| Awaiting a reviewer or evidence the export does not carry | 140 |
+| Awaiting a reviewer or evidence the export does not carry | 139 |
 | Not Applicable, dispositioned Descriptive | 1 |
 
-**Core Conformance: not established.** Section 3 establishes it when every mandatory Test is Pass or Review Pass. 0 mandatory Test(s) fail and 140 await a reviewer or evidence this export does not carry.
+**Core Conformance: not established.** Section 3 establishes it when every mandatory Test is Pass or Review Pass. 0 mandatory Test(s) fail and 139 await a reviewer or evidence this export does not carry.
 
 ---
 
 ## Reference Integrity
 
 75 field value(s) were resolved against the 38 identities this export declares, and every one of them names a record it carries. Fields holding prose, and a Reference's target, which may legitimately name another system, are not resolved.
+
+---
+
+## Erasure Records
+
+The Representation Map declares no Erasure records, so no record was excluded from an Integrity Test on that ground. `Memory/Retention.md` is outside the requirement set, so this is an observation and not a Test outcome.
 
 ---
 
@@ -47,7 +53,7 @@
 | REQ-META-IDENTITY-001 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-IDENTITY-002 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-IDENTITY-003 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-IDENTITY-005 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
+| REQ-META-IDENTITY-005 | `Meta/Identity.md` | Declaration | mandatory | Pass | the map declares Organization for every identity the export carries |
 | REQ-META-IDENTITY-007 | `Meta/Identity.md` | Presence | mandatory | pending | the Statement states a condition rather than an element (when an object is created); a reviewer decides it |
 | REQ-META-IDENTITY-008 | `Meta/Identity.md` | Invariant | mandatory | Pass | 38 identities, each carried by exactly one record |
 | REQ-META-IDENTITY-009 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
@@ -176,7 +182,7 @@
 | REQ-MODELS-ENTITY-001 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-ENTITY-002 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-ENTITY-003 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-MODELS-ENTITY-004 | `Models/Entity.md` | Presence | mandatory | Pass | 3 entity record(s) carry responsible owner |
+| REQ-MODELS-ENTITY-004 | `Models/Entity.md` | Presence | mandatory | Pass | 3 entity record(s) carry responsible owner, one each, each resolving to the one Ownership record that names it |
 | REQ-MODELS-ENTITY-006 | `Models/Entity.md` | Presence | mandatory | pending | the Statement's subject is not a type the Representation Map declares |
 | REQ-MODELS-ENTITY-007 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-ENTITY-008 | `Models/Entity.md` | Transition | mandatory | Pass | 3 Entities each occupy exactly one State defined by their Lifecycle |

@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 17 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -43,11 +43,13 @@ A first pilot exists to answer one question — does modeling our operations as 
 
 1. Pick the one Domain your pilot team already owns.
 2. List the things that Domain manages. Keep only the ones with a clear owner and a clear lifecycle — that shortlist is your 10–20 Entities.
-3. For each Entity, write the minimal definition from `Getting Started.md` §4: Identifier, Name, Domain, Owner, Attributes, State, Lifecycle.
+3. For each Entity, write the minimal definition from `Getting Started.md` §4: Identifier, Name, Domain, Owner, Attributes, State, Lifecycle. Owner is the one accountable party; anyone else responsible for part of the Entity is a further Ownership record, not a second Owner *(see `Meta/Ownership.md`, Shared Ownership)*.
 4. Draw each Entity's Lifecycle as a small state diagram, four or five states.
 5. Name the two or three Events per Entity that actually matter to the business, not every possible occurrence.
 6. Pick one or two KPIs that would tell you, honestly, whether the model is useful.
 7. Run it for a few weeks against real work. See what breaks, what's missing, and what nobody actually looks at.
+
+If your people report along two lines at once, a line manager and a functional lead, pick the Domain by responsibility, not by reporting line: a Domain organizes what the team is responsible for *(see `Models/Domain.md`)*, and each Entity has exactly one primary Domain whatever the org chart says. The reporting lines themselves are not Domains; a person's line manager is the Manager attribute of the Employee Entity, and a second line is one further Relationship *(see `Entities/Department/Department.md`)*. A department, a division or a business unit is a Department Entity, and a legal entity is an Organization; neither is a Domain *(`CAND-027`)*.
 
 ## What Success Looks Like
 
@@ -61,6 +63,7 @@ If a gap looks like it's in OCOM itself, rather than in how your pilot modeled i
 |----------|------|-------------|
 | 0.1 | 22 July 2026 | Initial guide, part of the Adoption framework (M021). |
 | 0.1 | 17 September 2026 | Revision History and Last Updated added, which `Governance/Documentation-Standards.md` requires of every document and this one had never carried; content unchanged. |
+| 0.1 | 22 September 2026 | Step 3 says what Owner means (`CAND-025`); one paragraph after the steps on picking the Domain in a matrix organization and on what a department, a business unit and a legal entity are (`CAND-027`). Both restate canonical documents and add no rule. |
 
 ---
 

@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -65,6 +65,8 @@ Identity shall not depend on implementation technology.
 # Ownership
 
 Every Entity shall have one responsible owner.
+
+Further Ownership records assign responsibilities to other parties under `Meta/Ownership.md`'s Shared Ownership; they never assign accountability, which rests with the one responsible owner (`CAND-025`).
 
 Ownership defines accountability for the Entity's correctness, lifecycle, and governance.
 
@@ -191,3 +193,4 @@ Future versions of this specification may introduce additional Entity capabiliti
 | Version | Date | Description |
 |----------|------|-------------|
 |0.1|20 July 2026|Initial draft|
+| 0.1 | 22 September 2026 | Ownership: one sentence added stating that further Ownership records assign responsibilities and never accountability, which rests with the one responsible owner, per `CAND-025` (Decided 22 September 2026). No requirement changed. |

@@ -271,3 +271,19 @@ harvested URLs from it asked the site for a page that does not exist. `AO-083`
 records the instance and the directory that closes it.
 
 This is the twelfth required check on `main`.
+
+## Reference Serialization schema (added 22 September 2026)
+
+`CAND-026` publishes one JSON encoding of an OCOM model as the Reference
+Serialization (`docs/Adoption/Reference Serialization.md`), with a JSON Schema
+derived from it. The schema is a generated file, so the job `Test Catalogue is
+derived, not written` gained a step: `tools/conformance/reference_schema.py
+--check` regenerates `docs/Examples/Conformance/schema.json` from `model.json`,
+fails if the committed file differs, and validates the model against the
+committed schema with the tool's own validator (standard library, no network,
+no third-party package). It is a step inside an existing required check, not a
+thirteenth check; the ruleset on `main` is unchanged.
+
+The schema validates a file in this encoding and nothing about OCOM: the
+Conformance Test Suite reads the model's content, the schema reads its shape.
+This is recorded here so that nobody reads the green step as conformance.

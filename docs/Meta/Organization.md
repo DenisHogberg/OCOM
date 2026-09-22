@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 25 July 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -89,6 +89,8 @@ Organization does not redefine Domain, which continues to represent what is gove
 
 Modeling of relationships between multiple Organizations is addressed separately by the OCOM governance process.
 
+The governance process has addressed two such cases (`CAND-027`, 22 September 2026). A group of Organizations, a parent with its subsidiaries or the parties to a joint venture, is expressed by Composition Relationships between the Organizations, and legal form is a Classification of the Organization. Internal structure, a department, a division or a business unit, is not an Organization but an Entity, `Entities/Department`, which belongs to the Organization it serves through a Membership Relationship.
+
 ---
 
 # Independence
@@ -122,3 +124,4 @@ A compliant implementation shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 25 July 2026 | Initial draft, per ADR CAND-005 (Option C — Organization as a first-class specialization of Object) |
+| 0.1 | 22 September 2026 | Relationship to Other Specifications: one paragraph added recording how the governance process expressed groups of Organizations (Composition, legal form as Classification) and internal structure (the Department Entity, Membership), per `CAND-027` (Decided 22 September 2026). No requirement changed. |

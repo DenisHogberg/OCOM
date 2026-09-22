@@ -1,0 +1,774 @@
+{
+  "$id": "https://ocom.uno/adoption/reference-serialization/schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "description": "Derived from docs/Examples/Conformance/model.json by tools/conformance/reference_schema.py and never edited by hand (CAND-026). Validates a file in this encoding; it validates nothing about OCOM, whose requirements the Conformance Test Suite reads through the Representation Map. The specification prescribes no serialization format (Language/Serialization.md).",
+  "properties": {
+    "audit_records": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "created_at": {
+            "type": "string"
+          },
+          "creator": {
+            "type": "string"
+          },
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "governance_policy": {
+            "type": "string"
+          },
+          "id": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "layer": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "created_at",
+          "creator",
+          "evidence",
+          "governance_policy",
+          "id",
+          "label",
+          "layer",
+          "subject",
+          "type",
+          "value"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "capabilities": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "purpose"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "classifications": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "constraints": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "applies_to": {
+            "type": "string"
+          },
+          "expression": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "applies_to",
+          "expression",
+          "id",
+          "name",
+          "purpose"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "contracts": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "effective_date": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "effective_date",
+          "id",
+          "name",
+          "parties",
+          "purpose",
+          "scope"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "domains": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "entity_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "entity_types",
+          "id",
+          "name",
+          "owner",
+          "purpose"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "entities": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "attributes": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "constraints": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "data_type": {
+                  "type": "string"
+                },
+                "meaning": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "data_type",
+                "meaning",
+                "name"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "classification": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "lifecycle": {
+            "type": "string"
+          },
+          "meaning": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "name": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "attributes",
+          "classification",
+          "domain",
+          "id",
+          "lifecycle",
+          "meaning",
+          "metadata",
+          "name",
+          "owner",
+          "state",
+          "type"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "events": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "from_state": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "id": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "occurred_at": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "to_state": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "from_state",
+          "id",
+          "occurred_at",
+          "source",
+          "subject",
+          "to_state",
+          "type"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "evidence_records": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "created_date": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "related_memory_record": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "reliability": {
+            "additionalProperties": true,
+            "properties": {
+              "recorded_by": {
+                "type": "string"
+              },
+              "scale": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "recorded_by",
+              "scale",
+              "value"
+            ],
+            "type": "object"
+          },
+          "source": {
+            "type": "string"
+          },
+          "source_identifier": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "created_date",
+          "description",
+          "id",
+          "related_memory_record",
+          "reliability",
+          "source",
+          "source_identifier"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "export": {
+      "additionalProperties": true,
+      "properties": {
+        "note": {
+          "type": "string"
+        },
+        "produced_by": {
+          "type": "string"
+        },
+        "produced_on": {
+          "type": "string"
+        },
+        "specification_version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "note",
+        "produced_by",
+        "produced_on",
+        "specification_version"
+      ],
+      "type": "object"
+    },
+    "lifecycles": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "entity": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "initial_state": {
+            "type": "string"
+          },
+          "states": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "entity": {
+                  "type": "string"
+                },
+                "lifecycle": {
+                  "type": "string"
+                },
+                "meaning": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "entity",
+                "lifecycle",
+                "meaning",
+                "name"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "terminal_states": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "transitions": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "from": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                },
+                "trigger": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "from",
+                "to",
+                "trigger"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "entity",
+          "id",
+          "initial_state",
+          "states",
+          "terminal_states",
+          "transitions"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "models": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "domains": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domains",
+          "id",
+          "name",
+          "purpose"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "ownership": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "effective_date": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "owned_object": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "responsibility_scope": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "effective_date",
+          "id",
+          "owned_object",
+          "owner",
+          "responsibility_scope"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "policies": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "effective_date": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "rule": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "effective_date",
+          "id",
+          "name",
+          "purpose",
+          "rule",
+          "scope"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "references": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "direction": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "direction",
+          "id",
+          "source",
+          "target"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "registries": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "registered_object_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "scope": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "owner",
+          "purpose",
+          "registered_object_types",
+          "scope"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "relationships": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "cardinality": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "cardinality",
+          "id",
+          "source",
+          "target",
+          "type"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "workflows": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "inputs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "name": {
+            "type": "string"
+          },
+          "outputs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "transitions": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "entity": {
+                  "type": "string"
+                },
+                "from": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "entity",
+                "from",
+                "to"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "inputs",
+          "name",
+          "outputs",
+          "purpose",
+          "transitions"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "audit_records",
+    "capabilities",
+    "classifications",
+    "constraints",
+    "contracts",
+    "domains",
+    "entities",
+    "events",
+    "evidence_records",
+    "export",
+    "lifecycles",
+    "models",
+    "ownership",
+    "policies",
+    "references",
+    "registries",
+    "relationships",
+    "workflows"
+  ],
+  "title": "OCOM Reference Serialization",
+  "type": "object"
+}
