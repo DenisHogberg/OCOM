@@ -1818,39 +1818,39 @@ It does not prescribe any order. It does not define an Exception's fields beyond
 
 ## CAND-033 · 🟡 Open, proposed Decision
 
-**Title:** The Owner of an Ownership Assignment Is a Party of the Kinds `Meta/Ownership.md` Names, and `Core/Terminology.md` Restates It
+**Title:** The Owner of an Ownership Assignment Is a Party of the Kinds `Meta/Ownership.md` Names
 
-**Status:** Open, filed 22 September 2026 under `EPIC-B` and `EPIC-D` (Object Model consolidation; Terminology as a verbatim index); Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+**Status:** Open, filed 22 September 2026 under `EPIC-B` (Object Model consolidation); Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision. **Re-grounded 22 September 2026:** as filed, this candidate quoted `Core/Terminology.md`'s Owner entry as "The role, domain, or organizational unit accountable for an entity" and proposed restating it. That sentence was removed on 16 September 2026 by `EPIC-D` (commit `d9dc3f7`), which made Terminology a verbatim index; the entry has read "The party named by the Owner field of an Ownership assignment" since, and points at `Meta/Ownership.md`. The all-packages test of 22 September 2026 found the quote, and the half of the candidate that rested on it, the disagreement between two lists, is withdrawn. What remains is the question `AO-033` records and `EPIC-D` did not answer: which kinds of party may hold Ownership, and whether an Owner is an Object.
 
 **Owner:** Chief Architect (Decision); each integration item separately authorized
 
 **Created:** 22 September 2026 · **Decided:** pending · **Decided by:** pending
 
-**Grounding:** `Core/Terminology.md` Owner ("The role, domain, or organizational unit accountable for an entity."); `Meta/Ownership.md` Definition ("Ownership identifies the individual, team, organizational unit, or system responsible for governing an Object during all or part of its lifecycle."); `Models/Domain.md` (a Domain has a defined owner; Domains organize responsibility rather than organizational structure); `CAND-004` question 2 (an Organization may be the one responsible owner); `CAND-025` (one accountable owner, further Ownership records assign responsibilities); `CAND-027` (Department is an Entity; legal form is Organization); `EPIC-D` (Terminology 0.2 is a verbatim index of canonical definitions; `GAP-002`); `AO-033` (Owner is untyped and the two lists differ); the enterprise evaluation of 22 September 2026, skeptic and risk lenses ("Owner as a string").
+**Grounding:** `Core/Terminology.md` Owner ("The party named by the Owner field of an Ownership assignment.", since `EPIC-D` of 16 September 2026, which is why this candidate no longer proposes restating it); `Meta/Ownership.md` Definition ("Ownership identifies the individual, team, organizational unit, or system responsible for governing an Object during all or part of its lifecycle."); `Models/Domain.md` (a Domain has a defined owner; Domains organize responsibility rather than organizational structure); `CAND-004` question 2 (an Organization may be the one responsible owner); `CAND-025` (one accountable owner, further Ownership records assign responsibilities); `CAND-027` (Department is an Entity; legal form is Organization); `EPIC-D` (Terminology 0.2 is a verbatim index of canonical definitions; `GAP-002`); `AO-033` (Owner is untyped and the two lists differ); the enterprise evaluation of 22 September 2026, skeptic and risk lenses ("Owner as a string").
 
 ### The question
 
-Two documents name different kinds of Owner, and neither says whether an Owner is an Object the specification can reach with identity, governance and audit. Which list governs, and what is an Owner?
+`Meta/Ownership.md` names four kinds of party that may hold Ownership and no text says whether a Domain or a role is among them, nor whether an Owner is an Object the specification can reach with identity, governance and audit. `Core/Terminology.md` now defers to `Meta/Ownership.md` rather than answering, so the question is open at one tier rather than answered twice. What is an Owner?
 
-**Proposed Decision:** **The Owner of an Ownership assignment is a party of the kinds `Meta/Ownership.md` names: an individual, a team, an organizational unit, which since `CAND-027` is an Organization or a Department Entity, or a system. A Domain is not a party and is not an Owner: it has an owner, and it organizes responsibility rather than structure. A role is the name an organization gives to a party's responsibility, not a party: an Ownership assignment names the party that holds the role at the time, and the Ownership Types of `Meta/Ownership.md` are how the role is recorded. `Core/Terminology.md`'s Owner entry is rewritten as a restatement of `Meta/Ownership.md`, as the verbatim index requires. Whether an Owner is itself an Object with an Identity, so that governance and audit reach the Owner and not only the assignment, stays open on `AO-033` for a Reference Case: today the Reference Serialization carries the owner as a party name, and the suite resolves an Entity's owner to its Ownership record and no further.**
+**Proposed Decision:** **The Owner of an Ownership assignment is a party of the kinds `Meta/Ownership.md` names: an individual, a team, an organizational unit, which since `CAND-027` is an Organization or a Department Entity, or a system. A Domain is not a party and is not an Owner: it has an owner, and it organizes responsibility rather than structure. A role is the name an organization gives to a party's responsibility, not a party: an Ownership assignment names the party that holds the role at the time, and the Ownership Types of `Meta/Ownership.md` are how the role is recorded. Whether an Owner is itself an Object with an Identity, so that governance and audit reach the Owner and not only the assignment, stays open on `AO-033` for a Reference Case: today the Reference Serialization carries the owner as a party name, and the suite resolves an Entity's owner to its Ownership record and no further.**
 
-Integration, when decided: the Owner entry of `Core/Terminology.md` restated from `Meta/Ownership.md` (documentation currency under `EPIC-D`); one sentence in `Meta/Ownership.md` Definition naming what a role is and that a Domain is not an Owner, carrying no keyword; `AO-033` Closed in part, its Owner-as-Object half standing.
+Integration, when decided: one sentence in `Meta/Ownership.md` Definition naming what a role is and that a Domain is not an Owner, carrying no keyword; `AO-033` Closed in part, its Owner-as-Object half standing. `Core/Terminology.md` needs no change: its Owner entry already defers to `Meta/Ownership.md`.
 
 ### Rationale
 
-1. It ends the disagreement between the two lists in favour of the canonical definition, which is the rule `EPIC-D` set for Terminology.
+1. It answers at the tier that defines the term. `Core/Terminology.md` already defers to `Meta/Ownership.md`, and `AO-033`'s finding of two disagreeing lists was closed on that side by `EPIC-D`; what it recorded about the kinds of party is still unanswered there.
 2. It keeps the Owner-as-Object question honest: making Owner an Object would change the Ownership record (its Owner field would become a Reference) and the suite's resolution, which is a rule for a Reference Case, not a reading.
 3. It answers the people lens in part: the parties that can own are named, and a role is placed as the way a party is named for a responsibility rather than as a fourth kind of party.
 
 ### Scope and the Architecture Freeze
 
-Filed under `EPIC-B` and `EPIC-D`, Section 3: a Terminology restatement and a clarifying sentence in a Meta document. Section 4 holds: no Meta Object, no change to the Ownership record.
+Filed under `EPIC-B`, Section 3: one clarifying sentence in a Meta document. Section 4 holds: no Meta Object, no change to the Ownership record, no Terminology change.
 
 ### What this Decision does not do
 
 It does not make Owner an Object. It does not define a Role entity; `CAND-007` Section 4 forbids a new Entity type. It does not decide outsourcing (whether an external provider may own an Object), which `CAND-004` leaves to a Reference Case.
 
-**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision. Step 2, separately authorized: the Terminology entry, the sentence, `AO-033` Closed in part.
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision. Step 2, separately authorized: the sentence, `AO-033` Closed in part.
 
 **Related Documents:** `AO-033`, `AO-020`, `CAND-025`, `CAND-027`, `CAND-004`, `Core/Terminology.md`, `Meta/Ownership.md`, `Models/Domain.md`, `GAP-002`
 
@@ -1957,3 +1957,4 @@ It does not define closure or retroactivity. It does not close `AO-012`.
 | 0.1 | 22 September 2026 | CAND-028 Decided as drafted by the Chief Architect, the same day it was filed, with integration authorized alongside and executed: `Adoption/First 90 Days.md` Informative and published as an Adoption Projection. |
 | 0.1 | 22 September 2026 | Added CAND-029 (the Memory tier measured through Profile Conformance, as `CAND-002` defined it: tooling and an example declaration, no new level), CAND-030 (a scope is what an identity's assigner guarantees uniqueness within), CAND-031 (merge and split as Identity Resolution), CAND-032 (no precedence between Policies and Exceptions; the organization's rules decide and the outcome is recorded), CAND-033 (the kinds of Owner, Terminology restated) and CAND-034 (temporal boundaries not required for v1.0), each Open with a proposed Decision or disposition; CAND-008 carries a proposed disposition. All from the enterprise evaluation of 22 September 2026 and the observations it named. |
 | 0.1 | 22 September 2026 | CAND-025's Next Action: the count of Statements the catalogue's cardinality rule holds at Review corrected from eleven to four, which are named; found by the all-packages test of the same day. No Decision changed. |
+| 0.1 | 22 September 2026 | CAND-033 re-grounded: as filed it quoted a sentence `EPIC-D` removed from `Core/Terminology.md` on 16 September 2026 and proposed restating it, work already done. The quote and the Terminology half are withdrawn; the open question, which kinds of party may hold Ownership and whether an Owner is an Object, stands. Found by the all-packages test of the same day. |

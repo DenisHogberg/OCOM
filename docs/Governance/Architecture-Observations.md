@@ -846,7 +846,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If corroborated, a future Reference Case should state once, at the Meta tier and together with AO-020, that the Owner of an Ownership assignment is an Object (or a named specialization such as Organization or an Entity), which kinds of party may hold Ownership and whether a Domain is among them, and align `Core/Terminology.md`'s Owner entry to that record; track together with `GAP-002`, since the glossary entry will be revised in the same pass.
 
-**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2) `CAND-033` (22 September 2026) proposes the reading: an Owner is a party of the kinds `Meta/Ownership.md` names, Terminology restated; the Owner-as-Object half stays for a Reference Case.
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2) `CAND-033` (22 September 2026) proposes the reading: an Owner is a party of the kinds `Meta/Ownership.md` names, Terminology restated; the Owner-as-Object half stays for a Reference Case. 22 September 2026: the Terminology half of this entry is closed by `EPIC-D` (16 September 2026), which replaced the Owner entry quoted above with "The party named by the Owner field of an Ownership assignment." and made Terminology a verbatim index; the two lists no longer disagree. What stands is which kinds of party may hold Ownership and whether an Owner is an Object, proposed as `CAND-033`.
 
 **Architect Response:** *(pending)*
 
@@ -2113,3 +2113,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 22 September 2026 | AO-009, AO-010, AO-011, AO-012, AO-033 and AO-081 note the candidates filed on them (`CAND-029` to `CAND-034`), each Open with a proposed Decision or disposition. |
 | 0.1 | 22 September 2026 | AO-089: the count of Statements the cardinality rule holds at Review corrected from eleven to four, each named; the all-packages test of the same day recounted them. The observation itself is unchanged. |
 | 0.1 | 22 September 2026 | Added AO-092 (an obligation written as a table row is in no register, catalogue or Test) and AO-093 (a reviewer's judgment is bound to its export by the report alone), both from the all-packages test of 22 September 2026, record only. |
+| 0.1 | 22 September 2026 | AO-033: the Terminology half recorded as closed by `EPIC-D`; the quoted sentence had been replaced on 16 September 2026 and the entry still read as if it stood. |
