@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 17 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -59,6 +59,8 @@ Walk through it with something simple — say, a support **Ticket**:
 | State | `Open` |
 | Lifecycle | see step 5 below |
 
+**Owner** means the one party accountable for the Entity. If others are responsible for parts of it, a data owner or a process owner, say, record them as further Ownership records of those Ownership Types *(see `Meta/Ownership.md`)*: they carry responsibility, not accountability, and the Entity still has exactly one Owner *(`CAND-025`)*.
+
 That's it — a conforming Entity. You do not need to model your whole business to have a valid first Object. One Entity, correctly defined, is a complete, useful starting point.
 
 ## 5. How to Define a Lifecycle
@@ -94,6 +96,7 @@ When you're ready to try this for real, continue to **[First Pilot](First%20Pilo
 |----------|------|-------------|
 | 0.1 | 22 July 2026 | Initial guide, part of the Adoption framework (M021). |
 | 0.1 | 17 September 2026 | Revision History and Last Updated added, which `Governance/Documentation-Standards.md` requires of every document and this one had never carried; content unchanged. |
+| 0.1 | 22 September 2026 | Section 4: one paragraph on what Owner means beside further Ownership records, restating `Models/Entity.md` and `Meta/Ownership.md` as read by `CAND-025`. |
 
 ---
 

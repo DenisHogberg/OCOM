@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 21 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -87,7 +87,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 
 | Carrier | Kind | Alias | Quote |
 |---|---|---|---|
-| `docs/Meta/Organization.md:112` | binding rule | REQ-META-ORGANIZATION-002 | support Organization as a specialization of Object; |
+| `docs/Meta/Organization.md:114` | binding rule | REQ-META-ORGANIZATION-002 | support Organization as a specialization of Object; |
 | `docs/Meta/Object.md:224` | permission | REQ-META-OBJECT-016 | Specifications may extend Object but shall preserve its core characteristics. |
 | `docs/Meta/Object.md:51` | binding rule | REQ-META-OBJECT-001 | Every Object shall: |
 | `docs/Language/Syntax.md:82` | binding rule |   | contain identifiable Objects; |
@@ -161,7 +161,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 | `docs/Memory/Overview.md:46` | binding rule |   | Memory shall be append-only. |
 | `docs/Memory/Memory Record.md:260` | binding rule |  | never modify a Memory Record after creation, and represent corrections as new Memory Records; |
 | `docs/Memory/Evidence Overlay.md:46` | binding rule |  | be append-only; |
-| `docs/Memory/Retention.md:198` | binding rule |  | preserve audit history; |
+| `docs/Memory/Retention.md:200` | binding rule |  | preserve audit history; |
 | `docs/Memory/Memory Record.md:265` | binding rule |   | be able to demonstrate, to a party holding a Memory Record together with its identity and nothing else, that the record has not been altered since its creation. |
 
 **Test:** An Invariant Test over Events: export the model, correct an already-exported Event, re-export, and fail when an identifier from the first export carries different content in the second or when the correction produced no additional Event (REQ-MODELS-EVENT-010, REQ-MODELS-EVENT-011). The same Test over Memory Records can fail only outside Core Conformance.
@@ -406,3 +406,4 @@ Three things follow, none of them decided here. A profile is the existing mechan
 | 0.1 | 18 September 2026 | First table, produced by fourteen independent passes over the canonical tiers, each adversarially verified, per the recommendation of `AO-074`. Checked by `tools/governance/principle_traceability.py`. |
 | 0.1 | 19 September 2026 | How to Read It now cites `Language/Conformance.md` for the definition of Core Conformance and names the twenty-two-document enumeration as the suite's reading, per `CAND-021`. |
 | 0.1 | 21 September 2026 | Memory-tier line references re-pointed after `CAND-023` and `CAND-024` were integrated; the Principle 3 row that recorded Evidence's Definition as reserved now carries the Definition itself; Principle 4 gains the integrity guarantee of `Memory Record.md` as a binding-rule carrier. |
+| 0.1 | 22 September 2026 | Two carriers re-pointed after a paragraph was added above each (`Meta/Organization.md`, `CAND-027`; `Memory/Retention.md`, `AO-085`); no row added or removed. |

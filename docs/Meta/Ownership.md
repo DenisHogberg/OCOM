@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 25 July 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -120,6 +120,8 @@ Objects may have multiple Owners.
 Organizations shall define responsibility boundaries where shared ownership exists.
 
 Shared ownership shall preserve accountability.
+
+Where the Object is an Entity, exactly one of its Owners is the responsible owner `Models/Entity.md` requires, and shared ownership assigns responsibilities to the others (`CAND-025`).
 
 ---
 
@@ -245,3 +247,4 @@ A compliant implementation shall:
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
 | 0.1 | 25 July 2026 | Added Organization to Relationship to Other Specifications, per ADR CAND-005 (Option C) |
+| 0.1 | 22 September 2026 | Shared Ownership: one sentence added stating that where the Object is an Entity exactly one of its Owners is the responsible owner `Models/Entity.md` requires and shared ownership assigns responsibilities to the others, per `CAND-025` (Decided 22 September 2026). No requirement changed. |

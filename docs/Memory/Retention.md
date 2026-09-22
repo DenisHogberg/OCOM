@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 21 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -102,6 +102,8 @@ A Memory Record is never altered. Where law or organizational policy requires th
 Deleted means this and nothing else. Reconstructability, Constitution Principle 6, holds for everything except the erased content, which is the purpose of the erasure.
 
 The preserved demonstration shows what the record's content was at creation. A party holding the erased record learns from it that the content has been erased, not that it is intact; a conformance test that verifies demonstrations excludes a record named by an erasure record rather than failing it.
+
+An erasure record shall name a Policy the organization has declared and the actor who issued it. An implementation shall refuse an erasure record that names neither, so that the exclusion an erasure record grants is granted only by a record that can itself be checked.
 
 Deletion shall be auditable.
 
@@ -209,3 +211,4 @@ A compliant implementation shall:
 | 0.1 | 18 September 2026 | Editorial note added under Deleted recording that this document's Deleted state and its controlled-deletion Conformance clause stand against Constitution §4 and §6, per `AO-069`; no requirement changed. |
 | 0.1 | 21 September 2026 | Deleted restated as an erasure that makes content irrecoverable while preserving the record's identity, creation time, creator and demonstration of integrity, recorded as a new Memory Record; the Conformance item "support controlled deletion" replaced accordingly, per `CAND-024` (Decided 21 September 2026). The editorial note of 18 September is replaced by a resolution note. `AO-069` closes. |
 | 0.1 | 21 September 2026 | Deleted: one sentence added stating what the preserved demonstration means after erasure (it shows the content at creation; a holder learns the record was erased), found by running the Integrity Test kind against an erased record; recorded as a postscript to `CAND-024`. |
+| 0.1 | 22 September 2026 | Deleted: two sentences added requiring an erasure record to name a declared Policy and the actor who issued it, and an implementation to refuse one that names neither; the closure `AO-085` proposed, adopted as a postscript to `CAND-024` (22 September 2026). |

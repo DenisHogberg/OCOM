@@ -8,6 +8,6 @@
 
 # Department
 
-Status: Planned for future versions.
+## Contents
 
-This entity is planned as part of the OCOM Entities section but does not yet contain content.
+- [Department](Department.md)
