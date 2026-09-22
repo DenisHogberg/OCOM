@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 21 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -1487,6 +1487,127 @@ It does not mandate hashing, signing, a ledger or any storage technology. It doe
 
 **Postscript (21 September 2026, from the tests):** two things the suite made precise the same day. First, a digest stored inside the record it hashes shows that the export is consistent, not that the record is unaltered: alter the record, recompute the digest, and it matches again. Clause 1 asks for a demonstration to a party holding only the record and its identity, and among the mechanisms it names only content-addressed identity provides that with nothing else in hand; `tools/conformance/validate.py` therefore passes an Integrity Test on content-addressed identity and reports a self-contained digest as pending for a reviewer. Second, clause 3 preserves the demonstration through an erasure, and an erased record no longer verifies by design; `Memory/Retention.md` now says what the preserved demonstration means, that the content was what it was at creation and has since been erased, and the suite excludes a record named by an erasure record rather than failing it. Neither changes the three clauses.
 
+## CAND-025 · 🟡 Open, proposed Decision
+
+**Title:** Accountability Is Singular and Responsibility Is Plural: What "One Responsible Owner" Means Beside "Objects May Have Multiple Owners"
+
+**Status:** Open, filed 22 September 2026 under `EPIC-B` (Object Model consolidation, the route `CAND-016` took for Relationship); Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 22 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** `AO-015` (4 September 2026, corroborated 5 September); `Models/Entity.md` Ownership ("Every Entity shall have one responsible owner"); `Meta/Ownership.md` Ownership Types, Responsibilities, Shared Ownership ("Objects may have multiple Owners"), Delegation; `CAND-016`; `CAND-004` question 2 and its disposition of 16 September 2026; `Core/Principles.md` Principle 3; the enterprise evaluation of 22 September 2026, whose first lens placed an adopter's first hard decision at this field.
+
+### The question
+
+`AO-015` records that one obligation is stated in four modalities: shall (`Models/Entity.md`), should (`Meta/Object.md`), where applicable (`Meta/Ownership.md` Conformance) and, for Entities, singular. The pair that stops an adopter is the first and the last: `Models/Entity.md` requires every Entity to have one responsible owner, and `Meta/Ownership.md`'s Shared Ownership section says Objects may have multiple Owners. An enterprise whose objects carry a business owner, a data owner and a process owner at once cannot tell from the text whether recording all three is conformant, and `Common Mistakes.md` forbids a private dialect. `CAND-004`'s disposition of question 2 already reads the single-owner rule as the Entity rule and defers "more than one owning" to a Reference Case; the evaluation of 22 September supplies the case in the form of the field an adopter fills on day one. What does one responsible owner mean beside multiple Owners?
+
+**Proposed Decision:** **Accountability is singular; responsibility is plural. An Entity has exactly one responsible Owner, the party accountable for it, which is what `Models/Entity.md` requires; that Ownership record carries the Ownership Type the organization declares as the accountable one. Further Ownership records of the other Ownership Types `Meta/Ownership.md` lists (Business, Operational, Technical, Data, Process, Product, AI, Custodian) may be assigned to the same Object, which is what Shared Ownership permits, and each of them assigns responsibilities and never accountability. The two documents describe one rule at two tiers, as `CAND-016` read Relationship: `Meta/` states what an Object may carry and `Models/` states what an Entity must have exactly one of.**
+
+Integration, when decided: one sentence in `Models/Entity.md` after "Every Entity shall have one responsible owner": "Further Ownership records may assign responsibilities to other parties under `Meta/Ownership.md`'s Shared Ownership; they never assign accountability, which rests with the one responsible owner." One sentence in `Meta/Ownership.md` Shared Ownership: "Where the Object is an Entity, exactly one of its Owners is the responsible owner `Models/Entity.md` requires, and shared ownership assigns responsibilities to the others." `Test-Catalogue.md` regenerated; the Presence Test for `REQ-MODELS-ENTITY-004` gains a cardinality leg, exactly one Ownership record of the accountable Type per Entity, so that a second accountable owner fails a Test that today passes on presence alone.
+
+### Rationale
+
+1. It is the reading the corpus already uses. `CAND-004`'s disposition calls the Entity rule the single-owner rule, `Meta/Ownership.md` lists eight Ownership Types with organization-specific responsibilities and a Delegation section that preserves accountability while delegating responsibilities: the distinction between accountability and responsibility is already the document's own.
+2. It changes no requirement. The Entity keeps one responsible owner; the Object keeps the right to several Owners; what is added is the sentence that says how the two coexist, which is a documentation-currency change under `CAND-007` Section 3 and the form `CAND-016` set for a Meta canonical text and a Models specialization.
+3. It answers the enterprise on the day it asks. The business, data and process owners are recorded as Ownership Types, one of them is declared accountable, and the field is filled without a private dialect.
+4. It makes a mandatory Statement fully decidable. The Presence Test for `REQ-MODELS-ENTITY-004` today establishes that an owner is present and cannot read "one" as a count, because the text does not say whether a second Ownership record breaks the rule; with the Decision it counts exactly one Ownership record of the accountable Type per Entity.
+
+### Scope and the Architecture Freeze
+
+Filed under `EPIC-B`, which `CAND-007` Section 6(a) routes ahead of any exception: the question fits an existing Epic and is not new work. Section 4 holds: no Canonical Principle, no Meta Object, no change to what Ownership is. Two clarifying sentences in canonical documents, each restating a rule the documents already state.
+
+### What this Decision does not do
+
+It does not type Owner: whether an Owner is an individual, a team, an organizational unit or a system stays as `Meta/Ownership.md` lists it, and `AO-015`'s other three modalities (should, where applicable, the chapter's Conformance sentence) stay recorded there. It does not decide shared ownership of a Contract between Organizations, `CAND-004` question 4. It does not touch Principle 3.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision on the proposed reading. Step 2, separately authorized: the two sentences; `AO-015` moved to Open in part; the cardinality leg in the validator and the catalogue regenerated; `Adoption/Getting Started.md` and `First Pilot.md` told which Ownership Type the pilot declares accountable.
+
+**Related Documents:** `AO-015`, `CAND-016`, `CAND-004`, `Models/Entity.md`, `Meta/Ownership.md`, `Meta/Object.md`, `Core/Principles.md`, `Adoption/Getting Started.md`, `Adoption/Common Mistakes.md`, `Governance/Test-Catalogue.md`
+
+---
+
+## CAND-026 · 🟡 Open, proposed Decision
+
+**Title:** An Interchange Contract That Prescribes No Format: the Reference Serialization, Its Schema, and the Rule for Identities From Other Systems
+
+**Status:** Open, filed 22 September 2026 as a publication decision on the form `CAND-012` set for Adoption pages; Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 22 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** `Language/Serialization.md` ("The OCOM Specification does not prescribe any specific serialization format"); `Language/Schema.md` Independence; `Meta/Identity.md` Identity Scope (Organization, Business Domain, Registry, External System, Global Ecosystem) and Identity Resolution; `AO-009`; `Governance/Conformance-Test-Suite.md` Section 1 (the Representation Map); `docs/Examples/Conformance/` (one complete encoding, its map, its report); `CAND-012`, `CAND-010`, `CAND-011`; `Governance/Publication-Model.md` tier 3; the enterprise evaluation of 22 September 2026, whose integration lens ranked the absence of an exchange contract first.
+
+### The question
+
+The specification prescribes no serialization and no schema, on purpose and for a reason it states: implementations adapt to the model, and a format would be a technology. An integration team asks for the opposite: a file to validate against, a schema, and a rule that lets an SAP business-partner number and a ServiceNow sys_id live in one export without colliding. The suite already has the mechanism that reconciles the two, the Representation Map, and the repository already ships one complete encoding with a map and a report, at `docs/Examples/Conformance/`. What the corpus lacks is a statement that this encoding is the one to start from, a schema a validator can run, and the identity rule. Can the specification give an adopter an interchange contract without prescribing a format?
+
+**Proposed Decision:** **The specification keeps prescribing no format. It publishes, as Informative Adoption material under the form `CAND-012` set, one Reference Serialization: the JSON encoding of `docs/Examples/Conformance/model.json`, with a JSON Schema derived from it for validation, its Representation Map as the worked example of the artifact every implementation owes the suite, and one rule for identities that come from other systems: every identity an export carries is bound to one of the five Identity Scopes `Meta/Identity.md` names, the scope is declared in the Representation Map, and an identity of scope External System names the system it comes from, so that two systems' keys coexist as two identities of two declared scopes. An implementation may use any other encoding; what it owes the suite is its map, and the Reference Serialization is what it starts from when it has no encoding of its own.**
+
+Integration, when decided: `docs/Adoption/Reference Serialization.md` (Informative), authorized for publication at `ocom.uno/adoption/reference-serialization` by this Decision, on `CAND-012`'s terms; `docs/Examples/Conformance/schema.json`, generated from the example and checked against it in CI; a map row `Identity.scope` and, per external system, `Identity.system`; a Declaration-kind check in `tools/conformance/validate.py` that reports pending when the map declares no scope; `Language/Serialization.md` and `Language/Schema.md` unchanged.
+
+### Rationale
+
+1. It gives the integration team the three things it asked for without giving up the position the Language tier states. A schema of the Reference Serialization validates a file in that encoding; it validates nothing about OCOM, and the document says so.
+2. The mechanism already exists and was built for this. Section 1 of the suite prescribes the Representation Map precisely so that the test is format-independent; publishing the reference encoding and its map turns a mechanism into a starting point.
+3. The identity rule uses only what `Meta/Identity.md` already says. Five scopes are listed and an organization shall define the appropriate scope for each Identity; the rule asks the export to declare which one, and the map to name the system for External System scope. `AO-009`, that scope semantics are not formally defined, stays open and is not decided here.
+4. `CAND-010` and `CAND-011` set the form: an Adoption page is published only on its own Decision, and this is that Decision for one page.
+
+### Scope and the Architecture Freeze
+
+Filed as a publication decision under `CAND-007` Section 3 and `CAND-012`. Section 4 holds: no Core concept, no Language-tier requirement, no serialization prescribed. Nothing here is normative except the sentence that an implementation owes the suite a Representation Map, which `Conformance-Test-Suite.md` Section 1 already states.
+
+### What this Decision does not do
+
+It does not make the schema, the encoding or the map's field names normative. It does not define identity scope semantics, merge or split (`AO-009`, `AO-010`), and does not decide Registry scope across Organizations (`CAND-004` question 6). It does not name a transport, a protocol or a storage.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision. Step 2, separately authorized: the Adoption document, the generated schema and its CI check, the map rows and the validator check, the site page, `sitemap.xml`, `discovery.json` and `llms.txt`.
+
+**Related Documents:** `Language/Serialization.md`, `Language/Schema.md`, `Language/Identifier Syntax.md`, `Meta/Identity.md`, `AO-009`, `AO-010`, `CAND-012`, `CAND-010`, `CAND-011`, `CAND-004`, `Governance/Conformance-Test-Suite.md`, `docs/Examples/Conformance/README.md`, `Governance/Publication-Model.md`
+
+---
+
+## CAND-027 · 🟡 Open, proposed Decision
+
+**Title:** Business Units, Departments, Legal Entities and Matrix Reporting Without a New Core Concept
+
+**Status:** Open, filed 22 September 2026 under `EPIC-B` and `EPIC-C` (Object Model consolidation; Domain and Entity integration); Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 22 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** `Meta/Organization.md` ("This document does not define additional characteristics, Relationship Types, or Ownership rules specific to Organization. Where such rules are required, they are addressed through the OCOM governance process"; "An Organization connects to other Objects exclusively through ordinary, governed Relationships"; "Modeling of relationships between multiple Organizations is addressed separately by the OCOM governance process"); `CAND-005` (Organization is a first-class Object, a peer of Entity and Domain, "an independent participant in the ecosystem", not an attribute or owner of Domain); `Meta/Relationship.md` Relationship Types (a list Organizations may define, including Composition, Membership, Responsibility and Assignment, with no semantics prescribed); `Meta/Classification.md`; `Models/Domain.md` ("Domains organize responsibility rather than organizational structure", one primary Domain per Entity, primary governance never shared); `Domains/Common/Domain Integration.md` (Capability Integration) and `Domain Governance.md` (Conflict Resolution: "Organizations shall define procedures for resolving conflicts involving: ownership; responsibilities; Policies; integration; capability overlap"); `Entities/Department/README.md` (a stub, Status Planned) while `Entities/Employee/Employee.md` and `Entities/Team/Team.md` require one primary Department and Employee lists Manager among its attributes; `Entities/Overview.md`; `CAND-004` and its dispositions of 16 September 2026 (questions 1 and 2 resolved by existing primitives); `CAND-007` Section 4 ("no new Entity types"); `AO-070`; the enterprise evaluation of 22 September 2026, whose skeptic and people lenses placed matrix reporting, shared services, subsidiaries and mergers first.
+
+### The question
+
+An enterprise is made of business units, departments, legal entities and joint ventures, with people who report along two lines at once, functions shared across units, and, in a merger, two of everything. The Core Vocabulary has Organization, a first-class Object since `CAND-005`, defined as an independent participant in the ecosystem, and says of it that further rules come through governance. Department is a stub that two Entities declare mandatory. Nothing says how a subsidiary, a business unit or a matrix report is expressed, and an adopter meets the question on day one. Can the structure be expressed without a new Core concept and without a new Entity type?
+
+**Proposed Decision:** **It can, with what the Core already has, and the specification says so in one place. The line `CAND-005` drew decides which is which: an Organization is an independent participant in the ecosystem, so legal form is Organization and internal structure is Entity. A legal entity, a subsidiary and a joint venture are Organizations told apart by Classification, a group is Organizations under Composition Relationships, and a company mid-merger is two Organizations under one Composition until a Lifecycle retires one of them; this restates what `Meta/Organization.md` already says, that an Organization connects to other Objects through ordinary Relationships. A department, a division, a business unit and a shared-services function are one Entity, Department, which `Entities/Department/` already reserves and Employee and Team already require, with Classification naming the kind of unit, Composition between Departments expressing the hierarchy, and Membership relating a Department to the Organization it serves; a business unit that is also a legal person is both, an Organization and the Department that carries its people. A reporting line is what `Entities/Employee/Employee.md` already lists, the Manager attribute; a matrix is a second line, one further Relationship of a Type the organization declares (Responsibility, in the terms of `Meta/Relationship.md`'s list) to the second manager or Department, so a person who reports in a matrix carries one Manager, one primary Department, one further Relationship, and one primary Domain. The rule that every Entity belongs to exactly one primary Domain is unchanged, because a Domain organizes responsibility and an Organization organizes participants and legal form, and the two are peers under Object; a shared-services Domain serves several Departments and Organizations by exposing Capabilities, which `Domain Integration.md` already allows. Where two Domains contest primary governance of an Entity type, the conflict is resolved by the procedure `Domain Governance.md`'s Conflict Resolution section already requires the organization to define, and the resolution is an Audit Record.**
+
+Integration, when decided: `Entities/Department/` completed to the structure `Entities/Overview.md` requires, with Classification carrying the kind of unit, Composition between Departments for nesting, Membership to the Organization served, and the second reporting line among its Relationships; two sentences in `Meta/Organization.md` after "Modeling of relationships between multiple Organizations is addressed separately by the OCOM governance process", stating that legal form is a Classification of the Organization and that a group is Organizations under Composition, on the form `CAND-016` set for a clarifying sentence in a Meta document; `Adoption/First Pilot.md` gains one paragraph on picking the Domain in a matrix; `Models/Domain.md` and `Domain Governance.md` unchanged.
+
+### Rationale
+
+1. It is what `Meta/Organization.md` asks for. The document declines to define Organization-specific rules and sends them to governance; this is governance delivering them, as two sentences that restate the document's own rule that Organizations connect through ordinary Relationships, and as the Entities document two Entities already require.
+2. Every construct is already in the corpus. Composition, Membership and Responsibility are in `Meta/Relationship.md`'s list, whose semantics the organization defines; Classification is a Core Characteristic; Manager is an Employee attribute; Capability Integration across Domains is in `Domain Integration.md`; Conflict Resolution is in `Domain Governance.md`; a Lifecycle retiring an Organization is `Models/Lifecycle.md`. The Decision names how they combine and adds nothing to them.
+3. It closes a dangling mandatory attribute. Employee and Team require a primary Department that no document defines; the stub becomes a document.
+4. It answers the four scenarios the evaluation tested, matrix, shared services, subsidiary and merger, with a sentence each, and leaves what it cannot answer named: shared objects between Organizations, Memory per Organization and AI across Organizations stay where `CAND-004` put them.
+
+### Scope and the Architecture Freeze
+
+Filed under `EPIC-B` and `EPIC-C`, which Section 6(a) routes ahead of any exception. Section 4 holds: no Meta Object, no Canonical Principle, no change to Domain's primary-governance rule or to Organization's definition, and no new Entity type: Department is a type the Entities directory already reserves and two Entities already require, so writing its document adds no type. If the Chief Architect reads Section 4 as covering it, that one item goes through Section 5 and the rest of the Decision stands without it. `Entities/` sits outside the Domain-Neutral Core (`Constitution-Step0-Summary.md` Decision 4), and the two Meta sentences are documentation currency on `CAND-016`'s form.
+
+### What this Decision does not do
+
+It does not add Business Unit, Department or Legal Entity to the Core Vocabulary. It does not define the semantics of any Relationship Type; `Meta/Relationship.md` leaves them to the organization. It does not decide `CAND-004` questions 4, 5 and 7. It does not resolve `AO-070` (three constraint vocabularies at the Entity tier). It does not type Owner (`CAND-025`) or define identity scope (`AO-009`). It does not say how many Organizations an adopter should model.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision. Step 2, separately authorized: the Department document, the two Meta sentences, the Adoption paragraph, `Test-Catalogue.md` regenerated if the requirement set reaches the changed documents (`Meta/Organization.md` is among the twenty-two, `Entities/` is not), `CAND-004` postscript noting that questions 1 and 2 now have a worked form.
+
+**Related Documents:** `Meta/Organization.md`, `CAND-005`, `CAND-004`, `CAND-007`, `CAND-016`, `Meta/Relationship.md`, `Meta/Classification.md`, `Models/Domain.md`, `Models/Lifecycle.md`, `Domains/Common/Domain Integration.md`, `Domains/Common/Domain Governance.md`, `Entities/Overview.md`, `Entities/Department/README.md`, `Entities/Employee/Employee.md`, `Entities/Team/Team.md`, `AO-070`, `CAND-025`
+
 ---
 
 # Revision History
@@ -1543,3 +1664,4 @@ It does not mandate hashing, signing, a ledger or any storage technology. It doe
 | 0.1 | 21 September 2026 | Added CAND-023 (Evidence defined: the four reserved sections of `Memory/Evidence Overlay.md`) and CAND-024 (an integrity guarantee for Memory and Evidence, an Audit record by reference, and what erasure preserves), both filed Open as `CAND-007` Section 5 Freeze exceptions on the authorization `AO-084` records, each with a proposed Decision for the Chief Architect. `CAND-007` Section 5 carries a postscript that its second named candidate is now filed. |
 | 0.1 | 21 September 2026 | CAND-023 and CAND-024 Decided as drafted, the same day they were filed, with integration authorized alongside on the form `CAND-022` set: `Memory/Evidence Overlay.md` carries its Definition, Source, Reliability, Independence and Conformance; `Memory/Memory Record.md` and `Memory/Evidence Overlay.md` carry the integrity guarantee; `Memory/Memory Record.md` defines Audit Record by reference; `Memory/Retention.md`'s Deleted state means erasure as defined; `Conformance-Test-Suite.md` gains the Integrity Test kind. |
 | 0.1 | 21 September 2026 | CAND-024 postscript: the suite showed that only content-addressed identity meets clause 1 with nothing else in hand, and that an erased record's preserved demonstration shows the content at creation; `Memory/Retention.md` says so, the clauses are unchanged. |
+| 0.1 | 22 September 2026 | Added CAND-025 (accountability singular, responsibility plural: how one responsible owner and multiple Owners coexist), CAND-026 (an interchange contract that prescribes no format: the Reference Serialization, its schema and the identity rule) and CAND-027 (business units, departments, legal entities and matrix reporting without a new Core concept), each Open with a proposed Decision for the Chief Architect, filed after the enterprise evaluation of 22 September 2026 named these three as what holds adoption. |

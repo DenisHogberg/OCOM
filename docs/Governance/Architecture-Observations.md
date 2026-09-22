@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 21 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -366,7 +366,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If independently corroborated, a future Reference Case should propose either (1) defining scope as a governed attribute of Identity with its own uniqueness rules, or (2) explicitly stating that Identity uniqueness is always evaluated within a declared Registry, making Registry the scope carrier.
 
-**Status:** Open; not escalated (single external source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2)
+**Status:** Open; not escalated (single external source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2). 22 September 2026: `CAND-026` proposes that every identity an export carries declare one of the five scopes `Meta/Identity.md` names and, for External System, the system; it requires the declaration and does not define the semantics, which stay open here.
 
 **Architect Response:** *(pending)*
 
@@ -486,7 +486,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If corroborated, a future Reference Case should state whether Ownership is mandatory for every managed Object or only for Entities, and align the Chapter 4 conformance sentence with its characteristic list.
 
-**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2) Independently corroborated by an external logic audit of commit 37c986a (5 September 2026), per Standard Evolution Methodology Rule 2; still awaiting a Reference Case.
+**Status:** Open; not escalated (single review source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2) Independently corroborated by an external logic audit of commit 37c986a (5 September 2026), per Standard Evolution Methodology Rule 2; still awaiting a Reference Case. 22 September 2026: the cardinality half, one responsible owner beside multiple Owners, is filed as `CAND-025` with a proposed reading, accountability singular and responsibility plural, under `EPIC-B`; the modality half, shall against should and where applicable, stays here.
 
 **Architect Response:** *(pending)*
 
@@ -1878,6 +1878,24 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Related:** `CAND-023`, `CAND-024`, `CAND-007`, `AO-069`, `AO-075`, `AO-064`, `Core/Constitution.md` Principles 3, 4 and 6, `Memory/Memory Record.md`, `Memory/Evidence Overlay.md`, `Memory/Retention.md`, `Governance/Architecture-Release-Review-v1.0.md` Part 2, `Governance/Architecture-Principles.md` Principle 2, `Governance/Conformance-Test-Suite.md` Section 4, `Governance/Evidence-Register.md`
 
+## AO-085
+
+**Title:** An Erasure Record Excludes a Record From Integrity Verification, and Nothing Says Who May Issue One
+
+**Date observed:** 22 September 2026
+
+**Description:** Surfaced by the enterprise evaluation of 22 September 2026, risk lens, reading `Memory/Retention.md` as integrated by `CAND-024` the day before. Clause 3 of that Decision makes an erasure a new Memory Record that names what was erased and under which policy, and preserves the erased record's identity, creation time, creator and demonstration of integrity; `Memory/Retention.md` then says that "a conformance test that verifies demonstrations excludes a record named by an erasure record rather than failing it", and `tools/conformance/validate.py` does so, per the `CAND-024` postscript, because an erased record no longer verifies by design. The clause states what an erasure record carries. It does not state who may issue one, what makes the named policy a policy the organization has declared, or what an implementation does with an erasure record that names no such policy. `Meta/Policy.md` requires a Policy to define Identifier, Name, Purpose, Scope and Effective Date, and `Memory/Write-back Governance.md` requires explicit authorization and a complete audit trail for a write-back, but the first is not bound to the erasure record by any sentence and the second governs writing into authoritative business systems, not an erasure inside Memory.
+
+**Impact:** The only path that removes a record from verification is open to any writer the implementation allows into Memory. An implementation that lets an operator issue an erasure record naming an undeclared policy is conformant as the text stands, and its integrity demonstrations are complete for every record but the ones it chose to erase. For a regulated adopter this is the bypass an auditor looks for first.
+
+**Recommendation:** Record, and propose the smallest closure for the Chief Architect: one sentence in `Memory/Retention.md`'s Deleted state, "An erasure record shall name a Policy the organization has declared and the actor who issued it, and an implementation shall refuse an erasure record that names neither", and one Presence check in the suite over erasure records for the policy and the actor, so that the exclusion an erasure record grants is granted only by a record that can itself be checked. If adopted, it is a postscript to `CAND-024`, not a new candidate: it says what clause 3's erasure record must carry to do what clause 3 says it does.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the Chief Architect adopts or declines the proposed sentence as a postscript to `CAND-024`, or when a Reference Case shows an erasure issued under no declared policy.
+
+**Architect Response:** *(pending)*
+
+**Related:** `CAND-024`, `AO-069`, `AO-084`, `Memory/Retention.md`, `Memory/Write-back Governance.md`, `Meta/Policy.md`, `Governance/Conformance-Test-Suite.md`, `tools/conformance/validate.py`
+
 ---
 
 # Revision History
@@ -1934,3 +1952,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 21 September 2026 | Added AO-084 (immutability is required in twenty-two documents and provable in none; the publication's own records are the first instance), with Reference Case `RC-012`; the Chief Architect authorized filing under `CAND-007` Section 5 and the entry is Escalated to `CAND-023` and `CAND-024`. |
 | 0.1 | 21 September 2026 | AO-069, AO-075 and AO-084 Closed: `CAND-023` and `CAND-024` decided as drafted and integrated the same day. Retention's Deleted state is an erasure that preserves the record, Audit Record is defined by reference, the integrity guarantee is in the Memory tier and the suite has a Test kind that can fail it. |
 | 0.1 | 21 September 2026 | AO-069 narrowed from Closed to Closed in part: `CAND-024` resolved the Retention half and the `Memory/Layered Memory.md` half stays open. AO-084's closure states that only content-addressed identity passes the Integrity kind. |
+| 0.1 | 22 September 2026 | Added AO-085 (an erasure record excludes a record from integrity verification and nothing says who may issue one), from the enterprise evaluation of 22 September 2026, with a proposed one-sentence closure for the Chief Architect. AO-015 notes its cardinality half filed as `CAND-025`; AO-009 notes `CAND-026`'s scope declaration. |

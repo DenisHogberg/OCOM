@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 21 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -348,3 +348,4 @@ This is a backlog, not a decision. No specification document has been changed. N
 
 | 0.1 | 19 September 2026 | EPIC-F: scope note recording that the three Decisions of 19 September 2026 add documentation-currency work to an Epic whose Definition of Done is executed, per `CAND-007` Section 7. |
 | 0.1 | 21 September 2026 | EPIC-A note: `FW-001`'s reserved sections were written ahead of this Epic by `CAND-023`; Layer 2 inherits them. |
+| 0.1 | 22 September 2026 | EPIC-B and EPIC-C note: `CAND-025` (ownership cardinality) and `CAND-027` (organizational structure) filed under these Epics per `CAND-007` Section 6(a); `CAND-026` (the Reference Serialization) filed as a publication decision on `CAND-012`'s form. All three from the enterprise evaluation of 22 September 2026. |
