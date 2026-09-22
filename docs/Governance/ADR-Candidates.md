@@ -1614,6 +1614,45 @@ It does not add Business Unit, Department or Legal Entity to the Core Vocabulary
 
 **Related Documents:** `Meta/Organization.md`, `CAND-005`, `CAND-004`, `CAND-007`, `CAND-016`, `Meta/Relationship.md`, `Meta/Classification.md`, `Models/Domain.md`, `Models/Lifecycle.md`, `Domains/Common/Domain Integration.md`, `Domains/Common/Domain Governance.md`, `Entities/Overview.md`, `Entities/Department/README.md`, `Entities/Employee/Employee.md`, `Entities/Team/Team.md`, `AO-070`, `CAND-025`
 
+## CAND-028 · 🟡 Open, proposed Decision
+
+**Title:** The First 90 Days: `First Pilot.md` Restated as a Plan With Weeks, Responsibility Slots, Artifacts and Exit Criteria
+
+**Status:** Open, filed 22 September 2026 on the form `CAND-010` and `CAND-011` set for an Adoption document and its page; Decision pending. The document is drafted as `docs/Adoption/First 90 Days.md` with Status Draft and is not published on ocom.uno until decided. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 22 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** the enterprise evaluation of 22 September 2026, first-90-days lens, whose one decisive finding survived verification: the Adoption section carries no calendar, no pilot roles and no plan-management templates, only "weeks, not quarters", so a pilot's budget and staffing cannot be defended from the text; `CAND-010` (one Informative Worked Example authorized under `EPIC-F`), `CAND-011` and `CAND-012` (Adoption pages are Projections, each on its own Decision); `Adoption/First Pilot.md` (Suggested Shape, Suggested Steps, What Success Looks Like); `Models/Domain.md` (a Domain has a defined owner), `Models/Entity.md` and `CAND-025` (one responsible owner), `Conformance-Test-Suite.md` Sections 3 and 4 (a Review outcome is a named reviewer's judgment, the report carries the reviewer's identity), `Meta/Ownership.md` Independence (no job titles prescribed); `CAND-007` Sections 3 and 4.
+
+### The question
+
+`First Pilot.md` bounds a pilot (5 to 10 people, one Domain, 10 to 20 Entities, a few weeks) and lists seven steps. It does not say who holds which responsibility, what exists at the end of which week, when the pilot is done, or how an adopter turns the envelope into an estimate. The evaluation's operator lens put it plainly: the artifacts of week 2, week 6 and week 12 have to be invented by the reader. Can the specification give a plan without stating a figure it has no evidence for, and without adding a rule?
+
+**Proposed Decision:** **Authorize `docs/Adoption/First 90 Days.md` as an Informative Adoption document and, on `CAND-012`'s terms, as an Adoption Projection at `ocom.uno/adoption/first-90-days`. The document restates `First Pilot.md` as three blocks of weeks with the artifact each produces and the criterion that closes it; names the four responsibilities the specification already requires a pilot to place (Domain owner, modeller, Entity owners, reviewer) without prescribing a job title; and gives a planning arithmetic in which the adopter enters their own estimate per artifact against the count the plan produces, so that the first pilot's measured totals become the next pilot's figures. It states no effort figure and no outcome figure of its own.**
+
+Integration, when decided: the document's Status moves from Draft to Informative and the status note is removed; the page is built from it on the form the other Adoption pages use and named in the site's `adoption` index, `sitemap.xml`, `discovery.json` and `publication/llms.txt`; `Adoption/README.md` lists it without the pending mark.
+
+### Rationale
+
+1. It answers the operator's question with what the corpus already holds. Every responsibility it names is a rule the specification states (`Models/Domain.md`, `Models/Entity.md`, `Conformance-Test-Suite.md`); every artifact is one the tooling produces or reads (the seven-field definition, the export, the map, the Test Report, the Reviewer Record); the order is `First Pilot.md`'s seven steps.
+2. It keeps the discipline on numbers. The corpus states no effort figure because it has no evidence for one, and the Evidence Register says what evidence exists; the plan turns that absence into an arithmetic the adopter fills in and then measures, which is the only honest form until a pilot reports.
+3. It is the form `CAND-010` and `CAND-011` set: an Informative document, restating, authorized by its own Decision, published only after it.
+4. It moves the lowest lens without moving a rule: the evaluation's first finding is closed by the existence of the plan, and its "what would change my mind" names this document first.
+
+### Scope and the Architecture Freeze
+
+Filed under `EPIC-F` on the form `CAND-010` used; `CAND-007` Section 3 permits editorial and adoption work and Section 4 holds: no concept, no Canonical Principle, no Entity type, no Conformance Profile, nothing normative. The document's Draft status until the Decision keeps the repository's own rule that an Adoption page qualifies only once it has its own Decision.
+
+### What this Decision does not do
+
+It does not make the weeks or the responsibility slots requirements. It does not state an effort or an outcome figure. It does not decide the reviewer submission route or the Measurement Protocol; the plan says a KPI is read before and after, and what the KPI is stays the pilot's choice until a Measurement Protocol exists.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision. Step 2, separately authorized: the Status change, the site page and the four site files that name it.
+
+**Related Documents:** `Adoption/First 90 Days.md`, `Adoption/First Pilot.md`, `Adoption/Getting Started.md`, `Adoption/Reference Serialization.md`, `CAND-010`, `CAND-011`, `CAND-012`, `CAND-025`, `CAND-026`, `Models/Domain.md`, `Models/Entity.md`, `Governance/Conformance-Test-Suite.md`, `Governance/Publication-Model.md`
+
 ---
 
 # Revision History
@@ -1673,3 +1712,4 @@ It does not add Business Unit, Department or Legal Entity to the Core Vocabulary
 | 0.1 | 22 September 2026 | Added CAND-025 (accountability singular, responsibility plural: how one responsible owner and multiple Owners coexist), CAND-026 (an interchange contract that prescribes no format: the Reference Serialization, its schema and the identity rule) and CAND-027 (business units, departments, legal entities and matrix reporting without a new Core concept), each Open with a proposed Decision for the Chief Architect, filed after the enterprise evaluation of 22 September 2026 named these three as what holds adoption. |
 | 0.1 | 22 September 2026 | CAND-025, CAND-026 and CAND-027 Decided as drafted by the Chief Architect, the same day they were filed, with integration authorized alongside on the form `CAND-022` set and executed: one sentence each in `Models/Entity.md` and `Meta/Ownership.md` and a counting Presence Test; `Adoption/Reference Serialization.md`, `Examples/Conformance/schema.json` and a Declaration Test read from the Representation Map; `Entities/Department/Department.md` and one paragraph in `Meta/Organization.md`. CAND-024 postscript adopting `AO-085`'s closure (an erasure record names a declared Policy and its actor); CAND-004 postscript recording the worked form of questions 1 and 2. |
 | 0.1 | 22 September 2026 | CAND-026 postscript: the acceptance evaluation found the suite comparing bare identifiers and the schema demanding every collection, against the Decision's promise; both fixed the same day, Decision unchanged. |
+| 0.1 | 22 September 2026 | Added CAND-028 (The First 90 Days: `First Pilot.md` restated as a plan with weeks, responsibility slots, artifacts and exit criteria), Open with a proposed Decision, from the first-90-days lens of the enterprise evaluation of 22 September 2026; the document is drafted and unpublished until decided. |
