@@ -68,7 +68,7 @@ This repository is tier 1. The site at [ocom.uno](https://ocom.uno) publishes ti
 
 ## Repository structure
 
-Everything normative is Markdown under `docs/`. There is no code in this repository.
+Everything normative is Markdown under `docs/`. The only code in this repository is the set of checking tools under `tools/`, which read the documents and the example export, change nothing, and are what CI runs.
 
 - [`Adoption/`](docs/Adoption/README.md): Quick Start, First Pilot, FAQ, Common Mistakes. Informative; start here if new.
 - [`AI/`](docs/AI/): AI agents, context, evaluation, knowledge, prompts, tools.

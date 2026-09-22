@@ -203,15 +203,47 @@ class Resolver:
                     return record.get(name)
         return record.get("id")
 
-    def ids(self):
-        """Every identity the export declares, as {id: [paths]}, each record counted once."""
+    GENERIC = ("object", "identity")
+
+    def namespace_of(self, path):
+        """The (scope, system) the map declares for the identities at `path`: a declaration keyed
+        by the collection path first, then by the most specific OCOM type the path is listed under,
+        then the export-wide `Identity.scope`; ("", "") when the map declares none. CAND-026 binds
+        every identity to a declared scope, and an External System names the system, so two
+        systems' keys coexist in one export as identities of two scopes."""
+        d = self.declarations
+        keys = [path.lower()] + sorted(t for t, paths in self.types.items() if path in paths and t not in self.GENERIC) \
+               + sorted(t for t in self.GENERIC if path in self.types.get(t, [])) + ["identity"]
+        # the scope and the system are resolved separately along the same order, so a type may
+        # declare the scope once and each of its collections name its own source system
+        scope = system = ""
+        for key in keys:
+            prefix = "%s.identity " % key if key != "identity" else "identity."
+            if not scope and d.get(prefix + "scope"):
+                scope = d[prefix + "scope"].strip().lower()
+            if not system and d.get(prefix + "system"):
+                system = d[prefix + "system"].strip()
+        return (scope, system) if scope else ("", "")
+
+    def identities(self):
+        """Every identity the export declares, keyed by (scope, system, id), each record counted
+        once: the same bare id under two declared systems is two identities, not one reused."""
         out = {}
         for path, rec in self.all_records():
             ident = self.identity_of(path, rec)
             if ident is not None and not is_absent(ident):
-                out.setdefault(ident, [])
-                if path not in out[ident]:
-                    out[ident].append(path)
+                key = self.namespace_of(path) + (ident,)
+                out.setdefault(key, [])
+                if path not in out[key]:
+                    out[key].append(path)
+        return out
+
+    def ids(self):
+        """Every bare identity the export declares, as {id: [paths]}, for resolving references."""
+        out = {}
+        for (scope, system, ident), paths in self.identities().items():
+            out.setdefault(ident, [])
+            out[ident].extend(p for p in paths if p not in out[ident])
         return out
 
 
@@ -349,10 +381,15 @@ def presence(test, text, r):
             name, _ = r.field(subject, element)
             if name is None:
                 continue
-            values = [rec.get(name) for _, rec in records]
-            repeated = [v for v in set(values) if values.count(v) > 1]
+            # unique within the scope the map declares for each record's collection (CAND-026):
+            # the same bare value under two declared systems is two identities
+            counts = {}
+            for path, rec in records:
+                key = r.namespace_of(path) + (rec.get(name),)
+                counts[key] = counts.get(key, 0) + 1
+            repeated = sorted({str(k[2]) for k, n in counts.items() if n > 1})
             if repeated:
-                return "Fail", "%s is not unique across %s: %s" % (element, subject, ", ".join(str(x) for x in repeated[:3]))
+                return "Fail", "%s is not unique across %s: %s" % (element, subject, ", ".join(repeated[:3]))
         unique_note = ", each distinct"
     note = "" if not borrowed else " (%s)" % "; ".join(borrowed)
     return "Pass", "%d %s record(s) carry %s%s%s%s" % (len(records), subject, ", ".join(elements), one_note, unique_note, note)
@@ -544,10 +581,11 @@ def invariant_predicate(text, r, lifecycles, by_entity):
         for path, rec in r.all_records():
             ident = r.identity_of(path, rec)
             if ident is not None and not is_absent(ident):
-                counts[ident] = counts.get(ident, 0) + 1
-        dupes = [i for i, n in counts.items() if n > 1]
-        return ("Fail", "identity carried by %d records: %s" % (len(dupes), ", ".join(sorted(dupes)[:3]))) if dupes else \
-               ("Pass", "%d identities, each carried by exactly one record" % len(counts))
+                key = r.namespace_of(path) + (ident,)
+                counts[key] = counts.get(key, 0) + 1
+        dupes = sorted({k[2] for k, n in counts.items() if n > 1})
+        return ("Fail", "%d identit%s carried by more than one record: %s" % (len(dupes), "y" if len(dupes) == 1 else "ies", ", ".join(dupes[:3]))) if dupes else \
+               ("Pass", "%d identities, each carried by exactly one record within its declared scope" % len(counts))
 
     if "ownership" in low and ("never be undefined" in low or "not be undefined" in low):
         governed = [("entity", rec) for _, rec in r.records("entity")] + \
@@ -675,6 +713,9 @@ def dangling_references(r):
     known = set(r.ids())
     if not known:
         return ["the export declares no identity, so no reference could be resolved"], 0
+    scopes = {}
+    for (scope, system, ident), _ in r.identities().items():
+        scopes.setdefault(ident, set()).add((scope, system))
     external = set(r.types.get("reference") or [])
     skip_keys = {"id", "type", "name", "label", "purpose", "meaning", "note", "rule", "expression",
                  "trigger", "responsibility_scope", "data_type", "state", "initial_state"}
@@ -703,6 +744,10 @@ def dangling_references(r):
                 if item not in known:
                     out.append("%s %s.%s names %s, which the export does not declare"
                                % (path, rec.get("id", "?"), key, item))
+                elif len(scopes.get(item, ())) > 1:
+                    out.append("%s %s.%s names %s, an identity the export declares in %d scopes (%s); the reference does not say which"
+                               % (path, rec.get("id", "?"), key, item, len(scopes[item]),
+                                  "; ".join(" ".join(x for x in s if x) for s in sorted(scopes[item]))))
     return sorted(set(out)), examined
 
 
@@ -953,18 +998,18 @@ def main(argv):
     lines.append("")
     dangling, examined = dangling_references(r)
     if dangling:
-        lines.append("%d field(s) name an identity the export does not declare. No Statement binds this "
-                     "check, so it is an observation and not a Test outcome, but a model whose owner, "
-                     "Domain or Lifecycle references resolve to nothing satisfies its Presence Tests while "
-                     "meaning nothing." % len(dangling))
+        lines.append("%d field(s) name an identity the export does not declare, or one it declares in more "
+                     "than one scope. No Statement binds this check, so it is an observation and not a Test "
+                     "outcome, but a model whose owner, Domain or Lifecycle references resolve to nothing, or to "
+                     "two records, satisfies its Presence Tests while meaning nothing." % len(dangling))
         lines.append("")
         for d in dangling[:20]:
             lines.append("- %s" % d)
     else:
         lines.append("%d field value(s) were resolved against the %d identities this export declares, and "
-                     "every one of them names a record it carries. Fields holding prose, and a Reference's "
-                     "target, which may legitimately name another system, are not resolved."
-                     % (examined, len(r.ids())))
+                     "every one of them names a record it carries in exactly one declared scope. Fields holding "
+                     "prose, and a Reference's target, which may legitimately name another system, are not resolved."
+                     % (examined, len(r.identities())))
     lines.append("")
     lines.append("---")
     lines.append("")

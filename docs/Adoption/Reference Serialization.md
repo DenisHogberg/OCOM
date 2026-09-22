@@ -51,7 +51,7 @@ The file itself: [`model.json`](../Examples/Conformance/model.json). The map tha
 
 ## The schema
 
-[`schema.json`](../Examples/Conformance/schema.json) is a JSON Schema (draft 2020-12) derived from the example by `tools/conformance/reference_schema.py` and never written by hand; CI regenerates it, fails on a difference, and validates the example against it. Every record type is an object with the properties the example carries, required where every record of that type carries them; content-addressed identifiers carry the pattern of a SHA-256 digest; additional properties are allowed everywhere, because an implementation extends the encoding before it replaces it.
+[`schema.json`](../Examples/Conformance/schema.json) is a JSON Schema (draft 2020-12) derived from the example by `tools/conformance/reference_schema.py` and never written by hand; CI regenerates it, fails on a difference, and validates the example against it. Every record type is an object with the properties the example carries, required only where every example record of that type carries them and there are at least two records to compare, since one record cannot tell an optional property from a mandatory one; collections are optional, because an export carries the types it has and its map says which; content-addressed identifiers carry the pattern of a SHA-256 digest; additional properties are allowed everywhere, because an implementation extends the encoding before it replaces it. An export that carries only its `export` block and its `entities` satisfies the schema.
 
 What the schema validates is a file in this encoding. It validates nothing about OCOM. A file can satisfy the schema and fail every Test in the catalogue, because the Tests read the model's content (does every Entity have one owner, is every recorded State change one its Lifecycle permits, does every Audit Record verify) and the schema reads its shape. The suite, not the schema, decides conformance; a validator that only checks the schema has checked nothing the specification requires.
 
@@ -68,10 +68,10 @@ What every implementation owes the suite is not the Reference Serialization but 
 `Meta/Identity.md` names five Identity Scopes (Organization, Business Domain, Registry, External System, Global Ecosystem) and requires the organization to define the appropriate scope for each Identity. The rule this document states for an export is the declaration of that choice:
 
 1. Every identity the export carries is bound to one of the five scopes.
-2. The scope is declared in the Representation Map, in a row `Identity.scope` of kind `declaration`; a type whose identities carry a different scope declares its own in a row `<Type>.identity scope`.
-3. An identity of scope External System names the system it comes from, in a row `Identity.system` (or `<Type>.identity system`).
+2. The scope is declared in the Representation Map, in a row `Identity.scope` of kind `declaration`; a type whose identities carry a different scope declares its own in a row `<Type>.identity scope`, and a type spread over several collections, one per source system, declares per collection in a row `<collection>.identity scope`.
+3. An identity of scope External System names the system it comes from, in a row `Identity.system`, `<Type>.identity system` or `<collection>.identity system`.
 
-So an SAP business-partner number and a ServiceNow record identifier coexist in one export as identities of two declared scopes naming two systems, and a reader knows which system to ask about each. The suite tests the declaration (`REQ-META-IDENTITY-005`, a Declaration Test since `CAND-026`): one of the five passes, any other fails, an External System that names no system fails, and a map that declares nothing is reported pending, since the suite reads a declaration and never supplies one.
+So an SAP business-partner number and a ServiceNow record identifier coexist in one export as identities of two declared scopes naming two systems, and a reader knows which system to ask about each. The suite keys identity uniqueness and reuse by the declared scope and system, so `1000001` from SAP and `1000001` from ServiceNow are two identities and not one reused; a bare reference that names an identity the export declares in two scopes is ambiguous, and the report's Reference Integrity section says so rather than resolving it to either. The suite tests the declaration (`REQ-META-IDENTITY-005`, a Declaration Test since `CAND-026`): one of the five passes, any other fails, an External System that names no system fails, and a map that declares nothing is reported pending, since the suite reads a declaration and never supplies one.
 
 What the rule does not do: it does not define what each scope means, or how identities are merged, split or resolved across systems; `AO-009` and `AO-010` record those as open, and `CAND-004` question 6 leaves Registry scope across Organizations to a Reference Case. It declares; it does not decide.
 
@@ -84,6 +84,7 @@ It does not make the encoding, the schema or the map's field names normative; `L
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 22 September 2026 | First version, authorized by `CAND-026` (Decided 22 September 2026) on the form `CAND-012` set for Adoption pages: the Reference Serialization, its derived schema, the Representation Map as the artifact every implementation owes the suite, and the declaration rule for identity scope. |
+| 0.1 | 22 September 2026 | The enterprise evaluation of the same day ran the suite on an SAP-and-ServiceNow-shaped export and found it comparing bare identifiers while this page promised coexistence, and found the derived schema demanding every collection. Both fixed in the tools; this page now says how the suite keys identity (declared scope and system, per type or per collection), that a bare reference to an identity present in two scopes is reported ambiguous, and that collections are optional in the schema. |
 
 ---
 

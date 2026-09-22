@@ -28,7 +28,7 @@
 
 ## Reference Integrity
 
-75 field value(s) were resolved against the 38 identities this export declares, and every one of them names a record it carries. Fields holding prose, and a Reference's target, which may legitimately name another system, are not resolved.
+75 field value(s) were resolved against the 38 identities this export declares, and every one of them names a record it carries in exactly one declared scope. Fields holding prose, and a Reference's target, which may legitimately name another system, are not resolved.
 
 ---
 
@@ -55,7 +55,7 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-META-IDENTITY-003 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-IDENTITY-005 | `Meta/Identity.md` | Declaration | mandatory | Pass | the map declares Organization for every identity the export carries |
 | REQ-META-IDENTITY-007 | `Meta/Identity.md` | Presence | mandatory | pending | the Statement states a condition rather than an element (when an object is created); a reviewer decides it |
-| REQ-META-IDENTITY-008 | `Meta/Identity.md` | Invariant | mandatory | Pass | 38 identities, each carried by exactly one record |
+| REQ-META-IDENTITY-008 | `Meta/Identity.md` | Invariant | mandatory | Pass | 38 identities, each carried by exactly one record within its declared scope |
 | REQ-META-IDENTITY-009 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-IDENTITY-010 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-IDENTITY-012 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |

@@ -71,12 +71,15 @@ def column_schema(values):
 
 def object_schema(records):
     """An object schema over records of one kind: every property any record carries, required where
-    all of them carry it, additional properties allowed since an implementation extends the encoding
-    before it replaces it."""
+    all of them carry it and there are at least two records to compare (one record cannot tell an
+    optional property from a mandatory one), additional properties allowed since an implementation
+    extends the encoding before it replaces it."""
     keys = sorted({k for r in records for k in r})
     props = {k: column_schema([r[k] for r in records if k in r]) for k in keys}
-    required = [k for k in keys if all(k in r for r in records)]
-    return {"type": "object", "properties": props, "required": required, "additionalProperties": True}
+    out = {"type": "object", "properties": props, "additionalProperties": True}
+    if len(records) > 1:
+        out["required"] = [k for k in keys if all(k in r for r in records)]
+    return out
 
 
 def derive(model):
@@ -100,10 +103,14 @@ def derive(model):
         "description": ("Derived from docs/Examples/Conformance/model.json by tools/conformance/reference_schema.py and "
                         "never edited by hand (CAND-026). Validates a file in this encoding; it validates nothing about "
                         "OCOM, whose requirements the Conformance Test Suite reads through the Representation Map. "
-                        "The specification prescribes no serialization format (Language/Serialization.md)."),
+                        "Collections are optional, an export carries the ones it has; a record's properties are "
+                        "required only where every example record of its kind carries them and there are at least two "
+                        "to compare. The specification prescribes no serialization format (Language/Serialization.md)."),
         "type": "object",
         "properties": props,
-        "required": sorted(model.keys()),
+        # an export carries the collections it has and its map says which; only the block that
+        # names who produced the file is required of every export
+        "required": ["export"] if "export" in model else [],
         "additionalProperties": True,
     }
 

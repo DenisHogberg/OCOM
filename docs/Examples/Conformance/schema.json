@@ -2,7 +2,7 @@
   "$id": "https://ocom.uno/adoption/reference-serialization/schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": true,
-  "description": "Derived from docs/Examples/Conformance/model.json by tools/conformance/reference_schema.py and never edited by hand (CAND-026). Validates a file in this encoding; it validates nothing about OCOM, whose requirements the Conformance Test Suite reads through the Representation Map. The specification prescribes no serialization format (Language/Serialization.md).",
+  "description": "Derived from docs/Examples/Conformance/model.json by tools/conformance/reference_schema.py and never edited by hand (CAND-026). Validates a file in this encoding; it validates nothing about OCOM, whose requirements the Conformance Test Suite reads through the Representation Map. Collections are optional, an export carries the ones it has; a record's properties are required only where every example record of its kind carries them and there are at least two to compare. The specification prescribes no serialization format (Language/Serialization.md).",
   "properties": {
     "audit_records": {
       "items": {
@@ -125,13 +125,6 @@
             "type": "string"
           }
         },
-        "required": [
-          "applies_to",
-          "expression",
-          "id",
-          "name",
-          "purpose"
-        ],
         "type": "object"
       },
       "type": "array"
@@ -162,14 +155,6 @@
             "type": "string"
           }
         },
-        "required": [
-          "effective_date",
-          "id",
-          "name",
-          "parties",
-          "purpose",
-          "scope"
-        ],
         "type": "object"
       },
       "type": "array"
@@ -197,13 +182,6 @@
             "type": "string"
           }
         },
-        "required": [
-          "entity_types",
-          "id",
-          "name",
-          "owner",
-          "purpose"
-        ],
         "type": "object"
       },
       "type": "array"
@@ -405,12 +383,6 @@
           "type": "string"
         }
       },
-      "required": [
-        "note",
-        "produced_by",
-        "produced_on",
-        "specification_version"
-      ],
       "type": "object"
     },
     "lifecycles": {
@@ -515,12 +487,6 @@
             "type": "string"
           }
         },
-        "required": [
-          "domains",
-          "id",
-          "name",
-          "purpose"
-        ],
         "type": "object"
       },
       "type": "array"
@@ -608,12 +574,6 @@
             "type": "string"
           }
         },
-        "required": [
-          "direction",
-          "id",
-          "source",
-          "target"
-        ],
         "type": "object"
       },
       "type": "array"
@@ -644,14 +604,6 @@
             "type": "string"
           }
         },
-        "required": [
-          "id",
-          "name",
-          "owner",
-          "purpose",
-          "registered_object_types",
-          "scope"
-        ],
         "type": "object"
       },
       "type": "array"
@@ -750,24 +702,7 @@
     }
   },
   "required": [
-    "audit_records",
-    "capabilities",
-    "classifications",
-    "constraints",
-    "contracts",
-    "domains",
-    "entities",
-    "events",
-    "evidence_records",
-    "export",
-    "lifecycles",
-    "models",
-    "ownership",
-    "policies",
-    "references",
-    "registries",
-    "relationships",
-    "workflows"
+    "export"
   ],
   "title": "OCOM Reference Serialization",
   "type": "object"
