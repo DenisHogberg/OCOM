@@ -88,7 +88,7 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | Invariant | exported model, refusal record | The exported model is searched for the condition the Statement forbids; the Test passes when no instance exhibits it, and where the implementation exposes a refusal record, when the refusal is recorded instead. |
 | Transition | exported model | Every recorded State of every instance is checked against the Transitions its Lifecycle permits; the Test passes when every change is permitted and no terminal State is left. |
 | Declaration | Conformance Statement; Representation Map for the Identity scope rule | The Conformance Statement is read for the field the claim clause requires, and the Test passes when the field is present and non-empty; for `Meta/Identity.md`'s scope rule the Representation Map is read for the scope it declares (`CAND-026`), and the Test passes when it is one of the five scopes that document names, an External System naming its system, and is pending when the map declares none. |
-| Review | reviewer record | A named reviewer examines the evidence and records Review Pass or Review Fail with a reason; no mechanical procedure decides it. |
+| Review | Reviewer Record | A named reviewer examines the evidence and records Review Pass or Review Fail with a reason, in a Reviewer Record the validator reads (`--reviews`); no mechanical procedure decides it. |
 
 ---
 

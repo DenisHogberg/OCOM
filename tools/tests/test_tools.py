@@ -364,12 +364,12 @@ class Validator(unittest.TestCase):
         # the exact numbers, not a substring a validator doing no work would also satisfy
         code, out = self.run_on(ROOT)
         self.assertEqual(code, 0, out)
-        m = re.search(r"mandatory (\d+): Pass (\d+), Fail (\d+), pending (\d+)", out)
+        m = re.search(r"mandatory (\d+): Pass (\d+), Fail (\d+), pending (\d+), reviewed (\d+) pass and (\d+) fail", out)
         self.assertIsNotNone(m, out)
-        total, passed, failed, pending = (int(x) for x in m.groups())
+        total, passed, failed, pending, rpass, rfail = (int(x) for x in m.groups())
         self.assertEqual(failed, 0, out)
         self.assertGreaterEqual(passed, 30, "the suite stopped deciding things: %s" % out)
-        self.assertEqual(passed + failed + pending, total, out)
+        self.assertEqual(passed + failed + pending + rpass + rfail, total, out)
         # a model alone never establishes Core Conformance: Review Pass needs a reviewer
         self.assertIn("not established", out)
 
@@ -890,6 +890,83 @@ class Validator(unittest.TestCase):
             rows = self.outcomes(c.dir)
             self.assertEqual(rows.get("REQ-META-IDENTITY-008"), "Fail")
             self.assertEqual(rows.get("REQ-META-OBJECT-003"), "Fail")
+
+    REVIEWS = "docs/Examples/Conformance/reviewer-record.md"
+    HEADER = "| Test | Outcome | Reviewer | Date | Reason |\n|---|---|---|---|---|\n"
+
+    def run_with_reviews(self, root, reviews_path):
+        out = pathlib.Path(tempfile.mkdtemp()) / "r.md"
+        code, printed = run(root, VALIDATE, "--model", "%s/model.json" % self.EX,
+                            "--map", "%s/representation-map.md" % self.EX,
+                            "--statement", "%s/conformance-statement.md" % self.EX,
+                            "--reviews", str(reviews_path), "--report", str(out))
+        text = out.read_text(encoding="utf-8") if out.exists() else ""
+        shutil.rmtree(out.parent, ignore_errors=True)
+        return code, printed, text
+
+    def test_the_reviewer_record_decides_review_tests_under_the_reviewers_name(self):
+        """Section 3: a Review Pass is a named reviewer's recorded judgment; Section 4: the report
+        carries the reviewer's identity. The example's illustrative record decides three Statements."""
+        code, printed, text = self.run_with_reviews(ROOT, ROOT / self.REVIEWS)
+        self.assertEqual(code, 0, printed)
+        self.assertIn("reviewed 3 pass and 0 fail", printed)
+        row = [l for l in text.splitlines() if l.startswith("| REQ-MODELS-ENTITY-003 |")][0]
+        self.assertIn("| Review Pass |", row)
+        self.assertIn("Example reviewer (first party), 22 September 2026:", row)
+        self.assertIn("- Example reviewer (first party): 3 judgment(s)", text)
+        self.assertIn("not established", printed)
+
+    def test_a_reviewer_record_that_cannot_be_attributed_stops_the_run(self):
+        """A judgment without a name, a reason, a readable date, a known Test or a permitted outcome
+        is not a judgment, and two rows for one Test are a contradiction; each stops the run."""
+        cases = {
+            "unknown test": "| REQ-NOWHERE-001 | Review Pass | A. Reviewer | 22 September 2026 | reason |\n",
+            "bad outcome": "| REQ-MODELS-ENTITY-003 | Pass | A. Reviewer | 22 September 2026 | reason |\n",
+            "no reviewer": "| REQ-MODELS-ENTITY-003 | Review Pass |  | 22 September 2026 | reason |\n",
+            "bad date": "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | yesterday | reason |\n",
+            "no reason": "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | 22 September 2026 |  |\n",
+            "duplicate": "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | 22 September 2026 | one |\n| REQ-MODELS-ENTITY-003 | Review Fail | B. Reviewer | 22 September 2026 | two |\n",
+            "empty": "",
+        }
+        for name, rows in cases.items():
+            with Copy() as c:
+                path = c.dir / "reviews.md"
+                path.write_text("# Reviewer Record\n\n" + self.HEADER + rows, encoding="utf-8")
+                code, printed, text = self.run_with_reviews(c.dir, path)
+                self.assertNotEqual(code, 0, "%s: %s" % (name, printed))
+                self.assertNotIn("reviewed 1 pass", printed, name)
+
+    def test_a_judgment_never_overrides_a_mechanical_outcome(self):
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# Reviewer Record\n\n" + self.HEADER +
+                            "| REQ-MODELS-ENTITY-004 | Review Fail | A. Reviewer | 22 September 2026 | I disagree with the machine. |\n", encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertEqual(code, 0, printed)
+            self.assertIn("reviewed 0 pass and 0 fail", printed)
+            row = [l for l in text.splitlines() if l.startswith("| REQ-MODELS-ENTITY-004 |")][0]
+            self.assertIn("| Pass |", row)
+            self.assertIn("not applied, REQ-MODELS-ENTITY-004: A. Reviewer recorded Review Fail, but the Test decided Pass mechanically", text)
+
+    def test_a_review_fail_blocks_core_conformance_and_a_complete_record_establishes_it(self):
+        """The end-to-end path Section 3 describes: with every Test the export cannot settle judged
+        Review Pass by a named reviewer, Core Conformance is established; one Review Fail among
+        them and it is not."""
+        with Copy() as c:
+            text = self.report_text(c.dir)          # no record: everything a reviewer may decide is pending
+            pending = [l.split("|")[1].strip() for l in text.splitlines()
+                       if (l.startswith("| REQ-") or l.startswith("| DECL-")) and "| mandatory | pending |" in l]
+            self.assertGreater(len(pending), 100, "the example stopped leaving Statements to a reviewer")
+            rows = "".join("| %s | Review Pass | Named Reviewer | 2026-09-22 | examined, met |\n" % a for a in pending)
+            path = c.dir / "complete.md"
+            path.write_text("# Reviewer Record\n\n" + self.HEADER + rows, encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertEqual(code, 0, printed)
+            self.assertIn("pending 0, reviewed %d pass and 0 fail. Core Conformance established" % len(pending), printed)
+            rows = rows.replace("| %s | Review Pass |" % pending[0], "| %s | Review Fail |" % pending[0], 1)
+            path.write_text("# Reviewer Record\n\n" + self.HEADER + rows, encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertIn("pending 0, reviewed %d pass and 1 fail. Core Conformance not established" % (len(pending) - 1), printed)
 
     def test_the_scope_declaration_decides_the_identity_scope_rule(self):
         """CAND-026: REQ-META-IDENTITY-005 is read from the map's Identity.scope declaration."""

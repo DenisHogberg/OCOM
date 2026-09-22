@@ -10,6 +10,8 @@
 
 **Published by:** the party that ran the suite. A report published by the claimant is self-validation; `Conformance-Test-Suite.md` Section 4 says the suite does not tell the two apart and the publisher does.
 
+**Reviewer Record:** `docs/Examples/Conformance/reviewer-record.md`, 3 judgment(s) by Example reviewer (first party). Whether a reviewer is independent of the claimant is a fact about the reviewer, not something this tool can read.
+
 ---
 
 ## Summary
@@ -19,10 +21,12 @@
 | Mandatory Tests | 187 |
 | Pass | 48 |
 | Fail | 0 |
-| Awaiting a reviewer or evidence the export does not carry | 139 |
+| Review Pass | 3 |
+| Review Fail | 0 |
+| Awaiting a reviewer or evidence the export does not carry | 136 |
 | Not Applicable, dispositioned Descriptive | 1 |
 
-**Core Conformance: not established.** Section 3 establishes it when every mandatory Test is Pass or Review Pass. 0 mandatory Test(s) fail and 139 await a reviewer or evidence this export does not carry.
+**Core Conformance: not established.** Section 3 establishes it when every mandatory Test is Pass or Review Pass. 0 mandatory Test(s) fail, 0 carry a Review Fail, and 136 await a reviewer or evidence this export does not carry.
 
 ---
 
@@ -38,6 +42,12 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 
 ---
 
+## Reviewers
+
+- Example reviewer (first party): 3 judgment(s), REQ-META-IDENTITY-001, REQ-META-OWNERSHIP-001, REQ-MODELS-ENTITY-003
+
+---
+
 ## Results
 
 | Test | Document | Kind | Class | Outcome | Why |
@@ -50,7 +60,7 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-META-OBJECT-018 | `Meta/Object.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-ORGANIZATION-001 | `Meta/Organization.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-ORGANIZATION-002 | `Meta/Organization.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-IDENTITY-001 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
+| REQ-META-IDENTITY-001 | `Meta/Identity.md` | Review | mandatory | Review Pass | Example reviewer (first party), 22 September 2026: The export carries one snapshot, so stability over time cannot be observed in it; the identifiers are the ones the library has pr |
 | REQ-META-IDENTITY-002 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-IDENTITY-003 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-IDENTITY-005 | `Meta/Identity.md` | Declaration | mandatory | Pass | the map declares Organization for every identity the export carries |
@@ -142,7 +152,7 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-META-CONSTRAINT-019 | `Meta/Constraint.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-CONSTRAINT-020 | `Meta/Constraint.md` | Integrity | mandatory | Pass | 3 audit record record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-META-CONSTRAINT-021 | `Meta/Constraint.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-OWNERSHIP-001 | `Meta/Ownership.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
+| REQ-META-OWNERSHIP-001 | `Meta/Ownership.md` | Review | mandatory | Review Pass | Example reviewer (first party), 22 September 2026: Each Ownership record names its owner, its owned object and a responsibility scope in plain words; ownership is explicit and trac |
 | REQ-META-OWNERSHIP-002 | `Meta/Ownership.md` | Presence | mandatory | pending | the Statement's subject is not a type the Representation Map declares |
 | REQ-META-OWNERSHIP-008 | `Meta/Ownership.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-OWNERSHIP-009 | `Meta/Ownership.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
@@ -181,7 +191,7 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-MODELS-MODEL-009 | `Models/Model.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-ENTITY-001 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-ENTITY-002 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-MODELS-ENTITY-003 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
+| REQ-MODELS-ENTITY-003 | `Models/Entity.md` | Review | mandatory | Review Pass | Example reviewer (first party), 22 September 2026: The identifiers P-10432, LIB-000198 and LOAN-2026-08-0431 are accession and membership numbers the library assigns, carried as st |
 | REQ-MODELS-ENTITY-004 | `Models/Entity.md` | Presence | mandatory | Pass | 3 entity record(s) carry responsible owner, one each, each resolving to the one Ownership record that names it |
 | REQ-MODELS-ENTITY-006 | `Models/Entity.md` | Presence | mandatory | pending | the Statement's subject is not a type the Representation Map declares |
 | REQ-MODELS-ENTITY-007 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |

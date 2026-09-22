@@ -888,6 +888,41 @@ def scope_declaration(test, text, r):
         for k, v in sorted(decl.items()))
 
 
+REVIEW_OUTCOMES = ("Review Pass", "Review Fail")
+MONTHS = ("January", "February", "March", "April", "May", "June", "July", "August", "September",
+          "October", "November", "December")
+
+
+def load_reviews(path, known_aliases):
+    """The Reviewer Record: one named judgment per Test, read fail-closed. Section 3 makes a Review
+    Pass a named reviewer's recorded judgment with a reason, and Section 4 makes the reviewer's
+    identity part of the report, so a row without a Test the catalogue carries, a permitted outcome,
+    a name, a readable date or a reason, and a second row for one Test, stop the run rather than
+    being skipped: a judgment that cannot be attributed is not a judgment."""
+    rows = read_table(path, "| Test | Outcome | Reviewer | Date | Reason |")
+    if not rows:
+        raise SystemExit("%s carries no reviewer row under the header '| Test | Outcome | Reviewer | Date | Reason |'" % path)
+    out = {}
+    for cells in rows:
+        if len(cells) < 5:
+            raise SystemExit("%s: a reviewer row has %d cell(s) and five are required: %s" % (path, len(cells), " | ".join(cells)[:80]))
+        alias, outcome, reviewer, date, reason = (c.strip() for c in cells[:5])
+        if alias not in known_aliases:
+            raise SystemExit("%s: %s names a Test the catalogue does not carry" % (path, alias))
+        if outcome not in REVIEW_OUTCOMES:
+            raise SystemExit("%s: %s records %r; a reviewer records Review Pass or Review Fail" % (path, alias, outcome))
+        if not reviewer or reviewer.lower() in EMPTY_STRINGS:
+            raise SystemExit("%s: %s carries no reviewer; a Review outcome is a named reviewer's judgment" % (path, alias))
+        if not re.match(r"^(\d{1,2} (%s) \d{4}|\d{4}-\d{2}-\d{2})$" % "|".join(MONTHS), date):
+            raise SystemExit("%s: %s carries a date this tool cannot read: %r (D Month YYYY or YYYY-MM-DD)" % (path, alias, date))
+        if not reason or reason.lower() in EMPTY_STRINGS:
+            raise SystemExit("%s: %s carries no reason; a judgment without one cannot be contested" % (path, alias))
+        if alias in out:
+            raise SystemExit("%s: two rows judge %s; a Test carries one judgment" % (path, alias))
+        out[alias] = {"outcome": outcome, "reviewer": reviewer, "date": date, "reason": reason}
+    return out
+
+
 def declaration(clause, statement):
     low = clause.lower()
     if "specification version" in low:
@@ -911,6 +946,7 @@ def main(argv):
     p.add_argument("--statement", required=True)
     p.add_argument("--report")
     p.add_argument("--today", default="20 September 2026")
+    p.add_argument("--reviews", help="the Reviewer Record: a Markdown table of named judgments on the Tests no procedure decided")
     a = p.parse_args(argv)
 
     model = json.loads(pathlib.Path(a.model).read_text(encoding="utf-8"))
@@ -952,12 +988,31 @@ def main(argv):
                         "class": "mandatory", "kind": "Declaration", "outcome": outcome,
                         "reason": reason, "text": cells[2]})
 
+    # the Reviewer Record decides what no procedure decided: a Review Test, or a mechanical Test the
+    # export could not settle. It never overrides a mechanical Pass or Fail (Section 3 binds Review
+    # Pass to Statements no mechanical procedure can decide), and the rows it could not apply are reported
+    reviews = load_reviews(a.reviews, {r["alias"] for r in results}) if a.reviews else {}
+    not_applied = []
+    for row in results:
+        judgment = reviews.get(row["alias"])
+        if not judgment:
+            continue
+        if row["outcome"] is None:
+            row["outcome"] = judgment["outcome"]
+            row["reason"] = "%s, %s: %s" % (judgment["reviewer"], judgment["date"], judgment["reason"])
+        else:
+            not_applied.append("%s: %s recorded %s, but the Test decided %s mechanically and a judgment does not override it"
+                               % (row["alias"], judgment["reviewer"], judgment["outcome"], row["outcome"]))
+
     mandatory = [r for r in results if r["class"] == "mandatory" and r["outcome"] != "Not Applicable"]
     not_applicable = [r for r in results if r["class"] == "mandatory" and r["outcome"] == "Not Applicable"]
     passed = [r for r in mandatory if r["outcome"] == "Pass"]
     failed = [r for r in mandatory if r["outcome"] == "Fail"]
+    review_passed = [r for r in mandatory if r["outcome"] == "Review Pass"]
+    review_failed = [r for r in mandatory if r["outcome"] == "Review Fail"]
     pending = [r for r in mandatory if r["outcome"] is None]
-    established = not failed and not pending
+    established = not failed and not review_failed and not pending
+    reviewers = sorted({j["reviewer"] for j in reviews.values()})
 
     lines = []
     lines.append("# Test Report")
@@ -974,6 +1029,13 @@ def main(argv):
                  "self-validation; `Conformance-Test-Suite.md` Section 4 says the suite does not tell the two "
                  "apart and the publisher does.")
     lines.append("")
+    if reviews:
+        lines.append("**Reviewer Record:** `%s`, %d judgment(s) by %s. Whether a reviewer is independent of the "
+                     "claimant is a fact about the reviewer, not something this tool can read." % (a.reviews, len(reviews), ", ".join(reviewers)))
+    else:
+        lines.append("**Reviewer Record:** none supplied; every Review Test is pending. Section 3 makes a Review "
+                     "outcome a named reviewer's recorded judgment, supplied to this tool as `--reviews`.")
+    lines.append("")
     lines.append("---")
     lines.append("")
     lines.append("## Summary")
@@ -983,14 +1045,16 @@ def main(argv):
     lines.append("| Mandatory Tests | %d |" % len(mandatory))
     lines.append("| Pass | %d |" % len(passed))
     lines.append("| Fail | %d |" % len(failed))
+    lines.append("| Review Pass | %d |" % len(review_passed))
+    lines.append("| Review Fail | %d |" % len(review_failed))
     lines.append("| Awaiting a reviewer or evidence the export does not carry | %d |" % len(pending))
     lines.append("| Not Applicable, dispositioned Descriptive | %d |" % len(not_applicable))
     lines.append("")
     lines.append("**Core Conformance: %s.** Section 3 establishes it when every mandatory Test is Pass or "
                  "Review Pass. %s" % ("established" if established else "not established",
                                       "" if established else
-                                      "%d mandatory Test(s) fail and %d await a reviewer or evidence this export "
-                                      "does not carry." % (len(failed), len(pending))))
+                                      "%d mandatory Test(s) fail, %d carry a Review Fail, and %d await a reviewer or "
+                                      "evidence this export does not carry." % (len(failed), len(review_failed), len(pending))))
     lines.append("")
     lines.append("---")
     lines.append("")
@@ -1035,6 +1099,20 @@ def main(argv):
     lines.append("")
     lines.append("---")
     lines.append("")
+    lines.append("## Reviewers")
+    lines.append("")
+    if not reviews:
+        lines.append("No Reviewer Record was supplied. Section 4 requires the reviewer's identity for every Review outcome, "
+                     "so a report without one carries no Review outcome.")
+    else:
+        for name in reviewers:
+            judged = [alias for alias, j in reviews.items() if j["reviewer"] == name]
+            lines.append("- %s: %d judgment(s), %s" % (name, len(judged), ", ".join(sorted(judged)[:12]) + (" ..." if len(judged) > 12 else "")))
+        for line in not_applied:
+            lines.append("- not applied, %s" % line)
+    lines.append("")
+    lines.append("---")
+    lines.append("")
     lines.append("## Results")
     lines.append("")
     lines.append("| Test | Document | Kind | Class | Outcome | Why |")
@@ -1048,8 +1126,8 @@ def main(argv):
     if a.report:
         pathlib.Path(a.report).write_text(report, encoding="utf-8")
         print("wrote %s" % a.report)
-    print("mandatory %d: Pass %d, Fail %d, pending %d. Core Conformance %s."
-          % (len(mandatory), len(passed), len(failed), len(pending),
+    print("mandatory %d: Pass %d, Fail %d, pending %d, reviewed %d pass and %d fail. Core Conformance %s."
+          % (len(mandatory), len(passed), len(failed), len(pending), len(review_passed), len(review_failed),
              "established" if established else "not established"))
     return 0
 

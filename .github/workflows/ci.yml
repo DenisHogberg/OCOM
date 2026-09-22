@@ -235,7 +235,7 @@ jobs:
         # matched English only is what put that document on the GAP-007 list
         # twice. Three documents are outside the rule by recorded decision:
         # the Committee Review Package, which is the record of the 22 July 2026
-        # review, and the two Conformance Test Suite artifacts, covered by the
+        # review, and the Conformance Test Suite artifacts, covered by the
         # generated and append-only convention the standard records.
         run: |
           python3 - <<'PY'
@@ -252,6 +252,9 @@ jobs:
               # would make it a worse example of the thing it is.
               "docs/Examples/Conformance/report.md",
               "docs/Examples/Conformance/conformance-statement.md",
+              # the Reviewer Record is the third: an artifact a reviewer publishes, whose form
+              # Conformance-Test-Suite.md Sections 3 and 4 fix and validate.py reads
+              "docs/Examples/Conformance/reviewer-record.md",
           }
           pats = {
               "Document ID": re.compile(r"^\*\*Document ID:\*\*", re.M),
