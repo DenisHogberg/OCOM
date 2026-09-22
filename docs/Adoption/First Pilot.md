@@ -22,6 +22,8 @@
 
 A first pilot exists to answer one question — does modeling our operations as OCOM Entities actually help — without betting the whole organization on the answer. Keep it small enough to finish in weeks, not quarters.
 
+A pilot starts in a different place from a rollout. This document starts with one Domain the team already owns, because a pilot exists to test the idea cheaply. The Implementation Case (`docs/Examples/Implementation-Case/`) starts with identity across the whole organization, because a rollout has to reconcile the Domains a pilot deliberately leaves alone. The two are one sequence: a pilot is the first Domain of a rollout, and the identity work is what later turns several pilots into one model.
+
 ## Suggested Shape
 
 | Dimension | Suggested bound | Why |
@@ -64,6 +66,7 @@ If a gap looks like it's in OCOM itself, rather than in how your pilot modeled i
 | 0.1 | 22 July 2026 | Initial guide, part of the Adoption framework (M021). |
 | 0.1 | 17 September 2026 | Revision History and Last Updated added, which `Governance/Documentation-Standards.md` requires of every document and this one had never carried; content unchanged. |
 | 0.1 | 22 September 2026 | Step 3 says what Owner means (`CAND-025`); one paragraph after the steps on picking the Domain in a matrix organization and on what a department, a business unit and a legal entity are (`CAND-027`). Both restate canonical documents and add no rule. |
+| 0.1 | 22 September 2026 | Purpose: one paragraph naming how this document's order (one Domain first) relates to the Implementation Case's order (identity first); closes `AO-091`. Restates both, adds no rule. |
 
 ---
 

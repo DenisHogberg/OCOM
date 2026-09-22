@@ -33,6 +33,7 @@ VALIDATE = "tools/conformance/validate.py"
 PARITY = "tools/site/published_source_parity.py"
 TRACE = "tools/governance/principle_traceability.py"
 HEALTH = "tools/site/publication_health.py"
+HUNT = "tools/site/site_error_hunt.py"
 SCHEMA = "tools/conformance/reference_schema.py"
 
 
@@ -1071,6 +1072,105 @@ class PublishedSourceParity(unittest.TestCase):
                 code, out = run(c.dir, PARITY, "--check", "--base", site.base)
                 self.assertEqual(code, 1, out)
                 self.assertIn("answered 404", out)
+
+
+def hunt_files(**changes):
+    """A two-page site for the error hunt, mutable per test: {path: (content type, body)}."""
+    def page(path, title="A page", canonical=None, extra=""):
+        canonical = "https://ocom.uno%s" % path if canonical is None else canonical
+        return ("text/html; charset=utf-8",
+                '<html><head><title>%s</title><link rel="canonical" href="%s">%s</head>'
+                '<body><a href="/a">a</a> <a href="/b">b</a> <a href="/logo.png">logo</a> '
+                '<a href="https://example.org/">outside</a><a href="#top">top</a></body></html>' % (title, canonical, extra))
+    files = {
+        "/sitemap.xml": ("application/xml", "<urlset><url><loc>https://ocom.uno/a</loc></url><url><loc>https://ocom.uno/b</loc></url></urlset>"),
+        "/a": page("/a", extra='<script type="application/ld+json">{"@context": "https://schema.org"}</script>'),
+        "/b": page("/b"),
+        "/logo.png": ("image/png", "not really a png"),
+        "/robots.txt": ("text/plain", "User-agent: *\nAllow: /\n"),
+        "/llms.txt": ("text/plain", "# site\n- [a](https://ocom.uno/a): a page\n- [x](https://ocom.uno/x.json): a record\n"),
+        "/discovery.json": ("application/json", json.dumps({"resources": [{"url": "https://ocom.uno/x.json", "mediaType": "application/json"}]})),
+        "/x.json": ("application/json", json.dumps({"ok": True})),
+    }
+    for k, v in changes.items():
+        if v is None:
+            files.pop(k, None)
+        else:
+            files[k] = v
+    return files
+
+
+class SiteErrorHunt(unittest.TestCase):
+    """The hunt has to notice a broken page, or its zero means nothing."""
+
+    def hunt(self, files):
+        with fake_site.Fixture(files) as site:
+            return run(ROOT, HUNT, "--base", site.base, "--pause", "0", "--check")
+
+    def test_a_healthy_site_passes(self):
+        code, out = self.hunt(hunt_files())
+        self.assertEqual(code, 0, out)
+        self.assertIn("2 page(s) and 0 record(s) from the sitemap", out)
+        self.assertIn("0 failure(s)", out)
+
+    def test_a_broken_internal_link_fails(self):
+        files = hunt_files()
+        files["/b"] = (files["/b"][0], files["/b"][1].replace('<a href="/a">a</a>', '<a href="/nowhere">gone</a>'))
+        code, out = self.hunt(files)
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("/nowhere (linked from /b) answers 404", out)
+
+    def test_a_page_the_sitemap_names_that_answers_404_fails(self):
+        code, out = self.hunt(hunt_files(**{"/b": None}))
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("/b answers 404", out)
+
+    def test_a_missing_or_wrong_canonical_fails(self):
+        files = hunt_files()
+        files["/b"] = (files["/b"][0], files["/b"][1].replace('<link rel="canonical" href="https://ocom.uno/b">', ""))
+        code, out = self.hunt(files)
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("/b carries no canonical link", out)
+        files = hunt_files()
+        files["/b"] = (files["/b"][0], files["/b"][1].replace('href="https://ocom.uno/b"', 'href="https://ocom.uno/a"'))
+        code, out = self.hunt(files)
+        self.assertIn("/b declares canonical https://ocom.uno/a, not itself", out)
+
+    def test_noindex_a_missing_title_and_bad_jsonld_fail(self):
+        files = hunt_files()
+        files["/b"] = (files["/b"][0], files["/b"][1].replace("<title>A page</title>", '<title></title><meta name="robots" content="noindex">'))
+        files["/a"] = (files["/a"][0], files["/a"][1].replace('{"@context": "https://schema.org"}', '{"@context": '))
+        code, out = self.hunt(files)
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("/b carries no <title>", out)
+        self.assertIn("/b carries robots noindex", out)
+        self.assertIn("/a: JSON-LD block 1 does not parse", out)
+
+    def test_a_target_llms_or_discovery_names_that_is_gone_fails(self):
+        code, out = self.hunt(hunt_files(**{"/x.json": None}))
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("llms.txt names https://ocom.uno/x.json, which answers 404", out)
+        self.assertIn("discovery.json names https://ocom.uno/x.json, which answers 404", out)
+
+    def test_a_json_record_in_the_sitemap_and_a_url_template_in_discovery_are_not_defects(self):
+        files = hunt_files()
+        files["/sitemap.xml"] = ("application/xml", files["/sitemap.xml"][1].replace("</urlset>", "<url><loc>https://ocom.uno/x.json</loc></url></urlset>"))
+        files["/discovery.json"] = ("application/json", json.dumps({"resources": [
+            {"url": "https://ocom.uno/x.json", "mediaType": "application/json"},
+            {"url": "https://ocom.uno/explain/{id}", "mediaType": "text/html"}]}))
+        code, out = self.hunt(files)
+        self.assertEqual(code, 0, out)
+        self.assertIn("2 page(s) and 1 record(s) from the sitemap", out)
+        self.assertIn("1 URL template(s) not fetched", out)
+        files["/x.json"] = ("application/json", "{not json")
+        code, out = self.hunt(files)
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("/x.json does not parse as JSON", out)
+
+    def test_a_sitemap_over_nothing_cannot_pass(self):
+        code, out = self.hunt(hunt_files(**{"/sitemap.xml": ("application/xml", "<urlset></urlset>")}))
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("names no URL", out)
 
 
 class PublicationHealth(unittest.TestCase):

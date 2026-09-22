@@ -272,6 +272,18 @@ records the instance and the directory that closes it.
 
 This is the twelfth required check on `main`.
 
+## Site error hunt (not a CI job, 22 September 2026)
+
+`tools/site/site_error_hunt.py --check` reads the live site: every URL
+`sitemap.xml` names must answer 200 without a redirect, be HTML, carry a
+title and a canonical link to itself, carry no robots noindex, and parse its
+JSON-LD; every internal link and asset those pages carry must answer 200
+(following a redirect only while it stays on the site); `robots.txt`,
+`llms.txt` and `discovery.json` must answer, and every site URL they name
+must too. It needs the network, so like `publication_health.py` it runs by
+hand after a deploy and not in CI; its negative tests run against the same
+in-memory fixture the health tool's do.
+
 ## Reference Serialization schema (added 22 September 2026)
 
 `CAND-026` publishes one JSON encoding of an OCOM model as the Reference
