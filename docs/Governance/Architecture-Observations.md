@@ -366,7 +366,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If independently corroborated, a future Reference Case should propose either (1) defining scope as a governed attribute of Identity with its own uniqueness rules, or (2) explicitly stating that Identity uniqueness is always evaluated within a declared Registry, making Registry the scope carrier.
 
-**Status:** Open; not escalated (single external source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2). 22 September 2026: `CAND-026` proposes that every identity an export carries declare one of the five scopes `Meta/Identity.md` names and, for External System, the system; it requires the declaration and does not define the semantics, which stay open here.
+**Status:** Open; not escalated (single external source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2). 22 September 2026: `CAND-026` proposes that every identity an export carries declare one of the five scopes `Meta/Identity.md` names and, for External System, the system; it requires the declaration and does not define the semantics, which stay open here. `CAND-030` (22 September 2026) proposes the reading: a scope is the range within which an identity's assigner guarantees uniqueness, carried by the Registry, the organization or the named external system.
 
 **Architect Response:** *(pending)*
 
@@ -386,7 +386,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. A future Reference Case drawn from a real merge incident should propose normative alias semantics for Identity (assertion, evidence requirement, effect on Relationships and history) without weakening the no-reuse rule.
 
-**Status:** Open; not escalated (single external source; the Implementation Case provides supporting but not independent evidence)
+**Status:** Open; not escalated (single external source; the Implementation Case provides supporting but not independent evidence) `CAND-031` (22 September 2026) proposes the reading: merge and split are acts of Identity Resolution; both Identities persist, the finding is an Event with Evidence, one Identity is designated canonical and the other its alias.
 
 **Architect Response:** *(pending)*
 
@@ -406,7 +406,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. Candidate remedies for a future Reference Case: (1) an explicit statement in `Meta/Policy.md` that evaluation order and conflict resolution are implementation responsibilities to be declared per model; or (2) a minimal normative precedence rule (for example, most specific scope wins; on remaining conflict, escalate to the accountable Owner rather than auto-resolve).
 
-**Status:** Open; not escalated (single external source)
+**Status:** Open; not escalated (single external source) `CAND-032` (22 September 2026) proposes the reading: the specification prescribes no precedence; the organization's applicability rules and conflict procedure decide, and the outcome is recorded.
 
 **Architect Response:** *(pending)*
 
@@ -426,7 +426,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. A future Reference Case should propose a single closure convention (for example, half-open intervals: inclusive start, exclusive end) and a stated rule for effective-dated records, both as small additive clauses.
 
-**Status:** Open; not escalated (single external source)
+**Status:** Open; not escalated (single external source) `CAND-034` (22 September 2026) proposes the disposition: not required for v1.0; the convention is stated by the model as a Constraint until a Reference Case.
 
 **Architect Response:** *(pending)*
 
@@ -846,7 +846,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If corroborated, a future Reference Case should state once, at the Meta tier and together with AO-020, that the Owner of an Ownership assignment is an Object (or a named specialization such as Organization or an Entity), which kinds of party may hold Ownership and whether a Domain is among them, and align `Core/Terminology.md`'s Owner entry to that record; track together with `GAP-002`, since the glossary entry will be revised in the same pass.
 
-**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2)
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2) `CAND-033` (22 September 2026) proposes the reading: an Owner is a party of the kinds `Meta/Ownership.md` names, Terminology restated; the Owner-as-Object half stays for a Reference Case.
 
 **Architect Response:** *(pending)*
 
@@ -1804,7 +1804,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If corroborated, a Reference Case drawn from a real conformance attempt should settle which subject Core Conformance has: the Language, in which case the requirement set is the Language tier and the present register measures something else that needs its own name; or the model, in which case `Language/Conformance.md` is the wrong home for the definition and the scoping sentence belongs where the model is defined. `CAND-021` deferred the canonical-text question behind the same Reference Case `CAND-017` waits on, and this entry is the sharpest reason to want it.
 
-**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the definition and the measured set name the same subject, or when the Chief Architect records that the Language tier's conformance section governs a claim about the model.
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the definition and the measured set name the same subject, or when the Chief Architect records that the Language tier's conformance section governs a claim about the model. `CAND-029` (22 September 2026) proposes measuring the Memory tier through Profile Conformance without touching the definition this entry records; it neither widens nor resolves the mismatch.
 
 **Architect Response:** *(pending)*
 
@@ -2072,3 +2072,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 22 September 2026 | AO-015 Closed in part (the cardinality half, by `CAND-025`; the modality half stands). AO-085 Closed (its closure adopted as a postscript to `CAND-024`: an erasure record names a declared Policy and its actor, and the suite grants the Integrity exclusion only to such a record). |
 | 0.1 | 22 September 2026 | Added AO-086 (the integrity guarantee covers alteration, not the journal's completeness or the authenticity of creator and creation time), AO-087 (the Entities tier requires a catalogue Lifecycle while the Core floor and the Adoption path let an Entity define its own) and AO-088 (one deployment represents one organization against a group modelled as several Organizations), all from the enterprise evaluation of 22 September 2026, record only. |
 | 0.1 | 22 September 2026 | Added AO-089 (conformance shall be objective, measurable and verifiable while 120 of 182 mandatory Statements are a reviewer's judgment), AO-090 (two content-addressed records cannot reference each other, so the record and its evidence cannot both carry the verified demonstration) and AO-091 (two orders of adoption, closed the same day by a paragraph in `First Pilot.md`). |
+| 0.1 | 22 September 2026 | AO-009, AO-010, AO-011, AO-012, AO-033 and AO-081 note the candidates filed on them (`CAND-029` to `CAND-034`), each Open with a proposed Decision or disposition. |

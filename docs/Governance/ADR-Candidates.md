@@ -592,6 +592,8 @@ Consequences by outcome:
 
 **Next Action:** Chief Architect to review `Concept-Paper-Value-Model.md` and `AO-005`, and record a Decision.
 
+**Proposed disposition (22 September 2026, CDKO):** *Closed without ADR for v1.0, reopened by a Reference Case in which a value was misread between systems.* The two Reference Cases behind `AO-005` are real, and what they show is the need for self-describing quantities in KPI records; Value would be a new Meta Object, which `CAND-007` Section 4 forbids without Section 5, and the Measurement Protocol prepared for the adoption path can meet the pilot's need as Informative material without a Core construct. `Concept-Paper-Value-Model.md` stays as the design of record for the day a case reopens this. The Chief Architect decides; the candidate stays Open until then.
+
 ---
 
 ## CAND-009
@@ -1653,6 +1655,245 @@ It does not make the weeks or the responsibility slots requirements. It does not
 
 **Related Documents:** `Adoption/First 90 Days.md`, `Adoption/First Pilot.md`, `Adoption/Getting Started.md`, `Adoption/Reference Serialization.md`, `CAND-010`, `CAND-011`, `CAND-012`, `CAND-025`, `CAND-026`, `Models/Domain.md`, `Models/Entity.md`, `Governance/Conformance-Test-Suite.md`, `Governance/Publication-Model.md`
 
+## CAND-029 · 🟡 Open, proposed Decision
+
+**Title:** Measuring the Memory Tier Through Profile Conformance: the Suite Tests Every Document a Profile Declaration Includes, and the Example Declares One
+
+**Status:** Open, filed 22 September 2026 under `EPIC-E` (Conformance Test Suite tooling), on what `CAND-002` already decided; Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 22 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** `Language/Conformance.md` Conformance Levels ("Core Conformance: Supports all mandatory language requirements"; "Profile Conformance: Supports a formally defined OCOM profile while preserving compatibility with the core specification"); `CAND-002` (Decided 16 September 2026: a profile is "defined by the form of the claim, not by any profile this repository publishes"; `R3` bounded by whole canonical source documents with their content hashes, `R4` the Included Set contains the documents Chapters 4 to 6 compile, `R5` subset only relative to the corpus, `R7` the Excluded Set computed; "OCOM defines no profile, approves none, certifies none"); `Governance/Conformance-Test-Suite.md` Section 1 (the requirement set of Core Conformance is the twenty-two documents) and Section 5 ("the Core Tests always run and the profile adds the Statements of its further documents"); `AO-081` (the definition of Core Conformance and the measured set name different subjects); `AO-084`'s closure ("its Evidence Records are contained but reached by no Test"); `AO-086`, `AO-090`; the seven documents of `docs/Memory/`, which carry 93 Statements, 57 of them mandatory, none catalogued; the enterprise evaluation of 22 September 2026, whose risk and audit lens made this its first decisive finding.
+
+### The question
+
+The Memory tier now carries what a regulated adopter asks for: Evidence defined, an integrity guarantee, an erasure that preserves the record and names its Policy and actor. None of it is reached by a Test, because the requirement set of Core Conformance is the twenty-two documents Chapters 4 to 6 compile and `Memory/` is not among them. A new conformance level in `Language/Conformance.md` would reach it, and would be a change to the Language tier under the Freeze with no Reference Case behind it. Can the Memory tier be measured with what is already decided?
+
+**Proposed Decision:** **It can, through Profile Conformance as `CAND-002` defined it, and the suite is built to do so. A claimant's Profile Declaration may include the seven `Memory/` documents beside the twenty-two of the Core (`R3`, `R4`), and Section 5 already says the suite tests every document a declaration includes. What this Decision authorizes is the tooling and one example. The tooling: `requirement_register.py` derives Statements and appends aliases (`REQ-MEMORY-<DOCUMENT>-n`) for every canonical document a Profile Declaration includes, with dispositions recorded in the Alias File as for the Core; `test_catalogue.py` and `validate.py` take a `--profile` declaration and run the Core Tests plus the profile's, and the report names the profile, the commit it is pinned to and its Included Set with hashes, as `R1` to `R3` and `R7` require. The example: `docs/Examples/Conformance/profile-declaration.md`, in the example claimant's own namespace, including the Core and the seven `Memory/` documents at the pinned commit, so that the Integrity Test reaches Memory Records and Evidence Records through the map, the erasure rule of `Memory/Retention.md` becomes a Presence Test, and the example's report says what the Memory tier's 57 mandatory Statements decide. No new conformance level: `Language/Conformance.md` is unchanged, Core Conformance stays the twenty-two documents, and OCOM still publishes no profile, since the example's declaration is the example claimant's, not OCOM's.**
+
+Integration, when decided: the three tools and their tests; the example declaration and its report regenerated; `docs/Examples/Conformance/README.md`; `Conformance-Test-Suite.md` Sections 5 and 7; the Alias File gains the Memory aliases on first generation; `CAND-002` postscript recording the first declaration in the repository as an example, not a profile OCOM publishes; `AO-084` and `AO-090` annotated.
+
+### Rationale
+
+1. It uses what is decided. `CAND-002` made a profile the form of a claim over whole canonical documents with the Core as its floor; Section 5 of the suite already commits to testing a profile's further documents. Nothing here is new except the code and one example file.
+2. It needs no Freeze exception. A Memory conformance level would edit `Language/Conformance.md`, a Language-tier canonical document, on an internal source; `CAND-007` Section 5 would then apply. Profile Conformance was decided under Section 3.
+3. It answers the risk lens where the guarantee lives. With the seven documents in the set, the Integrity kind reaches `Memory Record` and `Evidence record` records, `Memory/Retention.md`'s erasure rule is catalogued as Presence over erasure records, and the guarantee `CAND-024` wrote becomes a Test outcome rather than an observation in the report.
+4. It keeps the honest shape. `AO-081` records that the definition of Core Conformance and the measured set name different subjects; this Decision does not touch the definition and adds nothing to the Core set, so it neither widens nor resolves that mismatch, and says so.
+
+### Scope and the Architecture Freeze
+
+Filed under `EPIC-E`, which `CAND-007` Section 3 permits; Section 6(a) routes it there ahead of any exception. Section 4 holds: no Conformance Profile published by OCOM, no new level, no Memory redesign, no Canonical Principle; the example declaration is what `CAND-002` `R1` requires a claimant to publish, in the claimant's namespace.
+
+### What this Decision does not do
+
+It does not make the Memory tier part of Core Conformance and does not decide `AO-081`. It does not define a profile on OCOM's behalf. It does not resolve `AO-090`: which side of the record and evidence pair carries the demonstration stays where the example put it. It does not certify anything.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision. Step 2, separately authorized: the tooling, the example declaration and report, the README and suite text, the postscripts.
+
+**Related Documents:** `CAND-002`, `CAND-021`, `CAND-024`, `AO-081`, `AO-084`, `AO-086`, `AO-090`, `Language/Conformance.md`, `Governance/Conformance-Test-Suite.md`, `Governance/Concept-Paper-Profile-Conformance.md`, `docs/Memory/`, `docs/Examples/Conformance/`
+
+---
+
+## CAND-030 · 🟡 Open, proposed Decision
+
+**Title:** A Scope Is the Range Within Which the Assigner of an Identity Guarantees Uniqueness, and the Assigner Carries It
+
+**Status:** Open, filed 22 September 2026 under `EPIC-B` (Object Model consolidation); Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 22 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** `Meta/Identity.md` Identity Scope (five scopes: Organization, Business Domain, Registry, External System, Global Ecosystem; "Organizations shall define the appropriate scope for each Identity"), Identity Assignment ("Identity shall be assigned when an Object is created"; "Once assigned, Identity shall not be reused for another Object"), Identity Resolution ("external mappings"); `Meta/Registry.md` Registry Scope (Organization; Business Domain; Functional Area; External Ecosystem; "Organizations shall define the appropriate scope for each Registry") and Registry Integrity ("A Registry shall maintain: unique Object registration"); `CAND-026` (the Representation Map declares the scope of the export's identities, per type or per collection, and the suite keys uniqueness and reuse by declared scope and system); `AO-009` (the review's regress: is Scope an Object with an Identity of its own); `CAND-004` question 6 (Registry scope across Organizations needs a Reference Case).
+
+### The question
+
+`AO-009` records that the text describes scope-qualified uniqueness and defines neither what a scope is nor what carries it, so a reviewer could ask whether Scope is itself an Object, with an Identity, in a scope, without end. `CAND-026` made every export declare a scope and left the semantics open. What is a scope?
+
+**Proposed Decision:** **A scope is the range within which the assigner of an identity guarantees that the identity names one Object, and the assigner carries it. Where a Registry assigns or registers the identity, the scope is that Registry's declared scope, and the guarantee is the unique Object registration `Meta/Registry.md` requires of it. Where the organization assigns identities without a Registry, the scope is the Organization or the Business Domain that assigns them. Where the identity comes from another system, the scope is External System and the system is named, as `CAND-026` has the map declare. Where the assigner is outside every organization, a standards body or a public registry, the scope is Global Ecosystem and the guarantee is that assigner's. Scope is therefore a property of an identity's assignment, not an Object: it has no Identity of its own, and the regress stops at the Registry, which is an Object with an Identity in the scope of the Organization that operates it. Identity uniqueness is evaluated within a scope, an identity is the pair of its scope and its value, and identities of different scopes never collide, which is what the suite has keyed on since `CAND-026`.**
+
+Integration, when decided: one paragraph in `Meta/Identity.md` Identity Scope, carrying no keyword, on the form `CAND-016` set for a clarifying passage in a Meta document; the "How to Read a Row" text of the example map and `Adoption/Reference Serialization.md` point at it; `AO-009` closes.
+
+### Rationale
+
+1. It is a reading of three documents that already agree: a Registry guarantees unique registration within its declared scope, an organization defines the scope of each identity, and the map declares which scope an export's identities carry. The paragraph names the assigner as what the three have in common.
+2. It closes the regress without a new Object. A Registry is already an Object; making Scope one would add a Meta Object, which `CAND-007` Section 4 forbids.
+3. It says what the suite does. Since `CAND-026` the tools key identity by declared scope and system; the reading makes the code's behaviour the text's meaning rather than the other way round.
+
+### Scope and the Architecture Freeze
+
+Filed under `EPIC-B`, Section 3, as a clarifying passage in a Meta document carrying no new requirement. Section 4 holds: no Meta Object, no change to Identity's definition, no change to the no-reuse rule.
+
+### What this Decision does not do
+
+It does not decide Registry scope across Organizations (`CAND-004` question 6) or merge and split (`CAND-031`). It does not define a syntax for writing a scope into an identifier; `Language/Identifier Syntax.md` is unchanged. It does not say which scope an organization should choose.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision. Step 2, separately authorized: the paragraph, the two pointers, `AO-009` closed.
+
+**Related Documents:** `AO-009`, `CAND-026`, `CAND-004`, `CAND-016`, `Meta/Identity.md`, `Meta/Registry.md`, `Language/Identifier Syntax.md`, `docs/Examples/Conformance/representation-map.md`, `Adoption/Reference Serialization.md`
+
+---
+
+## CAND-031 · 🟡 Open, proposed Decision
+
+**Title:** Merge and Split Are Acts of Identity Resolution, Not Changes of Identity
+
+**Status:** Open, filed 22 September 2026 under `EPIC-B` (Object Model consolidation); Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 22 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** `Meta/Identity.md` Identity Assignment ("Identity shall be assigned when an Object is created"; "Once assigned, Identity shall not be reused for another Object"; "Replacement of an Object shall result in a new Identity unless organizational policy specifies otherwise"), Identity Persistence, Identity Resolution ("Organizations may implement mechanisms for resolving: aliases; migrated identities; external mappings; historical references"; "Identity resolution shall preserve traceability"); `Core/Constitution.md` Principle 4 (Memory is append-only); `Models/Event.md` (an Event records a fact); `Memory/Evidence Overlay.md` (`CAND-023`); `docs/Examples/Implementation-Case/` (alias handling on evidence, no automatic merging); `AO-010` (merge and split have no normative semantics); `CAND-030`.
+
+### The question
+
+Two Objects turn out to be one subject; one Object turns out to be two. `AO-010` records the three bad answers the text seems to leave: delete one Identity (against persistence), re-point history (against Principle 4), or keep two Identities for one subject (against the canonical-identity promise). Is there a reading in which none of the three is needed?
+
+**Proposed Decision:** **Merge and split are acts of Identity Resolution, and Identity Resolution is what the text already provides for aliases, migrated identities and historical references. Merge: when evidence shows two Objects to be one subject, both Identities persist and neither is reused or removed; the finding is recorded as an Event carrying its Evidence; the organization designates one Identity as canonical and the other as its alias under Identity Resolution; Relationships and history keep the Identity they were recorded with and resolve through the alias; nothing is rewritten. Split: when evidence shows one Object to be two subjects, the second subject receives a new Identity at the moment it is recognized, as Identity Assignment requires of any new Object; the original keeps its Identity and its history; the finding is an Event carrying its Evidence; and the records that belong to the second subject are related to it by Reference or Relationship from then on, not moved. Both preserve traceability, as Identity Resolution requires, because the finding, its evidence and the designation are records. The canonical-identity promise is kept by resolution: one subject resolves to one canonical Identity, however many aliases lead to it.**
+
+Integration, when decided: one paragraph in `Meta/Identity.md` Identity Resolution, carrying no keyword; a sentence in `Adoption/Reference Serialization.md` that an alias is declared in the map when an export carries one (`Identity.alias`, a field row, read by no Test until a Statement binds it); `AO-010` closes.
+
+### Rationale
+
+1. Every step is a rule the text already states: persistence and no reuse, assignment at creation, resolution of aliases and historical references with traceability, append-only Memory, Events as facts, Evidence as the ground of a finding. The Decision names their order.
+2. It matches the one real rollout on record: the Implementation Case handled aliases on evidence and merged nothing automatically.
+3. It answers the integration lens and the skeptic: a company mid-merger keeps both sets of Identities and resolves, which is what MDM does when it is done well, and what a rewrite of history would forbid an auditor from trusting.
+
+### Scope and the Architecture Freeze
+
+Filed under `EPIC-B`, Section 3, a clarifying passage in a Meta document. Section 4 holds: no Meta Object, no new rule, the no-reuse rule untouched.
+
+### What this Decision does not do
+
+It does not define the fields of an alias record or of the finding Event; a Reference Case with a real merge would. It does not say who may designate the canonical Identity beyond the Owner of the Objects concerned. It does not touch Registry scope across Organizations.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision. Step 2, separately authorized: the paragraph, the Adoption sentence, `AO-010` closed.
+
+**Related Documents:** `AO-010`, `CAND-030`, `CAND-023`, `Meta/Identity.md`, `Meta/Reference.md`, `Models/Event.md`, `Core/Constitution.md` Principle 4, `docs/Examples/Implementation-Case/README.md`, `Adoption/Reference Serialization.md`
+
+---
+
+## CAND-032 · 🟡 Open, proposed Decision
+
+**Title:** The Specification Prescribes No Precedence Between Policies and Exceptions: the Organization's Applicability Rules and Conflict Procedure Decide, and the Outcome Is Recorded
+
+**Status:** Open, filed 22 September 2026 under `EPIC-B` (Object Model consolidation); Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 22 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** `Meta/Policy.md` (Exceptions among a Policy's characteristics; "Organizations shall define applicability rules"; "Organizations shall define how Policies are enforced"; "Enforcement mechanisms are implementation-specific"; Policy Exceptions: "Organizations may define controlled exceptions", which "should specify: justification; approving authority; validity period; associated risks", and "Exception history shall be retained"); `Domains/Common/Domain Governance.md` Conflict Resolution ("Organizations shall define procedures for resolving conflicts involving: ownership; responsibilities; Policies; integration; capability overlap"); `AO-011` (a cyclic stack of one Policy and three Exceptions yields ALLOW and DENY at once).
+
+### The question
+
+`AO-011` shows that nothing orders a Policy against its Exceptions or two Policies against each other, so a rule set can yield two outcomes for one Object. Should the specification prescribe a precedence rule, or say whose rule it is?
+
+**Proposed Decision:** **The specification prescribes no precedence order, and says so, because it already places the decision: the organization shall define applicability rules and how Policies are enforced, and shall define procedures for resolving conflicts involving Policies; an Exception names its approving authority and its history is retained. Read together: where two Policies, or a Policy and one of its Exceptions, yield different outcomes for one Object, the organization's applicability rules decide; where they do not, the conflict goes to the procedure Domain Governance requires, its outcome is recorded, and the Exception's approving authority is the one answerable for it. A rule set that yields two outcomes for one Object has not defined applicability, which the text already requires; the specification does not resolve it on the organization's behalf.**
+
+Integration, when decided: one sentence in `Meta/Policy.md` Policy Exceptions, carrying no keyword: the specification prescribes no precedence order between Policies and Exceptions; where they yield different outcomes for one Object, the organization's applicability rules and its conflict-resolution procedure decide, and the outcome is recorded. `AO-011` closes.
+
+### Rationale
+
+1. It is what four sentences already say, placed next to each other.
+2. A prescribed order (most specific wins, latest wins, deny wins) would be a new rule under the Freeze with no Reference Case, and would be wrong for some organization: precedence is policy, and Policy is the organization's.
+3. It answers the skeptic's KYC case: a regulated process gets its order from the regulation the organization applies, recorded as its applicability rules, and the record shows who decided.
+
+### Scope and the Architecture Freeze
+
+Filed under `EPIC-B`, Section 3, a clarifying sentence in a Meta document. Section 4 holds.
+
+### What this Decision does not do
+
+It does not prescribe any order. It does not define an Exception's fields beyond what the text lists. It does not decide Policy across Organizations (`CAND-004`).
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision. Step 2, separately authorized: the sentence, `AO-011` closed.
+
+**Related Documents:** `AO-011`, `Meta/Policy.md`, `Domains/Common/Domain Governance.md`, `Meta/Ownership.md`, `CAND-004`
+
+---
+
+## CAND-033 · 🟡 Open, proposed Decision
+
+**Title:** The Owner of an Ownership Assignment Is a Party of the Kinds `Meta/Ownership.md` Names, and `Core/Terminology.md` Restates It
+
+**Status:** Open, filed 22 September 2026 under `EPIC-B` and `EPIC-D` (Object Model consolidation; Terminology as a verbatim index); Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 22 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** `Core/Terminology.md` Owner ("The role, domain, or organizational unit accountable for an entity."); `Meta/Ownership.md` Definition ("Ownership identifies the individual, team, organizational unit, or system responsible for governing an Object during all or part of its lifecycle."); `Models/Domain.md` (a Domain has a defined owner; Domains organize responsibility rather than organizational structure); `CAND-004` question 2 (an Organization may be the one responsible owner); `CAND-025` (one accountable owner, further Ownership records assign responsibilities); `CAND-027` (Department is an Entity; legal form is Organization); `EPIC-D` (Terminology 0.2 is a verbatim index of canonical definitions; `GAP-002`); `AO-033` (Owner is untyped and the two lists differ); the enterprise evaluation of 22 September 2026, skeptic and risk lenses ("Owner as a string").
+
+### The question
+
+Two documents name different kinds of Owner, and neither says whether an Owner is an Object the specification can reach with identity, governance and audit. Which list governs, and what is an Owner?
+
+**Proposed Decision:** **The Owner of an Ownership assignment is a party of the kinds `Meta/Ownership.md` names: an individual, a team, an organizational unit, which since `CAND-027` is an Organization or a Department Entity, or a system. A Domain is not a party and is not an Owner: it has an owner, and it organizes responsibility rather than structure. A role is the name an organization gives to a party's responsibility, not a party: an Ownership assignment names the party that holds the role at the time, and the Ownership Types of `Meta/Ownership.md` are how the role is recorded. `Core/Terminology.md`'s Owner entry is rewritten as a restatement of `Meta/Ownership.md`, as the verbatim index requires. Whether an Owner is itself an Object with an Identity, so that governance and audit reach the Owner and not only the assignment, stays open on `AO-033` for a Reference Case: today the Reference Serialization carries the owner as a party name, and the suite resolves an Entity's owner to its Ownership record and no further.**
+
+Integration, when decided: the Owner entry of `Core/Terminology.md` restated from `Meta/Ownership.md` (documentation currency under `EPIC-D`); one sentence in `Meta/Ownership.md` Definition naming what a role is and that a Domain is not an Owner, carrying no keyword; `AO-033` Closed in part, its Owner-as-Object half standing.
+
+### Rationale
+
+1. It ends the disagreement between the two lists in favour of the canonical definition, which is the rule `EPIC-D` set for Terminology.
+2. It keeps the Owner-as-Object question honest: making Owner an Object would change the Ownership record (its Owner field would become a Reference) and the suite's resolution, which is a rule for a Reference Case, not a reading.
+3. It answers the people lens in part: the parties that can own are named, and a role is placed as the way a party is named for a responsibility rather than as a fourth kind of party.
+
+### Scope and the Architecture Freeze
+
+Filed under `EPIC-B` and `EPIC-D`, Section 3: a Terminology restatement and a clarifying sentence in a Meta document. Section 4 holds: no Meta Object, no change to the Ownership record.
+
+### What this Decision does not do
+
+It does not make Owner an Object. It does not define a Role entity; `CAND-007` Section 4 forbids a new Entity type. It does not decide outsourcing (whether an external provider may own an Object), which `CAND-004` leaves to a Reference Case.
+
+**Next Action:** Two-step discipline. Step 1 is the Chief Architect recording a Decision. Step 2, separately authorized: the Terminology entry, the sentence, `AO-033` Closed in part.
+
+**Related Documents:** `AO-033`, `AO-020`, `CAND-025`, `CAND-027`, `CAND-004`, `Core/Terminology.md`, `Meta/Ownership.md`, `Models/Domain.md`, `GAP-002`
+
+---
+
+## CAND-034 · 🟡 Open, proposed disposition
+
+**Title:** Temporal Boundaries: Not Required for v1.0, With the Convention Stated by the Model and Not by the Specification
+
+**Status:** Open, filed 22 September 2026 as a disposition of `AO-012`; Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+
+**Owner:** Chief Architect (Decision); each integration item separately authorized
+
+**Created:** 22 September 2026 · **Decided:** pending · **Decided by:** pending
+
+**Grounding:** `AO-012` (interval closure and retroactive effect undefined for Ownership's Effective and Expiration Dates, Policy's Effective and Expiration Dates, Relationship's Validity Period, and effective-dated Events); `Meta/Constraint.md`; `CAND-004`'s postscript form for dispositions ("not required for v1.0"); `CAND-007` Sections 3 and 4; the absence of any Statement requiring an organization to define closure.
+
+### The question
+
+Two Ownership records meeting at one instant, a Policy expiring as another takes effect, an Event recorded today and effective last month: the text does not say which bound is inclusive or how far a projection recomputes. Should the specification add a convention now?
+
+**Proposed disposition:** **Not required for v1.0. A closure convention (half-open intervals) and a retroactivity rule would be new requirements on four documents with no Reference Case in which a boundary was contested, and `CAND-007` Section 4 does not admit them on an internal source. Until a Reference Case arrives, the convention is the model's: an organization states its interval closure and its retroactivity rule as a Constraint of its model (`Meta/Constraint.md`), the example states its own in its Representation Map as a declaration (`Interval.closure`, informative, read by no Test), and `AO-012` stays Open with this disposition recorded. What reopens it is a Reference Case, or an export that carries validity periods the suite is asked to compare.**
+
+Integration, when decided: the example's map row and one sentence in `Adoption/Reference Serialization.md`; `AO-012` annotated with the disposition; nothing in a canonical document.
+
+### Rationale
+
+1. The three cases `AO-012` poses are real and the answer is a convention, and a convention without a case is a rule chosen for no one.
+2. The model already has the place for it: a Constraint is what an organization states about values its Objects carry.
+3. Recording the disposition is what `CAND-004` did for its seven questions, so the observation stops reading as forgotten.
+
+### Scope and the Architecture Freeze
+
+A disposition under Section 3; no canonical document changes.
+
+### What this disposition does not do
+
+It does not define closure or retroactivity. It does not close `AO-012`.
+
+**Next Action:** The Chief Architect records the disposition or asks for a convention instead; then the map row and the sentence.
+
+**Related Documents:** `AO-012`, `Meta/Ownership.md`, `Meta/Policy.md`, `Meta/Relationship.md`, `Models/Event.md`, `Meta/Constraint.md`, `CAND-004`
+
 ---
 
 # Revision History
@@ -1714,3 +1955,4 @@ It does not make the weeks or the responsibility slots requirements. It does not
 | 0.1 | 22 September 2026 | CAND-026 postscript: the acceptance evaluation found the suite comparing bare identifiers and the schema demanding every collection, against the Decision's promise; both fixed the same day, Decision unchanged. |
 | 0.1 | 22 September 2026 | Added CAND-028 (The First 90 Days: `First Pilot.md` restated as a plan with weeks, responsibility slots, artifacts and exit criteria), Open with a proposed Decision, from the first-90-days lens of the enterprise evaluation of 22 September 2026; the document is drafted and unpublished until decided. |
 | 0.1 | 22 September 2026 | CAND-028 Decided as drafted by the Chief Architect, the same day it was filed, with integration authorized alongside and executed: `Adoption/First 90 Days.md` Informative and published as an Adoption Projection. |
+| 0.1 | 22 September 2026 | Added CAND-029 (the Memory tier measured through Profile Conformance, as `CAND-002` defined it: tooling and an example declaration, no new level), CAND-030 (a scope is what an identity's assigner guarantees uniqueness within), CAND-031 (merge and split as Identity Resolution), CAND-032 (no precedence between Policies and Exceptions; the organization's rules decide and the outcome is recorded), CAND-033 (the kinds of Owner, Terminology restated) and CAND-034 (temporal boundaries not required for v1.0), each Open with a proposed Decision or disposition; CAND-008 carries a proposed disposition. All from the enterprise evaluation of 22 September 2026 and the observations it named. |
