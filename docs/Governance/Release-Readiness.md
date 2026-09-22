@@ -140,9 +140,9 @@ Every release entry from this point forward **shall** confirm the following:
 
 **Standard Evolution Methodology reviewed:** Yes. Every canonical change in this Release carries a recorded Decision: `CAND-023` and `CAND-024` as `CAND-007` Section 5 exceptions on Reference Case `RC-012`; `CAND-025` and `CAND-027` under `EPIC-B` and `EPIC-C`, Section 3; `CAND-026` and `CAND-028` as publication decisions on the `CAND-012` form; the `AO-085` closure as a postscript to `CAND-024`. No new Core concept entered; independent Reference Cases toward Rule 2 stand where `v1.3.0` left them.
 
-**Recommendation:** Approved for release; the Manifest entry is recorded before tagging with its Commit field to be filled by the merge commit of the carrying pull request.
+**Recommendation:** Approved for release; the Manifest entry names commit `73d73b9`.
 
-**Status:** Pending publication; completed in the revision that fills the Manifest entry's Commit field.
+**Status:** Released. GitHub Release `v1.4.0` published 2026-09-22T15:48:25Z from the SSH-signed tag on `73d73b9`, with the three signed assets verified from the public download; Zenodo version DOI `10.5281/zenodo.22900969`, record published 2026-09-22T15:48:29Z.
 
 ---
 
@@ -163,3 +163,4 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 18 September 2026 | v1.3.0: post-release note recording the `AO-069` finding, the Chief Architect's disposition of the same day, and the qualification the v1.0 claim now carries. |
 | 0.1 | 18 September 2026 | v1.1.1: two tallies each counted an Informative entry that neither register carried; corrected with a dated note. |
 | 0.1 | 22 September 2026 | Added the `v1.4.0` record before tagging: checks green, 93 observations disclosed, two open candidates non-blocking, deferred content named; Status pending publication. |
+| 0.1 | 22 September 2026 | `v1.4.0` record: Status Pending to Released, with the GitHub Release timestamp, the commit and the Zenodo version DOI. |
