@@ -75,6 +75,7 @@ The model proposes; it never gets the pen on the record. LLM extraction, summari
 - [Shape Check](https://ocom.uno/shape-check): read-only concept-coverage tool: paste your own model's field names, see which Core Characteristics you already have a name for. Not a validator, not part of the Specification, creates no normative requirements, not a source of truth.
 - [First Pilot](https://ocom.uno/adoption/first-pilot): suggested shape and steps for a bounded first OCOM pilot: one team, one Domain, a few weeks.
 - [Reference Serialization](https://ocom.uno/adoption/reference-serialization): one JSON encoding of an OCOM model with its derived JSON Schema and its Representation Map, and the declaration rule for identity scope (every exported identity declares one of the five scopes Meta/Identity.md names). Informative; the specification prescribes no serialization format.
+- [The First 90 Days](https://ocom.uno/adoption/first-90-days): First Pilot as a twelve-week plan: four responsibility slots the specification already requires a pilot to place (Domain owner, modeller, Entity owners, reviewer), the artifact each block of weeks produces, the criterion that closes it, and an arithmetic for the adopter's own effort estimate. Informative; states no effort or outcome figure.
 
 ## Examples
 

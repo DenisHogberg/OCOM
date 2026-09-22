@@ -10,15 +10,13 @@
 
 **Document ID:** ADOPTION-FIRST-90-DAYS-01
 
-**Status:** Draft
+**Status:** Informative
 
 **Version:** 0.1
 
 **Last Updated:** 22 September 2026
 
 ---
-
-> **Status note.** This document is filed as `CAND-028` and stays Draft, unpublished on ocom.uno, until the Chief Architect records a Decision on it. It restates `First Pilot.md` as a plan with weeks, responsibility slots, artifacts and exit criteria; it adds no rule and no number of its own.
 
 ## Purpose
 
@@ -94,6 +92,7 @@ It does not promise an operational result; the specification claims none with a 
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 22 September 2026 | First draft, filed as `CAND-028`: `First Pilot.md` as a twelve-week plan with four responsibility slots, artifacts, exit criteria and an arithmetic for the adopter's own effort estimate. Unpublished until decided. |
+| 0.1 | 22 September 2026 | `CAND-028` Decided as drafted the same day: Status Draft to Informative, the status note removed, published at `ocom.uno/adoption/first-90-days` as an Adoption Projection on `CAND-012`'s terms. Content unchanged. |
 
 ---
 

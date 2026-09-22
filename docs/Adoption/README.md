@@ -36,6 +36,6 @@ If you have already read `docs/Specification/00 Executive Overview.md` through `
 4. **[Common Mistakes](Common%20Mistakes.md)** — what tends to go wrong early, and why.
 5. **[Worked Example: Library Lending](Worked%20Example%20-%20Library%20Lending.md)**, one small operating model built end to end, from Objects through States to a Lifecycle, in a domain nobody has to know first.
 6. **[Reference Serialization](Reference%20Serialization.md)**, one JSON encoding of an OCOM model with its derived schema and its Representation Map, for the integration team that asks what to validate against; the specification still prescribes no format (`CAND-026`).
-7. **[The First 90 Days](First%2090%20Days.md)** (Draft, pending `CAND-028`): First Pilot as a twelve-week plan with responsibility slots, artifacts per block of weeks, exit criteria and an arithmetic for the adopter's own effort estimate; not published on the site until decided.
+7. **[The First 90 Days](First%2090%20Days.md)**: First Pilot as a twelve-week plan with responsibility slots, artifacts per block of weeks, exit criteria and an arithmetic for the adopter's own effort estimate (`CAND-028`).
 
 After these, the next step is `Core/Constitution.md`, the document that governs the specification, and then `docs/Specification/01 Introduction.md`, the compiled reading path through the canonical source documents (`Governance/Publication-Model.md`).
