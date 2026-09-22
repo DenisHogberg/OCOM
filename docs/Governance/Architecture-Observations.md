@@ -1896,6 +1896,64 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Related:** `CAND-024`, `AO-069`, `AO-084`, `Memory/Retention.md`, `Memory/Write-back Governance.md`, `Meta/Policy.md`, `Governance/Conformance-Test-Suite.md`, `tools/conformance/validate.py`
 
+## AO-086
+
+**Title:** The Integrity Guarantee Covers Alteration of a Record Held With Its Identity, and Nothing Covers the Completeness of the Journal or the Authenticity of Its Creator and Creation Time
+
+**Date observed:** 22 September 2026
+
+**Description:** Surfaced by the enterprise evaluation of 22 September 2026, risk and audit lens, and confirmed against the text by its verifier. `CAND-024` clause 1, as written into `Memory/Memory Record.md` and `Memory/Evidence Overlay.md`, requires an implementation to be able to demonstrate, "to a party holding a Memory Record together with its identity and nothing else, that the record has not been altered since its creation"; the suite verifies it through content-addressed identity, where an altered record is a different record. That is what the guarantee covers, and it is stated as a property without a mechanism on purpose. Three things an auditor would also ask are outside it: whether a record was omitted or replaced in the sequence of records (the journal's completeness, which content addressing of single records does not reach and which a hash chain or an external anchor would); whether the creator and the creation time the record carries are what they claim to be (nothing names a signature, a trusted time source or an anchor); and what the preserved demonstration of an erased record proves once its content is gone, which `Memory/Retention.md` answers for alteration only.
+
+**Impact:** An implementation can pass every Integrity Test while a record is missing from its journal or carries a fabricated creation time, because no Statement asks about either. For a regulated adopter the guarantee as it stands answers "was this record changed" and not "is this the whole record of what happened, when", which is the second half of what an audit trail is for.
+
+**Recommendation:** Record. A Reference Case in which a journal's completeness or a timestamp's authenticity was contested would ground a candidate to extend clause 1 with a second property (a demonstration that the sequence is complete) and to name creator and creation time as what the demonstration binds; until then the boundary is stated here so that nobody reads the Integrity kind as covering it.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when a Reference Case shows the gap or the Chief Architect records that the guarantee's boundary is intended.
+
+**Architect Response:** *(pending)*
+
+**Related:** `CAND-024`, `AO-084`, `AO-085`, `Memory/Memory Record.md`, `Memory/Evidence Overlay.md`, `Memory/Retention.md`, `Core/Constitution.md` Principles 4 and 6, `Governance/Conformance-Test-Suite.md` Section 3
+
+---
+
+## AO-087
+
+**Title:** The Entities Tier Requires Every Entity to Reference a Lifecycle From the Lifecycles Catalogue While the Core Floor and the Adoption Path Let an Entity Define Its Own
+
+**Date observed:** 22 September 2026
+
+**Description:** Surfaced by the enterprise evaluation of 22 September 2026, first-90-days lens; the verifier confirmed the texts and narrowed the claim to what stands. `Entities/Overview.md` Lifecycle: "Every Entity shall reference a Lifecycle defined in the **Lifecycles** section of the OCOM Specification", and each Entity specification binds itself to a catalogue lifecycle (`Entities/Ticket/Ticket.md`: "This Entity shall conform to the **Operational Lifecycle** unless otherwise specified", whose catalogue form carries seven States). `Models/Entity.md` Lifecycle: "Every Entity shall define a lifecycle", with `Models/Lifecycle.md` prescribing structure and no catalogue; `Specification/06 Lifecycle Model.md` calls the catalogue patterns illustrations; `Adoption/Getting Started.md` Section 5 tells a first adopter to draw four or five States of their own and `First Pilot.md` step 4 repeats it. The requirement set of Core Conformance takes no Statement from `Entities/` or `Lifecycles/`, so the two rules never meet in a Test; they meet in an adopter, who follows the Adoption path and violates the Entities tier, or follows the Entities tier and finds the Adoption path telling them otherwise. `AO-041` records the neighbouring defect (Entity profiles naming lifecycles that do not exist and States that conflict with the standard lifecycle); this entry records the rule itself.
+
+**Impact:** A ServiceNow-shaped pilot with the States New, In Progress, On Hold, Resolved, Closed and Cancelled conforms to the Core floor and to Getting Started and does not conform to `Entities/Ticket/Ticket.md`. Which of the two the pilot is measured against is not written anywhere, and `Entities/Overview.md` is normative ("shall") with Status Draft.
+
+**Recommendation:** Record. The resolution is one of two Decisions the Chief Architect can take under `EPIC-C`: either `Entities/Overview.md`'s "shall reference a Lifecycle defined in the Lifecycles section" becomes "should reuse" (its own next sentence already says "should reuse an existing Lifecycle whenever applicable"), bringing the tier in line with the floor; or the Adoption path says that the catalogue applies once an Entity type is specified at the Entities tier. Neither adds a rule; both name which text governs a first adopter.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the Chief Architect records which tier governs a first adopter's lifecycle, or when a Reference Case shows an adopter caught between the two.
+
+**Architect Response:** *(pending)*
+
+**Related:** `AO-041`, `AO-070`, `Entities/Overview.md`, `Entities/Ticket/Ticket.md`, `Models/Entity.md`, `Models/Lifecycle.md`, `Lifecycles/Operational Lifecycle.md`, `Specification/06 Lifecycle Model.md`, `Adoption/Getting Started.md`, `Adoption/First Pilot.md`
+
+---
+
+## AO-088
+
+**Title:** The Constitution Says One Deployment Represents One Organization While `CAND-027` Models a Group as Several Organizations Inside One Export
+
+**Date observed:** 22 September 2026
+
+**Description:** Surfaced by the enterprise evaluation of 22 September 2026, risk and skeptic lenses, on the day `CAND-027` was decided. `Core/Constitution.md`: "One deployment currently represents one organization." `CAND-027`, integrated into `Meta/Organization.md` the same day: a group of Organizations, a parent with its subsidiaries or the parties to a joint venture, is expressed by Composition Relationships between the Organizations, and a company mid-merger is two Organizations under one Composition until a Lifecycle retires one of them. Both sentences are true of different things, the deployment and the model it holds, and neither says so: the Constitution's sentence carries "currently" and no definition of what a deployment represents when its model contains several Organizations; `CAND-004` questions 5 and 7 (Memory per Organization, AI across Organizations) are exactly the questions that arise when it does, and both are not required for v1.0 by the disposition of 16 September 2026.
+
+**Impact:** An enterprise with subsidiaries reads the Constitution as excluding its case and `CAND-027` as inviting it. Nothing in the corpus says which Organization the deployment represents when the model holds a group, whether Memory is one journal or one per Organization, or what happens to the sentence when a subsidiary is sold.
+
+**Recommendation:** Record. A one-sentence reading would close it once the Chief Architect records it: a deployment represents the Organization that operates it, and the Organizations its model holds are Objects it governs, so a group is one deployment holding several Organizations until `CAND-004` questions 5 and 7 decide otherwise on a Reference Case. Amending the Constitution's sentence is outside the Freeze (`CAND-007` Section 4); the reading is not an amendment.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the Chief Architect records the reading or when a Reference Case with subsidiaries arrives.
+
+**Architect Response:** *(pending)*
+
+**Related:** `CAND-027`, `CAND-004`, `CAND-005`, `CAND-007`, `Core/Constitution.md`, `Meta/Organization.md`, `Memory/Layered Memory.md`
+
 ---
 
 # Revision History
@@ -1954,3 +2012,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 21 September 2026 | AO-069 narrowed from Closed to Closed in part: `CAND-024` resolved the Retention half and the `Memory/Layered Memory.md` half stays open. AO-084's closure states that only content-addressed identity passes the Integrity kind. |
 | 0.1 | 22 September 2026 | Added AO-085 (an erasure record excludes a record from integrity verification and nothing says who may issue one), from the enterprise evaluation of 22 September 2026, with a proposed one-sentence closure for the Chief Architect. AO-015 notes its cardinality half filed as `CAND-025`; AO-009 notes `CAND-026`'s scope declaration. |
 | 0.1 | 22 September 2026 | AO-015 Closed in part (the cardinality half, by `CAND-025`; the modality half stands). AO-085 Closed (its closure adopted as a postscript to `CAND-024`: an erasure record names a declared Policy and its actor, and the suite grants the Integrity exclusion only to such a record). |
+| 0.1 | 22 September 2026 | Added AO-086 (the integrity guarantee covers alteration, not the journal's completeness or the authenticity of creator and creation time), AO-087 (the Entities tier requires a catalogue Lifecycle while the Core floor and the Adoption path let an Entity define its own) and AO-088 (one deployment represents one organization against a group modelled as several Organizations), all from the enterprise evaluation of 22 September 2026, record only. |

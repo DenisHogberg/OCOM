@@ -330,6 +330,18 @@ class ReferenceSchema(unittest.TestCase):
             self.assertIn("expected array", out)
             self.assertIn("does not match", out)
 
+    def test_a_minimal_export_satisfies_the_schema(self):
+        """Collections are optional and one example record proves nothing about optionality: an
+        export carrying only its export block and its entities validates. The enterprise
+        evaluation of 22 September 2026 found the first derivation demanding all eighteen keys."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            minimal = {"export": {"produced_by": "probe"}, "entities": model["entities"][:1]}
+            path = c.dir / "minimal.json"
+            path.write_text(json.dumps(minimal), encoding="utf-8")
+            code, out = run(c.dir, SCHEMA, "--validate", str(path))
+            self.assertEqual(code, 0, out)
+
     def test_a_model_without_records_cannot_produce_a_schema(self):
         with Copy() as c:
             c.write("%s/model.json" % self.EX, json.dumps({"export": {"produced_by": "nobody"}}))
@@ -820,6 +832,64 @@ class Validator(unittest.TestCase):
             model["entities"][0]["owner"] = "Nobody In Particular"
             c.write("%s/model.json" % self.EX, json.dumps(model))
             self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-ENTITY-004"), "Fail")
+
+    def probe_two_systems(self, c, path_keyed):
+        """An SAP-shaped and a ServiceNow-shaped record carrying the same bare identifier under two
+        declared systems, plus a bare reference to it. Returns the outcomes and the report text."""
+        model = json.loads(c.read("%s/model.json" % self.EX))
+        sap = dict(model["entities"][0], id="BP-1000001", name="SAP business partner 1000001", owner="OWN-BP-1000001")
+        model["ownership"].append({"id": "OWN-BP-1000001", "owner": "Master Data Office", "owned_object": "BP-1000001",
+                                   "responsibility_scope": "The partner record.", "effective_date": "2024-01-08"})
+        model["relationships"].append({"id": "REL-PROBE", "source": "BP-1000001", "target": "LIB-000198",
+                                       "type": "Association", "cardinality": model["relationships"][0]["cardinality"]})
+        path = "%s/representation-map.md" % self.EX
+        m = c.read(path)
+        if path_keyed:
+            model["entities"].append(sap)
+            model["entities_snow"] = [dict(sap, name="ServiceNow record 1000001")]
+            m = m.replace("| Entity | collection | `entities` |", "| Entity | collection | `entities`, `entities_snow` |")
+            m = m.replace("| Integrity.method |", "| Entity.identity scope | declaration | `External System` |\n"
+                          "| entities.identity system | declaration | `SAP S/4HANA` |\n"
+                          "| entities_snow.identity system | declaration | `ServiceNow` |\n| Integrity.method |")
+        else:
+            model["entities"].append(sap)
+            model["capabilities"].append({"id": "BP-1000001", "name": "ServiceNow asset 1000001", "purpose": "probe"})
+            m = m.replace("| Integrity.method |", "| Entity.identity scope | declaration | `External System` |\n"
+                          "| Entity.identity system | declaration | `SAP S/4HANA` |\n"
+                          "| Capability.identity scope | declaration | `External System` |\n"
+                          "| Capability.identity system | declaration | `ServiceNow` |\n| Integrity.method |")
+        c.write("%s/model.json" % self.EX, json.dumps(model))
+        c.write(path, m)
+        return self.outcomes(c.dir), self.report_text(c.dir)
+
+    def test_the_same_identifier_under_two_declared_systems_is_two_identities(self):
+        """CAND-026: two systems' keys coexist in one export as identities of two declared scopes.
+        The enterprise evaluation of 22 September 2026 ran the suite on such an export and found it
+        comparing bare strings: SAP BP 1000001 and ServiceNow 1000001 failed REQ-META-OBJECT-003 and
+        REQ-META-IDENTITY-008 while the page promised the opposite."""
+        with Copy() as c:
+            rows, text = self.probe_two_systems(c, path_keyed=False)
+            self.assertEqual(rows.get("REQ-META-OBJECT-003"), "Pass", rows.get("REQ-META-OBJECT-003"))
+            self.assertEqual(rows.get("REQ-META-IDENTITY-008"), "Pass", rows.get("REQ-META-IDENTITY-008"))
+            self.assertEqual(rows.get("REQ-MODELS-ENTITY-004"), "Pass")
+            # a bare reference to an identity that exists in two scopes is ambiguous, and the report says so
+            self.assertIn("REL-PROBE.source names BP-1000001, an identity the export declares in 2 scopes", text)
+
+    def test_a_declaration_keyed_by_collection_path_separates_two_sources_of_one_type(self):
+        with Copy() as c:
+            rows, text = self.probe_two_systems(c, path_keyed=True)
+            self.assertEqual(rows.get("REQ-META-OBJECT-003"), "Pass", rows.get("REQ-META-OBJECT-003"))
+            self.assertEqual(rows.get("REQ-META-IDENTITY-008"), "Pass", rows.get("REQ-META-IDENTITY-008"))
+            self.assertIn("declares in 2 scopes", text)
+
+    def test_the_same_identifier_within_one_scope_is_still_a_reuse(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["capabilities"].append({"id": model["entities"][0]["id"], "name": "clash", "purpose": "probe"})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-META-IDENTITY-008"), "Fail")
+            self.assertEqual(rows.get("REQ-META-OBJECT-003"), "Fail")
 
     def test_the_scope_declaration_decides_the_identity_scope_rule(self):
         """CAND-026: REQ-META-IDENTITY-005 is read from the map's Identity.scope declaration."""
