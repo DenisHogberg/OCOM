@@ -1954,6 +1954,64 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Related:** `CAND-027`, `CAND-004`, `CAND-005`, `CAND-007`, `Core/Constitution.md`, `Meta/Organization.md`, `Memory/Layered Memory.md`
 
+## AO-089
+
+**Title:** `Language/Conformance.md` Requires Conformance to Be Objective, Measurable and Verifiable, and 120 of the 182 Mandatory Statements of Core Conformance Are Decided by a Named Reviewer's Judgment
+
+**Date observed:** 22 September 2026
+
+**Description:** `Language/Conformance.md` Design Principles: "Conformance shall: be objective; be measurable; be verifiable; preserve interoperability; support extensibility; remain technology independent." `Governance/Test-Catalogue.md`, generated from the register: "Of the 182 mandatory Statements, 62 carry a mechanical kind and 120 fall to Review", where a Review outcome is "a named reviewer's recorded judgment" (`Conformance-Test-Suite.md` Section 3), since 22 September 2026 carried by a Reviewer Record the validator reads. Of the 120, `AO-076` records twenty-five whose predicates no observation can fail, and the catalogue's cardinality rule holds eleven more at Review that the Presence procedure could now count (`CAND-025` counts one and names them as not moved). The skeptic and risk lenses of the enterprise evaluation of 22 September 2026 both landed on the ratio: two thirds of Core Conformance is an attributable opinion, and two reviewers can disagree with both records valid.
+
+**Impact:** Whether an implementation conforms depends, for two Statements in three, on who reviews it; the suite makes the judgment attributable and contestable, which is what a recorded judgment can be, and does not make it objective, measurable or verifiable in the sense the Language tier requires of conformance itself. A claimant with a lenient reviewer and one with a strict reviewer publish reports the suite cannot tell apart.
+
+**Recommendation:** Record. Three routes reduce the ratio without adding a rule, each a recorded Decision: move the eleven counting Statements to Presence now that Presence counts (`CAND-025` postscript); disposition the twenty-five unfalsifiable predicates Descriptive under `AO-076`, which removes them from the count rather than pretending a reviewer can fail them; and accept an export that carries its own event history, which moves the persistence Statements to Invariant, as the catalogue already says it would. What remains after the three is the honest size of judgment in this specification, and the Language principle should then be read against it.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when one of the three routes is decided or when a submitted report shows two reviewers disagreeing on the same export.
+
+**Architect Response:** *(pending)*
+
+**Related:** `AO-076`, `AO-081`, `CAND-025`, `Language/Conformance.md`, `Governance/Conformance-Test-Suite.md` Sections 3 and 4, `Governance/Test-Catalogue.md`, `docs/Examples/Conformance/reviewer-record.md`
+
+---
+
+## AO-090
+
+**Title:** Two Content-Addressed Records Cannot Reference Each Other, So a Memory Record and the Evidence Record That Supports It Cannot Both Carry the Only Demonstration the Suite Verifies
+
+**Date observed:** 22 September 2026
+
+**Description:** `CAND-024` clause 1 requires a demonstration "to a party holding a Memory Record or an Evidence Record together with its identity and nothing else"; its postscript of 21 September 2026 records that among the mechanisms the clause names only content-addressed identity provides that with nothing else in hand, and `tools/conformance/validate.py` passes an Integrity Test on that method alone. `Memory/Memory Record.md` requires a Memory Record to reference at least one Evidence Record, and the example's Evidence Records reference the Memory Record they support (`related_memory_record`). When each side's identity is the digest of a content that contains the other side's identity, the two cannot both be computed: whichever is addressed second changes the content of the first. The example resolves it by addressing Audit Records and Events by content and giving Evidence Records a readable identity (`docs/Examples/Conformance/README.md`), and `AO-084`'s closure records that "its Evidence Records are contained but reached by no Test". The guarantee is stated identically for Evidence Records in `Memory/Evidence Overlay.md`.
+
+**Impact:** For the pair the Memory tier is built on, the record and its evidence, the only demonstration the suite verifies can be carried by one side. An implementation that wants both sides demonstrated needs a mechanism the clause permits and the suite does not verify, hash chaining or an external anchor, and reports it as pending; and no Test reaches an Evidence Record in any case, because `Memory/` is outside the twenty-two-document requirement set (`AO-081`, `EPIC-A`).
+
+**Recommendation:** Record. A Reference Case with an implementation that demonstrates both sides, a chain in which the Evidence Record's identity is computed first and the Memory Record's content carries it, or an anchor outside both, would ground either a second verifiable method in the suite or a sentence in `Memory Record.md` saying which side of the pair carries the demonstration. Until then the Representation Map's `Integrity.method` row makes the choice explicit per type, and this entry says why the example chose as it did.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves with `AO-081`'s disposition or with a Reference Case that anchors both sides.
+
+**Architect Response:** *(pending)*
+
+**Related:** `CAND-024`, `AO-081`, `AO-084`, `AO-086`, `Memory/Memory Record.md`, `Memory/Evidence Overlay.md`, `docs/Examples/Conformance/README.md`, `docs/Examples/Conformance/representation-map.md`, `tools/conformance/validate.py`
+
+---
+
+## AO-091
+
+**Title:** The Corpus Carried Two Orders of Adoption, One Domain First and Identity First, and Neither Named the Other
+
+**Date observed:** 22 September 2026
+
+**Description:** Surfaced by the enterprise evaluation of 22 September 2026, first-90-days lens. `Adoption/First Pilot.md` step 1: "Pick the one Domain your pilot team already owns", with cross-Domain integration deliberately left out. `docs/Examples/Implementation-Case/README.md`: "the order a real OCOM rollout actually followed, identity first, events and evidence second, the commercial layer last", with Phase 1 identity across the whole organization. Read as instructions for a Monday, the two gave an adopter two first steps, and no sentence said that one is a pilot inside one Domain and the other a rollout that has to reconcile Domains.
+
+**Impact:** A reader who took the Case as the recommended order started with an organization-wide identity programme, which is the opposite of what First Pilot bounds a first attempt to; a reader who took First Pilot as the whole method had no idea what came after the first Domain.
+
+**Recommendation:** Closed by one paragraph in `Adoption/First Pilot.md` Purpose, restating both documents: a pilot is the first Domain of a rollout, and the identity work is what later turns several pilots into one model. No rule added; the Case is unchanged.
+
+**Status:** Closed, 22 September 2026, by the paragraph above; the published `/adoption/first-pilot` page carries it.
+
+**Architect Response:** Not required; documentation currency under `EPIC-F`, `CAND-007` Section 3.
+
+**Related:** `Adoption/First Pilot.md`, `Adoption/Getting Started.md`, `docs/Examples/Implementation-Case/README.md`, `CAND-028`
+
 ---
 
 # Revision History
@@ -2013,3 +2071,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 22 September 2026 | Added AO-085 (an erasure record excludes a record from integrity verification and nothing says who may issue one), from the enterprise evaluation of 22 September 2026, with a proposed one-sentence closure for the Chief Architect. AO-015 notes its cardinality half filed as `CAND-025`; AO-009 notes `CAND-026`'s scope declaration. |
 | 0.1 | 22 September 2026 | AO-015 Closed in part (the cardinality half, by `CAND-025`; the modality half stands). AO-085 Closed (its closure adopted as a postscript to `CAND-024`: an erasure record names a declared Policy and its actor, and the suite grants the Integrity exclusion only to such a record). |
 | 0.1 | 22 September 2026 | Added AO-086 (the integrity guarantee covers alteration, not the journal's completeness or the authenticity of creator and creation time), AO-087 (the Entities tier requires a catalogue Lifecycle while the Core floor and the Adoption path let an Entity define its own) and AO-088 (one deployment represents one organization against a group modelled as several Organizations), all from the enterprise evaluation of 22 September 2026, record only. |
+| 0.1 | 22 September 2026 | Added AO-089 (conformance shall be objective, measurable and verifiable while 120 of 182 mandatory Statements are a reviewer's judgment), AO-090 (two content-addressed records cannot reference each other, so the record and its evidence cannot both carry the verified demonstration) and AO-091 (two orders of adoption, closed the same day by a paragraph in `First Pilot.md`). |
