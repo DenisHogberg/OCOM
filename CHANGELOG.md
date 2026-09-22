@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-(nothing yet)
+- `CAND-029` to `CAND-034` filed, each Open with a proposed Decision or disposition: the Memory tier measured through Profile Conformance; a scope as what an identity's assigner guarantees uniqueness within; merge and split as Identity Resolution; no precedence between Policies and Exceptions; the kinds of Owner; temporal boundaries not required for v1.0. `CAND-008` carries a proposed disposition.
 
 ## v1.4.0 (22 September 2026)
 
