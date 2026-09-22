@@ -24,6 +24,7 @@ IDS = {"OCOM-META-01": "/vocabulary/object", "ocom:Object": "/vocabulary/object"
 PRINTED = {"CMP-01": "/compare/x", "OWN-01": "/ownership.json",
            "SPEC-01": "/specification.json", "SPEC-02": "/specification.json"}
 CITATION = "OCOM Core Vocabulary. %s. Version 0.1."
+DEFINITION = "%s is the thing this fixture defines."
 
 
 def base_files():
@@ -56,12 +57,16 @@ def base_files():
 
     for t in TERMS:
         cite = CITATION % t.capitalize()
-        j("/vocabulary/%s.json" % t, {"identifier": "OCOM-META-0%d" % (TERMS.index(t) + 1), "citation": cite})
+        j("/vocabulary/%s.json" % t, {"identifier": "OCOM-META-0%d" % (TERMS.index(t) + 1), "citation": cite,
+                                       "definition_lead": DEFINITION % t.capitalize(), "headings": ["Purpose"]})
         # the JSON-LD alternate publishes its nodes under @graph, as the real site does
         j("/vocabulary/%s.jsonld" % t, {"@context": {"ocom": "https://ocom.uno/vocabulary/"},
                                         "@graph": [{"@id": "https://ocom.uno/vocabulary/%s#term" % t, "citation": cite}]})
-        f["/vocabulary/%s.md" % t] = ("text/markdown; charset=utf-8", "# %s\n\n%s\n" % (t, cite))
-        h("/vocabulary/%s" % t, "<html><body><p>%s</p></body></html>" % cite)
+        f["/vocabulary/%s.md" % t] = ("text/markdown; charset=utf-8",
+                                       "# %s\n\n%s\n\n%s\n\n## Purpose\n\nwhy it exists\n" % (t, cite, DEFINITION % t.capitalize()))
+        # the real site prints a record's identity as a pill, which the harvester used to miss
+        h("/vocabulary/%s" % t, '<html><body><span class="pill">Doc ID <b>OCOM-META-0%d</b></span>'
+          "<p>%s</p><p>%s</p><h2>Purpose</h2></body></html>" % (TERMS.index(t) + 1, cite, DEFINITION % t.capitalize()))
         j("/api/v1/term/%s" % t, {"term": t, "identifier": "OCOM-META-0%d" % (TERMS.index(t) + 1)})
         j("/api/v1/neighbors/%s" % t, {"neighbors": []})
         h("/inspect/%s" % t, "<html><body>inspect</body></html>")

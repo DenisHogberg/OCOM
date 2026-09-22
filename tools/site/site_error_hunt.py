@@ -118,6 +118,19 @@ def jsonld_errors(body):
     return out
 
 
+def external_ok(url, timeout=TIMEOUT):
+    """Whether a destination off the site answers. An internal path that redirects away was counted
+    as fine without anyone asking where it went."""
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "ocom-site-error-hunt/1.0 (+https://github.com/DenisHogberg/OCOM)"})
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.status == 200
+    except urllib.error.HTTPError as e:
+        return e.code in (200, 403, 429)        # a destination that refuses a bot still exists
+    except Exception:
+        return False
+
+
 def resolve(site, path, hops=3):
     """Follow a redirect only while it stays on the site; (final status, final path, note)."""
     seen = []
@@ -143,6 +156,9 @@ def hunt(site):
     locs = re.findall(r"<loc>\s*([^<\s]+)\s*</loc>", body)
     if not locs:
         raise SystemExit("/sitemap.xml names no URL; a hunt over nothing checks nothing")
+    repeated = sorted({u for u in locs if locs.count(u) > 1})
+    for u in repeated:
+        failures.append("sitemap names %s %d times; a sitemap lists each URL once" % (u, locs.count(u)))
     sitemap_host = urllib.parse.urlparse(locs[0]).netloc or site.host
     pages = []
     for loc in locs:
@@ -202,7 +218,13 @@ def hunt(site):
         kind = "assets" if re.search(r"\.(png|svg|ico|jpg|jpeg|gif|webp|css|js|woff2?|ttf|pdf)$", target.split("?")[0], re.I) else "links"
         counts[kind] += 1
         if note and status in (301, 302, 303, 307, 308):
-            counts["external"] += 1          # an internal path that sends the reader off the site is fine
+            # an internal path may send the reader off the site, and where it does the target is
+            # checked like any other external destination rather than taken on trust
+            counts["external"] += 1
+            away = re.search(r"to (https?://\S+)$", note)
+            if away and not external_ok(away.group(1)):
+                failures.append("%s (linked from %s) redirects off the site to %s, which does not answer"
+                                % (target, source, away.group(1)))
             continue
         if status != 200:
             failures.append("%s (linked from %s) answers %s%s" % (target, source, status, ", " + note if note else ""))
@@ -224,13 +246,18 @@ def hunt(site):
                 counts["links"] += 1
                 if st != 200 and not (note and st in (301, 302, 303, 307, 308)):
                     failures.append("llms.txt names %s, which answers %s" % (url, st))
+        if path == "/llms.txt" and not re.search(r"https?://", body):
+            failures.append("/llms.txt names no URL, so nothing in it was checked")
         if path == "/discovery.json":
             try:
                 d = json.loads(body)
             except ValueError as e:
                 failures.append("/discovery.json does not parse: %s" % e)
                 continue
-            for res in d.get("resources", []) if isinstance(d, dict) else []:
+            resources = d.get("resources") if isinstance(d, dict) else None
+            if not resources:
+                failures.append("/discovery.json carries no resources, so nothing in it was checked")
+            for res in resources or []:
                 url = res.get("url", "") if isinstance(res, dict) else ""
                 p = as_path(url, sitemap_host) if url else None
                 if p is None:

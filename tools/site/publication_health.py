@@ -285,15 +285,23 @@ def resolver_rows(site, entries):
         raise SystemExit("cannot read %s/sitemap.xml: the printed-identifier row harvests from the "
                          "pages it lists, so an empty page list would report a pass over nothing" % site.base)
     pages = [as_path(u) for u in re.findall(r"<loc>([^<]+)</loc>", sitemap)]
-    label = re.compile(r"(?:class=\"(?:attr|k)\"[^>]*>|<dt[^>]*>)\s*(?:Identifier|Record|URI|Document ID)\s*<")
-    value = re.compile(r"([A-Za-z][A-Za-z0-9:.\-]{4,60})")
+    # the harvester matched three markup shapes (class="attr", class="k", <dt>). Every Adoption page
+    # writes `<span class="pill">Doc ID <b>...</b></span>`, which matches none of them, so the HTML
+    # half of this row harvested nothing from the whole site while the row reported ok. It now strips
+    # the tags first and reads any labelled identifier out of the text, whatever carries it
+    # What this row means by an identifier the site prints is the identity of a published record,
+    # which a page labels Doc ID, Document ID or URI in its own metadata. Identifier and Record are
+    # deliberately not labels here: the Worked Example prints "Identifier: LOAN-2026-08-0431" as an
+    # illustration, and the registry's own scope excludes example values. The value is a hyphenated
+    # upper-case code or a minted ocom: name, never a capitalised English word from prose.
+    label = re.compile(r"\b(?:Doc(?:ument)? ID|URI)\b\s*[:]?\s+"
+                       r"((?:[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)|(?:ocom:[A-Za-z][A-Za-z0-9]*))")
     for page in pages:
         body = site.text(page) or ""
-        for m in label.finditer(body):
-            tail = re.sub(r"<[^>]+>", " ", body[m.end():m.end() + 400])
-            found = value.search(tail)
-            if found:
-                printed.add(found.group(1))
+        text = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", body, flags=re.S | re.I)
+        text = re.sub(r"<[^>]+>", " ", text)
+        for m in label.finditer(text):
+            printed.add(m.group(1).rstrip(".,;"))
     slugs = term_slugs(site)
     for path in published_records(site, slugs):
         rec = site.json(path)
@@ -418,12 +426,70 @@ def coined_names_row(site):
                checked, missing)
 
 
+def term_parity(site, slugs):
+    """Whether each term's four projections still agree. The row was published as a literal ok with
+    nothing fetched, and under it the Organization term's JSON record fell behind its HTML and
+    Markdown twins. Compares what all four carry: the definition and the section headings."""
+    disagree = []
+    for slug in slugs:
+        rec = site.json("/vocabulary/%s.json" % slug) or {}
+        md = site.text("/vocabulary/%s.md" % slug) or ""
+        html = site.text("/vocabulary/%s" % slug) or ""
+        definition = (rec.get("definition_lead") or rec.get("definition") or "").strip()
+        if not definition:
+            disagree.append("%s: the JSON record carries no definition" % slug)
+            continue
+        text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html))
+        if norm(definition) not in norm(md):
+            disagree.append("%s: the Markdown projection does not carry the JSON record's definition" % slug)
+        if norm(definition) not in norm(text):
+            disagree.append("%s: the HTML page does not carry the JSON record's definition" % slug)
+        # the one section whose prose the JSON record carries in full: if the Markdown says more
+        # than the record does, the record has fallen behind its own twins, which is how the
+        # CAND-027 paragraph reached the page and the Markdown and never reached the JSON
+        note = " ".join(x for x in (rec.get("relationships_lead"), rec.get("relationships_note")) if x)
+        if note.strip():
+            section = re.search(r"(?ms)^## Relationship to other specifications\s*(.*?)(?=^## |\Z)", md)
+            if section:
+                prose = " ".join(l for l in section.group(1).splitlines()
+                                 if l.strip() and not l.strip().startswith(("-", "*")))
+                extra = [s.strip() for s in re.split(r"(?<=\.)\s+", prose)
+                         if s.strip() and len(s.strip()) > 20 and norm(s) not in norm(note)]
+                if extra:
+                    disagree.append("%s: the Markdown projection carries a sentence the JSON record does not (%s)"
+                                    % (slug, extra[0][:60]))
+        for heading in rec.get("headings") or []:
+            # both projections publish the canonical Revision History as Provenance, which CAND-019
+            # permits a projection to name for itself; every other section keeps its canonical name
+            if norm(heading) == norm("Revision History"):
+                continue
+            if norm(heading) not in norm(text):
+                disagree.append("%s: the HTML page carries no section %s, which the JSON record lists" % (slug, heading))
+                break
+            if norm(heading) not in norm(md):
+                disagree.append("%s: the Markdown projection carries no section %s, which the JSON record lists" % (slug, heading))
+                break
+    return disagree
+
+
+def norm(text):
+    return re.sub(r"\s+", " ", (text or "").replace("\u2014", "-")).strip().lower()
+
+
 def projection_parity(site, slugs):
     spec = site.json("/specification.json") or {}
     chapters = spec.get("chapters", [])
     comparisons = (site.json("/comparisons.json") or {}).get("comparisons", [])
+    term_disagreements = term_parity(site, slugs)
+    compared = []
+    for c in comparisons:
+        url, record = c.get("url", ""), c.get("record", "")
+        if record and not site.ok(as_path(record)):
+            compared.append("%s: the record %s does not answer" % (url, record))
+        elif url and not site.ok(as_path(url)):
+            compared.append("%s: the page does not answer" % url)
     return {
-        "ok": True,
+        "ok": bool(chapters) and not term_disagreements and not compared,
         "specification": {
             "ok": bool(chapters),
             "representations": ["HTML", "JSON", "Markdown"],
@@ -432,8 +498,11 @@ def projection_parity(site, slugs):
             "chapterIds": [c.get("id") for c in chapters],
             "sourceCommit": spec.get("source_commit"),
         },
-        "coreVocabulary": {"ok": True, "terms": len(slugs), "representations": ["HTML", "JSON", "JSON-LD", "Markdown"]},
-        "comparisons": {"ok": True, "records": len(comparisons), "representations": ["HTML", "JSON"]},
+        "coreVocabulary": {"ok": not term_disagreements, "terms": len(slugs),
+                            "representations": ["HTML", "JSON", "JSON-LD", "Markdown"],
+                            "disagreements": term_disagreements},
+        "comparisons": {"ok": not compared, "records": len(comparisons),
+                         "representations": ["HTML", "JSON"], "disagreements": compared},
     }
 
 
@@ -549,11 +618,26 @@ def main(argv):
             continue
         if live_h.get(key) != health.get(key):
             diffs.append("health.%s: published %r, recomputed %r" % (key, live_h.get(key), health.get(key)))
+    parity_record = health.get("projectionParity") or {}
     lp = (live_h.get("projectionParity") or {}).get("specification") or {}
     for key in sorted(set(spec) | set(lp)):
         if lp.get(key) != spec.get(key):
             diffs.append("health.projectionParity.specification.%s: published %r, recomputed %r" % (
                 key, lp.get(key), spec.get(key)))
+    # the record's own top-level claims were compared by nothing, so publication-health.json could
+    # say it harvested from 53 pages while the sitemap listed 55 and the run still reported 0 drift
+    for key in ("note", "ok"):
+        if live_p.get(key) != pub.get(key):
+            diffs.append("publication-health.%s: published %r, recomputed %r"
+                         % (key, str(live_p.get(key))[:120], str(pub.get(key))[:120]))
+    for key in ("ok", "coreVocabulary", "comparisons"):
+        live_parity = (live_h.get("projectionParity") or {}).get(key)
+        mine = parity_record.get(key)
+        if isinstance(mine, dict):
+            live_parity = (live_parity or {}).get("ok")
+            mine = mine.get("ok")
+        if live_parity != mine:
+            diffs.append("health.projectionParity.%s: published %r, recomputed %r" % (key, live_parity, mine))
     live_rows = {r["name"]: r for r in live_p.get("checks", [])}
     for r in pub["checks"]:
         old = live_rows.get(r["name"])

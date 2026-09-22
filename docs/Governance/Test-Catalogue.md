@@ -55,7 +55,9 @@ Declaration, the fifth kind, reaches one register Statement through rule 1, `Met
 | Invariant | 14 | 14 |
 | Transition | 10 | 9 |
 | Review | 145 | 120 |
-| Declaration | 7 | 7 |
+| Declaration | 1 | 1 |
+
+Beside the rows above, 6 claim clauses of `Language/Conformance.md` are catalogued separately below and carry Declaration Tests read from the Conformance Statement; they are not register Statements and are counted in neither column, so the two columns sum to 208 and 182, the figures this document's Purpose and `Requirement-Register.md` state.
 
 Of the 182 mandatory Statements, 62 carry a mechanical kind and 120 fall to Review. A Review outcome is a named reviewer's recorded judgment, which Section 3 counts toward Core Conformance as Review Pass; it is not a gap in the suite, and it is not a machine result either, which is why the count is printed rather than buried.
 

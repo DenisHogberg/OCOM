@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 19 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -85,6 +85,8 @@ a fact with a date; none is an assessment.
 | Release v1.3.0 published from an SSH-signed tag with three signed assets; Specification reading path 1.0 | 2026-09-17 | `github.com/DenisHogberg/OCOM/releases/tag/v1.3.0` |
 | Release v1.3.0 archived in Zenodo, resource type Standard | 2026-09-17 | `doi.org/10.5281/zenodo.22809694` |
 | Release v1.3.0 and the repository archived in Software Heritage, release SWHID `swh:1:rel:f4482014c65a6fe05e865c9f68b70c6cbae76b00` | 2026-09-17 | `archive.softwareheritage.org` |
+| Release v1.4.0 published from an SSH-signed tag with three signed assets; the Memory tier, the Package 3 Decisions and the Conformance Test Suite tooling | 2026-09-22 | `github.com/DenisHogberg/OCOM/releases/tag/v1.4.0` |
+| Release v1.4.0 archived in Zenodo, resource type Standard | 2026-09-22 | `doi.org/10.5281/zenodo.22900969` |
 | Release v1.2.0 published from an SSH-signed tag with three signed assets | 2026-09-16 | `github.com/DenisHogberg/OCOM/releases/tag/v1.2.0` |
 | Release v1.2.0 archived in Zenodo, resource type Standard | 2026-09-17 | `doi.org/10.5281/zenodo.22807178` |
 | Release v1.2.0 and the repository archived in Software Heritage, release SWHID `swh:1:rel:78eb36465ed18b3bf8f2d0948712537a7a51ae89` | 2026-09-17 | `archive.softwareheritage.org` |
@@ -123,3 +125,4 @@ implied.
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 19 September 2026 | Moved into the repository from `ocom.uno/evidence-register`, where it had been published since 5 September 2026 with no source here, per `CAND-022`. Counts brought current: 82 Architecture Observations, REUSE 426 of 426. The enumerated mandatory Statements and the reason the ladder stands at step 1 are stated here for the first time; the published page carried neither. |
+| 0.1 | 22 September 2026 | Two rows added for Release v1.4.0 (the signed release and its Zenodo DOI). The register was one release behind `publication/llms.txt`, which `CAND-022` makes it the record of; found by the all-packages test of 22 September 2026. No Software Heritage row: the v1.4.0 tag is not archived there yet. |

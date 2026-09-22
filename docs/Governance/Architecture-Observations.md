@@ -846,7 +846,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If corroborated, a future Reference Case should state once, at the Meta tier and together with AO-020, that the Owner of an Ownership assignment is an Object (or a named specialization such as Organization or an Entity), which kinds of party may hold Ownership and whether a Domain is among them, and align `Core/Terminology.md`'s Owner entry to that record; track together with `GAP-002`, since the glossary entry will be revised in the same pass.
 
-**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2) `CAND-033` (22 September 2026) proposes the reading: an Owner is a party of the kinds `Meta/Ownership.md` names, Terminology restated; the Owner-as-Object half stays for a Reference Case.
+**Status:** Open; not escalated (external review source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2) `CAND-033` (22 September 2026) proposes the reading: an Owner is a party of the kinds `Meta/Ownership.md` names, Terminology restated; the Owner-as-Object half stays for a Reference Case. 22 September 2026: the Terminology half of this entry is closed by `EPIC-D` (16 September 2026), which replaced the Owner entry quoted above with "The party named by the Owner field of an Ownership assignment." and made Terminology a verbatim index; the two lists no longer disagree. What stands is which kinds of party may hold Ownership and whether an Owner is an Object, proposed as `CAND-033`.
 
 **Architect Response:** *(pending)*
 
@@ -1960,11 +1960,11 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Date observed:** 22 September 2026
 
-**Description:** `Language/Conformance.md` Design Principles: "Conformance shall: be objective; be measurable; be verifiable; preserve interoperability; support extensibility; remain technology independent." `Governance/Test-Catalogue.md`, generated from the register: "Of the 182 mandatory Statements, 62 carry a mechanical kind and 120 fall to Review", where a Review outcome is "a named reviewer's recorded judgment" (`Conformance-Test-Suite.md` Section 3), since 22 September 2026 carried by a Reviewer Record the validator reads. Of the 120, `AO-076` records twenty-five whose predicates no observation can fail, and the catalogue's cardinality rule holds eleven more at Review that the Presence procedure could now count (`CAND-025` counts one and names them as not moved). The skeptic and risk lenses of the enterprise evaluation of 22 September 2026 both landed on the ratio: two thirds of Core Conformance is an attributable opinion, and two reviewers can disagree with both records valid.
+**Description:** `Language/Conformance.md` Design Principles: "Conformance shall: be objective; be measurable; be verifiable; preserve interoperability; support extensibility; remain technology independent." `Governance/Test-Catalogue.md`, generated from the register: "Of the 182 mandatory Statements, 62 carry a mechanical kind and 120 fall to Review", where a Review outcome is "a named reviewer's recorded judgment" (`Conformance-Test-Suite.md` Section 3), since 22 September 2026 carried by a Reviewer Record the validator reads. Of the 120, `AO-076` records twenty-five whose predicates no observation can fail, and the catalogue's cardinality rule holds four more at Review that the Presence procedure could now count, `REQ-MODELS-ENTITY-007`, `REQ-MODELS-EVENT-009`, `REQ-MODELS-LIFECYCLE-001` and `REQ-LIFECYCLES-001` (`CAND-025` counts one and names them as not moved; five further Review rows carry a cardinality phrase and leave for an earlier rule). The skeptic and risk lenses of the enterprise evaluation of 22 September 2026 both landed on the ratio: two thirds of Core Conformance is an attributable opinion, and two reviewers can disagree with both records valid.
 
 **Impact:** Whether an implementation conforms depends, for two Statements in three, on who reviews it; the suite makes the judgment attributable and contestable, which is what a recorded judgment can be, and does not make it objective, measurable or verifiable in the sense the Language tier requires of conformance itself. A claimant with a lenient reviewer and one with a strict reviewer publish reports the suite cannot tell apart.
 
-**Recommendation:** Record. Three routes reduce the ratio without adding a rule, each a recorded Decision: move the eleven counting Statements to Presence now that Presence counts (`CAND-025` postscript); disposition the twenty-five unfalsifiable predicates Descriptive under `AO-076`, which removes them from the count rather than pretending a reviewer can fail them; and accept an export that carries its own event history, which moves the persistence Statements to Invariant, as the catalogue already says it would. What remains after the three is the honest size of judgment in this specification, and the Language principle should then be read against it.
+**Recommendation:** Record. Three routes reduce the ratio without adding a rule, each a recorded Decision: move the four counting Statements to Presence now that Presence counts (`CAND-025` postscript); disposition the twenty-five unfalsifiable predicates Descriptive under `AO-076`, which removes them from the count rather than pretending a reviewer can fail them; and accept an export that carries its own event history, which moves the persistence Statements to Invariant, as the catalogue already says it would. What remains after the three is the honest size of judgment in this specification, and the Language principle should then be read against it.
 
 **Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when one of the three routes is decided or when a submitted report shows two reviewers disagreeing on the same export.
 
@@ -2011,6 +2011,44 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 **Architect Response:** Not required; documentation currency under `EPIC-F`, `CAND-007` Section 3.
 
 **Related:** `Adoption/First Pilot.md`, `Adoption/Getting Started.md`, `docs/Examples/Implementation-Case/README.md`, `CAND-028`
+
+## AO-092
+
+**Title:** An Obligation Written as a Table Row Is in No Requirement Register, No Catalogue and No Test
+
+**Date observed:** 22 September 2026
+
+**Description:** Surfaced by the all-packages test of 22 September 2026, which added a normative sentence as a table row to a canonical document and watched every check stay green. `tools/conformance/requirement_register.py` derives a Statement from a paragraph or a list item carrying a keyword, and a table row carries neither shape: the row is not a paragraph and not a list item, so the register does not see it, no alias is minted, no Test is catalogued and no procedure decides it. The corpus writes almost all its obligations as prose and lists, so the register is complete today; nothing stops the next obligation from being written as a table row, and nothing would say so. The register's own `--check` compares a regeneration against the committed file, so a row that enters neither is invisible to it as well. Moving an existing Statement into a table is caught, because the Statement then disappears from the regeneration and its alias goes stale; only a new one is silent.
+
+**Impact:** A mandatory requirement can enter a canonical document and be measured by nothing, with every CI job green. For a specification whose conformance claim rests on the register being the complete enumeration of its obligations, that is the one way the enumeration can quietly stop being complete.
+
+**Recommendation:** Record, and one of two Decisions when a Reference Case arrives: either the register reads table cells for keywords as well (and the documents that carry tables of examples are dispositioned, since many cells would match), or `Documentation-Standards.md` states that an obligation is written as a sentence or a list item and never as a table row, which a check can then enforce cheaply over the twenty-two documents.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when an obligation is written as a table row in a canonical document, or when the Chief Architect records which of the two Decisions governs.
+
+**Architect Response:** *(pending)*
+
+**Related:** `AO-062`, `AO-089`, `Governance/Conformance-Test-Suite.md` Section 2, `Governance/Documentation-Standards.md`, `tools/conformance/requirement_register.py`
+
+---
+
+## AO-093
+
+**Title:** A Reviewer's Judgment Is Bound to the Export It Was Made Against by the Report Alone, and Nothing Refuses a Judgment Carried to Another Export
+
+**Date observed:** 22 September 2026
+
+**Description:** Surfaced by the all-packages test of 22 September 2026. `Conformance-Test-Suite.md` Section 3 makes a Review outcome a named reviewer's recorded judgment, and since 22 September the suite reads those judgments from a Reviewer Record and the report names the digest of the model, the map and the Conformance Statement the run read. What the record itself carries is a Test, an outcome, a name, a date and a reason: nothing binds it to a subject. A judgment recorded against one export therefore applies unchanged to any later `--model`, and the tool cannot tell the difference. This is the load-bearing path to Core Conformance, not a corner case: 136 of the 187 mandatory Tests can be satisfied only this way.
+
+**Impact:** An implementation can change, be re-exported, and keep the Review Passes recorded against what it used to be. The report names the digests of the run's own inputs, so a reader who compares two reports can see that the export changed; nobody is required to look, and the suite does not.
+
+**Recommendation:** Record, with the closure named: the Reviewer Record carries, in its header, the digest of the model, the map and the Conformance Statement it was made against, and the validator refuses a record whose digests do not match the files it was given. The mechanism is already in the repository (content-addressed identity, `CAND-024`), and the report already prints the digests, so the remaining step is small. It is left to a Decision because it makes an artifact a claimant publishes carry a required field, which is a rule about a claim rather than about the model.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when the Chief Architect records the closure, or when a submitted report carries judgments made against another export.
+
+**Architect Response:** *(pending)*
+
+**Related:** `AO-089`, `CAND-024`, `Governance/Conformance-Test-Suite.md` Sections 3 and 4, `docs/Examples/Conformance/reviewer-record.md`, `tools/conformance/validate.py`
 
 ---
 
@@ -2073,3 +2111,6 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 22 September 2026 | Added AO-086 (the integrity guarantee covers alteration, not the journal's completeness or the authenticity of creator and creation time), AO-087 (the Entities tier requires a catalogue Lifecycle while the Core floor and the Adoption path let an Entity define its own) and AO-088 (one deployment represents one organization against a group modelled as several Organizations), all from the enterprise evaluation of 22 September 2026, record only. |
 | 0.1 | 22 September 2026 | Added AO-089 (conformance shall be objective, measurable and verifiable while 120 of 182 mandatory Statements are a reviewer's judgment), AO-090 (two content-addressed records cannot reference each other, so the record and its evidence cannot both carry the verified demonstration) and AO-091 (two orders of adoption, closed the same day by a paragraph in `First Pilot.md`). |
 | 0.1 | 22 September 2026 | AO-009, AO-010, AO-011, AO-012, AO-033 and AO-081 note the candidates filed on them (`CAND-029` to `CAND-034`), each Open with a proposed Decision or disposition. |
+| 0.1 | 22 September 2026 | AO-089: the count of Statements the cardinality rule holds at Review corrected from eleven to four, each named; the all-packages test of the same day recounted them. The observation itself is unchanged. |
+| 0.1 | 22 September 2026 | Added AO-092 (an obligation written as a table row is in no register, catalogue or Test) and AO-093 (a reviewer's judgment is bound to its export by the report alone), both from the all-packages test of 22 September 2026, record only. |
+| 0.1 | 22 September 2026 | AO-033: the Terminology half recorded as closed by `EPIC-D`; the quoted sentence had been replaced on 16 September 2026 and the entry still read as if it stood. |

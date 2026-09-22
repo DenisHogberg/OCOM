@@ -18,6 +18,7 @@ Pass or Review Pass, which is Section 3's criterion and not this tool's.
 Standard library only, no network.
 """
 import argparse
+import datetime
 import hashlib
 import json
 import pathlib
@@ -195,15 +196,31 @@ class Resolver:
     def all_records(self):
         return instances(self.model, self.all_paths())
 
+    GENERIC = ("object", "identity")
+
     def identity_of(self, path, record):
-        for type_name, paths in self.types.items():
-            if path in paths:
-                name, _ = self.field(type_name, "identity")
+        """The identity the map binds for the records at `path`, resolved through the most specific
+        type the path is listed under. Reading it through the first type in map order let the
+        generic `Object` row, which every collection is listed under, answer for a collection that
+        spells its identity otherwise: `identity_of` then returned None for every record there and
+        the identity-reuse Invariant passed having counted them zero times. There is no fallback to
+        a literal key: a record whose identity the map does not bind has no identity here, and the
+        engines say so rather than guessing that it is called `id`."""
+        # the most specific type's own bindings first, both elements, before any generic row:
+        # asking self.field() took the generic Object row ahead of the type's own identifier row,
+        # and looping elements outside types took Identity.identity ahead of Domain.identifier
+        for type_name in self.specific_types(path):
+            for element in ("identity", "identifier"):
+                name = self.fields.get("%s.%s" % (type_name, element))
                 if name:
                     return record.get(name)
-        return record.get("id")
+        return None
 
-    GENERIC = ("object", "identity")
+    def specific_types(self, path):
+        """The types the map lists `path` under, most specific first and deterministically ordered:
+        a verdict must not depend on the order of rows in the map's Types table."""
+        return sorted(t for t, paths in self.types.items() if path in paths and t not in self.GENERIC) \
+               + sorted(t for t in self.GENERIC if path in self.types.get(t, []))
 
     def namespace_of(self, path):
         """The (scope, system) the map declares for the identities at `path`: a declaration keyed
@@ -212,8 +229,7 @@ class Resolver:
         every identity to a declared scope, and an External System names the system, so two
         systems' keys coexist in one export as identities of two scopes."""
         d = self.declarations
-        keys = [path.lower()] + sorted(t for t, paths in self.types.items() if path in paths and t not in self.GENERIC) \
-               + sorted(t for t in self.GENERIC if path in self.types.get(t, [])) + ["identity"]
+        keys = [path.lower()] + self.specific_types(path) + ["identity"]
         # the scope and the system are resolved separately along the same order, so a type may
         # declare the scope once and each of its collections name its own source system
         scope = system = ""
@@ -237,6 +253,17 @@ class Resolver:
                 if path not in out[key]:
                     out[key].append(path)
         return out
+
+    def object_paths(self):
+        """The collection paths the map lists under Object or Identity. The no-reuse rule is about
+        Objects, and a nested value record (a State, a Transition) carries no Identity of its own."""
+        return [p for p in self.all_paths() if p in set(self.types.get("object", [])) | set(self.types.get("identity", []))]
+
+    def undeclared_paths(self):
+        """The collection paths the map declares no identity scope for. An empty scope is not a
+        scope: keying uniqueness by it made "no declaration" a namespace of its own, so declaring a
+        scope for one type exempted every other collection from the identity-reuse Invariant."""
+        return [p for p in self.all_paths() if self.namespace_of(p) == ("", "")]
 
     def ids(self):
         """Every bare identity the export declares, as {id: [paths]}, for resolving references."""
@@ -307,7 +334,7 @@ def one_of(subject, element, records, r):
     owned, _ = r.field("ownership", "owned object")
     owner_party, _ = r.field("ownership", "owner")
     ownership = [o for _, o in r.records("ownership")] if r.types.get("ownership") and owned else []
-    resolved = False
+    resolved = 0
     for path, rec in records:
         value = rec.get(name)
         if isinstance(value, list):
@@ -321,7 +348,7 @@ def one_of(subject, element, records, r):
         naming = [o for o in ownership if o.get(owned) == ident]
         by_id = [o for o in ownership if own_id and o.get(own_id) == value]
         if by_id:
-            resolved = True
+            resolved += 1
             if not any(o is x for o in by_id for x in naming):
                 return ("%s record %s names Ownership record %s, which names %s as its owned object and not it"
                         % (subject, ident, value, by_id[0].get(owned, "nothing"))), ""
@@ -330,8 +357,26 @@ def one_of(subject, element, records, r):
             if len(accountable) != 1:
                 return ("%d Ownership records name %s record %s and its %s (%s) says which of them is accountable to none of them"
                         % (len(naming), subject, ident, element, value)), ""
-            resolved = True
-    return None, (", each resolving to the one Ownership record that names it" if resolved else "")
+            resolved += 1
+        elif len(naming) == 1:
+            # exactly one Ownership record names it: the owner value must be that record or its party
+            one = naming[0]
+            if owner_party and one.get(owner_party) == value:
+                resolved += 1
+            else:
+                return ("%s record %s names %s as its %s, which is neither the Ownership record that names it (%s) "
+                        "nor the party that record names (%s)"
+                        % (subject, ident, value, element, one.get(own_id, "?") if own_id else "?",
+                           one.get(owner_party, "?") if owner_party else "?")), ""
+        else:
+            # no Ownership record names it and its owner names no Ownership record: nothing resolved,
+            # and counting it as resolved let the Pass reason claim a resolution that never happened
+            return ("%s record %s names %s as its %s, and no Ownership record names either it or that value"
+                    % (subject, ident, value, element)), ""
+    if not ownership or "owner" not in element:
+        return None, ""
+    return None, (", each resolving to the one Ownership record that names it" if resolved == len(records)
+                  else ", %d of %d resolving to the one Ownership record that names it" % (resolved, len(records)))
 
 
 def presence(test, text, r):
@@ -490,6 +535,10 @@ def transition_predicate(text, r, lifecycles, by_entity):
                ("Pass", "%d Lifecycle(s) define %d Transitions, every endpoint a State they declare" % (len(lifecycles), total))
 
     if "terminal" in low:
+        field, _ = r.field("lifecycle", "terminal states")
+        if field is None:
+            return None, ("the Representation Map binds no field to Lifecycle.terminal states, so no terminal State "
+                          "could be read; an export that declares none says so through the map")
         left = []
         for k, lc in lifecycles.items():
             outgoing = {a for a, _ in transitions_of(r, lc)}
@@ -502,22 +551,36 @@ def transition_predicate(text, r, lifecycles, by_entity):
     if "prohibit undefined" in low or "only perform" in low or "permitted by the lifecycle" in low:
         events = r.records("event")
         permitted = {k: set(transitions_of(r, lc)) for k, lc in lifecycles.items()}
-        compared, bad, unresolved = 0, [], []
+        compared, bad, unresolved, destination_only = 0, [], [], []
         for _, e in events:
             subject = r.value(e, "event", "subject")
             before = r.value(e, "event", "from state")
             after = r.value(e, "event", "to state")
-            if before is None:
-                continue
+            if before is None and after is None:
+                continue                      # records no State change at all
             named = by_entity.get(subject)
             if named is None or named not in permitted:
                 unresolved.append(str(subject))
+                continue
+            if before is None:
+                # a destination without a prior State is a creation when it names the initial State,
+                # and Models/Lifecycle.md makes entering the initial State the start rather than a
+                # Transition. Anything else is a State change that was not compared, and skipping it
+                # silently let an Event move an Entity into a State its Lifecycle does not define
+                if after not in state_names(r, lifecycles[named]):
+                    bad.append("%s: to %s, a State the Lifecycle does not define" % (e.get("id"), after))
+                elif after != r.value(lifecycles[named], "lifecycle", "initial state"):
+                    destination_only.append(str(e.get("id")))
                 continue
             compared += 1
             if (before, after) not in permitted[named]:
                 bad.append("%s: %s to %s" % (e.get("id"), before, after))
         if bad:
             return "Fail", "State change the Lifecycle does not permit: %s" % "; ".join(bad[:3])
+        if destination_only:
+            return None, ("%d recorded State change(s) name a destination and no prior State (%s), so they could not "
+                          "be compared against a Transition; every destination is a State its Lifecycle defines"
+                          % (len(destination_only), destination_only[0]))
         if unresolved:
             return None, ("%d recorded State change(s) name a subject no Lifecycle can be resolved for (%s), "
                           "so they were not compared" % (len(unresolved), unresolved[0]))
@@ -577,15 +640,40 @@ def invariant_predicate(text, r, lifecycles, by_entity):
     if "identity" in low and "reused" in low:
         if not r.all_records():
             return "Fail", "the export carries no record, so no identity could be compared"
-        counts = {}
-        for path, rec in r.all_records():
+        paths = r.object_paths()
+        if not paths:
+            return None, ("the Representation Map lists no collection under Object or Identity, so the export "
+                          "carries no Object whose identity could be compared")
+        counts, unreadable, undeclared_ids = {}, {}, {}
+        for path, rec in instances(r.model, paths):
             ident = r.identity_of(path, rec)
-            if ident is not None and not is_absent(ident):
-                key = r.namespace_of(path) + (ident,)
-                counts[key] = counts.get(key, 0) + 1
+            if ident is None or is_absent(ident):
+                unreadable[path] = unreadable.get(path, 0) + 1
+                continue
+            scope = r.namespace_of(path)
+            counts[scope + (ident,)] = counts.get(scope + (ident,), 0) + 1
+            if scope == ("", ""):
+                undeclared_ids.setdefault(ident, 0)
+                undeclared_ids[ident] += 1
         dupes = sorted({k[2] for k, n in counts.items() if n > 1})
-        return ("Fail", "%d identit%s carried by more than one record: %s" % (len(dupes), "y" if len(dupes) == 1 else "ies", ", ".join(dupes[:3]))) if dupes else \
-               ("Pass", "%d identities, each carried by exactly one record within its declared scope" % len(counts))
+        # a record whose scope the map does not declare is compared against every namespace, since
+        # nothing says it is in a namespace of its own; otherwise one declaration row exempted the rest
+        crossing = sorted(i for i, _ in undeclared_ids.items()
+                          if sum(n for k, n in counts.items() if k[2] == i) > 1 and i not in dupes)
+        if dupes or crossing:
+            named = (dupes + crossing)[:3]
+            return "Fail", ("%d identit%s carried by more than one record: %s%s"
+                            % (len(dupes) + len(crossing), "y" if len(dupes) + len(crossing) == 1 else "ies",
+                               ", ".join(named),
+                               "" if not crossing else " (%d of them in a collection whose scope the map does not declare)" % len(crossing)))
+        if unreadable:
+            return None, ("%d Object record(s) carry no identity the Representation Map binds, so they could not "
+                          "be compared (%s); bind the identity of every collection the map lists under Object"
+                          % (sum(unreadable.values()), ", ".join(sorted(unreadable)[:3])))
+        undeclared = [p for p in paths if r.namespace_of(p) == ("", "")]
+        note = "" if not undeclared else (", %d of them in collection(s) whose scope the map does not declare (%s), compared against every namespace"
+                                          % (sum(undeclared_ids.values()), ", ".join(sorted(undeclared)[:3])))
+        return "Pass", "%d Object identities, each carried by exactly one record within its declared scope%s" % (len(counts), note)
 
     if "ownership" in low and ("never be undefined" in low or "not be undefined" in low):
         governed = [("entity", rec) for _, rec in r.records("entity")] + \
@@ -717,36 +805,67 @@ def dangling_references(r):
     for (scope, system, ident), _ in r.identities().items():
         scopes.setdefault(ident, set()).add((scope, system))
     external = set(r.types.get("reference") or [])
-    skip_keys = {"id", "type", "name", "label", "purpose", "meaning", "note", "rule", "expression",
-                 "trigger", "responsibility_scope", "data_type", "state", "initial_state"}
+    # fields the map binds to prose are not references. Reading them off a list of literal key names
+    # was the one place in the engine that did not go through the map, so an export that spelled a
+    # reference "note" had it skipped and one that spelled prose "owner" had it resolved
+    PROSE = ("name", "purpose", "meaning", "note", "rule", "expression", "trigger", "description",
+             "responsibility scope", "classification name", "label", "type", "event type",
+             "relationship type", "classification type", "data type")
+    mapped_prose = set()
+    for type_name in r.types:
+        for element in PROSE:
+            field = r.fields.get("%s.%s" % (type_name, element))
+            if field:
+                mapped_prose.add(field)
+    skip_keys = mapped_prose | {"id", "type", "name", "label", "purpose", "meaning", "note", "rule",
+                                "expression", "trigger", "data_type", "state", "initial_state"}
     # what a reference looks like is read off this export's own identities rather than assumed:
     # an export whose identities all carry a separator is one where a bare word is not a reference
     separated = sum(1 for i in known if "-" in i or "_" in i)
     needs_separator = separated > len(known) / 2
+    def scalars(value, prefix):
+        """Every string reachable through nested objects and lists, with the path that holds it.
+        Reading only top-level values left a reference inside a provenance block unexamined while
+        the report said every reference resolved."""
+        if isinstance(value, dict):
+            for k, v in value.items():
+                if k in skip_keys:
+                    continue
+                for item in scalars(v, "%s.%s" % (prefix, k)):
+                    yield item
+        elif isinstance(value, list):
+            for v in value:
+                for item in scalars(v, prefix):
+                    yield item
+        elif isinstance(value, str) and value.strip():
+            yield (prefix, value.strip())
+
     out, examined = [], 0
     for path, rec in r.all_records():
         if path in external:
             continue          # a Reference may legitimately name a target in another system
+        ident = r.identity_of(path, rec) or rec.get("id", "?")
         for key, value in rec.items():
             if key in skip_keys:
                 continue
-            for item in (value if isinstance(value, list) else [value]):
-                if not isinstance(item, str) or not item.strip():
-                    continue
-                item = item.strip()
+            for where, item in scalars(value, key):
                 if " " in item:
                     continue   # a sentence is not a reference
-                if needs_separator and "-" not in item and "_" not in item and not re.fullmatch(r"[0-9a-f]{64}", item):
-                    continue   # not shaped like an identity this export declares (a content address is)
                 if re.match(r"^\d{4}-\d{2}-\d{2}([T ]|$)", item):
                     continue   # a date carries separators and names nothing
-                examined += 1
                 if item not in known:
-                    out.append("%s %s.%s names %s, which the export does not declare"
-                               % (path, rec.get("id", "?"), key, item))
-                elif len(scopes.get(item, ())) > 1:
+                    # the shape heuristic decides only what an unknown value is: a value the export
+                    # declares is a reference whatever it looks like, which is how a bare SAP or
+                    # ServiceNow number reaches the ambiguity check at all
+                    if needs_separator and "-" not in item and "_" not in item and not re.fullmatch(r"[0-9a-f]{64}", item):
+                        continue
+                    examined += 1
+                    out.append("%s %s.%s names %s, which the export does not declare" % (path, ident, where, item))
+                    continue
+                examined += 1
+                if len(scopes.get(item, ())) > 1:
                     out.append("%s %s.%s names %s, an identity the export declares in %d scopes (%s); the reference does not say which"
-                               % (path, rec.get("id", "?"), key, item, len(scopes[item]),
+                               % (path, ident, where, item, len(scopes[item]),
                                   "; ".join(" ".join(x for x in s if x) for s in sorted(scopes[item]))))
     return sorted(set(out)), examined
 
@@ -786,11 +905,19 @@ def erasure_records(r):
     actor_f, _ = r.field("erasure", "actor")
     pol_id, _ = r.field("policy", "identifier")
     policies = {p.get(pol_id) for _, p in r.records("policy")} if r.types.get("policy") and pol_id else set()
+    declared = set(r.ids())
     out = []
     for path, rec in r.records("erasure"):
         why = []
+        ident_here = rec.get(ident_f) if ident_f else None
+        if is_absent(ident_here):
+            ident_here = r.identity_of(path, rec)
         if erased_f is None or is_absent(rec.get(erased_f)):
             why.append("names no erased record")
+        elif rec.get(erased_f) == ident_here:
+            why.append("names itself, so it would exclude itself from the verification it authorizes")
+        elif declared and rec.get(erased_f) not in declared:
+            why.append("names %s, which the export does not declare, so it excludes nothing" % rec.get(erased_f))
         if policy_f is None:
             why.append("the map binds no field to Erasure.policy")
         elif is_absent(rec.get(policy_f)):
@@ -803,8 +930,7 @@ def erasure_records(r):
             why.append("the map binds no field to Erasure.actor")
         elif is_absent(rec.get(actor_f)):
             why.append("names no actor")
-        ident = rec.get(ident_f) if ident_f else None
-        out.append((ident if not is_absent(ident) else r.identity_of(path, rec), rec.get(erased_f) if erased_f else None, why))
+        out.append((ident_here, rec.get(erased_f) if erased_f else None, why))
     return out
 
 
@@ -849,6 +975,10 @@ def integrity(test, text, r):
             bad.append("%s does not verify" % (ident or "?"))
     if bad:
         return "Fail", "%d of %d %s record(s) fail their demonstration: %s" % (len(bad), len(records), subject, "; ".join(bad[:3]))
+    if skipped and len(records) - skipped == 0:
+        return None, ("every %s record in the export (%d) is named by an erasure record, so no demonstration was "
+                      "verified; the exclusion is granted by records the claimant writes, and a reviewer decides "
+                      "whether the erasures are genuine" % (subject, len(records)))
     note = "" if not skipped else ", %d erased record(s) excluded as Retention.md's Deleted state provides" % skipped
     if method == SELF_CONTAINED:
         return None, ("%d %s record(s) match their own digest%s. That shows the export is consistent and not that a "
@@ -856,10 +986,17 @@ def integrity(test, text, r):
                       "CAND-024 asks for a demonstration to a party holding only the record and its identity, which "
                       "content-addressed identity provides; a reviewer decides whether this digest is anchored elsewhere"
                       % (len(records) - skipped, subject, note))
-    identity_field, _ = r.field(subject, "identity")
-    if identity_field != field:
-        return None, ("%s declares content-addressed identity but binds %s.integrity to %s rather than to its identity field "
-                      "%s, so the identity does not address the content" % (subject, subject, field, identity_field))
+    # the demonstration must be the identity this export resolves for the record, not a second field
+    # beside it: comparing two map rows let a map bind Type.identity to the same column as
+    # Type.integrity while every other leg resolved a different, mutable identity for the record
+    for path, rec in records:
+        if r.identity_of(path, rec) in erased:
+            continue
+        if r.identity_of(path, rec) != rec.get(field):
+            return None, ("%s binds %s.integrity to %s, but the identity this export resolves for record %s is not "
+                          "that value, so the identity does not address the content and the digest is a field beside "
+                          "it; a reviewer decides whether it is anchored elsewhere"
+                          % (subject, subject, field, r.identity_of(path, rec) or "?"))
     return "Pass", "%d %s record(s) are identified by the digest of their own content, so an altered record is a different record%s" % (len(records) - skipped, subject, note)
 
 
@@ -883,6 +1020,12 @@ def scope_declaration(test, text, r):
             system_key = key[:-len("scope")] + "system"
             if is_absent(r.declarations.get(system_key)):
                 return "Fail", "%s declares External System and names no system (a row %s of kind declaration)" % (key, system_key)
+    uncovered = [p for p in r.all_paths() if r.namespace_of(p) == ("", "")]
+    if uncovered:
+        return "Fail", ("the map declares %s, which covers no identity in %d of the export's collections (%s); "
+                        "CAND-026 binds every identity the export carries to a declared scope"
+                        % ("; ".join("%s = %s" % (k, v) for k, v in sorted(decl.items())), len(uncovered),
+                           ", ".join(sorted(uncovered)[:3])))
     return "Pass", "the map declares %s" % "; ".join(
         "%s for %s" % (v, "every identity the export carries" if k == "identity.scope" else "%s identities" % k.split(".")[0])
         for k, v in sorted(decl.items()))
@@ -893,34 +1036,102 @@ MONTHS = ("January", "February", "March", "April", "May", "June", "July", "Augus
           "October", "November", "December")
 
 
+def readable_date(value):
+    """A date the tool can read and that exists: the shape check accepted 2026-13-45."""
+    m = re.match(r"^(\d{1,2}) (%s) (\d{4})$" % "|".join(MONTHS), value)
+    if m:
+        day, month, year = int(m.group(1)), MONTHS.index(m.group(2)) + 1, int(m.group(3))
+    else:
+        m = re.match(r"^(\d{4})-(\d{2})-(\d{2})$", value)
+        if not m:
+            return False
+        year, month, day = (int(x) for x in m.groups())
+    try:
+        datetime.date(year, month, day)
+    except ValueError:
+        return False
+    return True
+
+
+def review_tables(path):
+    """Every table under the Reviewer Record's header, not just the first. read_table reads one
+    table, so a second table of judgments sat in the file unread and unreported."""
+    text = pathlib.Path(path).read_text(encoding="utf-8")
+    header = "| Test | Outcome | Reviewer | Date | Reason |"
+    return text.count(header)
+
+
 def load_reviews(path, known_aliases):
     """The Reviewer Record: one named judgment per Test, read fail-closed. Section 3 makes a Review
     Pass a named reviewer's recorded judgment with a reason, and Section 4 makes the reviewer's
     identity part of the report, so a row without a Test the catalogue carries, a permitted outcome,
     a name, a readable date or a reason, and a second row for one Test, stop the run rather than
     being skipped: a judgment that cannot be attributed is not a judgment."""
+    tables = review_tables(path)
+    if tables != 1:
+        raise SystemExit("%s carries %d tables under the header '| Test | Outcome | Reviewer | Date | Reason |'; "
+                         "a Reviewer Record is one table, so that no judgment sits in the file unread" % (path, tables))
     rows = read_table(path, "| Test | Outcome | Reviewer | Date | Reason |")
     if not rows:
         raise SystemExit("%s carries no reviewer row under the header '| Test | Outcome | Reviewer | Date | Reason |'" % path)
     out = {}
     for cells in rows:
-        if len(cells) < 5:
+        if len(cells) != 5:
             raise SystemExit("%s: a reviewer row has %d cell(s) and five are required: %s" % (path, len(cells), " | ".join(cells)[:80]))
-        alias, outcome, reviewer, date, reason = (c.strip() for c in cells[:5])
+        alias, outcome, reviewer, date, reason = (c.strip() for c in cells)
         if alias not in known_aliases:
             raise SystemExit("%s: %s names a Test the catalogue does not carry" % (path, alias))
         if outcome not in REVIEW_OUTCOMES:
             raise SystemExit("%s: %s records %r; a reviewer records Review Pass or Review Fail" % (path, alias, outcome))
-        if not reviewer or reviewer.lower() in EMPTY_STRINGS:
-            raise SystemExit("%s: %s carries no reviewer; a Review outcome is a named reviewer's judgment" % (path, alias))
-        if not re.match(r"^(\d{1,2} (%s) \d{4}|\d{4}-\d{2}-\d{2})$" % "|".join(MONTHS), date):
-            raise SystemExit("%s: %s carries a date this tool cannot read: %r (D Month YYYY or YYYY-MM-DD)" % (path, alias, date))
-        if not reason or reason.lower() in EMPTY_STRINGS:
-            raise SystemExit("%s: %s carries no reason; a judgment without one cannot be contested" % (path, alias))
+        if len(re.sub(r"[^0-9A-Za-z\u0400-\u04ff]", "", reviewer)) < 2 or reviewer.lower() in EMPTY_STRINGS:
+            raise SystemExit("%s: %s carries no reviewer this tool can read (%r); a Review outcome is a named "
+                             "reviewer's judgment and the report carries the name" % (path, alias, reviewer[:40]))
+        if not readable_date(date):
+            raise SystemExit("%s: %s carries a date this tool cannot read: %r (D Month YYYY or YYYY-MM-DD, and a date that exists)" % (path, alias, date))
+        if len(re.sub(r"[^0-9A-Za-z\u0400-\u04ff]", "", reason)) < 10 or reason.lower() in EMPTY_STRINGS:
+            raise SystemExit("%s: %s carries no reason this tool can read (%r); a judgment without one cannot be contested" % (path, alias, reason[:40]))
         if alias in out:
             raise SystemExit("%s: two rows judge %s; a Test carries one judgment" % (path, alias))
         out[alias] = {"outcome": outcome, "reviewer": reviewer, "date": date, "reason": reason}
     return out
+
+
+def short_reason(reason):
+    """A reason cut at a byte boundary with no marker hid the half of a reviewer's judgment that
+    qualified it. The cut is now visible and says where the whole of it lives."""
+    reason = (reason or "").replace("|", "\\|")
+    return reason if len(reason) <= 180 else reason[:160].rstrip() + " ... (cut here; the whole reason is in the Reviewer Record)"
+
+
+def file_digest(path):
+    return hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest()[:16]
+
+
+def manifest_release():
+    """The Release Identifier and Commit of the last Manifest entry that names a commit. Section 4
+    requires both in a report, and the report carried neither."""
+    text = (ROOT / "docs" / "Governance" / "Publication-Manifest.md").read_text(encoding="utf-8")
+    release, commit = "(not recorded)", "(not recorded)"
+    for m in re.finditer(r"## Release: `([^`]+)`(.*?)(?=\n## |\Z)", text, re.S):
+        c = re.search(r"\| \*\*Commit\*\* \| `([0-9a-f]{7,40})`", m.group(2))
+        if c:
+            release, commit = m.group(1), c.group(1)
+    return release, commit
+
+
+def register_count():
+    return sum(1 for line in REGISTER.read_text(encoding="utf-8").splitlines() if line.startswith("| REQ-"))
+
+
+def alias_revision():
+    """The Alias File is append-only and carries no version, so its revision is the date it was last
+    updated and the number of aliases it holds: what a later reader needs to reproduce this run."""
+    text = (ROOT / "docs" / "Governance" / "Requirement-Aliases.md").read_text(encoding="utf-8")
+    m = re.search(r"(?m)^\*\*Last Updated:\*\* (.+)$", text)
+    dates = re.findall(r"(?m)^\| REQ-[^|]+\|[^|]*\|[^|]*\|[^|]*\| (\d{1,2} [A-Z][a-z]+ \d{4}) \|", text)
+    rows = sum(1 for line in text.splitlines() if line.startswith("| REQ-"))
+    last = sorted(set(dates))[-1] if dates else (m.group(1).strip() if m else "(no date)")
+    return "%d aliases, last appended %s" % (rows, last)
 
 
 def declaration(clause, statement):
@@ -960,7 +1171,7 @@ def main(argv):
     for test in catalogue:
         text = register.get(test["alias"], "")
         kind = test["kind"]
-        if "descriptive" in (test.get("disposition") or "").lower():
+        if (test.get("disposition") or "").strip().lower() == "descriptive":
             # Section 3: a Statement dispositioned Descriptive is Not Applicable, and the governance
             # record that dispositioned it is the authority, not this tool
             outcome, reason = "Not Applicable", "dispositioned Descriptive in the Alias File"
@@ -1024,6 +1235,15 @@ def main(argv):
     lines.append("**Specification version claimed:** %s" % statement.get("supported specification version", "(not declared)"))
     lines.append("")
     lines.append("**Model:** `%s`  **Representation Map:** `%s`" % (a.model, a.map))
+    lines.append("")
+    lines.append("**Inputs, by content:** model `%s`, map `%s`, Conformance Statement `%s` (SHA-256 of each file as read). "
+                 "A Review outcome below was recorded against these three; a judgment carried to a different export is a "
+                 "judgment about something else." % (file_digest(a.model), file_digest(a.map), file_digest(a.statement)))
+    lines.append("")
+    release, commit = manifest_release()
+    lines.append("**Tested against:** Release %s, commit `%s`, per `Governance/Publication-Manifest.md`. "
+                 "Requirement Register: %d Statements. Alias File revision: %s."
+                 % (release, commit, register_count(), alias_revision()))
     lines.append("")
     lines.append("**Published by:** the party that ran the suite. A report published by the claimant is "
                  "self-validation; `Conformance-Test-Suite.md` Section 4 says the suite does not tell the two "
@@ -1120,7 +1340,7 @@ def main(argv):
     for r in results:
         lines.append("| %s | `%s` | %s | %s | %s | %s |"
                      % (r["alias"], r["document"], r["kind"], r["class"],
-                        r["outcome"] or "pending", (r["reason"] or "").replace("|", "\\|")[:180]))
+                        r["outcome"] or "pending", short_reason(r["reason"])))
     report = "\n".join(lines) + "\n"
 
     if a.report:

@@ -139,8 +139,8 @@ def kind_of(text):
         return "Transition"
     if REQUIRES.search(body):
         if CARDINALITY.search(body):
-            # Presence counts one since CAND-025 ("shall have one responsible owner"), and these
-            # eleven Statements stay at Review until a Decision names them; see the catalogue's rule 8
+            # Presence counts one since CAND-025 ("shall have one responsible owner"), and the four
+            # Statements this clause holds stay at Review until a Decision names them (rule 8)
             return "Review"
         return "Presence"
     return "Review"
@@ -273,9 +273,23 @@ def render(today):
         total = counts.get(kind, 0)
         mand = len([r for r in mandatory if r[5] == kind])
         out.append("| %s | %d | %d |" % (kind, total, mand))
-    out.append("| Declaration | %d | %d |" % (counts.get("Declaration", 0) + len(claims),
-                                                len([r for r in mandatory if r[5] == "Declaration"]) + len(claims)))
+    out.append("| Declaration | %d | %d |" % (counts.get("Declaration", 0),
+                                                len([r for r in mandatory if r[5] == "Declaration"])))
+    # the Census counts register Statements, and adding the claim clauses to it made the columns
+    # sum to 214 and 188 against the 208 and 182 this document states elsewhere. The sums are taken
+    # from the lines just written, not recomputed, so that a wrong figure cannot be printed at all
+    census = [re.match(r"^\| \w+ \| (\d+) \| (\d+) \|$", line) for line in out]
+    printed = sum(int(m.group(1)) for m in census if m)
+    printed_mandatory = sum(int(m.group(2)) for m in census if m)
+    if (printed, printed_mandatory) != (len(rows), len(mandatory)):
+        raise SystemExit("the Census columns sum to %d and %d, and the catalogue carries %d Statements of which %d are "
+                         "mandatory; a Census that does not add up is worse than none"
+                         % (printed, printed_mandatory, len(rows), len(mandatory)))
     out.append("")
+    out.append("Beside the rows above, %d claim clauses of `%s` are catalogued separately below and carry "
+               "Declaration Tests read from the Conformance Statement; they are not register Statements and are "
+               "counted in neither column, so the two columns sum to %d and %d, the figures this document's "
+               "Purpose and `Requirement-Register.md` state.\n" % (len(claims), CLAIM_DOC, len(rows), len(mandatory)))
     out.append("Of the %d mandatory Statements, %d carry a mechanical kind and %d fall to Review. A Review outcome "
                "is a named reviewer's recorded judgment, which Section 3 counts toward Core Conformance as Review "
                "Pass; it is not a gap in the suite, and it is not a machine result either, which is why the count "

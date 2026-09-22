@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 19 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -24,7 +24,7 @@ This is a snapshot, not a normative document. For the full history and forward-l
 
 ## Current Version
 
-**Core Vocabulary v0.1**, released 21 July 2026. **Specification reading path v1.0**, 17 September 2026. **Constitution 1.0.1**. **Current Release v1.3.0**. The four tracks are defined in [`Governance/Publication-Model.md`](Governance/Publication-Model.md) and the Release is recorded in [`Governance/Publication-Manifest.md`](Governance/Publication-Manifest.md); the tables below are the 22 July 2026 snapshot and are left as written.
+**Core Vocabulary v0.1**, released 21 July 2026. **Specification reading path v1.0**, 17 September 2026. **Constitution 1.0.1**. **Current Release v1.4.0**, 22 September 2026 (Zenodo DOI 10.5281/zenodo.22900969). The four tracks are defined in [`Governance/Publication-Model.md`](Governance/Publication-Model.md) and the Release is recorded in [`Governance/Publication-Manifest.md`](Governance/Publication-Manifest.md); the tables below are the 22 July 2026 snapshot and are left as written. **Current Release v1.4.0**, 22 September 2026 (Zenodo DOI 10.5281/zenodo.22900969).
 
 ## Completed Subsystems
 
@@ -92,3 +92,4 @@ Per-document `Status` fields are authoritative; as a general guide:
 | 0.1 | 16 September 2026 | Currency note added (the tables record the 22 July 2026 state; current Release v1.2.0); the Section 9 sentence dated to the 11 September 2026 transcription; this Revision History table added, since `Governance/Documentation-Standards.md` requires one in every document. |
 | 0.1 | 17 September 2026 | Currency note extended: the Specification reading path is v1.0. |
 | 0.1 | 19 September 2026 | Currency note: the current Release is v1.3.0, corrected on 18 September 2026 in the same edit that left this row unwritten. |
+| 0.1 | 22 September 2026 | Currency note: the current Release is `v1.4.0` (22 September 2026, Zenodo DOI 10.5281/zenodo.22900969); the tables below still record the 22 July 2026 state and are still left as written. |

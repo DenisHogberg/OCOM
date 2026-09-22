@@ -49,3 +49,4 @@ Security issues go through [SECURITY.md](SECURITY.md). Everything else goes thro
 | 0.1 | 15 September 2026 | Continuity item 1 corrected: Zenodo holds the releases it accepted, v1.0.0 and v1.1.1, not every release; v1.1.0's deposit was rejected and it carries no DOI. |
 | 0.1 | 17 September 2026 | Continuity item 1 updated: Zenodo now also holds v1.2.0; the Software Heritage archive is named by origin and by the SWHID of release v1.2.0, taken from the snapshot of 17 September 2026. |
 | 0.1 | 17 September 2026 | Continuity item 1 updated for v1.3.0: Zenodo holds it, and the Software Heritage snapshot taken after its publication names it by SWHID. |
+| 0.1 | 22 September 2026 | Continuity item 1: `v1.4.0` added to the releases Zenodo holds under the concept DOI. |
