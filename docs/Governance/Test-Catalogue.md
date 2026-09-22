@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -30,18 +30,19 @@ Applied in order; the first that matches decides. The rules are stated here so t
 
 | Order | Kind | The Statement goes here when it |
 |---|---|---|
-| 1 | Review | binds the adopting organization's own process rather than the model: it opens with Organization or An organization |
-| 2 | Review | turns on a judgement: appropriate, adequate, sufficient, relevant, meaningful, conflicting, clear, understandable, as needed, where applicable, business semantics, technology independent |
-| 3 | Review | is a stem with a list, one of whose items names a behaviour rather than a thing (support, preserve, remain, maintain, participate, ensure, avoid, enable, allow, be, comply, reflect, operate, exist, apply, survive, respect, follow, consider, account) |
-| 4 | Integrity | claims a record is immutable: remain immutable, immutable after creation, never be modified after creation (`CAND-024`) |
-| 5 | Invariant | forbids a condition: shall not, shall never, must not, may not, never be |
-| 6 | Transition | turns on a State or a Transition: transition, state change, initial State, terminal State, permitted State, exactly one State, occupying a State |
-| 7 | Presence | requires something to exist: a stem ending in a colon whose items all name things, or shall define, have, possess, contain, include, carry, specify, record, reference, assign, exist, be assigned |
-| 8 | Review | everything else, which Section 3 sends to a named reviewer |
+| 1 | Declaration | is `Meta/Identity.md`'s scope rule, which `CAND-026` decides by the scope the Representation Map declares for the export's identities |
+| 2 | Review | binds the adopting organization's own process rather than the model: it opens with Organization or An organization |
+| 3 | Review | turns on a judgement: appropriate, adequate, sufficient, relevant, meaningful, conflicting, clear, understandable, as needed, where applicable, business semantics, technology independent |
+| 4 | Review | is a stem with a list, one of whose items names a behaviour rather than a thing (support, preserve, remain, maintain, participate, ensure, avoid, enable, allow, be, comply, reflect, operate, exist, apply, survive, respect, follow, consider, account) |
+| 5 | Integrity | claims a record is immutable: remain immutable, immutable after creation, never be modified after creation (`CAND-024`) |
+| 6 | Invariant | forbids a condition: shall not, shall never, must not, may not, never be |
+| 7 | Transition | turns on a State or a Transition: transition, state change, initial State, terminal State, permitted State, exactly one State, occupying a State |
+| 8 | Presence | requires something to exist: a stem ending in a colon whose items all name things, or shall define, have, possess, contain, include, carry, specify, record, reference, assign, exist, be assigned; a Statement that also counts (exactly one, one or more, at least one, no more than, only one) stays at Review, except that Presence counts one where the Statement says one (`CAND-025`) |
+| 9 | Review | everything else, which Section 3 sends to a named reviewer |
 
-The first three rules are the ones that matter, and they run before the mechanical kinds on purpose. A Statement leaves for Review as soon as any part of it is beyond an export's reach, so that a mechanical kind means the whole Statement was checked and never most of it. The rule that moves the most is the third: the most frequent item across the corpus's list obligations is "remain technology independent", in 24 Statements, and the second is "support governance", in 13. Both are properties of an implementation, not fields of a model, and a Presence Test over a list containing one of them would report Pass having checked nothing.
+The three Review rules, 2 to 4, are the ones that matter, and they run before the mechanical kinds on purpose. A Statement leaves for Review as soon as any part of it is beyond an export's reach, so that a mechanical kind means the whole Statement was checked and never most of it. The rule that moves the most is the third: the most frequent item across the corpus's list obligations is "remain technology independent", in 24 Statements, and the second is "support governance", in 13. Both are properties of an implementation, not fields of a model, and a Presence Test over a list containing one of them would report Pass having checked nothing.
 
-Declaration, the fifth kind, is not assigned by these rules. Section 3 binds it to the claim clauses of `Language/Conformance.md`, tested through the Conformance Statement rather than an exported model. That document is not one of the twenty two in the requirement set, so its clauses carry no register alias and are catalogued separately below.
+Declaration, the fifth kind, reaches one register Statement through rule 1, `Meta/Identity.md`'s scope rule, read from the Representation Map since `CAND-026`. Otherwise Section 3 binds it to the claim clauses of `Language/Conformance.md`, tested through the Conformance Statement rather than an exported model. That document is not one of the twenty two in the requirement set, so its clauses carry no register alias and are catalogued separately below.
 
 ---
 
@@ -53,10 +54,10 @@ Declaration, the fifth kind, is not assigned by these rules. Section 3 binds it 
 | Integrity | 10 | 10 |
 | Invariant | 14 | 14 |
 | Transition | 10 | 9 |
-| Review | 146 | 121 |
-| Declaration | 6 | 6 |
+| Review | 145 | 120 |
+| Declaration | 7 | 7 |
 
-Of the 182 mandatory Statements, 61 carry a mechanical kind and 121 fall to Review. A Review outcome is a named reviewer's recorded judgment, which Section 3 counts toward Core Conformance as Review Pass; it is not a gap in the suite, and it is not a machine result either, which is why the count is printed rather than buried.
+Of the 182 mandatory Statements, 62 carry a mechanical kind and 120 fall to Review. A Review outcome is a named reviewer's recorded judgment, which Section 3 counts toward Core Conformance as Review Pass; it is not a gap in the suite, and it is not a machine result either, which is why the count is printed rather than buried.
 
 A Statement whose subject is persistence over time, such as "Identity shall remain stable throughout the Object's existence", falls to Review here because a single exported model carries no history to check it against. An export that carried its own event history would move several of these to Invariant; the catalogue will report that change when an export offers one, rather than claiming it now.
 
@@ -82,11 +83,11 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 
 | Kind | Reads | Procedure |
 |---|---|---|
-| Presence | exported model, Representation Map | For every instance of the Object type the Statement names, the Representation Map resolves each required element; the Test passes when every instance resolves every one of them. |
+| Presence | exported model, Representation Map | For every instance of the Object type the Statement names, the Representation Map resolves each required element; the Test passes when every instance resolves every one of them. Where the Statement asks for one of an element (`CAND-025`), every instance carries exactly one value for it, and an owner resolves to the one Ownership record that names the instance. |
 | Integrity | exported model, Representation Map (method and field of the demonstration) | For every record of the type the Statement names, the demonstration the Representation Map declares is verified against the record as exported; the Test passes when every record verifies, fails when one does not, and is pending when the map declares no demonstration, since the suite verifies one and never supplies it. |
 | Invariant | exported model, refusal record | The exported model is searched for the condition the Statement forbids; the Test passes when no instance exhibits it, and where the implementation exposes a refusal record, when the refusal is recorded instead. |
 | Transition | exported model | Every recorded State of every instance is checked against the Transitions its Lifecycle permits; the Test passes when every change is permitted and no terminal State is left. |
-| Declaration | Conformance Statement | The Conformance Statement is read for the field the claim clause requires; the Test passes when the field is present and non-empty. |
+| Declaration | Conformance Statement; Representation Map for the Identity scope rule | The Conformance Statement is read for the field the claim clause requires, and the Test passes when the field is present and non-empty; for `Meta/Identity.md`'s scope rule the Representation Map is read for the scope it declares (`CAND-026`), and the Test passes when it is one of the five scopes that document names, an External System naming its system, and is pending when the map declares none. |
 | Review | reviewer record | A named reviewer examines the evidence and records Review Pass or Review Fail with a reason; no mechanical procedure decides it. |
 
 ---
@@ -106,7 +107,7 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-META-IDENTITY-001 | `Meta/Identity.md` | Definition | mandatory | Review |  |
 | REQ-META-IDENTITY-002 | `Meta/Identity.md` | Design Principles | mandatory | Review |  |
 | REQ-META-IDENTITY-003 | `Meta/Identity.md` | Core Characteristics | mandatory | Review |  |
-| REQ-META-IDENTITY-005 | `Meta/Identity.md` | Identity Scope | mandatory | Review |  |
+| REQ-META-IDENTITY-005 | `Meta/Identity.md` | Identity Scope | mandatory | Declaration |  |
 | REQ-META-IDENTITY-007 | `Meta/Identity.md` | Identity Assignment | mandatory | Presence |  |
 | REQ-META-IDENTITY-008 | `Meta/Identity.md` | Identity Assignment | mandatory | Invariant |  |
 | REQ-META-IDENTITY-009 | `Meta/Identity.md` | Identity Assignment | mandatory | Review |  |
@@ -325,4 +326,4 @@ Derived from `Language/Conformance.md`. Every one is kind Declaration and is rea
 
 | Version | Date | Description |
 |----------|------|-------------|
-| 0.1 | 20 September 2026 | First generation: 208 Statements bound to a Test, 182 of them mandatory, and 6 claim clauses bound to Declaration. Completes the binding `Conformance-Test-Suite.md` Section 3 specifies. |
+| 0.1 | 22 September 2026 | First generation: 208 Statements bound to a Test, 182 of them mandatory, and 6 claim clauses bound to Declaration. Completes the binding `Conformance-Test-Suite.md` Section 3 specifies. |

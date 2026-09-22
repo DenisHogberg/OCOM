@@ -76,7 +76,7 @@ def load_register():
 
 
 def load_map(path):
-    types, fields = {}, {}
+    types, fields, declarations = {}, {}, {}
     for cells in read_table(path, "| OCOM type | Kind | Where it is in this export |"):
         if len(cells) < 3 or cells[1] != "collection":
             continue
@@ -88,12 +88,19 @@ def load_map(path):
     for cells in read_table(path, "| OCOM element | Kind | Field in the export |"):
         # a row of kind method names how records demonstrate integrity; it is read like a field
         # binding but its value is a method name, not a field of the export
-        if len(cells) < 3 or cells[1] not in ("field", "method"):
+        if len(cells) < 3:
+            continue
+        if cells[1] == "declaration":
+            # a row of kind declaration states something about the export as a whole, such as the
+            # scope of its identities (CAND-026); it names no field and is read by Declaration Tests
+            declarations[cells[0].lower()] = cells[2].strip("`")
+            continue
+        if cells[1] not in ("field", "method"):
             continue
         fields[cells[0].lower()] = cells[2].strip("`")
     if not types:
         raise SystemExit("%s declares no type; the map is what makes the test possible" % path)
-    return types, fields
+    return types, fields, declarations
 
 
 def load_statement(path):
@@ -156,8 +163,9 @@ def is_absent(value):
 class Resolver:
     """The only way the engines touch the export, so every kind honours the Representation Map."""
 
-    def __init__(self, model, types, fields):
+    def __init__(self, model, types, fields, declarations=None):
         self.model, self.types, self.fields = model, types, fields
+        self.declarations = declarations or {}
 
     def declared(self, type_name):
         return type_name.lower() in self.types
@@ -252,6 +260,47 @@ def required_elements(text):
 # a phrase carrying a clause is a condition, not an element: "when an Object is created"
 CLAUSE = re.compile(r"\b(when|where|unless|while|after|before|if|through|within|that|which)\b")
 
+# a Statement that asks for one of something: "Every Entity shall have one responsible owner"
+ONE = re.compile(r"\bshall (?:have|possess|define|carry|reference|belong to|contain|include) (?:exactly )?(?:one|a single)\b", re.I)
+
+
+def one_of(subject, element, records, r):
+    """The cardinality leg CAND-025 added to Presence. Every record carries exactly one value for
+    the element, and, when the element is an owner and the map binds Ownership.owned object, the
+    owner resolves to the one Ownership record that names the record: an Ownership record it names
+    must name it back, and where several Ownership records name it (Shared Ownership) its owner
+    must say which one is accountable. Returns (failure reason or None, note for the Pass reason)."""
+    name, _ = r.field(subject, element)
+    own_id, _ = r.field("ownership", "identifier")
+    owned, _ = r.field("ownership", "owned object")
+    owner_party, _ = r.field("ownership", "owner")
+    ownership = [o for _, o in r.records("ownership")] if r.types.get("ownership") and owned else []
+    resolved = False
+    for path, rec in records:
+        value = rec.get(name)
+        if isinstance(value, list):
+            if len(value) != 1:
+                return ("%s record %s carries %d values for %s where the Statement asks for one"
+                        % (subject, rec.get("id", "?"), len(value), element)), ""
+            value = value[0]
+        if not ownership or "owner" not in element:
+            continue
+        ident = r.identity_of(path, rec)
+        naming = [o for o in ownership if o.get(owned) == ident]
+        by_id = [o for o in ownership if own_id and o.get(own_id) == value]
+        if by_id:
+            resolved = True
+            if not any(o is x for o in by_id for x in naming):
+                return ("%s record %s names Ownership record %s, which names %s as its owned object and not it"
+                        % (subject, ident, value, by_id[0].get(owned, "nothing"))), ""
+        elif len(naming) > 1:
+            accountable = [o for o in naming if owner_party and o.get(owner_party) == value]
+            if len(accountable) != 1:
+                return ("%d Ownership records name %s record %s and its %s (%s) says which of them is accountable to none of them"
+                        % (len(naming), subject, ident, element, value)), ""
+            resolved = True
+    return None, (", each resolving to the one Ownership record that names it" if resolved else "")
+
 
 def presence(test, text, r):
     subject = subject_of(text, r.types)
@@ -285,6 +334,14 @@ def presence(test, text, r):
                 break
     if missing:
         return "Fail", "; ".join(missing[:4])
+    # a Statement asking for one of something is not established by the value being there either
+    one_note = ""
+    if ONE.search(text):
+        for element in elements:
+            failure, one_note = one_of(subject, element, records, r)
+            if failure:
+                return "Fail", failure
+        one_note = ", one each" + one_note
     # a Statement asking for a unique value is not established by the value being there
     unique_note = ""
     if re.search(r"\bunique\b", text, re.I):
@@ -298,7 +355,7 @@ def presence(test, text, r):
                 return "Fail", "%s is not unique across %s: %s" % (element, subject, ", ".join(str(x) for x in repeated[:3]))
         unique_note = ", each distinct"
     note = "" if not borrowed else " (%s)" % "; ".join(borrowed)
-    return "Pass", "%d %s record(s) carry %s%s%s" % (len(records), subject, ", ".join(elements), unique_note, note)
+    return "Pass", "%d %s record(s) carry %s%s%s%s" % (len(records), subject, ", ".join(elements), one_note, unique_note, note)
 
 
 def lifecycle_index(r):
@@ -669,13 +726,46 @@ def canonical_digest(record, field):
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+def erasure_records(r):
+    """Every erasure record the map declares (`Erasure` is the collection; `Erasure.erased record`,
+    `Erasure.policy` and `Erasure.actor` its fields), as (identity, erased identity, reasons). The
+    reasons are why the record grants no exclusion; an empty list grants it. Memory/Retention.md's
+    Deleted state requires an erasure record to name a Policy the organization has declared and the
+    actor who issued it (AO-085, a postscript to CAND-024), so a record naming neither is reported
+    and the record it names is verified like any other."""
+    if not r.types.get("erasure"):
+        return []
+    ident_f, _ = r.field("erasure", "identifier")
+    erased_f, _ = r.field("erasure", "erased record")
+    policy_f, _ = r.field("erasure", "policy")
+    actor_f, _ = r.field("erasure", "actor")
+    pol_id, _ = r.field("policy", "identifier")
+    policies = {p.get(pol_id) for _, p in r.records("policy")} if r.types.get("policy") and pol_id else set()
+    out = []
+    for path, rec in r.records("erasure"):
+        why = []
+        if erased_f is None or is_absent(rec.get(erased_f)):
+            why.append("names no erased record")
+        if policy_f is None:
+            why.append("the map binds no field to Erasure.policy")
+        elif is_absent(rec.get(policy_f)):
+            why.append("names no Policy")
+        elif not policies:
+            why.append("names Policy %s, but the export declares no Policy records to check it against" % rec.get(policy_f))
+        elif rec.get(policy_f) not in policies:
+            why.append("names Policy %s, which the export does not declare" % rec.get(policy_f))
+        if actor_f is None:
+            why.append("the map binds no field to Erasure.actor")
+        elif is_absent(rec.get(actor_f)):
+            why.append("names no actor")
+        ident = rec.get(ident_f) if ident_f else None
+        out.append((ident if not is_absent(ident) else r.identity_of(path, rec), rec.get(erased_f) if erased_f else None, why))
+    return out
+
+
 def erased_records(r):
-    """Identities named by an erasure record, per Memory/Retention.md's Deleted state, read
-    through the map: `Erasure` is the collection and `Erasure.erased record` the field."""
-    field, _ = r.field("erasure", "erased record")
-    if not r.types.get("erasure") or field is None:
-        return set()
-    return {rec.get(field) for _, rec in r.records("erasure") if rec.get(field)}
+    """Identities whose erasure record grants the exclusion Retention.md provides."""
+    return {erased for _, erased, why in erasure_records(r) if erased and not why}
 
 
 def integrity(test, text, r):
@@ -728,6 +818,31 @@ def integrity(test, text, r):
     return "Pass", "%d %s record(s) are identified by the digest of their own content, so an altered record is a different record%s" % (len(records) - skipped, subject, note)
 
 
+SCOPES = ("organization", "business domain", "registry", "external system", "global ecosystem")
+
+
+def scope_declaration(test, text, r):
+    """CAND-026: `Organizations shall define the appropriate scope for each Identity` is decided by
+    the scope the Representation Map declares, in a row `Identity.scope` of kind declaration (or
+    `<Type>.identity scope` for one type). One of the five scopes Meta/Identity.md names passes;
+    any other fails; External System must also name its system; a map that declares none is pending,
+    since the suite reads a declaration and never supplies one."""
+    decl = {k: v for k, v in r.declarations.items() if k == "identity.scope" or k.endswith(".identity scope")}
+    if not decl:
+        return None, ("the Representation Map declares no Identity scope (a row `Identity.scope` of kind declaration); "
+                      "CAND-026 asks the map to declare one of the five scopes Meta/Identity.md names")
+    for key, value in sorted(decl.items()):
+        if value.strip().lower() not in SCOPES:
+            return "Fail", "%s declares %r, which is not one of the five scopes Meta/Identity.md names" % (key, value)
+        if value.strip().lower() == "external system":
+            system_key = key[:-len("scope")] + "system"
+            if is_absent(r.declarations.get(system_key)):
+                return "Fail", "%s declares External System and names no system (a row %s of kind declaration)" % (key, system_key)
+    return "Pass", "the map declares %s" % "; ".join(
+        "%s for %s" % (v, "every identity the export carries" if k == "identity.scope" else "%s identities" % k.split(".")[0])
+        for k, v in sorted(decl.items()))
+
+
 def declaration(clause, statement):
     low = clause.lower()
     if "specification version" in low:
@@ -754,8 +869,8 @@ def main(argv):
     a = p.parse_args(argv)
 
     model = json.loads(pathlib.Path(a.model).read_text(encoding="utf-8"))
-    types, fields = load_map(a.map)
-    r = Resolver(model, types, fields)
+    types, fields, declarations = load_map(a.map)
+    r = Resolver(model, types, fields, declarations)
     statement = load_statement(a.statement)
     catalogue = load_catalogue()
     register = load_register()
@@ -778,6 +893,8 @@ def main(argv):
             outcome, reason = invariant(test, text, r)
         elif kind == "Integrity":
             outcome, reason = integrity(test, text, r)
+        elif kind == "Declaration":
+            outcome, reason = scope_declaration(test, text, r)
         else:
             outcome, reason = None, "no procedure is bound to this kind"
         results.append({**test, "outcome": outcome, "reason": reason, "text": text})
@@ -848,6 +965,28 @@ def main(argv):
                      "every one of them names a record it carries. Fields holding prose, and a Reference's "
                      "target, which may legitimately name another system, are not resolved."
                      % (examined, len(r.ids())))
+    lines.append("")
+    lines.append("---")
+    lines.append("")
+    lines.append("## Erasure Records")
+    lines.append("")
+    erasures = erasure_records(r)
+    if not r.types.get("erasure"):
+        lines.append("The Representation Map declares no Erasure records, so no record was excluded from an "
+                     "Integrity Test on that ground. `Memory/Retention.md` is outside the requirement set, so "
+                     "this is an observation and not a Test outcome.")
+    else:
+        granted = [e for e in erasures if not e[2]]
+        lines.append("%d erasure record(s); %d grant the exclusion `Memory/Retention.md`'s Deleted state provides, "
+                     "naming a Policy the export declares and an actor. The records the others name were verified "
+                     "like any other. `Memory/Retention.md` is outside the requirement set, so this is an observation "
+                     "and not a Test outcome." % (len(erasures), len(granted)))
+        lines.append("")
+        for ident, erased, why in erasures[:20]:
+            if why:
+                lines.append("- %s names %s and grants no exclusion: %s" % (ident or "?", erased or "no record", "; ".join(why)))
+            else:
+                lines.append("- %s names %s: exclusion granted" % (ident or "?", erased))
     lines.append("")
     lines.append("---")
     lines.append("")

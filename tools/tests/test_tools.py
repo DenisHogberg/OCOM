@@ -33,6 +33,7 @@ VALIDATE = "tools/conformance/validate.py"
 PARITY = "tools/site/published_source_parity.py"
 TRACE = "tools/governance/principle_traceability.py"
 HEALTH = "tools/site/publication_health.py"
+SCHEMA = "tools/conformance/reference_schema.py"
 
 
 def run(root, tool, *args):
@@ -246,10 +247,12 @@ class TestCatalogue(unittest.TestCase):
             self.assertEqual([c.strip() for c in row.strip().strip("|").split("|")][4], "Review", row)
 
     def test_an_organizational_obligation_is_not_mechanical(self):
+        # REQ-META-OWNERSHIP-008 opens with Organizations and stays at Review; REQ-META-IDENTITY-005 opened
+        # with it too until CAND-026 bound the scope rule to a Declaration read from the map
         with Copy() as c:
             run(c.dir, CATALOGUE, "--write")
             text = (c.dir / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
-            rows = [l for l in text.splitlines() if l.startswith("| REQ-META-IDENTITY-005 |")]
+            rows = [l for l in text.splitlines() if l.startswith("| REQ-META-OWNERSHIP-008 |")]
             self.assertTrue(rows, "the Statement this test names is gone from the register")
             self.assertEqual([c.strip() for c in rows[0].strip().strip("|").split("|")][4], "Review", rows[0])
 
@@ -284,6 +287,55 @@ class TestCatalogue(unittest.TestCase):
             code, out = run(c.dir, CATALOGUE, "--check")
             self.assertNotEqual(code, 0, out)
             self.assertIn("no alias", out)
+
+
+class ReferenceSchema(unittest.TestCase):
+    """The schema is derived, and a check that could not tell a drifted schema or a broken file
+    from a good one would be decoration."""
+
+    EX = "docs/Examples/Conformance"
+
+    def test_the_committed_schema_matches_a_regeneration_and_the_model_satisfies_it(self):
+        code, out = run(ROOT, SCHEMA, "--check")
+        self.assertEqual(code, 0, out)
+        self.assertIn("schema up to date", out)
+
+    def test_a_drifted_schema_fails_the_check(self):
+        with Copy() as c:
+            path = "%s/schema.json" % self.EX
+            c.write(path, c.read(path).replace('"additionalProperties": true', '"additionalProperties": false', 1))
+            code, out = run(c.dir, SCHEMA, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("differs from a regeneration", out)
+
+    def test_a_file_missing_a_required_key_fails_validation(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            del model["entities"][0]["id"]
+            broken = c.dir / "broken.json"
+            broken.write_text(json.dumps(model), encoding="utf-8")
+            code, out = run(c.dir, SCHEMA, "--validate", str(broken))
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("required key id is missing", out)
+
+    def test_a_wrongly_typed_value_and_a_bad_digest_fail_validation(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["attributes"] = "not a list"
+            model["audit_records"][0]["id"] = "not-a-digest"
+            broken = c.dir / "broken.json"
+            broken.write_text(json.dumps(model), encoding="utf-8")
+            code, out = run(c.dir, SCHEMA, "--validate", str(broken))
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("expected array", out)
+            self.assertIn("does not match", out)
+
+    def test_a_model_without_records_cannot_produce_a_schema(self):
+        with Copy() as c:
+            c.write("%s/model.json" % self.EX, json.dumps({"export": {"produced_by": "nobody"}}))
+            code, out = run(c.dir, SCHEMA, "--write")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("no collection of records", out)
 
 
 class Validator(unittest.TestCase):
@@ -463,12 +515,56 @@ class Validator(unittest.TestCase):
             model = json.loads(c.read("%s/model.json" % self.EX))
             erased = model["audit_records"][0]["id"]
             model["audit_records"][0]["value"] = "[erased]"
-            model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND", "created_at": "2026-09-21T00:00:00Z"}]
+            model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND", "actor": "records-officer", "created_at": "2026-09-21T00:00:00Z"}]
             c.write("%s/model.json" % self.EX, json.dumps(model))
-            path = "%s/representation-map.md" % self.EX
-            c.write(path, c.read(path).replace("| Registry | collection | `registries` |", "| Registry | collection | `registries` |\n| Erasure | collection | `erasures` |") .replace("| Integrity.method |", "| Erasure.erased record | field | `record` |\n| Integrity.method |"))
+            self.map_erasures(c)
             rows = self.integrity_rows(c.dir)
             self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Pass", rows)
+            self.assertIn("ERA-0001 names %s: exclusion granted" % erased, self.report_text(c.dir))
+
+    def map_erasures(self, c):
+        path = "%s/representation-map.md" % self.EX
+        c.write(path, c.read(path)
+                .replace("| Registry | collection | `registries` |", "| Registry | collection | `registries` |\n| Erasure | collection | `erasures` |")
+                .replace("| Integrity.method |", "| Erasure.identifier | field | `id` |\n| Erasure.erased record | field | `record` |\n| Erasure.policy | field | `policy` |\n| Erasure.actor | field | `actor` |\n| Integrity.method |"))
+
+    def report_text(self, root):
+        out = pathlib.Path(tempfile.mkdtemp()) / "r.md"
+        code, printed = run(root, VALIDATE, "--model", "%s/model.json" % self.EX,
+                            "--map", "%s/representation-map.md" % self.EX,
+                            "--statement", "%s/conformance-statement.md" % self.EX, "--report", str(out))
+        self.assertEqual(code, 0, printed)
+        text = out.read_text(encoding="utf-8")
+        shutil.rmtree(out.parent, ignore_errors=True)
+        return text
+
+    def test_an_erasure_record_naming_no_policy_and_no_actor_grants_no_exclusion(self):
+        """AO-085: the exclusion is granted only by an erasure record that can itself be checked.
+        A record that names neither a Policy nor an actor leaves the erased record to be verified
+        like any other, and an erased record no longer verifies."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            erased = model["audit_records"][0]["id"]
+            model["audit_records"][0]["value"] = "[erased]"
+            model["erasures"] = [{"id": "ERA-0001", "record": erased, "created_at": "2026-09-21T00:00:00Z"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.map_erasures(c)
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Fail", rows)
+            text = self.report_text(c.dir)
+            self.assertIn("grants no exclusion: names no Policy; names no actor", text)
+
+    def test_an_erasure_record_naming_an_undeclared_policy_grants_no_exclusion(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            erased = model["audit_records"][0]["id"]
+            model["audit_records"][0]["value"] = "[erased]"
+            model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-NOWHERE", "actor": "records-officer", "created_at": "2026-09-21T00:00:00Z"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.map_erasures(c)
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Fail", rows)
+            self.assertIn("names Policy POL-NOWHERE, which the export does not declare", self.report_text(c.dir))
 
     def test_a_domain_identity_renamed_with_the_map_still_finds_the_overlap(self):
         with Copy() as c:
@@ -490,6 +586,15 @@ class Validator(unittest.TestCase):
             code, out = self.run_on(c.dir)
             self.assertNotEqual(code, 0, out)
             self.assertIn("not a list of records", out)
+
+    def test_the_catalogue_binds_the_scope_rule_to_declaration(self):
+        code, out = run(ROOT, CATALOGUE, "--census")
+        self.assertEqual(code, 0, out)
+        self.assertRegex(out, r"Declaration\s+1 \(mandatory 1\)")
+        row = [l for l in (ROOT / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8").splitlines()
+               if l.startswith("| REQ-META-IDENTITY-005 |")]
+        self.assertEqual(len(row), 1)
+        self.assertIn("| Declaration |", row[0])
 
     def test_the_catalogue_binds_immutability_to_integrity(self):
         text = (ROOT / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
@@ -685,6 +790,52 @@ class Validator(unittest.TestCase):
             c.write("%s/model.json" % self.EX, json.dumps(model))
             code, out = self.run_on(c.dir)
             self.assertNotIn("Fail 0", out)
+
+    def test_an_entity_with_two_owners_fails_the_one_owner_statement(self):
+        """CAND-025: `Every Entity shall have one responsible owner` is a count, not a presence."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["owner"] = ["OWN-P-10432", "OWN-LIB-000198"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-ENTITY-004"), "Fail")
+
+    def test_an_owner_naming_another_objects_ownership_record_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["owner"] = "OWN-LIB-000198"      # names the Item's Ownership record
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-ENTITY-004"), "Fail")
+
+    def test_shared_ownership_needs_the_owner_to_say_which_record_is_accountable(self):
+        """Several Ownership records may name one Entity (Shared Ownership); its owner must say
+        which one is accountable. A party name that matches exactly one of them passes, a name that
+        matches none fails."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["ownership"].append({"id": "OWN-P-10432-DATA", "owner": "Data Office", "owned_object": "P-10432",
+                                       "responsibility_scope": "Personal data of the record.", "effective_date": "2024-01-08"})
+            model["entities"][0]["owner"] = "Membership Desk"     # the party named by OWN-P-10432, not a record id
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-ENTITY-004"), "Pass")
+            model["entities"][0]["owner"] = "Nobody In Particular"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-ENTITY-004"), "Fail")
+
+    def test_the_scope_declaration_decides_the_identity_scope_rule(self):
+        """CAND-026: REQ-META-IDENTITY-005 is read from the map's Identity.scope declaration."""
+        self.assertEqual(self.outcomes(ROOT).get("REQ-META-IDENTITY-005"), "Pass")
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            row = "| Identity.scope | declaration | `Organization` |"
+            self.assertIn(row, c.read(path))
+            c.write(path, c.read(path).replace(row, ""))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-META-IDENTITY-005"), "pending")
+            c.write(path, c.read(path).replace("| Integrity.method |", "| Identity.scope | declaration | `Nowhere` |\n| Integrity.method |"))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-META-IDENTITY-005"), "Fail")
+            c.write(path, c.read(path).replace("| Identity.scope | declaration | `Nowhere` |", "| Identity.scope | declaration | `External System` |"))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-META-IDENTITY-005"), "Fail", "External System must name its system")
+            c.write(path, c.read(path).replace("| Integrity.method |", "| Identity.system | declaration | `SAP S/4HANA` |\n| Integrity.method |"))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-META-IDENTITY-005"), "Pass")
 
     def test_an_entity_type_governed_by_two_domains_fails(self):
         with Copy() as c:

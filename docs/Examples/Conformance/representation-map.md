@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -35,6 +35,8 @@ own.
 # How to Read a Row
 
 A row of kind `method`, `Integrity.method`, names the method by which records demonstrate they are unaltered, and a row `Type.integrity` of kind `field` names the field that carries the demonstration on each record of that type. `content-addressed-identity` means the record's identity field holds the SHA-256 of the record's own content (its JSON with the identity field removed, keys sorted, no whitespace, UTF-8; a stated encoding, not RFC 8785), so an altered record is a different record and a party holding the old identity can tell. It is the one method `tools/conformance/validate.py` passes. A record that merely carries its own digest (`sha256-canonical-json`) is verified and reported pending, because matching one's own digest shows consistency and not that nothing changed. Audit Records in this export carry a `label` beside the content address, for reading; Evidence Records keep a readable identity: a Memory Record's content includes the Evidence it references and an Evidence Record names its Memory Record, so the two cannot both be content-addressed, and the Evidence side names the Memory Record by its content address.
+
+A row of kind `declaration` states something about the export as a whole rather than binding a field: `Identity.scope` declares which of the five Identity Scopes `Meta/Identity.md` names the export's identities carry (`CAND-026`); an export whose identities come from another system declares `External System` and names the system in a row `Identity.system`. A type may declare its own scope in a row `<Type>.identity scope`.
 
 A row of kind `collection` names where instances of an OCOM type live in the export: one or more
 top-level keys, or a path of the form `parent[].child` for instances nested inside another
@@ -199,6 +201,7 @@ that needs it fails rather than passing over an absence.
 | Audit record.label | field | `label` |
 | Event.integrity | field | `id` |
 | Integrity.method | method | `content-addressed-identity` |
+| Identity.scope | declaration | `Organization` |
 
 ---
 
@@ -207,3 +210,4 @@ that needs it fails rather than passing over an absence.
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 September 2026 | First map, written for `model.json` so the Conformance Test Suite can be run end to end against a real file. |
+| 0.1 | 22 September 2026 | Row `Identity.scope` of kind `declaration`, declaring Organization as the scope of every identity this export carries, per `CAND-026`; the kind explained under How to Read a Row. |

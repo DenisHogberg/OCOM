@@ -42,6 +42,9 @@ DOC = ROOT / "docs" / "Governance" / "Test-Catalogue.md"
 CLAIM_DOC = "Language/Conformance.md"
 
 # An obligation on the adopting organization's own process, not on anything a model can carry.
+# CAND-026 binds one register Statement to a Declaration Test read from the Representation Map:
+# the scope rule of Meta/Identity.md, decided by the scope the map declares for the export's identities
+DECLARES = re.compile(r"define the appropriate scope for each Identity", re.I)
 ORGANIZATION = re.compile(r"^(an? )?organizations?\b", re.I)
 # A predicate whose truth is a judgement: no export settles "appropriate" or "sufficient".
 JUDGEMENT = re.compile(r"\b(appropriate|adequate|sufficient|relevant|meaningful|conflicting|clear|understandable|as needed|where applicable|business semantics|technology independent|implementation technolog(?:y|ies))\b", re.I)
@@ -60,11 +63,11 @@ SECTION_3_EXAMPLES = [
 ]
 
 PROCEDURE = {
-    "Presence": "For every instance of the Object type the Statement names, the Representation Map resolves each required element; the Test passes when every instance resolves every one of them.",
+    "Presence": "For every instance of the Object type the Statement names, the Representation Map resolves each required element; the Test passes when every instance resolves every one of them. Where the Statement asks for one of an element (`CAND-025`), every instance carries exactly one value for it, and an owner resolves to the one Ownership record that names the instance.",
     "Integrity": "For every record of the type the Statement names, the demonstration the Representation Map declares is verified against the record as exported; the Test passes when every record verifies, fails when one does not, and is pending when the map declares no demonstration, since the suite verifies one and never supplies it.",
     "Invariant": "The exported model is searched for the condition the Statement forbids; the Test passes when no instance exhibits it, and where the implementation exposes a refusal record, when the refusal is recorded instead.",
     "Transition": "Every recorded State of every instance is checked against the Transitions its Lifecycle permits; the Test passes when every change is permitted and no terminal State is left.",
-    "Declaration": "The Conformance Statement is read for the field the claim clause requires; the Test passes when the field is present and non-empty.",
+    "Declaration": "The Conformance Statement is read for the field the claim clause requires, and the Test passes when the field is present and non-empty; for `Meta/Identity.md`'s scope rule the Representation Map is read for the scope it declares (`CAND-026`), and the Test passes when it is one of the five scopes that document names, an External System naming its system, and is pending when the map declares none.",
     "Review": "A named reviewer examines the evidence and records Review Pass or Review Fail with a reason; no mechanical procedure decides it.",
 }
 
@@ -73,7 +76,7 @@ READS = {
     "Integrity": "exported model, Representation Map (method and field of the demonstration)",
     "Invariant": "exported model, refusal record",
     "Transition": "exported model",
-    "Declaration": "Conformance Statement",
+    "Declaration": "Conformance Statement; Representation Map for the Identity scope rule",
     "Review": "reviewer record",
 }
 
@@ -119,6 +122,8 @@ def kind_of(text):
     never most of it.
     """
     body = text.strip()
+    if DECLARES.search(body):
+        return "Declaration"                  # read from the map's Identity.scope declaration (CAND-026)
     if ORGANIZATION.match(body):
         return "Review"                       # binds the organization's process, not the model
     if JUDGEMENT.search(body):
@@ -134,7 +139,9 @@ def kind_of(text):
         return "Transition"
     if REQUIRES.search(body):
         if CARDINALITY.search(body):
-            return "Review"       # Presence proves a value is there, never that there is one of it
+            # Presence counts one since CAND-025 ("shall have one responsible owner"), and these
+            # eleven Statements stay at Review until a Decision names them; see the catalogue's rule 8
+            return "Review"
         return "Presence"
     return "Review"
 
@@ -232,16 +239,17 @@ def render(today):
     out.append("")
     out.append("| Order | Kind | The Statement goes here when it |")
     out.append("|---|---|---|")
-    out.append("| 1 | Review | binds the adopting organization's own process rather than the model: it opens with Organization or An organization |")
-    out.append("| 2 | Review | turns on a judgement: appropriate, adequate, sufficient, relevant, meaningful, conflicting, clear, understandable, as needed, where applicable, business semantics, technology independent |")
-    out.append("| 3 | Review | is a stem with a list, one of whose items names a behaviour rather than a thing (support, preserve, remain, maintain, participate, ensure, avoid, enable, allow, be, comply, reflect, operate, exist, apply, survive, respect, follow, consider, account) |")
-    out.append("| 4 | Integrity | claims a record is immutable: remain immutable, immutable after creation, never be modified after creation (`CAND-024`) |")
-    out.append("| 5 | Invariant | forbids a condition: shall not, shall never, must not, may not, never be |")
-    out.append("| 6 | Transition | turns on a State or a Transition: transition, state change, initial State, terminal State, permitted State, exactly one State, occupying a State |")
-    out.append("| 7 | Presence | requires something to exist: a stem ending in a colon whose items all name things, or shall define, have, possess, contain, include, carry, specify, record, reference, assign, exist, be assigned |")
-    out.append("| 8 | Review | everything else, which Section 3 sends to a named reviewer |")
+    out.append("| 1 | Declaration | is `Meta/Identity.md`'s scope rule, which `CAND-026` decides by the scope the Representation Map declares for the export's identities |")
+    out.append("| 2 | Review | binds the adopting organization's own process rather than the model: it opens with Organization or An organization |")
+    out.append("| 3 | Review | turns on a judgement: appropriate, adequate, sufficient, relevant, meaningful, conflicting, clear, understandable, as needed, where applicable, business semantics, technology independent |")
+    out.append("| 4 | Review | is a stem with a list, one of whose items names a behaviour rather than a thing (support, preserve, remain, maintain, participate, ensure, avoid, enable, allow, be, comply, reflect, operate, exist, apply, survive, respect, follow, consider, account) |")
+    out.append("| 5 | Integrity | claims a record is immutable: remain immutable, immutable after creation, never be modified after creation (`CAND-024`) |")
+    out.append("| 6 | Invariant | forbids a condition: shall not, shall never, must not, may not, never be |")
+    out.append("| 7 | Transition | turns on a State or a Transition: transition, state change, initial State, terminal State, permitted State, exactly one State, occupying a State |")
+    out.append("| 8 | Presence | requires something to exist: a stem ending in a colon whose items all name things, or shall define, have, possess, contain, include, carry, specify, record, reference, assign, exist, be assigned; a Statement that also counts (exactly one, one or more, at least one, no more than, only one) stays at Review, except that Presence counts one where the Statement says one (`CAND-025`) |")
+    out.append("| 9 | Review | everything else, which Section 3 sends to a named reviewer |")
     out.append("")
-    out.append("The first three rules are the ones that matter, and they run before the mechanical kinds on purpose. "
+    out.append("The three Review rules, 2 to 4, are the ones that matter, and they run before the mechanical kinds on purpose. "
                "A Statement leaves for Review as soon as any part of it is beyond an export's reach, so that a "
                "mechanical kind means the whole Statement was checked and never most of it. The rule that moves "
                "the most is the third: the most frequent item across the corpus's list obligations is "
@@ -249,7 +257,8 @@ def render(today):
                "Both are properties of an implementation, not fields of a model, and a Presence Test over a list "
                "containing one of them would report Pass having checked nothing.")
     out.append("")
-    out.append("Declaration, the fifth kind, is not assigned by these rules. Section 3 binds it to the claim clauses "
+    out.append("Declaration, the fifth kind, reaches one register Statement through rule 1, `Meta/Identity.md`'s scope rule, "
+               "read from the Representation Map since `CAND-026`. Otherwise Section 3 binds it to the claim clauses "
                "of `Language/Conformance.md`, tested through the Conformance Statement rather than an exported "
                "model. That document is not one of the twenty two in the requirement set, so its clauses carry no "
                "register alias and are catalogued separately below.")
@@ -264,7 +273,8 @@ def render(today):
         total = counts.get(kind, 0)
         mand = len([r for r in mandatory if r[5] == kind])
         out.append("| %s | %d | %d |" % (kind, total, mand))
-    out.append("| Declaration | %d | %d |" % (len(claims), len(claims)))
+    out.append("| Declaration | %d | %d |" % (counts.get("Declaration", 0) + len(claims),
+                                                len([r for r in mandatory if r[5] == "Declaration"]) + len(claims)))
     out.append("")
     out.append("Of the %d mandatory Statements, %d carry a mechanical kind and %d fall to Review. A Review outcome "
                "is a named reviewer's recorded judgment, which Section 3 counts toward Core Conformance as Review "
@@ -360,7 +370,7 @@ def main(argv):
         for r in rows:
             counts[r[5]] = counts.get(r[5], 0) + 1
         print("statements %d, mandatory %d, claim clauses %d" % (len(rows), len(mandatory), len(claim_clauses())))
-        for k in ("Presence", "Integrity", "Invariant", "Transition", "Review"):
+        for k in ("Presence", "Integrity", "Invariant", "Transition", "Declaration", "Review"):
             print("  %-11s %3d (mandatory %d)" % (k, counts.get(k, 0), len([r for r in mandatory if r[5] == k])))
         return 0
 
