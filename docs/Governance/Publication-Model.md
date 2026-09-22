@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 19 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -77,7 +77,7 @@ All nine chapters declare one of the three today. The two that declare verbatim,
 A machine-generated representation of a single canonical document, produced by the external Publication Engine (see "Known Gaps" — this repository contains no code, config, or documentation for that engine; it lives entirely outside this repository). Two instances currently recognized — recognizing a second instance does not create a new tier; both share the same mandatory fields (`Version`, `Status`, `source_file`, `source_url`, `history_url`) and the same rule that canonical source is GitHub and the projection itself is never edited directly:
 
 - **Core Vocabulary term-cards** — the individual term-cards on ocom.uno (`/vocabulary/<term>`) — HTML, JSON, JSON-LD, and Markdown representations, generated from the Core Vocabulary (`Meta/`) canonical source.
-- **Adoption pages** — `ocom.uno/adoption/<page>` — generated from an individually-authorized `docs/Adoption/*.md` file. A file qualifies only once it has its own separate Decision (`CAND-012`; e.g. `CAND-010` for the Worked Example, `CAND-011` for First Pilot) — directory membership in `docs/Adoption/` grants nothing by itself.
+- **Adoption pages** — `ocom.uno/adoption/<page>` — generated from an individually-authorized `docs/Adoption/*.md` file. A file qualifies only once it has its own separate Decision (`CAND-012`; e.g. `CAND-010` for the Worked Example, `CAND-011` for First Pilot, `CAND-026` for the Reference Serialization) — directory membership in `docs/Adoption/` grants nothing by itself.
 
 **What a generated file's own names assert (`CAND-019`, Decided 19 September 2026).** A projection may coin names for its own structures, and those names are local to the publication: they assert nothing about the Core Vocabulary and create no governed term. Two rules follow, and both are checkable from the published file alone:
 
@@ -139,3 +139,4 @@ An interactive, read-only tool published on the site (currently one instance: `o
 | 0.1 | 19 September 2026 | Step 2 of three Decisions of the same day: the Compiled Publication tier states what a chapter carries and which form its Source line declares (`CAND-018`); the Projection tier states that a generated file's coined names are local and carries the two rules that follow (`CAND-019`); Known Gaps records that stewardship of the name is outside this specification (`CAND-017`). |
 | 0.1 | 19 September 2026 | Known Gaps: the machine-facing files the Publication Engine never generated now have canonical sources under `publication/` and a checker (`AO-083`); the Compiled Publication tier records that the backward check of `CAND-018`'s three forms is now a build-time check, with the first survey's figures. |
 | 0.1 | 19 September 2026 | Tier 4: the Evidence Register is no longer a site-held record. `CAND-022` moved it to `Governance/Evidence-Register.md`, where it is versioned, reviewed and archived with each Release; `ocom.uno/evidence-register` and `/implementations` redirect to it. |
+| 0.1 | 22 September 2026 | Tier 3, Adoption pages: `CAND-026` named as the Decision authorizing `docs/Adoption/Reference Serialization.md` and its page; no tier changed. |
