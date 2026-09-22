@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+(nothing yet)
+
+## v1.4.0 (22 September 2026)
+
+- Release cut from `main` on 22 September 2026 per `Release-Workflow.md`: Constitution 1.0.1, Core Vocabulary 0.1 (13 governed terms), Specification reading path 1.0, unchanged tracks; the Manifest entry recorded before tagging and completed after publication with the commit, the timestamps and the Zenodo version DOI. The first Release to carry the Memory tier's Evidence definition, the integrity guarantee and the erasure rules, the Package 3 Decisions (`CAND-025` to `CAND-028`), and the Conformance Test Suite tooling with its example run.
+- `CAND-028` (Decided 22 September 2026): `docs/Adoption/First 90 Days.md` Informative and published at `/adoption/first-90-days`.
 - `AO-089` to `AO-091` recorded (the judgment share of Core Conformance against `Language/Conformance.md`'s principle; the content-addressing cycle between a record and its evidence; two orders of adoption, closed by a paragraph in `Adoption/First Pilot.md`). `tools/site/site_error_hunt.py`: a local checker over every URL the sitemap names and every internal link they carry (status, title, canonical, robots, JSON-LD, `llms.txt` and `discovery.json` targets); not a CI job, it needs the network.
 - Suite: the Reviewer Record. `tools/conformance/validate.py --reviews` reads one named judgment per Test the suite could not decide (Test, Review Pass or Review Fail, reviewer, date, reason), refuses a record it cannot attribute, never overrides a mechanical outcome, and reports the reviewers; `docs/Examples/Conformance/reviewer-record.md` shows the form with a first-party reviewer deciding three Statements. `CAND-028` filed: `docs/Adoption/First 90 Days.md` drafted as a plan with weeks, responsibility slots, artifacts and exit criteria, unpublished until decided.
 - Suite, after the acceptance evaluation of 22 September 2026: identity uniqueness and reuse are keyed by the scope and system the Representation Map declares (per type or per collection path), so two systems' keys coexist as `CAND-026` promised; a bare reference to an identity present in two scopes is reported ambiguous; the derived schema makes collections optional and requires a property only where at least two example records carry it. `AO-086` to `AO-088` recorded from the same evaluation. `README.md` no longer says the repository holds no code.

@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 17 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -104,7 +104,23 @@ Entries are append-only, mirroring the same discipline already used for `ADR-Can
 | **Publication Date** | Published 2026-09-17T09:27:34Z (GitHub Release timestamp); Zenodo record published 2026-09-17T09:27:43Z, minted by the GitHub integration on the release event without intervention. |
 | **Published Artifacts** | GitHub Release "OCOM v1.3.0: Object-Centric Operating Model, an open specification for a machine-readable description of an organization" from an SSH-signed annotated tag `v1.3.0` with the three assets `Release-Workflow.md` step 7 names (`OCOM-v1.3.0.zip`, `SHA256SUMS`, `SHA256SUMS.sig`), verified from the public download on publication day; Zenodo version DOI `10.5281/zenodo.22809694` (`doi.org/10.5281/zenodo.22809694`), under the concept DOI `10.5281/zenodo.21510450`, resource type Standard, the Release body as the record description; Software Heritage release object `swh:1:rel:f4482014c65a6fe05e865c9f68b70c6cbae76b00` in snapshot `swh:1:snp:945e1c20162f93fed9749880175c3e62b2c7c4ba` (visit 2026-09-17T09:29:44Z after a Save Code Now request), resolving to the same commit `8235b85`. |
 | **Machine-readable Projections** | `.zenodo.json` and `CITATION.cff` at this commit (`CITATION.cff` at this commit still says 1.2.0; it is set to 1.3.0 on `main` in the revision that fills this Commit field, since the tagged commit cannot carry its own hash). ocom.uno: the Specification pages, `specification.md` and `specification.json` regenerated from the v1.0 chapters at commit `8235b85` on 17 September 2026, and `release.json`, `/changelog` and the Evidence Register updated the same day; term-card projections unchanged, since no `Meta/` definition changed. |
-| **Status** | **Current.** The Specification track moves from 0.2 to 1.0: the nine chapters of `docs/Specification/` recompiled against the canonical documents as they stand on 17 September 2026, per the Chief Architect's decision of the same day, each with a Revision History and a Source line naming what changed; `Specification/Committee Review Package.md` keeps the v0.2 review record. Constitution and Core Vocabulary tracks unchanged. Cut per `Release-Workflow.md` steps 6 and 7: this entry recorded before tagging, signed annotated tag on the commit named above. |
+| **Status** | **Superseded by `v1.4.0`** (next entry). The Specification track moves from 0.2 to 1.0: the nine chapters of `docs/Specification/` recompiled against the canonical documents as they stand on 17 September 2026, per the Chief Architect's decision of the same day, each with a Revision History and a Source line naming what changed; `Specification/Committee Review Package.md` keeps the v0.2 review record. Constitution and Core Vocabulary tracks unchanged. Cut per `Release-Workflow.md` steps 6 and 7: this entry recorded before tagging, signed annotated tag on the commit named above. |
+
+---
+
+## Release: `v1.4.0`
+
+| Field | Value |
+|---|---|
+| **Release Identifier** | `v1.4.0` |
+| **Commit** | TBD until tagged: the commit this entry is tagged at, filled in the revision after tagging, since a commit cannot carry its own hash (the form `v1.3.0` used). |
+| **Constitution Version** | 1.0.1 |
+| **Core Vocabulary Version** | 0.1 (13 governed terms; `Meta/Ownership.md` and `Meta/Organization.md` each carry one clarifying passage since 22 September 2026, no definition changed) |
+| **Specification Version** | 1.0 |
+| **Publication Date** | Pending publication; filled in the revision that fills the Commit field. |
+| **Published Artifacts** | Pending publication: GitHub Release from an SSH-signed annotated tag `v1.4.0` with the three assets `Release-Workflow.md` step 7 names, and the Zenodo version DOI the GitHub integration mints; both recorded in the revision that fills the Commit field. |
+| **Machine-readable Projections** | `.zenodo.json` and `CITATION.cff` at this commit (`CITATION.cff` says 1.4.0 and 2026-09-22 from this entry on, set before tagging so that the tagged tree is consistent). ocom.uno: `release.json`, `.well-known/ocom.json`, `discovery.json`, `/changelog` and `llms.txt` updated on publication day; term-card projections of Ownership and Organization carry the clarifying passages since 22 September 2026; the Specification pages are unchanged, since the reading path stays 1.0. |
+| **Status** | **Current** once published. First Release to carry the Memory tier's Evidence definition (`CAND-023`), the integrity guarantee, Audit Record by reference and erasure that preserves the record and names its Policy and actor (`CAND-024`, `AO-085`); the ownership reading (`CAND-025`), the Reference Serialization and its schema (`CAND-026`), the Department Entity and the Organization passage (`CAND-027`), The First 90 Days (`CAND-028`); the Conformance Test Suite tooling: the Test Catalogue, the validator with six Test kinds, the Declaration Test read from the Representation Map, the Reviewer Record, the example run (48 Pass, 3 Review Pass, 136 pending); the Evidence Register moved into the repository (`CAND-022`); `AO-069` to `AO-091`. Constitution, Core Vocabulary and Specification tracks unchanged. Cut per `Release-Workflow.md` steps 6 and 7: this entry recorded before tagging, signed annotated tag on the commit named above once filled. |
 
 # Revision History
 
@@ -125,3 +141,4 @@ Entries are append-only, mirroring the same discipline already used for `ADR-Can
 | 0.1 | 17 September 2026 | `v1.3.0` entry: Commit filled with the merge commit of the carrying pull request (`8235b85`), per `Release-Workflow.md` step 6. |
 | 0.1 | 17 September 2026 | `v1.3.0` entry completed after publication: GitHub Release timestamp 2026-09-17T09:27:34Z, Zenodo version DOI `10.5281/zenodo.22809694` (record published 2026-09-17T09:27:43Z), site projections regenerated at `8235b85`. |
 | 0.1 | 17 September 2026 | `v1.3.0` entry: Software Heritage snapshot and release SWHID recorded; the archived release resolves to the same commit `8235b85`. |
+| 0.1 | 22 September 2026 | Added the `v1.4.0` entry, recorded before tagging per `Release-Workflow.md` step 6 with the Commit, Publication Date and Published Artifacts fields to be filled after publication, as `v1.3.0` did; `v1.3.0` marked Superseded by `v1.4.0`. |
