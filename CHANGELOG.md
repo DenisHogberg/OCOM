@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- The all-packages test of 22 September 2026: thirty confirmed findings, each reproduced by an independent verifier before it was believed. Fixed in the suite (eleven fail-opens in `validate.py`, from identity resolution through the erasure gate to Reference Integrity), in the governance records (four counting Statements, not eleven; a Census that adds up), in the site tools (`publication_health.py` harvested no identifier from any page and asserted a parity it never computed; `site_error_hunt.py` counted a duplicated sitemap URL twice and trusted an off-site redirect) and in `reference_schema.py` (the second leg of `--check` could not fail). `publication/llms.txt` attributed v1.3.0's Zenodo DOI and Software Heritage SWHID to v1.4.0 on the live site; the Evidence Register gained its v1.4.0 rows. 126 tests.
 - `CAND-029` to `CAND-034` filed, each Open with a proposed Decision or disposition: the Memory tier measured through Profile Conformance; a scope as what an identity's assigner guarantees uniqueness within; merge and split as Identity Resolution; no precedence between Policies and Exceptions; the kinds of Owner; temporal boundaries not required for v1.0. `CAND-008` carries a proposed disposition.
 
 ## v1.4.0 (22 September 2026)

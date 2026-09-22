@@ -1379,6 +1379,19 @@ class SiteErrorHunt(unittest.TestCase):
         self.assertNotEqual(code, 0, out)
         self.assertIn("/x.json does not parse as JSON", out)
 
+    def test_a_duplicated_sitemap_url_and_an_empty_discovery_are_reported(self):
+        files = hunt_files()
+        files["/sitemap.xml"] = ("application/xml", files["/sitemap.xml"][1].replace("</urlset>", "<url><loc>https://ocom.uno/a</loc></url></urlset>"))
+        code, out = self.hunt(files)
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("sitemap names https://ocom.uno/a 2 times", out)
+        files = hunt_files(**{"/discovery.json": ("application/json", json.dumps({"resources": []})),
+                              "/llms.txt": ("text/plain", "# nothing here\n")})
+        code, out = self.hunt(files)
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("carries no resources", out)
+        self.assertIn("names no URL", out)
+
     def test_a_sitemap_over_nothing_cannot_pass(self):
         code, out = self.hunt(hunt_files(**{"/sitemap.xml": ("application/xml", "<urlset></urlset>")}))
         self.assertNotEqual(code, 0, out)
@@ -1470,6 +1483,35 @@ class PublicationHealth(unittest.TestCase):
             code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
             self.assertNotEqual(code, 0, out)
             self.assertIn("Coined names resolve", out)
+
+    def test_an_identifier_printed_as_a_pill_is_harvested(self):
+        """The harvester matched three markup shapes and the site uses a fourth, so the HTML half of
+        the printed-identifier row harvested nothing while the row reported ok."""
+        with fake_site.Fixture() as site:
+            self.healthy(site)
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--summary")
+            self.assertEqual(code, 0, out)
+            row = [l for l in out.splitlines() if l.startswith("Printed identifier coverage")][0]
+            self.assertIn("ok", row)
+            # the same fixture with one page printing an identifier nobody registered
+            site.files["/vocabulary/object"] = (site.files["/vocabulary/object"][0],
+                                                site.files["/vocabulary/object"][1].replace("OCOM-META-01", "OCOM-META-99"))
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--summary")
+            row = [l for l in out.splitlines() if l.startswith("Printed identifier coverage")][0]
+            self.assertIn("FAIL", row, out)
+            self.assertIn("OCOM-META-99", row)
+
+    def test_a_term_whose_projections_disagree_is_reported(self):
+        """projection_parity published ok as a literal for the term projections, and under that tick
+        one term's JSON record fell behind its HTML and Markdown twins."""
+        with fake_site.Fixture() as site:
+            self.healthy(site)          # records published while the projections agree
+            site.files["/vocabulary/object.md"] = (site.files["/vocabulary/object.md"][0],
+                                                   site.files["/vocabulary/object.md"][1]
+                                                   .replace("Object is the thing this fixture defines.", "Object is something else entirely."))
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("projectionParity", out)
 
     def test_a_published_figure_that_drifts_is_reported(self):
         with fake_site.Fixture() as site:

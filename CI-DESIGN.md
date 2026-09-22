@@ -282,7 +282,11 @@ JSON-LD; every internal link and asset those pages carry must answer 200
 `llms.txt` and `discovery.json` must answer, and every site URL they name
 must too. It needs the network, so like `publication_health.py` it runs by
 hand after a deploy and not in CI; its negative tests run against the same
-in-memory fixture the health tool's do.
+in-memory fixture the health tool's do. Since 22 September 2026 it also reports
+a URL the sitemap lists twice, a `discovery.json` with no resources and an
+`llms.txt` with no URL (each of which made it check nothing quietly), and it
+follows an internal path that redirects off the site to see whether the
+destination answers.
 
 ## Reference Serialization schema (added 22 September 2026)
 
@@ -291,8 +295,10 @@ Serialization (`docs/Adoption/Reference Serialization.md`), with a JSON Schema
 derived from it. The schema is a generated file, so the job `Test Catalogue is
 derived, not written` gained a step: `tools/conformance/reference_schema.py
 --check` regenerates `docs/Examples/Conformance/schema.json` from `model.json`,
-fails if the committed file differs, and validates the model against the
-committed schema with the tool's own validator (standard library, no network,
+fails if the committed file differs, validates the model against the committed
+schema, and then breaks one required key in memory and requires the validator
+to reject it, because validating a model against a schema derived from that
+same model cannot fail and proved nothing (standard library, no network,
 no third-party package). It is a step inside an existing required check, not a
 thirteenth check; the ruleset on `main` is unchanged.
 

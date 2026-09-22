@@ -194,7 +194,27 @@ def main(argv):
         return 1
     if validate(MODEL):
         return 1
-    print("schema up to date: %d collections, and the model satisfies it" % len([k for k, v in model.items() if isinstance(v, list)]))
+    # validating the model against a schema derived from that same model cannot fail, so the leg
+    # proved nothing. A negative self-check does: break one required key in memory and require the
+    # validator to reject it, so a validator that accepts everything fails this check
+    probe = json.loads(json.dumps(model))
+    schema = derive(model)
+    collection, required = None, []
+    for key, value in probe.items():
+        spec = schema["properties"].get(key) or {}
+        items = spec.get("items") if isinstance(spec.get("items"), dict) else {}
+        if isinstance(value, list) and value and isinstance(value[0], dict) and items.get("required"):
+            collection, required = key, items["required"]
+            break
+    if not collection:
+        print("FAIL the example carries no collection with a required property, so the validator cannot be checked")
+        return 1
+    del probe[collection][0][required[0]]
+    if not list(violations(probe, schema)):
+        print("FAIL the validator accepted a record missing its required %s; it is checking nothing" % required[0])
+        return 1
+    print("schema up to date: %d collections, the model satisfies it, and the validator rejects a model missing %s.%s"
+          % (len([k for k, v in model.items() if isinstance(v, list)]), collection, required[0]))
     return 0
 
 

@@ -120,7 +120,7 @@ The model proposes; it never gets the pen on the record. LLM extraction, summari
 
 - [Search](https://ocom.uno/search): knowledge retrieval (exact + semantic) over the model
 - [Retrieval index](https://ocom.uno/search.json): per-term knowledge records
-- [Resolver](https://ocom.uno/resolve.json): 79 identifiers, mapping every identifier this site prints to the page that answers for it (Core Vocabulary URI, Definition ID, Document ID; Specification chapter and annex; Comparison; site-published record). Repository Document IDs with no published page do not resolve.
+- [Resolver](https://ocom.uno/resolve.json): 81 identifiers, mapping every identifier this site prints to the page that answers for it (Core Vocabulary URI, Definition ID, Document ID; Specification chapter and annex; Comparison; site-published record). Repository Document IDs with no published page do not resolve.
 
 ## Knowledge API
 
