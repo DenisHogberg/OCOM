@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 18 September 2026
+**Last Updated:** 22 September 2026
 
 ---
 
@@ -124,6 +124,28 @@ Every release entry from this point forward **shall** confirm the following:
 
 ---
 
+## Release: v1.4.0
+
+**Date:** 22 September 2026
+
+**Documentation Readiness:** Ready once the carrying pull request is merged: every repository check green at this date (Requirement Register 335 Statements and 335 aliases, Test Catalogue 208 rows, compilation survey 9 chapters with 0 failures, Principle Traceability 72 rows with 0 failures, Reference Serialization schema current, published sources linted, metadata and revision tables consistent, 106 tool tests). The Release body's bundle claims are checkable against the `Publication-Manifest.md` entry: Constitution 1.0.1, Core Vocabulary 0.1 (13 governed terms), Specification 1.0, all three tracks unchanged since `v1.3.0`; what changed is the Memory tier, the Governance records, the Adoption documents and the tooling, listed in `CHANGELOG.md`.
+
+**Open Observations:** 93 recorded (AO-001 to AO-091 with AO-072 reserved, and OBS-001 to OBS-003): 14 Closed, 8 Open or Closed in part (AO-015, AO-042, AO-062, AO-069, AO-071, AO-074, AO-079, AO-080), 2 Escalated (AO-005 to `CAND-008`, AO-008 to `CAND-009`), 69 Open. None blocks a Release: each open item is a disclosed tension in the model or in the suite, not a defect in a published rule, and the Architecture Freeze (`CAND-007`) keeps the Core stable while they wait for Reference Cases. AO-086 to AO-091, recorded from the enterprise evaluation of 22 September 2026, are disclosed rather than resolved.
+
+**Unresolved ADR Candidates:** CAND-004 (Open; each question dispositioned for v1.0, questions 1 and 2 with a worked form since `CAND-025` and `CAND-027`) and CAND-008 (Open, Value Model); 26 Decided, including CAND-022 to CAND-028 decided between 19 and 22 September 2026. Non-blocking: no open Candidate proposes a Core change this Release would pre-empt.
+
+**Critical Documentation Debt:** None critical. FW-001 closed by `CAND-023` (the reserved sections of `Memory/Evidence Overlay.md` written); GAP-007 stays open for the documents outside the reading path it still names; DEBT-DOC-001, GAP-001, FW-002, FW-005 and FW-009 carry not-required-for-v1.0 dispositions; FW-006 stays open and is disclosed in the Manifest entry.
+
+**Known Deferred Content:** Layer 2 of `CAND-014`; the `CAND-002` declaration Projection and CI validator; the Memory tier outside the Core Conformance requirement set (`AO-081`; a candidate for a Memory conformance level is being prepared); the eleven counting Statements the catalogue holds at Review and the twenty-five unfalsifiable predicates of `AO-076` (`AO-089`); the first submitted Test Report from a party other than the author; the reading-path pages on the site, which stay at the `v1.3.0` compilation since the reading path is unchanged.
+
+**Standard Evolution Methodology reviewed:** Yes. Every canonical change in this Release carries a recorded Decision: `CAND-023` and `CAND-024` as `CAND-007` Section 5 exceptions on Reference Case `RC-012`; `CAND-025` and `CAND-027` under `EPIC-B` and `EPIC-C`, Section 3; `CAND-026` and `CAND-028` as publication decisions on the `CAND-012` form; the `AO-085` closure as a postscript to `CAND-024`. No new Core concept entered; independent Reference Cases toward Rule 2 stand where `v1.3.0` left them.
+
+**Recommendation:** Approved for release; the Manifest entry is recorded before tagging with its Commit field to be filled by the merge commit of the carrying pull request.
+
+**Status:** Pending publication; completed in the revision that fills the Manifest entry's Commit field.
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -140,3 +162,4 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 17 September 2026 | v1.3.0 entry: Status Prepared to Released, with the GitHub Release timestamp and the Zenodo version DOI. |
 | 0.1 | 18 September 2026 | v1.3.0: post-release note recording the `AO-069` finding, the Chief Architect's disposition of the same day, and the qualification the v1.0 claim now carries. |
 | 0.1 | 18 September 2026 | v1.1.1: two tallies each counted an Informative entry that neither register carried; corrected with a dated note. |
+| 0.1 | 22 September 2026 | Added the `v1.4.0` record before tagging: checks green, 93 observations disclosed, two open candidates non-blocking, deferred content named; Status pending publication. |
