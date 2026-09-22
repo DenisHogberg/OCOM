@@ -937,6 +937,59 @@ class Validator(unittest.TestCase):
                 self.assertNotEqual(code, 0, "%s: %s" % (name, printed))
                 self.assertNotIn("reviewed 1 pass", printed, name)
 
+    def test_a_reviewer_record_the_tool_cannot_attribute_is_refused(self):
+        """The gates were shape-only: 2026-13-45 was a date, "." was a reviewer, a second table of
+        judgments was read by nobody, and a six-column row was accepted because the header matched
+        with startswith."""
+        cases = {
+            "impossible date": "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | 2026-13-45 | examined the identifiers |\n",
+            "punctuation reviewer": "| REQ-MODELS-ENTITY-003 | Review Pass | . | 22 September 2026 | examined the identifiers |\n",
+            "reason too short": "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | 22 September 2026 | ok |\n",
+            "six columns": "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | 22 September 2026 | examined the identifiers | extra |\n",
+        }
+        for name, rows in cases.items():
+            with Copy() as c:
+                path = c.dir / "reviews.md"
+                path.write_text("# Reviewer Record\n\n" + self.HEADER + rows, encoding="utf-8")
+                code, printed, text = self.run_with_reviews(c.dir, path)
+                self.assertNotEqual(code, 0, "%s: %s" % (name, printed))
+        with Copy() as c:      # a second table of judgments must not sit in the file unread
+            path = c.dir / "reviews.md"
+            good = "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | 22 September 2026 | examined the identifiers |\n"
+            path.write_text("# Reviewer Record\n\n" + self.HEADER + good + "\n## Second thoughts\n\n" + self.HEADER + good, encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertNotEqual(code, 0, printed)
+            self.assertIn("carries 2 tables", printed)
+
+    def test_the_report_carries_what_section_4_says_a_report_carries(self):
+        code, printed, text = self.run_with_reviews(ROOT, ROOT / self.REVIEWS)
+        self.assertEqual(code, 0, printed)
+        for item in ("**Tested against:** Release", "commit `", "Requirement Register: 335 Statements",
+                     "Alias File revision:", "**Inputs, by content:**", "**Reviewer Record:**", "## Reviewers"):
+            self.assertIn(item, text, item)
+
+    def test_a_long_reason_is_cut_with_a_marker_not_silently(self):
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            reason = "examined the identifiers and they are technology independent, " * 6 + "but the third one is a database key"
+            path.write_text("# Reviewer Record\n\n" + self.HEADER +
+                            "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | 22 September 2026 | %s |\n" % reason, encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertEqual(code, 0, printed)
+            row = [l for l in text.splitlines() if l.startswith("| REQ-MODELS-ENTITY-003 |")][0]
+            self.assertIn("... (cut here; the whole reason is in the Reviewer Record)", row)
+
+    def test_a_disposition_cell_is_read_exactly_not_as_a_substring(self):
+        """A free-text cell containing the word Descriptive removed a mandatory Test from the
+        denominator; the cell is now compared exactly."""
+        with Copy() as c:
+            path = "docs/Governance/Test-Catalogue.md"
+            text = c.read(path)
+            row = [l for l in text.splitlines() if l.startswith("| REQ-MODELS-ENTITY-004 |")][0]
+            c.write(path, text.replace(row, row.rstrip().rstrip("|") + " Review, and certainly not Descriptive |"))
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-ENTITY-004"), "Pass", "a cell that merely mentions Descriptive must not delete the Test")
+
     def test_a_judgment_never_overrides_a_mechanical_outcome(self):
         with Copy() as c:
             path = c.dir / "reviews.md"
@@ -968,6 +1021,146 @@ class Validator(unittest.TestCase):
             path.write_text("# Reviewer Record\n\n" + self.HEADER + rows, encoding="utf-8")
             code, printed, text = self.run_with_reviews(c.dir, path)
             self.assertIn("pending 0, reviewed %d pass and 1 fail. Core Conformance not established" % (len(pending) - 1), printed)
+
+    def model_map(self, c, model, map_text=None):
+        c.write("%s/model.json" % self.EX, json.dumps(model))
+        if map_text is not None:
+            c.write("%s/representation-map.md" % self.EX, map_text)
+
+    def test_identity_is_resolved_through_the_most_specific_type_the_map_names(self):
+        """The all-packages test of 22 September 2026: identity_of took the first type in map order,
+        so the generic Object row answered for a collection that spells its identity otherwise and
+        the reuse Invariant passed having counted those records zero times."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for d in model["domains"]:
+                d["domain_key"] = d.pop("id")
+            model["domains"].append({"domain_key": "DOM-LENDING", "name": "Second", "purpose": "overlap",
+                                     "owner": "OWN-DOM-LENDING", "entity_types": ["Item"]})
+            self.model_map(c, model, c.read("%s/representation-map.md" % self.EX)
+                           .replace("| Domain.identifier | field | `id` |", "| Domain.identifier | field | `domain_key` |"))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-META-IDENTITY-008"), "Fail")
+
+    def test_a_record_whose_identity_the_map_does_not_bind_is_not_given_one(self):
+        """There is no fallback to a literal `id` key: an export that binds its identity elsewhere
+        must be read through the map, and an Object the map leaves unbound is pending, not passed."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for e in model["entities"]:
+                e["key"] = e.pop("id")
+            model["entities"].append(dict(model["entities"][0], key=model["entities"][0]["key"]))
+            self.model_map(c, model)          # the map still says `id`
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-META-IDENTITY-008"), "pending", rows.get("REQ-META-IDENTITY-008"))
+            self.assertIn("carry no identity the Representation Map binds", self.report_text(c.dir))
+
+    def test_a_verdict_does_not_depend_on_the_order_of_rows_in_the_map(self):
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            lines = c.read(path).splitlines()
+            obj = [i for i, l in enumerate(lines) if l.startswith("| Object | collection |")][0]
+            ent = [i for i, l in enumerate(lines) if l.startswith("| Entity | collection |")][0]
+            lines.insert(obj, lines.pop(ent))
+            c.write(path, "\n".join(lines) + "\n")
+            self.assertEqual(self.outcomes(c.dir), self.outcomes(ROOT))
+
+    def test_declaring_a_scope_for_one_type_does_not_exempt_the_others_from_the_reuse_rule(self):
+        """An empty scope is not a scope: keying uniqueness by "no declaration" made it a namespace
+        of its own, so one declaration row turned a real reuse from Fail into Pass."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["capabilities"].append({"id": model["entities"][0]["id"], "name": "clash", "purpose": "probe"})
+            self.model_map(c, model, c.read("%s/representation-map.md" % self.EX)
+                           .replace("| Identity.scope | declaration | `Organization` |",
+                                    "| Entity.identity scope | declaration | `External System` |\n| Entity.identity system | declaration | `SAP` |"))
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-META-IDENTITY-008"), "Fail", rows.get("REQ-META-IDENTITY-008"))
+            self.assertEqual(rows.get("REQ-META-IDENTITY-005"), "Fail", "a declaration that covers part of the export is not a declaration")
+
+    def test_an_integrity_test_over_only_erased_records_is_pending_not_passed(self):
+        """The exclusion is granted by records the claimant writes, so a Pass over zero verified
+        records would let an export erase its way to eight Integrity Passes."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["erasures"] = []
+            for rec in model["audit_records"]:
+                rec["value"] = "[erased]"
+                model["erasures"].append({"id": "ERA-%s" % rec["id"][:6], "record": rec["id"],
+                                          "policy": "POL-SUSPEND", "actor": "records-officer"})
+            self.model_map(c, model)
+            self.map_erasures(c)
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "pending", rows)
+            self.assertIn("no demonstration was verified", self.report_text(c.dir))
+
+    def test_an_erasure_record_that_names_itself_or_a_record_the_export_lacks_grants_nothing(self):
+        for case, named in (("itself", "SELF"), ("a record the export does not carry", "AUD-NOWHERE")):
+            with Copy() as c:
+                model = json.loads(c.read("%s/model.json" % self.EX))
+                erased = model["audit_records"][0]["id"]
+                model["audit_records"][0]["value"] = "[erased]"
+                ident = erased if named == "SELF" else named
+                model["erasures"] = [{"id": "ERA-0001", "record": ident, "policy": "POL-SUSPEND", "actor": "officer"}]
+                if named == "SELF":
+                    model["erasures"][0]["id"] = erased          # the erasure names its own identity
+                self.model_map(c, model)
+                self.map_erasures(c)
+                self.assertEqual(self.integrity_rows(c.dir).get("REQ-META-OWNERSHIP-022"), "Fail", case)
+                self.assertIn("grants no exclusion", self.report_text(c.dir), case)
+
+    def test_a_digest_beside_a_readable_identity_is_not_a_content_address(self):
+        """The guard compared two map rows, so a map could declare content-addressed identity while
+        every other leg resolved a different, mutable identity for the same record."""
+        with Copy() as c:
+            sys.path.insert(0, str(c.dir / "tools" / "conformance"))
+            import importlib, validate as V
+            importlib.reload(V)
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for i, rec in enumerate(model["audit_records"], 1):
+                rec["id"] = "AUD-%04d" % i          # a readable, mutable identity
+                rec["digest"] = V.canonical_digest(rec, "digest")   # and a digest beside it that verifies
+            self.model_map(c, model, c.read("%s/representation-map.md" % self.EX)
+                           .replace("| Audit record.integrity | field | `id` |", "| Audit record.integrity | field | `digest` |"))
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "pending", rows)
+            self.assertIn("the identity this export resolves for record", self.report_text(c.dir))
+
+    def test_an_owner_that_resolves_to_no_ownership_record_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["owner"] = "OWN-NOWHERE"
+            self.model_map(c, model)
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-ENTITY-004"), "Fail")
+
+    def test_removing_the_terminal_states_row_does_not_turn_the_check_into_a_pass(self):
+        """The terminal leg read `r.value(...) or []`, so an unbound map row made the loop body
+        never run and the Test reported "no terminal State is left" having read nothing."""
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            kept = [l for l in c.read(path).splitlines() if not l.startswith("| Lifecycle.terminal states |")]
+            c.write(path, "\n".join(kept) + "\n")
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-LIFECYCLE-002"), "pending", rows.get("REQ-MODELS-LIFECYCLE-002"))
+            self.assertIn("terminal States", self.report_text(c.dir))
+
+    def test_an_event_into_a_state_the_lifecycle_does_not_define_fails(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["events"].append({"id": "e" * 64, "type": "Probe", "subject": "LIB-000198",
+                                    "occurred_at": "2026-08-10T10:00:00Z", "source": "probe",
+                                    "from_state": None, "to_state": "Evaporated"})
+            self.model_map(c, model)
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-WORKFLOW-008"), "Fail", rows.get("REQ-MODELS-WORKFLOW-008"))
+            self.assertIn("a State the Lifecycle does not define", self.report_text(c.dir))
+
+    def test_a_reference_inside_a_nested_object_is_resolved(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["metadata"] = dict(model["entities"][0].get("metadata") or {},
+                                                    provenance={"related_record": "AUD-NOWHERE"})
+            self.model_map(c, model)
+            self.assertIn("names AUD-NOWHERE, which the export does not declare", self.report_text(c.dir))
 
     def test_the_scope_declaration_decides_the_identity_scope_rule(self):
         """CAND-026: REQ-META-IDENTITY-005 is read from the map's Identity.scope declaration."""
