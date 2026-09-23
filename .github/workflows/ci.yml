@@ -373,20 +373,25 @@ jobs:
     # is generated from the documents Chapters 4 to 6 compile, never edited by
     # hand, and a divergence between the committed file and a regeneration
     # fails the build. The second step keeps the append-only Alias File in
-    # step with the register: every Statement needs an alias, and an alias
-    # whose identity no Statement carries must be marked superseded. The
-    # generator is standard-library Python and reads only this repository.
+    # step with the register: every Statement needs an alias, an alias whose
+    # identity no Statement carries must be marked superseded, and no
+    # committed row may be edited in place. That last rule is about the
+    # file's history, so the checkout fetches it: without history, editing a
+    # row's Identity cell to match a changed sentence kept the alias, the
+    # date and the note with every check green. The generator is
+    # standard-library Python and reads only this repository.
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0 # the append-only Alias File is checked against its base revision
 
       - name: Register matches a regeneration
         run: python3 tools/conformance/requirement_register.py --check
 
-      - name: Every Statement has an alias
+      - name: Every Statement has an alias, and no committed row was edited
         run: python3 tools/conformance/requirement_register.py --check-aliases
 
   principle-traceability:

@@ -13,6 +13,7 @@ would have caught none of the six.
 
   python3 tools/tests/test_tools.py        runs everything, no network, no third-party packages
 """
+import hashlib
 import json
 import pathlib
 import re
@@ -119,6 +120,61 @@ class RequirementRegister(unittest.TestCase):
             count = lambda s: int(s.split("statements ")[1].split(",")[0])
             self.assertEqual(count(after), count(before), "a sub-bullet must not split one obligation into two")
 
+
+    def commit_aliases(self, c):
+        """A copy with the Alias File committed, so the append-only rule has a history to read."""
+        for args in (("init", "-q"), ("add", "docs/Governance/Requirement-Aliases.md"),
+                     ("-c", "user.email=t@example.com", "-c", "user.name=T", "commit", "-q", "-m", "base")):
+            done = subprocess.run(["git"] + list(args), cwd=str(c.dir), capture_output=True, text=True)
+            self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+
+    ALIASES = "docs/Governance/Requirement-Aliases.md"
+
+    def test_an_alias_row_edited_in_place_is_refused(self):
+        """Section 2 makes the Alias File append-only: "rows are appended, never edited or removed".
+        Round 3 of the all-packages test rewrote a source sentence and edited the row's Identity cell
+        to the new hash: the register regenerated cleanly, every alias was covered, and nothing
+        noticed that the sentence under the row had changed. The rule is about history."""
+        with Copy() as c:
+            self.commit_aliases(c)
+            code, out = run(c.dir, REGISTER, "--check-aliases", "--against", "HEAD")
+            self.assertEqual(code, 0, out)
+            self.assertIn("rows edited since HEAD 0", out)
+            row = [l for l in c.read(self.ALIASES).splitlines() if l.startswith("| REQ-MODELS-DOMAIN-004 |")][0]
+            c.edit(self.ALIASES, row, row.replace(row.split("|")[2].strip(), "`%s`" % ("a" * 64)))
+            code, out = run(c.dir, REGISTER, "--check-aliases", "--against", "HEAD")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("REQ-MODELS-DOMAIN-004 was edited in place", out)
+
+    def test_an_alias_row_that_disappears_is_refused(self):
+        with Copy() as c:
+            self.commit_aliases(c)
+            text = c.read(self.ALIASES)
+            row = [l for l in text.splitlines() if l.startswith("| REQ-MODELS-DOMAIN-004 |")][0]
+            c.write(self.ALIASES, text.replace(row + "\n", ""))
+            code, out = run(c.dir, REGISTER, "--check-aliases", "--against", "HEAD")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("is no longer in the file", out)
+
+    def test_a_disposition_recorded_later_is_not_an_edit(self):
+        """Only the Disposition cell may change after a row is committed; that is how a Statement is
+        dispositioned and how a superseded row is marked."""
+        with Copy() as c:
+            self.commit_aliases(c)
+            row = [l for l in c.read(self.ALIASES).splitlines() if l.startswith("| REQ-MODELS-DOMAIN-004 |")][0]
+            cells = row.split("|")
+            cells[6] = " Review "
+            c.edit(self.ALIASES, row, "|".join(cells))
+            code, out = run(c.dir, REGISTER, "--check-aliases", "--against", "HEAD")
+            self.assertEqual(code, 0, out)
+
+    def test_an_append_only_check_with_no_history_reports_that_it_checked_nothing(self):
+        """A checker that cannot check must not report ok: outside a checkout there is no base
+        revision, and the run says so and fails rather than passing over the rule."""
+        with Copy() as c:
+            code, out = run(c.dir, REGISTER, "--check-aliases", "--against", "HEAD")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("compared against nothing", out)
 
 class PrincipleTraceability(unittest.TestCase):
     def test_current_document_passes(self):
@@ -546,19 +602,271 @@ class Validator(unittest.TestCase):
         with Copy() as c:
             model = json.loads(c.read("%s/model.json" % self.EX))
             erased = model["audit_records"][0]["id"]
-            model["audit_records"][0]["value"] = "[erased]"
+            model["audit_records"][0] = self.erase(model["audit_records"][0])
             model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND", "actor": "records-officer", "created_at": "2026-09-21T00:00:00Z"}]
             c.write("%s/model.json" % self.EX, json.dumps(model))
             self.map_erasures(c)
             rows = self.integrity_rows(c.dir)
             self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Pass", rows)
-            self.assertIn("ERA-0001 names %s: exclusion granted" % erased, self.report_text(c.dir))
+            self.assertIn("ERA-0001 names %s: well formed" % erased, self.report_text(c.dir))
+            self.assertIn("1 erased record(s) excluded", self.report_text(c.dir))
+
+    def test_an_erasure_does_not_cover_a_record_that_still_carries_its_content(self):
+        """Round 3 of the all-packages test: the exclusion was granted on the identity alone, so a
+        record that kept every field and had its content altered was excluded from the one Test that
+        would have caught the alteration. `Memory/Retention.md` grants it to a record whose content
+        is irrecoverable and whose identity, creation time, creator and demonstration are preserved."""
+        for label, mutate in (("tampered", lambda rec: dict(rec, value="Ownership assigned to OWN-ATTACKER")),
+                              ("blanked one field", lambda rec: dict(rec, value="[erased]")),
+                              ("creation time gone", lambda rec: {"id": rec["id"], "creator": rec["creator"]})):
+            with self.subTest(label), Copy() as c:
+                model = json.loads(c.read("%s/model.json" % self.EX))
+                erased = model["audit_records"][0]["id"]
+                model["audit_records"][0] = mutate(model["audit_records"][0])
+                model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND",
+                                      "actor": "records-officer"}]
+                c.write("%s/model.json" % self.EX, json.dumps(model))
+                self.map_erasures(c)
+                rows = self.integrity_rows(c.dir)
+                self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Fail", (label, rows))
+                printed = self.run_on(c.dir)[1]
+                self.assertIn("the exclusion an erasure record grants does not cover it", printed)
+
+    def test_an_erasure_grants_nothing_where_the_map_cannot_show_the_preservation(self):
+        """The map binds no creation time and no creator for the type, so nothing can say the
+        Deleted state preserved them; the exclusion is refused rather than granted on the identity."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            erased = model["audit_records"][0]["id"]
+            model["audit_records"][0] = self.erase(model["audit_records"][0])
+            model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND", "actor": "records-officer"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path)
+                    .replace("| Registry | collection | `registries` |", "| Registry | collection | `registries` |\n| Erasure | collection | `erasures` |")
+                    .replace("| Integrity.method |", "| Erasure.identifier | field | `id` |\n| Erasure.erased record | field | `record` |\n| Erasure.policy | field | `policy` |\n| Erasure.actor | field | `actor` |\n| Integrity.method |"))
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Fail", rows)
+            self.assertIn("binds no field to audit record.creation time", self.run_on(c.dir)[1])
+
+    def test_an_erasure_naming_an_identity_in_two_namespaces_grants_nothing(self):
+        """Round 3: the exclusion was keyed by the namespace of the erasures collection, not of the
+        record named, so an erasure stored in one scope excised a record that merely shared its key
+        in another. Content addressing makes exactly that pair."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            target = model["audit_records"][0]
+            erased = target["id"]
+            model["audit_records"][0] = self.erase(target)
+            model["capabilities"].append({"id": erased, "name": "a twin in another system", "purpose": "probe"})
+            model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND", "actor": "records-officer"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.map_erasures(c)
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path).replace("| Integrity.method |",
+                    "| Capability.identity scope | declaration | `External System` |\n"
+                    "| Capability.identity system | declaration | `ServiceNow` |\n| Integrity.method |"))
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Fail", rows)
+            self.assertIn("an identity the export declares in 2 namespaces", self.report_text(c.dir)
+                          + self.run_on(c.dir)[1])
+
+
+    # --- round 3 of the all-packages test: a verdict a map row can switch off ------------
+
+    def drop_rows(self, c, *rows):
+        """Delete map rows by their left-hand cell, as a claimant editing their own map would."""
+        path = "%s/representation-map.md" % self.EX
+        text = c.read(path)
+        for row in rows:
+            before = text
+            text = "\n".join(l for l in text.splitlines() if not l.startswith("| %s |" % row))
+            assert text != before, "no row %s in the map" % row
+        c.write(path, text + "\n")
+
+    def test_a_map_that_lists_no_ownership_collection_cannot_pass_the_owner_leg(self):
+        """Round 3: the resolution leg was gated on the map declaring an Ownership collection, so an
+        export whose map simply did not list one skipped it and passed. The claimant writes the map,
+        so that made the verdict a one-line edit of their own artifact."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for e in model["entities"]:
+                e["owner"] = "OWN-NOWHERE"
+            del model["ownership"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.drop_rows(c, "Ownership", "Ownership.identifier", "Ownership.owner", "Ownership.owned object",
+                           "Ownership.responsibility scope", "Ownership.effective date")
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-ENTITY-004"), "pending", rows.get("REQ-MODELS-ENTITY-004"))
+            self.assertIn("lists no Ownership collection", self.report_text(c.dir))
+
+    LIFECYCLE_TESTS = ("REQ-MODELS-LIFECYCLE-007", "REQ-MODELS-ENTITY-008", "REQ-LIFECYCLES-003",
+                       "REQ-MODELS-WORKFLOW-011")
+
+    def test_the_lifecycle_engines_read_no_literal_key(self):
+        """Round 3: `state_names`, `transitions_of`, `lifecycle_index` and `workflow_violations`
+        read `name`, `from`, `to`, `entity` and `id` when the map bound no row, so seven map rows
+        could be deleted with every verdict unchanged: the legs compared None with None and passed."""
+        with Copy() as c:
+            self.drop_rows(c, "State.name", "Transition.from", "Transition.to", "Transition.entity")
+            rows = self.outcomes(c.dir)
+            for alias in self.LIFECYCLE_TESTS:
+                self.assertEqual(rows.get(alias), "pending", (alias, rows.get(alias)))
+            self.assertIn("binds no field to State.name", self.report_text(c.dir))
+        with Copy() as c:
+            self.drop_rows(c, "Lifecycle.identifier", "Entity.identity", "Entity.identifier",
+                           "Object.identity", "Object.identifier")
+            rows = self.outcomes(c.dir)
+            for alias in self.LIFECYCLE_TESTS:
+                self.assertNotEqual(rows.get(alias), "Pass", alias)
+
+    def test_an_export_whose_entities_name_no_domain_cannot_pass_primary_governance(self):
+        """Round 3: the leg flagged an Entity only when its Domain was a list of more than one, so
+        an absent field flagged nothing and the reason asserted that every Entity names one."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for e in model["entities"]:
+                e.pop("domain", None)
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-DOMAIN-010"), "pending", rows.get("REQ-MODELS-DOMAIN-010"))
+        with Copy() as c:
+            self.drop_rows(c, "Entity.domain")
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-DOMAIN-010"), "pending", rows.get("REQ-MODELS-DOMAIN-010"))
+
+    def test_a_collection_of_records_nested_in_a_record_is_not_invisible(self):
+        """Round 3: the unlisted-collection rule read the top level only, so a collection of records
+        placed inside a record reused an identity while both identity Tests passed."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["sub_entities"] = [{"id": model["entities"][1]["id"], "name": "Shadow"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-META-IDENTITY-005"), "Fail", rows.get("REQ-META-IDENTITY-005"))
+            self.assertEqual(rows.get("REQ-META-IDENTITY-008"), "pending", rows.get("REQ-META-IDENTITY-008"))
+            self.assertIn("entities[].sub_entities", self.report_text(c.dir))
+
+    def test_a_collection_that_carries_no_identity_is_reported_and_not_failed_as_one(self):
+        """The mirror of the same rule: a block of records carrying no identity the map binds is
+        outside every Test, which the Pass says, but it is not an identity in no declared scope."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["export_log"] = [{"step": "extract", "at": "2026-09-23"}, {"step": "serialize", "at": "2026-09-23"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-META-IDENTITY-005"), "Pass", rows.get("REQ-META-IDENTITY-005"))
+            printed = self.run_on(c.dir)[1]
+            self.assertIn("carry no identity it binds", printed)
+            self.assertIn("export_log", printed)
+
+    def shared_ownership(self, c, second):
+        model = json.loads(c.read("%s/model.json" % self.EX))
+        model["ownership"].append(second)
+        c.write("%s/model.json" % self.EX, json.dumps(model))
+        return self.outcomes(c.dir)
+
+    def test_a_second_ownership_record_is_seen_even_when_the_owner_names_one_by_identifier(self):
+        """Round 3: the by_id branch returned before the shared-ownership leg ran, so an Entity whose
+        owner named a record by its identifier passed with a second Ownership record naming it and
+        the reason said "the one Ownership record that names it". CAND-025 counts one accountable."""
+        with Copy() as c:
+            rows = self.shared_ownership(c, {"id": "OWN-P-10432-B", "owner": "Data Governance Office",
+                                             "owned_object": "P-10432", "responsibility_scope": "Second.",
+                                             "effective_date": "2024-01-01"})
+            self.assertEqual(rows.get("REQ-MODELS-ENTITY-004"), "Pass", rows.get("REQ-MODELS-ENTITY-004"))
+            printed = self.run_on(c.dir)[1]
+            self.assertIn("shared between several Ownership records", printed)
+        with Copy() as c:
+            # and where the owner singles out none of them, it fails rather than passing on presence
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["ownership"].append({"id": "OWN-P-10432-B", "owner": "Data Governance Office",
+                                       "owned_object": "P-10432", "responsibility_scope": "Second.",
+                                       "effective_date": "2024-01-01"})
+            for e in model["entities"]:
+                if e["id"] == "P-10432":
+                    e["owner"] = "Somebody Else"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-ENTITY-004"), "Fail")
+            self.assertIn("singles out 0 of them", self.report_text(c.dir))
+
+    def declare_accountable_type(self, c, types):
+        """Give every Ownership record a Type and declare which one is accountable (CAND-025)."""
+        model = json.loads(c.read("%s/model.json" % self.EX))
+        for rec in model["ownership"]:
+            rec["ownership_type"] = types.get(rec["id"], "Business")
+        c.write("%s/model.json" % self.EX, json.dumps(model))
+        path = "%s/representation-map.md" % self.EX
+        c.write(path, c.read(path).replace("| Integrity.method |",
+                "| Ownership.type | field | `ownership_type` |\n"
+                "| Ownership.accountable type | declaration | `Business` |\n| Integrity.method |"))
+
+    def test_the_accountable_ownership_type_is_counted_where_the_map_declares_it(self):
+        """CAND-025's Decision counts "exactly one Ownership record of the accountable Type per
+        Entity". Nothing read an Ownership Type until round 3 found the Decision enforced by nothing."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["ownership"].append({"id": "OWN-P-10432-B", "owner": "Data Governance Office",
+                                       "owned_object": "P-10432", "responsibility_scope": "Second.",
+                                       "effective_date": "2024-01-01"})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.declare_accountable_type(c, {"OWN-P-10432": "Business", "OWN-P-10432-B": "Data"})
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-ENTITY-004"), "Pass")
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["ownership"].append({"id": "OWN-P-10432-B", "owner": "Data Governance Office",
+                                       "owned_object": "P-10432", "responsibility_scope": "Second.",
+                                       "effective_date": "2024-01-01"})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            # two records of the accountable Type name the same Entity: accountability is singular
+            self.declare_accountable_type(c, {"OWN-P-10432": "Business", "OWN-P-10432-B": "Business"})
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-ENTITY-004"), "Fail")
+            self.assertIn("carry the accountable Ownership Type the map declares", self.run_on(c.dir)[1])
+
+    def test_the_owner_leg_says_when_no_accountable_type_is_declared(self):
+        """A Test that reads accountability from the owner's own pointer says so, rather than
+        reporting the rule CAND-025 states."""
+        code, printed = self.run_on(ROOT)
+        self.assertEqual(code, 0, printed)
+        self.assertIn("no accountable Ownership Type declared", printed)
+
+    def test_an_extension_declaration_is_read_and_not_merely_present(self):
+        """Round 3: both extension Declaration Tests returned Pass whenever the `Supported
+        extensions` field was non-empty, including `none`, which this tool's own vocabulary calls an
+        absence, and including a sentence declaring the violation they forbid. Section 5 of the
+        suite binds them to the four attestations Chapter 8 imposes."""
+        statement = "%s/conformance-statement.md" % self.EX
+        cases = (("none", "", "Not Applicable", "Not Applicable"),
+                 ("-", "", "Not Applicable", "Not Applicable"),
+                 ("OCOM-Finance v1, which changes the normative semantics of Ownership", "", "Fail", "Fail"),
+                 ("OCOM-Finance v1", "compatibility preserved; semantics unchanged", "Fail", "Fail"),
+                 ("OCOM-Finance v1", "compatibility with the core language is preserved; normative semantics are "
+                                     "unchanged; the extension is clearly identifiable and fully documented; "
+                                     "conformance with the core specification is not invalidated", "Pass", "Pass"))
+        for extensions, attestations, decl2, decl3 in cases:
+            with self.subTest(extensions=extensions, attestations=attestations[:20]), Copy() as c:
+                text = c.read(statement).replace("**Supported extensions:** none",
+                                                 "**Supported extensions:** %s" % extensions)
+                if attestations:
+                    text += "\n**Extension attestations:** %s\n" % attestations
+                c.write(statement, text)
+                rows = self.outcomes(c.dir)
+                self.assertEqual(rows.get("DECL-002"), decl2, (extensions, rows.get("DECL-002")))
+                self.assertEqual(rows.get("DECL-003"), decl3, (extensions, rows.get("DECL-003")))
 
     def map_erasures(self, c):
         path = "%s/representation-map.md" % self.EX
         c.write(path, c.read(path)
                 .replace("| Registry | collection | `registries` |", "| Registry | collection | `registries` |\n| Erasure | collection | `erasures` |")
-                .replace("| Integrity.method |", "| Erasure.identifier | field | `id` |\n| Erasure.erased record | field | `record` |\n| Erasure.policy | field | `policy` |\n| Erasure.actor | field | `actor` |\n| Integrity.method |"))
+                .replace("| Integrity.method |", "| Erasure.identifier | field | `id` |\n| Erasure.erased record | field | `record` |\n| Erasure.policy | field | `policy` |\n| Erasure.actor | field | `actor` |\n"
+                         "| Audit record.creation time | field | `created_at` |\n| Audit record.creator | field | `creator` |\n| Integrity.method |"))
+
+    @staticmethod
+    def erase(rec):
+        """What `Memory/Retention.md`'s Deleted state leaves of a record: its identity, its creation
+        time, its creator and its demonstration of integrity, and nothing else. Blanking one field
+        and keeping the rest is not an erasure, and the suite refuses the exclusion for it."""
+        return {k: v for k, v in rec.items() if k in ("id", "created_at", "creator")}
 
     def report_text(self, root):
         out = pathlib.Path(tempfile.mkdtemp()) / "r.md"
@@ -891,7 +1199,13 @@ class Validator(unittest.TestCase):
             rows, text = self.probe_two_systems(c, path_keyed=False)
             self.assertEqual(rows.get("REQ-META-OBJECT-003"), "Pass", rows.get("REQ-META-OBJECT-003"))
             self.assertEqual(rows.get("REQ-META-IDENTITY-008"), "Pass", rows.get("REQ-META-IDENTITY-008"))
-            self.assertEqual(rows.get("REQ-MODELS-ENTITY-004"), "Pass")
+            # `Adoption/Reference Serialization.md` says a bare reference to an identity the export
+            # declares in two scopes is ambiguous and is not resolved to either, so the owner leg
+            # reports that it could not resolve rather than resolving by bare key. Until round 3 it
+            # compared the scope and dropped the system, so every source system shared one namespace
+            # and a ServiceNow record resolved to an SAP record's Ownership record.
+            self.assertEqual(rows.get("REQ-MODELS-ENTITY-004"), "pending", rows.get("REQ-MODELS-ENTITY-004"))
+            self.assertIn("carries an identity the export declares in 2 namespaces", text)
             # a bare reference to an identity that exists in two scopes is ambiguous, and the report says so
             self.assertIn("REL-PROBE.source names BP-1000001, an identity the export declares in 2 scopes", text)
 
@@ -935,6 +1249,40 @@ class Validator(unittest.TestCase):
         self.assertIn("Example reviewer (first party), 22 September 2026:", row)
         self.assertIn("- Example reviewer (first party): 3 judgment(s)", text)
         self.assertIn("not established", printed)
+
+    JUDGMENT = "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | 22 September 2026 | A reason long enough to be read. |\n"
+
+    def test_a_reviewer_record_that_declares_fewer_than_three_digests_is_refused(self):
+        """Round 3: the run compared whatever subset of model, map and statement the line happened
+        to name, so a record naming one digest was accepted against any map and any Conformance
+        Statement while the report printed that all three were verified. Section 3 fixes the grammar."""
+        digest = hashlib.sha256((ROOT / self.EX / "model.json").read_bytes()).hexdigest()[:16]
+        for line in ("**Recorded against:** model `%s`" % digest,
+                     "**Recorded against:** model `%s`, statement `nothing`" % digest,
+                     "**Recorded against:** nothing in particular"):
+            with self.subTest(line=line[:44]), Copy() as c:
+                path = c.dir / "reviews.md"
+                path.write_text("# R\n\n%s\n\n%s%s" % (line, self.HEADER, self.JUDGMENT), encoding="utf-8")
+                code, printed, text = self.run_with_reviews(c.dir, path)
+                self.assertNotEqual(code, 0, printed)
+                self.assertIn("names fewer binds its judgments to less", printed)
+
+    def test_a_judgment_inside_a_fence_or_a_comment_is_not_a_judgment(self):
+        """Round 3: every line starting with `|` was read as a judgment, so a row written inside a
+        ``` fence to illustrate the format was counted as a named reviewer's judgment and cleared a
+        mandatory Test. The shipped record is full of exactly that kind of prose."""
+        illustration = "| REQ-META-OBJECT-004 | Review Pass | Nobody At All | 22 September 2026 | A reason long enough to be read. |"
+        cases = {"fence": "```\n%s\n```\n\n" % illustration,
+                 "tilde fence": "~~~\n%s\n~~~\n\n" % illustration,
+                 "comment": "<!--\n%s\n-->\n\n" % illustration}
+        for name, block in cases.items():
+            with self.subTest(name), Copy() as c:
+                path = c.dir / "reviews.md"
+                path.write_text("# R\n\n" + block + self.HEADER + self.JUDGMENT, encoding="utf-8")
+                code, printed, text = self.run_with_reviews(c.dir, path)
+                self.assertEqual(code, 0, printed)
+                self.assertIn("reviewed 1 pass", printed, name)
+                self.assertNotIn("Nobody At All", text, name)
 
     def test_a_reviewer_record_that_cannot_be_attributed_stops_the_run(self):
         """A judgment without a name, a reason, a readable date, a known Test or a permitted outcome
@@ -1102,8 +1450,8 @@ class Validator(unittest.TestCase):
         with Copy() as c:
             model = json.loads(c.read("%s/model.json" % self.EX))
             model["erasures"] = []
-            for rec in model["audit_records"]:
-                rec["value"] = "[erased]"
+            for i, rec in enumerate(list(model["audit_records"])):
+                model["audit_records"][i] = self.erase(rec)
                 model["erasures"].append({"id": "ERA-%s" % rec["id"][:6], "record": rec["id"],
                                           "policy": "POL-SUSPEND", "actor": "records-officer"})
             self.model_map(c, model)
@@ -1545,6 +1893,65 @@ class PublicationHealth(unittest.TestCase):
                 return health, pub
         self.fail("the fixture never became self-consistent: %s" % last)
         return health, pub
+
+    def settle(self, site, rounds=4):
+        """Publish what the tool computes until the fixture stops moving, without requiring the run
+        to pass: a site whose figures breach a published threshold never returns 0 and still has to
+        reach the fixed point a deploy reaches."""
+        health = pub = None
+        for _ in range(rounds):
+            out = tempfile.mkdtemp(prefix="ocom-health-")
+            run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--write", out)
+            health = json.loads((pathlib.Path(out) / "observatory" / "health.json").read_text(encoding="utf-8"))
+            pub = json.loads((pathlib.Path(out) / "observatory" / "publication-health.json").read_text(encoding="utf-8"))
+            site.publish(health, pub)
+            shutil.rmtree(out, ignore_errors=True)
+        return health, pub
+
+    def test_a_figure_that_breaches_its_published_threshold_fails_the_check(self):
+        """Round 3 of the all-packages test: the record publishes thresholds for its figures and
+        nothing ever compared a figure with one. Because the same tool writes the record, a deploy
+        republished the breached numbers and the next run found perfect agreement."""
+        with fake_site.Fixture() as site:
+            self.healthy(site)
+            graph = json.loads(site.files["/graph.jsonld"][1])
+            graph["@graph"].append(dict(graph["@graph"][0]))      # one @id carried by two nodes
+            site.files["/graph.jsonld"] = ("application/json", json.dumps(graph))
+            self.settle(site)
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("differ in 0 place(s)", out)            # the record agrees with itself
+            self.assertIn("duplicateIdentities is 1", out)        # and the figure still breaches
+            self.assertIn("1 figure(s) breach a published threshold", out)
+
+    def test_a_record_that_holds_its_figures_to_nothing_is_reported(self):
+        with fake_site.Fixture() as site:
+            health, pub = self.healthy(site)
+            for label, notes in (("no thresholds", {}), ("a threshold this tool cannot read", {"mutualPairs": 3})):
+                with self.subTest(label):
+                    health["notes"]["thresholds"] = notes
+                    if not notes:
+                        health["notes"].pop("thresholds")
+                    site.publish(health, pub)
+                    code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+                    self.assertNotEqual(code, 0, out)
+                    self.assertIn("thresholds" if not notes else "which way it points", out)
+
+    def test_a_resolve_page_the_tool_cannot_read_a_count_from_fails_its_row(self):
+        """Round 3: the leg counted the comparison before making it, so a page printing no number in
+        the shape it reads was reported ok having compared nothing; and it tested set membership, so
+        a page whose headline was wrong passed whenever another number beside the word matched."""
+        with fake_site.Fixture() as site:
+            self.healthy(site)
+            entries = len(json.loads(site.files["/resolve.json"][1])["entries"])
+            pages = {"no count": "<html><body><p>Identifiers: many</p></body></html>",
+                     "wrong headline": "<html><body><p>Identifiers 3</p><p>Term identifiers %d</p></body></html>" % entries}
+            for label, page in pages.items():
+                with self.subTest(label):
+                    site.files["/resolve"] = ("text/html; charset=utf-8", page)
+                    code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+                    self.assertNotEqual(code, 0, out)
+                    self.assertIn("Rendered figures match their records FAIL", out)
 
     def test_healthy_fixture_passes(self):
         with fake_site.Fixture() as site:

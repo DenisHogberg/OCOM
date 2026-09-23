@@ -65,15 +65,16 @@ Standard library only, no network, a few seconds.
 
 # What the Result Says, and What It Does Not
 
-At the commit that records this document: 187 mandatory Tests, 49 Pass, 0 Fail, 3 Review Pass from
+At the commit that records this document: 185 mandatory Tests, 47 Pass, 0 Fail, 3 Review Pass from
 the illustrative Reviewer Record, 135 awaiting a named reviewer or evidence this export does not
-carry. **Core Conformance is not established**, and that is the correct answer rather than a
+carry, and 3 Not Applicable: one Statement dispositioned Descriptive, and the two Declaration Tests
+on extensions, which this Conformance Statement declares none of. **Core Conformance is not established**, and that is the correct answer rather than a
 disappointing one: Section 3 establishes it when every mandatory Test is Pass or Review Pass, a model
 alone cannot produce a Review Pass, and this example's reviewer is its own author deciding three
 Statements to show the format. An implementation plus a reviewer who works through the rest can; the
 tests include a record that does exactly that and reaches "established".
 
-The 135 are not a defect of the tool. 117 of them are Statements the Test Catalogue sends to
+The 135 are not a defect of the tool. 116 of them are Statements the Test Catalogue sends to
 Review because no export can settle them, such as "Identity shall remain stable throughout the
 Object's existence", which needs a history rather than a snapshot. The rest are prohibitions whose
 evidence an export does not carry, and one Statement whose list items are not separated in its
@@ -115,4 +116,5 @@ defect report.
 | 0.1 | 22 September 2026 | Identity uniqueness and reuse keyed by the scope the map declares (`CAND-026`), so two systems' keys coexist; a bare reference to an identity present in two scopes is reported ambiguous; the schema no longer requires every collection. Found by the enterprise evaluation of the same day. |
 | 0.1 | 22 September 2026 | `reviewer-record.md` added and read by `validate.py --reviews`: a named judgment per Test the suite could not decide, fail-closed on anything it cannot attribute, never overriding a mechanical outcome; the report carries the reviewers and the not-applied rows. 48 Pass, 3 Review Pass, 136 pending at this commit. |
 | 0.1 | 22 September 2026 | Report regenerated after the all-packages test of the same day: the header carries the Release, commit, register count, Alias File revision and the digests of the three inputs; the counts are unchanged (48 Pass, 3 Review Pass, 136 pending), which is the point of the fixes. |
+| 0.1 | 23 September 2026 | Round 3 of the all-packages test: the two Declaration Tests on extensions are Not Applicable where the Conformance Statement declares none, rather than passing on the word `none` (185 mandatory, 47 Pass); the map's How to Read a Row states the rows that declare an erasure record and the accountable Ownership Type; the Reviewer Record's three digests are rebound to this commit's inputs. |
 | 0.1 | 23 September 2026 | Round 2 of the all-packages test: the record declares the inputs it was recorded against; one further Statement decides (`Every Ownership assignment shall define:`, which the subject reader could not resolve), so 49 Pass and 135 pending. |

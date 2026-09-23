@@ -18,12 +18,17 @@ Standard library only. Usage:
                                            (refuses to run if the file already exists)
   requirement_register.py --check-aliases  fail if any Statement in the register has no
                                            alias, or an alias names an identity that no
-                                           longer exists without being marked superseded
+                                           longer exists without being marked superseded,
+                                           or a committed row was edited in place rather
+                                           than superseded by a new one (the append-only
+                                           rule; --against <rev> picks what to compare to)
   requirement_register.py --census         print the counts only
 """
 import hashlib
+import os
 import pathlib
 import re
+import subprocess
 import sys
 
 REPO = pathlib.Path(__file__).resolve().parents[2]
@@ -151,6 +156,78 @@ DISPOSITIONS = ("", "descriptive", "review")
 SUPERSEDED = re.compile(r"^superseded by (REQ-[A-Z0-9-]+)$", re.I)
 
 
+def alias_rows(text):
+    """Every alias row of an Alias File, keyed by alias, as its list of cells."""
+    rows = {}
+    for line in text.splitlines():
+        if line.startswith("| REQ-"):
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            rows.setdefault(cells[0], cells)
+    return rows
+
+
+def file_at(rev, relative):
+    """The file as of `rev`, or None when this checkout cannot answer."""
+    try:
+        done = subprocess.run(["git", "-C", str(REPO), "show", "%s:%s" % (rev, relative)],
+                              capture_output=True, text=True)
+    except OSError:
+        return None
+    return done.stdout if done.returncode == 0 else None
+
+
+def base_revisions():
+    """The revisions to compare the Alias File against, most meaningful first."""
+    out = []
+    base = os.environ.get("GITHUB_BASE_REF")
+    if base:
+        out += ["origin/" + base, base]
+    return out + ["origin/main", "main", "HEAD"]
+
+
+# Only the Disposition may change after a row is committed, and only into a value the grammar
+# above reads. Everything else in a row is fixed: the identity is the SHA-256 of the document
+# path, the section and the text, so a changed sentence is a new identity and therefore a new row.
+EDITABLE_CELL = 5
+
+
+def append_only_failures(revisions):
+    """Every committed alias row that was edited in place or removed, and the revision compared to.
+
+    Section 2 makes the file append-only: rows "are appended, never edited or removed; when a
+    source sentence changes, its Statement gets a new identity, a new row is appended for it, and
+    the old row's Disposition cell records `superseded by <alias>`". Nothing enforced that.
+    --check-aliases compares the current register against the current file, so editing a row's
+    Identity cell in place to the new hash keeps the alias, the recorded date and the note, and
+    every check stays green while the sentence underneath it has changed. The rule is about the
+    file's history, so history is what decides it.
+    """
+    relative = str(ALIASES.relative_to(REPO))
+    for rev in revisions:
+        text = file_at(rev, relative)
+        if text is None:
+            continue
+        before, now = alias_rows(text), alias_rows(ALIASES.read_text(encoding="utf-8"))
+        failures = []
+        for alias, cells in before.items():
+            current = now.get(alias)
+            if current is None:
+                failures.append("alias %s was committed at %s and is no longer in the file; rows are appended, "
+                                "never removed" % (alias, rev))
+                continue
+            for i, cell in enumerate(cells):
+                if i == EDITABLE_CELL:
+                    continue
+                if i >= len(current) or current[i] != cell:
+                    failures.append("alias %s was edited in place since %s: column %d read %r and now reads %r; a "
+                                    "changed Statement gets a new identity and a new row, and the old row records "
+                                    "`superseded by <alias>`"
+                                    % (alias, rev, i + 1, cell[:60], (current[i] if i < len(current) else "")[:60]))
+        return failures, rev
+    return (["the Alias File could not be read at any of %s, so the append-only rule was compared against nothing"
+             % ", ".join(revisions)], None)
+
+
 def disposition_failures(pairs, aliases):
     """Every Disposition cell this tool cannot read, and every supersession that names nothing."""
     names = {a for a, _ in pairs}
@@ -274,10 +351,14 @@ def render_aliases(paths, derived, today):
 
 
 def main(argv):
-    if len(argv) != 2 or argv[1] not in ("--write", "--check", "--init-aliases", "--check-aliases", "--census"):
+    if len(argv) < 2 or argv[1] not in ("--write", "--check", "--init-aliases", "--check-aliases", "--census") \
+            or (len(argv) != 2 and argv[2:3] != ["--against"]) or (argv[2:3] == ["--against"] and len(argv) != 4):
         print(__doc__)
         return 2
     mode = argv[1]
+    against = None
+    if "--against" in argv:
+        against = argv[argv.index("--against") + 1]
     paths, derived = derive()
     total = sum(len(v) for v in derived.values())
     if mode == "--census":
@@ -321,6 +402,9 @@ def main(argv):
         grammar = disposition_failures(pairs, aliases)
         for failure in grammar:
             print(failure)
+        edits, compared_to = append_only_failures([against] if against else base_revisions())
+        for failure in edits:
+            print(failure)
         # a supersession must hand the obligation to a row that is itself live, or removing a
         # sentence removes its mandatory Test with every check green
         orphan = []
@@ -334,10 +418,10 @@ def main(argv):
         for line in orphan:
             print(line)
         print("aliases %d, statements %d, missing %d, stale %d, duplicate aliases %d, duplicate identities %d, "
-              "unreadable dispositions %d, orphan supersessions %d"
+              "unreadable dispositions %d, orphan supersessions %d, rows edited since %s %d"
               % (len(aliases), total, len(missing), len(stale), len(dup_alias), len(dup_identity),
-                 len(grammar), len(orphan)))
-        return 1 if (missing or stale or dup_alias or dup_identity or grammar or orphan) else 0
+                 len(grammar), len(orphan), compared_to or "(no revision)", len(edits)))
+        return 1 if (missing or stale or dup_alias or dup_identity or grammar or orphan or edits) else 0
     rendered = render_register(paths, derived, aliases)
     if mode == "--write":
         REGISTER.write_text(rendered, encoding="utf-8")

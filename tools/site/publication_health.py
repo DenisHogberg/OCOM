@@ -16,7 +16,9 @@ this implementation is narrower than the rule, the record says so in its own not
   publication_health.py --write <dir>   recompute and write both records into <dir>
   publication_health.py --check         recompute and compare against what is published,
                                         printing every difference; exit 1 if any row fails
-                                        its threshold or a published figure disagrees
+                                        its rule, any figure breaches the threshold the
+                                        record publishes for it, or a published figure
+                                        disagrees with the recomputed one
   publication_health.py --summary       recompute and print the counts only
 
 Figures the published records mark as not reproducible are carried forward as constants in
@@ -399,15 +401,63 @@ def rendered_figures_row(site):
         missing.append("/resolve does not answer")
     elif entries:
         text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", resolve_page))
-        printed = set(int(n) for n in re.findall(r"(?:Identifiers|identifiers)\D{0,12}(\d{1,4})", text))
-        checked += 1
-        if printed and entries not in printed:
-            missing.append("/resolve prints %s identifiers and resolve.json holds %d"
-                           % (", ".join(str(x) for x in sorted(printed)), entries))
+        printed = [int(n) for n in re.findall(r"(?:Identifiers|identifiers)\D{0,12}(\d{1,4})", text)]
+        # the count was incremented before the comparison and the test was set membership, so a
+        # page printing no number in this shape was reported ok having compared nothing, and a page
+        # whose headline figure was wrong passed whenever any other number beside the word
+        # "identifiers" happened to equal the registry size
+        if not printed:
+            missing.append("/resolve prints no identifier count this tool can read, so the figure resolve.json "
+                           "publishes (%d) was compared against nothing" % entries)
+        else:
+            checked += 1
+            if printed[0] != entries:
+                missing.append("/resolve prints %d identifiers and resolve.json holds %d" % (printed[0], entries))
     return row("Rendered figures match their records",
                "Every count the /observatory page prints for a publication-health row, and the identifier count "
                "printed on /resolve, equals the figure in the record the page renders.",
                checked, missing)
+
+
+# The health record publishes a thresholds block and nothing ever compared a figure against one:
+# --check compared the recomputed figures with the published figures, and since the same tool
+# writes the record, a deploy republished the breached numbers and the next run found perfect
+# agreement. The direction is per figure, and a threshold this tool cannot read is a failure
+# rather than a silent skip.
+THRESHOLD_DIRECTION = {
+    "brokenLinks": "at most",
+    "orphans": "at most",
+    "duplicateIdentities": "at most",
+    "cycles": "at most",
+    "missingReverse": "at most",
+    "coreVocabularyProjectionCoverage": "at least",
+    "projectionParity": "exactly",
+}
+
+
+def threshold_failures(health):
+    """Every figure of the health record that breaches the threshold the record publishes for it."""
+    thresholds = (health.get("notes") or {}).get("thresholds") or {}
+    if not thresholds:
+        return ["the health record publishes no thresholds block, so no figure could be held to one"]
+    out = []
+    for key in sorted(thresholds):
+        want = thresholds[key]
+        direction = THRESHOLD_DIRECTION.get(key)
+        got = (health.get("projectionParity") or {}).get("ok") if key == "projectionParity" else health.get(key)
+        if direction is None:
+            out.append("the record publishes a threshold for %s and this tool does not know which way it points, "
+                       "so the figure was compared against nothing" % key)
+        elif direction == "exactly":
+            if got != want:
+                out.append("%s is %r and the record publishes a threshold of %r" % (key, got, want))
+        elif not isinstance(got, (int, float)) or isinstance(got, bool):
+            out.append("%s is %r, which is not a number the published threshold %r can be applied to" % (key, got, want))
+        elif direction == "at most" and got > want:
+            out.append("%s is %s and the record publishes a maximum of %s" % (key, got, want))
+        elif direction == "at least" and got < want:
+            out.append("%s is %s and the record publishes a minimum of %s" % (key, got, want))
+    return out
 
 
 def coined_names_row(site):
@@ -621,6 +671,9 @@ def main(argv):
     site = Site(a.base, a.pause)
     health, pub = recompute(site, a.today)
     failed = [r for r in pub["checks"] if not r["ok"]]
+    breached = threshold_failures(health)
+    for line in breached:
+        print("THRESHOLD", line)
     for r in pub["checks"]:
         tail = ""
         if not r["ok"]:
@@ -637,14 +690,14 @@ def main(argv):
     spec = health["projectionParity"]["specification"]
     print("specification projection: version=%s chapters=%d commit=%s" % (spec["version"], spec["chapters"], spec["sourceCommit"]))
     if a.summary:
-        return 1 if failed else 0
+        return 1 if (failed or breached) else 0
     if a.write:
         d = pathlib.Path(a.write)
         (d / "observatory").mkdir(parents=True, exist_ok=True)
         (d / "observatory" / "health.json").write_text(json.dumps(health, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (d / "observatory" / "publication-health.json").write_text(json.dumps(pub, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print("wrote %s/observatory/{health,publication-health}.json" % d)
-        return 1 if failed else 0
+        return 1 if (failed or breached) else 0
     live_h = site.json("/observatory/health.json") or {}
     live_p = site.json("/observatory/publication-health.json") or {}
     diffs = []
@@ -708,8 +761,9 @@ def main(argv):
         diffs.append("publication-health: published row %r is computed by nothing" % name)
     for d in diffs:
         print("DIFF", d)
-    print("published records differ in %d place(s); %d row(s) fail their rule" % (len(diffs), len(failed)))
-    return 1 if (diffs or failed) else 0
+    print("published records differ in %d place(s); %d row(s) fail their rule; %d figure(s) breach a published "
+          "threshold" % (len(diffs), len(failed), len(breached)))
+    return 1 if (diffs or failed or breached) else 0
 
 
 if __name__ == "__main__":

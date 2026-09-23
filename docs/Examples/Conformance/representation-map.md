@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 September 2026
+**Last Updated:** 23 September 2026
 
 ---
 
@@ -38,9 +38,27 @@ A row of kind `method`, `Integrity.method`, names the method by which records de
 
 A row of kind `declaration` states something about the export as a whole rather than binding a field: `Identity.scope` declares which of the five Identity Scopes `Meta/Identity.md` names the export's identities carry (`CAND-026`); an export whose identities come from another system declares `External System` and names the system in a row `Identity.system`. A type may declare its own scope in a row `<Type>.identity scope`, and a type spread over several collections, one per source system, declares per collection in a row `<collection>.identity scope` (with `<collection>.identity system` for an External System). The suite keys identity uniqueness and reuse by the declared scope and system.
 
+An export whose Objects carry several Owners declares which Ownership Type the organization holds
+accountable (`CAND-025`; `Meta/Ownership.md` lists eight and the choice is the organization's), in a
+row `Ownership.accountable type` of kind `declaration` beside a field row `Ownership.type`. The
+Presence Test for `REQ-MODELS-ENTITY-004` then counts exactly one Ownership record of that Type per
+Entity. This export gives each Entity one Ownership record and declares neither row, and the Test
+says so in its reason: accountability is read from each record's owner instead.
+
+An export that erases a record under `Memory/Retention.md` declares the erasure records the same
+way: a row `Erasure | collection | <path>` says where they live, and rows `Erasure.identifier`,
+`Erasure.erased record`, `Erasure.policy` and `Erasure.actor` bind their fields. The suite then
+excludes an erased record from an Integrity Test, but only where the erasure record names a Policy
+the export declares and an actor, names an identity the export declares in one namespace, and names
+a record that shows the Deleted state: its identity, its creation time and creator (rows
+`<Type>.creation time` and `<Type>.creator`) and its demonstration of integrity preserved, and
+nothing else of its content left in it. This export erases nothing and carries none of those rows.
+
 A row of kind `collection` names where instances of an OCOM type live in the export: one or more
 top-level keys, or a path of the form `parent[].child` for instances nested inside another
-collection. A row of kind `field` names the field those instances carry for one element of the
+collection. A collection of records the map lists nowhere is outside every Test, and the Declaration
+Test on Identity scope fails an export that carries one whose records carry an identity this map
+binds, at the top level or nested inside another record. A row of kind `field` names the field those instances carry for one element of the
 vocabulary, written `Type.element`. An element the export does not carry has no row, and a Test
 that needs it fails rather than passing over an absence.
 
@@ -212,3 +230,4 @@ that needs it fails rather than passing over an absence.
 | 0.1 | 20 September 2026 | First map, written for `model.json` so the Conformance Test Suite can be run end to end against a real file. |
 | 0.1 | 22 September 2026 | Row `Identity.scope` of kind `declaration`, declaring Organization as the scope of every identity this export carries, per `CAND-026`; the kind explained under How to Read a Row. |
 | 0.1 | 22 September 2026 | How to Read a Row: declarations may be keyed by collection path, and the suite keys identity by the declared scope and system. |
+| 0.1 | 23 September 2026 | How to Read a Row: the rows that declare the accountable Ownership Type, and the rows that declare an erasure record and what the exclusion requires of the record one names, and what a collection the map does not list costs. Round 3 of the all-packages test found that vocabulary written down nowhere outside the validator. The rows themselves are unchanged: this export erases nothing. |
