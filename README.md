@@ -54,8 +54,8 @@ Prefer the repository? Start with [`docs/README.md`](docs/README.md), then [`doc
 
 - [Constitution v1.0.1](docs/Core/Constitution.md): the canonical principles, amended only through an RFC-like process.
 - [Architecture Freeze](docs/Governance/ADR-Candidates.md) (ADR Candidate CAND-007): no new Core concept, no reworded Canonical Principle, until the freeze is lifted through the change process.
-- [ADR Candidates](docs/Governance/ADR-Candidates.md): 22 recorded decisions and proposals, CAND-001 to CAND-022.
-- [Architecture Observations](docs/Governance/Architecture-Observations.md): 82 recorded tensions, AO-001 to AO-083 with 072 reserved, including the ones the specification's own site found when it audited itself and the ones its own logic check found.
+- [ADR Candidates](docs/Governance/ADR-Candidates.md): 34 recorded decisions and proposals, CAND-001 to CAND-034.
+- [Architecture Observations](docs/Governance/Architecture-Observations.md): 92 recorded tensions, AO-001 to AO-093 with 072 reserved, including the ones the specification's own site found when it audited itself and the ones its own logic check found.
 - [Standard Evolution Methodology](docs/Governance/Standard%20Evolution%20Methodology.md): how a Reference Case becomes an observation, a candidate and, eventually, a change.
 
 Found something the text gets wrong? Open a [Reference Case](.github/ISSUE_TEMPLATE/reference-case.md). Found two rules that contradict each other? Open an [Architecture Observation](.github/ISSUE_TEMPLATE/architecture-observation.md). Found a page on ocom.uno that disagrees with the file it names as its source? Open a [Projection defect](.github/ISSUE_TEMPLATE/projection-defect.md).
@@ -91,7 +91,7 @@ Everything normative is Markdown under `docs/`. The only code in this repository
 - Core Vocabulary v0.1: released 21 July 2026 with 12 terms; Organization was added on 25 July 2026 through ADR CAND-005, bringing the set to 13. The 0.1 label did not change on either date, and the [Publication Manifest](docs/Governance/Publication-Manifest.md) records that.
 - Specification v1.0 reading path and Governance: baseline. Baseline means reviewed and frozen pending the change process, not finished.
 - Constitution v1.0.1: adopted as v1.0 through ADR CAND-006 and amended once since; Architecture Freeze in force through CAND-007.
-- Evidence: one Reference Case published; reference implementations, verified implementations and independent validations all stand at zero, and the [Evidence Register](docs/Governance/Evidence-Register.md) says so, alongside the fourteen third-party records that do exist.
+- Evidence: one Reference Case published; reference implementations, verified implementations and independent validations all stand at zero, and the [Evidence Register](docs/Governance/Evidence-Register.md) says so, alongside the sixteen third-party records that do exist.
 
 See [`ROADMAP.md`](ROADMAP.md) for what is done, what is open and what is under exploration, and [`CHANGELOG.md`](CHANGELOG.md) for the record of changes.
 

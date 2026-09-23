@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 September 2026
+**Last Updated:** 23 September 2026
 
 ---
 
@@ -67,7 +67,8 @@ If a gap looks like it's in OCOM itself, rather than in how your pilot modeled i
 | 0.1 | 17 September 2026 | Revision History and Last Updated added, which `Governance/Documentation-Standards.md` requires of every document and this one had never carried; content unchanged. |
 | 0.1 | 22 September 2026 | Step 3 says what Owner means (`CAND-025`); one paragraph after the steps on picking the Domain in a matrix organization and on what a department, a business unit and a legal entity are (`CAND-027`). Both restate canonical documents and add no rule. |
 | 0.1 | 22 September 2026 | Purpose: one paragraph naming how this document's order (one Domain first) relates to the Implementation Case's order (identity first); closes `AO-091`. Restates both, adds no rule. |
+| 0.1 | 23 September 2026 | Source line names the documents the paragraphs of 22 September restate (`Models/Entity.md` and `Meta/Ownership.md` for what Owner means, the Implementation Case for the two orders of adoption). |
 
 ---
 
-*Source: this document restates, and does not extend, `Models/Domain.md`, `Models/Event.md`, `Core/Principles.md`, and `docs/Governance/Standard Evolution Methodology.md`. Team size and Entity count are suggested bounds for a first attempt, not normative requirements.*
+*Source: this document restates, and does not extend, `Models/Domain.md`, `Models/Event.md`, `Models/Entity.md`, `Meta/Ownership.md`, `Core/Principles.md`, `docs/Examples/Implementation-Case/README.md`, and `docs/Governance/Standard Evolution Methodology.md`. Team size and Entity count are suggested bounds for a first attempt, not normative requirements.*

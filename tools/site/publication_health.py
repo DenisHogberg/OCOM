@@ -370,6 +370,46 @@ def graph_figures(site):
     }
 
 
+def rendered_figures_row(site):
+    """Every figure the human-facing pages print about the records beside them. The Observatory
+    page and the /resolve page render publication-health.json and resolve.json, and nothing
+    compared the rendering with the record: the page printed four stale counts and an identifier
+    count two behind the registry while both site tools called the site clean."""
+    missing, checked = [], 0
+    pub = site.json("/observatory/publication-health.json") or {}
+    page = site.text("/observatory")
+    if page is None:
+        missing.append("/observatory does not answer")
+    else:
+        text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", page))
+        for r in pub.get("checks", []):
+            name = r.get("name") or ""
+            m = re.search(re.escape(name) + r"\s*(\d+)\s*checked", text)
+            if not m:
+                missing.append("/observatory does not print a checked count for %r" % name)
+                continue
+            checked += 1
+            if int(m.group(1)) != r.get("checked"):
+                missing.append("/observatory prints %s for %r and the record says %s"
+                               % (m.group(1), name, r.get("checked")))
+    reg = site.json("/resolve.json") or {}
+    entries = len(reg.get("entries") or {})
+    resolve_page = site.text("/resolve")
+    if resolve_page is None:
+        missing.append("/resolve does not answer")
+    elif entries:
+        text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", resolve_page))
+        printed = set(int(n) for n in re.findall(r"(?:Identifiers|identifiers)\D{0,12}(\d{1,4})", text))
+        checked += 1
+        if printed and entries not in printed:
+            missing.append("/resolve prints %s identifiers and resolve.json holds %d"
+                           % (", ".join(str(x) for x in sorted(printed)), entries))
+    return row("Rendered figures match their records",
+               "Every count the /observatory page prints for a publication-health row, and the identifier count "
+               "printed on /resolve, equals the figure in the record the page renders.",
+               checked, missing)
+
+
 def coined_names_row(site):
     """CAND-019: a name a generated file coins expands to a URI that file's publisher defines.
 
@@ -514,6 +554,7 @@ def recompute(site, today):
     rows.append(citation_parity(site, slugs))
     rows.append(ownership_row(site, slugs))
     rows.append(coined_names_row(site))
+    rows.append(rendered_figures_row(site))
     resolver, printed, page_count = resolver_rows(site, entries)
     rows += [resolver, printed]
     figures = graph_figures(site)
@@ -630,14 +671,20 @@ def main(argv):
         if live_p.get(key) != pub.get(key):
             diffs.append("publication-health.%s: published %r, recomputed %r"
                          % (key, str(live_p.get(key))[:120], str(pub.get(key))[:120]))
-    for key in ("ok", "coreVocabulary", "comparisons"):
-        live_parity = (live_h.get("projectionParity") or {}).get(key)
-        mine = parity_record.get(key)
-        if isinstance(mine, dict):
-            live_parity = (live_parity or {}).get("ok")
-            mine = mine.get("ok")
-        if live_parity != mine:
-            diffs.append("health.projectionParity.%s: published %r, recomputed %r" % (key, live_parity, mine))
+    if (live_h.get("projectionParity") or {}).get("ok") != parity_record.get("ok"):
+        diffs.append("health.projectionParity.ok: published %r, recomputed %r"
+                     % ((live_h.get("projectionParity") or {}).get("ok"), parity_record.get("ok")))
+    # field by field, as the specification block already is: comparing only ok let the published
+    # term count and comparison count say anything at all
+    for key in ("coreVocabulary", "comparisons"):
+        live_block = ((live_h.get("projectionParity") or {}).get(key)) or {}
+        mine = parity_record.get(key) or {}
+        for field in sorted(set(live_block) | set(mine)):
+            if field == "disagreements":
+                continue
+            if live_block.get(field) != mine.get(field):
+                diffs.append("health.projectionParity.%s.%s: published %r, recomputed %r"
+                             % (key, field, live_block.get(field), mine.get(field)))
     live_rows = {r["name"]: r for r in live_p.get("checks", [])}
     for r in pub["checks"]:
         old = live_rows.get(r["name"])
@@ -649,6 +696,13 @@ def main(argv):
             if old.get("checked") != r["checked"]:
                 diffs.append("publication-health.%s: published checked=%r, recomputed checked=%r" % (
                     r["name"], old.get("checked"), r["checked"]))
+            # the module says every row keeps the rule it was published with, and nothing compared it
+            if " ".join((old.get("rule") or "").split()) != " ".join((r.get("rule") or "").split()):
+                diffs.append("publication-health.%s: published rule %r, recomputed rule %r"
+                             % (r["name"], (old.get("rule") or "")[:80], (r.get("rule") or "")[:80]))
+            if sorted(old.get("missing") or []) != sorted(r.get("missing") or []):
+                diffs.append("publication-health.%s: published missing %r, recomputed missing %r"
+                             % (r["name"], (old.get("missing") or [])[:3], (r.get("missing") or [])[:3]))
     # and in the other direction: a row that used to be published and is no longer computed
     for name in sorted(set(live_rows) - {r["name"] for r in pub["checks"]}):
         diffs.append("publication-health: published row %r is computed by nothing" % name)

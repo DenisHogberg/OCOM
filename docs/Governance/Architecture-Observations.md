@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 September 2026
+**Last Updated:** 23 September 2026
 
 ---
 
@@ -1888,9 +1888,9 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Impact:** The only path that removes a record from verification is open to any writer the implementation allows into Memory. An implementation that lets an operator issue an erasure record naming an undeclared policy is conformant as the text stands, and its integrity demonstrations are complete for every record but the ones it chose to erase. For a regulated adopter this is the bypass an auditor looks for first.
 
-**Recommendation:** Record, and propose the smallest closure for the Chief Architect: one sentence in `Memory/Retention.md`'s Deleted state, "An erasure record shall name a Policy the organization has declared and the actor who issued it, and an implementation shall refuse an erasure record that names neither", and one Presence check in the suite over erasure records for the policy and the actor, so that the exclusion an erasure record grants is granted only by a record that can itself be checked. If adopted, it is a postscript to `CAND-024`, not a new candidate: it says what clause 3's erasure record must carry to do what clause 3 says it does.
+**Recommendation:** Record, and propose the smallest closure for the Chief Architect: one sentence in `Memory/Retention.md`'s Deleted state, "An erasure record shall name a Policy the organization has declared and the actor who issued it, and an implementation shall refuse an erasure record that does not name both", and one Presence check in the suite over erasure records for the policy and the actor, so that the exclusion an erasure record grants is granted only by a record that can itself be checked. If adopted, it is a postscript to `CAND-024`, not a new candidate: it says what clause 3's erasure record must carry to do what clause 3 says it does.
 
-**Status:** Closed, 22 September 2026. The Chief Architect adopted the proposed closure as a postscript to `CAND-024`: `Memory/Retention.md`'s Deleted state requires an erasure record to name a Policy the organization has declared and the actor who issued it, and an implementation to refuse one that names neither. `tools/conformance/validate.py` grants the Integrity exclusion only to an erasure record whose Policy the export declares and whose actor is named, verifies the records the other erasure records name like any other, and reports every erasure record in the report's Erasure Records section; a negative test covers the erasure record that names nothing.
+**Status:** Closed, 22 September 2026. The Chief Architect adopted the proposed closure as a postscript to `CAND-024`: `Memory/Retention.md`'s Deleted state requires an erasure record to name a Policy the organization has declared and the actor who issued it, and an implementation to refuse one that does not name both. `tools/conformance/validate.py` grants the Integrity exclusion only to an erasure record whose Policy the export declares and whose actor is named, verifies the records the other erasure records name like any other, and reports every erasure record in the report's Erasure Records section; a negative test covers the erasure record that names nothing.
 
 **Architect Response:** Chief Architect, 22 September 2026: adopted as a postscript to `CAND-024`, not as a new candidate.
 
@@ -2114,3 +2114,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 22 September 2026 | AO-089: the count of Statements the cardinality rule holds at Review corrected from eleven to four, each named; the all-packages test of the same day recounted them. The observation itself is unchanged. |
 | 0.1 | 22 September 2026 | Added AO-092 (an obligation written as a table row is in no register, catalogue or Test) and AO-093 (a reviewer's judgment is bound to its export by the report alone), both from the all-packages test of 22 September 2026, record only. |
 | 0.1 | 22 September 2026 | AO-033: the Terminology half recorded as closed by `EPIC-D`; the quoted sentence had been replaced on 16 September 2026 and the entry still read as if it stood. |
+| 0.1 | 23 September 2026 | AO-085: "names neither" restated as "does not name both" wherever this entry states the rule, matching `Memory/Retention.md` and the suite. |

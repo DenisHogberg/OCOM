@@ -49,7 +49,9 @@ class Site:
         self.opener = urllib.request.build_opener(NoRedirect)
 
     def get(self, path):
-        """(status, content type, body, location) for a path; body is "" unless the status is 200."""
+        """(status, content type, body, location, robots header) for a path; the body is "" unless the
+        status is 200. The X-Robots-Tag comes back because a page can be excluded by a header while
+        its HTML says nothing, and the hunt used to see only the meta tag."""
         if path in self.cache:
             return self.cache[path]
         url = self.base + urllib.parse.quote(path, safe="/:@?=&#%+,;")
@@ -58,10 +60,13 @@ class Site:
             try:
                 req = urllib.request.Request(url, headers={"User-Agent": "ocom-site-error-hunt/1.0 (+https://github.com/DenisHogberg/OCOM)"})
                 with self.opener.open(req, timeout=TIMEOUT) as r:
-                    out = (r.status, r.headers.get("Content-Type", ""), r.read().decode("utf-8", "replace"), "")
+                    out = (r.status, r.headers.get("Content-Type", ""), r.read().decode("utf-8", "replace"),
+                           "", r.headers.get("X-Robots-Tag", ""))
                 break
             except urllib.error.HTTPError as e:
-                out = (e.code, e.headers.get("Content-Type", "") if e.headers else "", "", (e.headers.get("Location", "") if e.headers else ""))
+                out = (e.code, e.headers.get("Content-Type", "") if e.headers else "", "",
+                       (e.headers.get("Location", "") if e.headers else ""),
+                       (e.headers.get("X-Robots-Tag", "") if e.headers else ""))
                 break
             except Exception as e:      # a reset connection is the server pacing us, not a site defect
                 last = e
@@ -87,12 +92,19 @@ def links_of(body):
     return re.findall(r"""(?:href|src)\s*=\s*["']([^"']+)["']""", body, re.I)
 
 
-def canonical_of(body):
-    m = re.search(r"""<link[^>]+rel\s*=\s*["']canonical["'][^>]*>""", body, re.I)
-    if not m:
-        return None
-    h = re.search(r"""href\s*=\s*["']([^"']+)["']""", m.group(0), re.I)
-    return h.group(1) if h else ""
+def canonicals_of(body):
+    """Every canonical link the page carries. Reading only the first let a second one, pointing at
+    another host, sit unexamined on the page."""
+    out = []
+    for m in re.finditer(r"""<link[^>]+rel\s*=\s*["']canonical["'][^>]*>""", body, re.I):
+        h = re.search(r"""href\s*=\s*["']([^"']+)["']""", m.group(0), re.I)
+        out.append(h.group(1) if h else "")
+    return out
+
+
+def base_of(body):
+    m = re.search(r"""<base[^>]+href\s*=\s*["']([^"']+)["']""", body, re.I)
+    return m.group(1) if m else None
 
 
 def title_of(body):
@@ -100,12 +112,15 @@ def title_of(body):
     return re.sub(r"\s+", " ", m.group(1)).strip() if m else None
 
 
-def noindex(body):
-    for m in re.finditer(r"""<meta[^>]+name\s*=\s*["']robots["'][^>]*>""", body, re.I):
+def noindex(body, header=""):
+    """Whether the page asks to be left out of an index, by meta tag or by header. "none" means
+    noindex plus nofollow and was not recognised, and the X-Robots-Tag was not read at all."""
+    values = [header or ""]
+    for m in re.finditer(r"""<meta[^>]+name\s*=\s*["'](?:robots|googlebot)["'][^>]*>""", body, re.I):
         c = re.search(r"""content\s*=\s*["']([^"']*)["']""", m.group(0), re.I)
-        if c and "noindex" in c.group(1).lower():
-            return True
-    return False
+        if c:
+            values.append(c.group(1))
+    return any(w in v.lower() for v in values for w in ("noindex", "none"))
 
 
 def jsonld_errors(body):
@@ -135,7 +150,7 @@ def resolve(site, path, hops=3):
     """Follow a redirect only while it stays on the site; (final status, final path, note)."""
     seen = []
     for _ in range(hops + 1):
-        status, ctype, body, location = site.get(path)
+        status, ctype, body, location, robots = site.get(path)
         if status in (301, 302, 303, 307, 308):
             target = as_path(location, site.host) if location else None
             if target is None:
@@ -150,7 +165,7 @@ def resolve(site, path, hops=3):
 def hunt(site):
     failures, counts = [], {"pages": 0, "records": 0, "links": 0, "assets": 0, "external": 0, "templates": 0}
     sitemap_host = site.host
-    status, ctype, body, _ = site.get("/sitemap.xml")
+    status, ctype, body, _, _robots = site.get("/sitemap.xml")
     if status != 200 or not body.strip():
         raise SystemExit("/sitemap.xml answers %s; a hunt with no sitemap checks nothing" % status)
     locs = re.findall(r"<loc>\s*([^<\s]+)\s*</loc>", body)
@@ -171,31 +186,45 @@ def hunt(site):
 
     targets = {}          # internal path -> first page that links to it
     for path in pages:
-        status, ctype, body, location = site.get(path)
+        status, ctype, body, location, robots = site.get(path)
         if status != 200:
             failures.append("%s answers %s%s (listed in the sitemap, which lists final URLs)"
                             % (path, status, " to " + location if location else ""))
             continue
-        if "html" not in ctype.lower():
+        # what the body is, not what the header says it is: a page served as text/plain skipped
+        # every check it should have had, and nothing said so
+        looks_html = bool(re.match(r"\s*(<!doctype html|<html)", body, re.I)) or "</html>" in body.lower()
+        declared_html = "html" in ctype.lower()
+        if declared_html != looks_html:
+            failures.append("%s is served as %s and its body %s HTML"
+                            % (path, ctype or "no declared type", "is" if looks_html else "is not"))
+        if not looks_html:
             # a sitemap may name a record as well as a page; a record has no title or canonical to check
-            if "json" in ctype.lower():
+            if "json" in ctype.lower() or body.strip().startswith(("{", "[")):
                 try:
                     json.loads(body)
                 except ValueError as e:
                     failures.append("%s does not parse as JSON: %s" % (path, e))
+            elif not declared_html and "xml" not in ctype.lower() and "text/" not in ctype.lower():
+                failures.append("%s is neither HTML nor a record this hunt can read (%s)" % (path, ctype or "no declared type"))
             counts["records"] += 1
             continue
         if not title_of(body):
             failures.append("%s carries no <title>" % path)
-        canonical = canonical_of(body)
-        if canonical is None:
+        canonicals = canonicals_of(body)
+        if not canonicals:
             failures.append("%s carries no canonical link" % path)
-        else:
+        for canonical in canonicals:
             c = urllib.parse.urlparse(canonical)
             if (c.netloc and c.netloc != sitemap_host) or (c.path or "/").rstrip("/") != path.rstrip("/"):
                 failures.append("%s declares canonical %s, not itself on %s" % (path, canonical or "(empty)", sitemap_host))
-        if noindex(body):
-            failures.append("%s carries robots noindex while the sitemap lists it" % path)
+        if len(canonicals) > 1:
+            failures.append("%s carries %d canonical links; a page has one" % (path, len(canonicals)))
+        if noindex(body, robots):
+            failures.append("%s asks not to be indexed (meta robots or X-Robots-Tag) while the sitemap lists it" % path)
+        base = base_of(body)
+        if base:
+            failures.append("%s carries <base href=%s>, which this hunt does not resolve links against" % (path, base))
         for err in jsonld_errors(body):
             failures.append("%s: %s" % (path, err))
         for raw in links_of(body):
@@ -230,7 +259,7 @@ def hunt(site):
             failures.append("%s (linked from %s) answers %s%s" % (target, source, status, ", " + note if note else ""))
 
     for path in ("/robots.txt", "/llms.txt", "/discovery.json"):
-        status, ctype, body, _ = site.get(path)
+        status, ctype, body, _, robots = site.get(path)
         if status != 200:
             failures.append("%s answers %s" % (path, status))
             continue
@@ -244,7 +273,12 @@ def hunt(site):
                     continue
                 st, final, note = resolve(site, p)
                 counts["links"] += 1
-                if st != 200 and not (note and st in (301, 302, 303, 307, 308)):
+                away = re.search(r"to (https?://\S+)$", note or "")
+                if away:
+                    if not external_ok(away.group(1)):
+                        failures.append("llms.txt names %s, which redirects off the site to %s, and that does not answer"
+                                        % (url, away.group(1)))
+                elif st != 200:
                     failures.append("llms.txt names %s, which answers %s" % (url, st))
         if path == "/llms.txt" and not re.search(r"https?://", body):
             failures.append("/llms.txt names no URL, so nothing in it was checked")
@@ -267,7 +301,12 @@ def hunt(site):
                     continue
                 st, final, note = resolve(site, p)
                 counts["links"] += 1
-                if st != 200 and not (note and st in (301, 302, 303, 307, 308)):
+                away = re.search(r"to (https?://\S+)$", note or "")
+                if away:
+                    if not external_ok(away.group(1)):
+                        failures.append("discovery.json names %s, which redirects off the site to %s, and that does not answer"
+                                        % (url, away.group(1)))
+                elif st != 200:
                     failures.append("discovery.json names %s, which answers %s" % (url, st))
                 elif st == 200 and "json" in (res.get("mediaType") or ""):
                     try:

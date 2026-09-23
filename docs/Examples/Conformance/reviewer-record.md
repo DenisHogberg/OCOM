@@ -4,6 +4,8 @@
 
 **Reviewed against:** the model, Representation Map and Conformance Statement beside this file, at the commit that carries it
 
+**Recorded against:** model `066a4ba34e504aee`, map `394fc55a2e07d3dc`, statement `cf478add0bddcc36` (the first sixteen hex digits of each file's SHA-256, as `tools/conformance/validate.py` prints them). The tool refuses this record against any other export: a judgment recorded against one model is a judgment about that model.
+
 **Reviewer's relation to the claimant:** first party. The reviewer is the example's own author, so every judgment below is self-validation, which `Conformance-Test-Suite.md` Section 4 says the suite does not distinguish from independent validation and the publisher does. This record exists to show the format; it decides three Statements and leaves the rest pending on purpose.
 
 A row is one named judgment on one Test the suite could not decide mechanically: a Review Test, or a mechanical Test the export could not settle. A judgment never overrides a mechanical Pass or Fail. Every cell is required; `tools/conformance/validate.py --reviews` refuses a record with an unknown Test, an outcome other than Review Pass or Review Fail, an unnamed reviewer, an unreadable date, an empty reason, or two rows for one Test.

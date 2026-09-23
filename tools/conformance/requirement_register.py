@@ -139,8 +139,36 @@ def read_aliases(pairs=None):
         disposition = cells[5] if len(cells) > 5 else ""
         if pairs is not None:
             pairs.append((alias, identity))
-        rows[identity] = (alias, disposition, "superseded" in disposition.lower())
+        rows[identity] = (alias, disposition, disposition.strip().lower().startswith("superseded by"))
     return rows
+
+
+# What a Disposition cell may say. It decides whether a mandatory Test exists (Descriptive removes
+# it from the measured set) and whether a stale row is forgiven (superseded), and it was free text
+# compared by substring: "Review, and certainly not Descriptive" deleted a Test, and "superseded by
+# <an alias that exists nowhere>" deleted one silently when a sentence was removed.
+DISPOSITIONS = ("", "descriptive", "review")
+SUPERSEDED = re.compile(r"^superseded by (REQ-[A-Z0-9-]+)$", re.I)
+
+
+def disposition_failures(pairs, aliases):
+    """Every Disposition cell this tool cannot read, and every supersession that names nothing."""
+    names = {a for a, _ in pairs}
+    live = {a for identity, (a, _, _) in aliases.items()}
+    out = []
+    for identity, (alias, disposition, _) in aliases.items():
+        value = (disposition or "").strip()
+        if value.lower() in DISPOSITIONS:
+            continue
+        m = SUPERSEDED.match(value)
+        if not m:
+            out.append("alias %s carries a Disposition this tool cannot read: %r; it may be empty, Descriptive, "
+                       "Review, or 'superseded by <alias>'" % (alias, value[:60]))
+            continue
+        if m.group(1) not in names:
+            out.append("alias %s says it is superseded by %s, which this file does not carry"
+                       % (alias, m.group(1)))
+    return out
 
 
 def document_code(path):
@@ -290,9 +318,26 @@ def main(argv):
             print("alias %s is bound to more than one Statement identity" % alias)
         for identity in dup_identity:
             print("Statement identity %s carries more than one alias" % identity[:16])
-        print("aliases %d, statements %d, missing %d, stale %d, duplicate aliases %d, duplicate identities %d"
-              % (len(aliases), total, len(missing), len(stale), len(dup_alias), len(dup_identity)))
-        return 1 if (missing or stale or dup_alias or dup_identity) else 0
+        grammar = disposition_failures(pairs, aliases)
+        for failure in grammar:
+            print(failure)
+        # a supersession must hand the obligation to a row that is itself live, or removing a
+        # sentence removes its mandatory Test with every check green
+        orphan = []
+        for identity, (alias, disposition, superseded) in aliases.items():
+            m = SUPERSEDED.match((disposition or "").strip())
+            if superseded and m:
+                successor = [i for i, (a, _, _) in aliases.items() if a == m.group(1)]
+                if not successor or successor[0] not in identities:
+                    orphan.append("alias %s is superseded by %s, which carries no Statement the register holds"
+                                  % (alias, m.group(1)))
+        for line in orphan:
+            print(line)
+        print("aliases %d, statements %d, missing %d, stale %d, duplicate aliases %d, duplicate identities %d, "
+              "unreadable dispositions %d, orphan supersessions %d"
+              % (len(aliases), total, len(missing), len(stale), len(dup_alias), len(dup_identity),
+                 len(grammar), len(orphan)))
+        return 1 if (missing or stale or dup_alias or dup_identity or grammar or orphan) else 0
     rendered = render_register(paths, derived, aliases)
     if mode == "--write":
         REGISTER.write_text(rendered, encoding="utf-8")

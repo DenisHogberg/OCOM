@@ -170,8 +170,21 @@ jobs:
             exit 1
           fi
           fail=0
-          # Extract every non-TBD value of the `**Commit**` field.
-          while IFS= read -r sha; do
+          # Every Commit cell, whatever it holds. Matching only well-formed hashes meant a cell
+          # holding anything else was never examined, and the step passed having checked nothing.
+          checked=0
+          while IFS= read -r cell; do
+            value=$(printf '%s' "$cell" | sed -E 's/^\| \*\*Commit\*\* \| //; s/ *\|$//' | tr -d '`' | sed -E 's/^ +| +$//g')
+            case "$value" in
+              TBD*|"") continue;;
+            esac
+            checked=$((checked+1))
+            sha=$(printf '%s' "$value" | grep -oE '^[0-9a-fA-F]{7,40}' || true)
+            if [ -z "$sha" ]; then
+              echo "::error::Publication-Manifest.md declares a Commit this check cannot read: '$value'"
+              fail=1
+              continue
+            fi
             if ! git cat-file -e "${sha}^{commit}" 2>/dev/null; then
               echo "::error::Publication-Manifest.md declares commit '$sha' which does not exist in this repository's history"
               fail=1
@@ -181,7 +194,13 @@ jobs:
               echo "::error::Publication-Manifest.md declares commit '$sha' which is not an ancestor of HEAD"
               fail=1
             fi
-          done < <(grep -oE '\*\*Commit\*\* \| `[0-9a-f]{7,40}`' "$manifest" | grep -oE '`[0-9a-f]{7,40}`' | tr -d '`')
+          done < <(grep -E '^\| \*\*Commit\*\* \|' "$manifest")
+          releases=$(grep -cE '^## Release: ' "$manifest")
+          if [ "$checked" -eq 0 ]; then
+            echo "::error::Publication-Manifest.md names $releases Release(s) and this check examined no commit at all"
+            fail=1
+          fi
+          echo "examined $checked commit(s) across $releases Release entries"
           exit "$fail"
 
       - name: Manifest's Specification Version must match docs/Specification/*
@@ -226,6 +245,39 @@ jobs:
             echo "::error::$f Status is '$status', expected 'Draft' — its normative content was not reduced, per Constitution-Step0-Summary.md Decision 4 review"
             exit 1
           fi
+
+      - name: The records that count the registers agree with the registers
+        # Three documents state how many Architecture Observations and ADR Candidates exist, one of
+        # them the machine-facing llms.txt the site serves. All three said 82 and AO-083 for two days
+        # after the registers reached 92 and AO-093, and nothing compared them.
+        run: |
+          python3 - <<'PY'
+          import pathlib, re, sys
+          ao = pathlib.Path("docs/Governance/Architecture-Observations.md").read_text(encoding="utf-8")
+          cand = pathlib.Path("docs/Governance/ADR-Candidates.md").read_text(encoding="utf-8")
+          ao_ids = sorted(re.findall(r"(?m)^## (AO-\d+)", ao))
+          cand_ids = sorted(re.findall(r"(?m)^## (CAND-\d+)", cand))
+          facts = {"AO": (len(ao_ids), ao_ids[-1]), "CAND": (len(cand_ids), cand_ids[-1])}
+          fail = 0
+          for path in ("README.md", "publication/llms.txt", "docs/Governance/Evidence-Register.md"):
+              for lineno, line in enumerate(pathlib.Path(path).read_text(encoding="utf-8").splitlines(), 1):
+                  for prefix, label in (("AO", "Architecture Observation"), ("CAND", "ADR Candidate")):
+                      m = re.search(r"%s-001 to (%s-\d+)" % (prefix, prefix), line)
+                      if not m:
+                          continue
+                      count, last = facts[prefix]
+                      numbers = [int(n) for n in re.findall(r"(?<![\w-])(\d{1,4})(?![\w-])", line)]
+                      if m.group(1) != last:
+                          print("::error file=%s,line=%d::%s names %s as the last %s; the register holds %s"
+                                % (path, lineno, path, m.group(1), label, last))
+                          fail = 1
+                      if count not in numbers:
+                          print("::error file=%s,line=%d::%s states no count matching the %d %ss the register holds"
+                                % (path, lineno, path, count, label))
+                          fail = 1
+          print("registers: %d observations to %s, %d candidates to %s" % (facts["AO"] + facts["CAND"]))
+          sys.exit(fail)
+          PY
 
       - name: Every document carries its metadata block and a revision table
         # Governance/Documentation-Standards.md requires Document ID, Status,
