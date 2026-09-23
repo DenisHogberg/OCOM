@@ -197,7 +197,10 @@ def base_revisions():
     base = os.environ.get("GITHUB_BASE_REF")
     if base:
         out += ["origin/" + base, base]
-    return out + ["origin/main", "main"]
+    # HEAD is last and is used only when no other revision resolves, which is what a shallow
+    # checkout gives: the comparison then says what it could and could not see, rather than
+    # reporting zero edits as though it had looked at history
+    return out + ["origin/main", "main", "HEAD"]
 
 
 # Only the Disposition may change after a row is committed, and only into a value the grammar

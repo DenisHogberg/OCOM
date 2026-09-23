@@ -473,6 +473,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0 # the append-only Alias File check reads history, and one test runs it here
 
       - name: Negative tests for the tools
         run: python3 tools/tests/test_tools.py
