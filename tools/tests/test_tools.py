@@ -893,6 +893,102 @@ class Validator(unittest.TestCase):
             self.assertNotEqual(code, 0, printed)
             self.assertIn("unbalanced", printed)
 
+    def test_the_guards_on_the_erasure_gate_each_decide_something(self):
+        """Round 7: the granted-exclusion guard, the unknown-method guard, the self-contained-digest
+        branch and the missing-demonstration leg were each covered by no test, and deleting any of
+        them left every test passing while a pending became a Pass."""
+        with Copy() as c:
+            # an unknown declared method is not a method this tool can verify
+            path = "%s/representation-map.md" % self.EX
+            row = [l for l in c.read(path).splitlines() if l.startswith("| Integrity.method |")][0]
+            c.edit(path, row, "| Integrity.method | method | `invented-method` |")
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "pending", rows)
+            self.assertIn("is not one this tool can verify", self.report_text(c.dir))
+        with Copy() as c:
+            # a digest beside the identity is consistency, not a demonstration: pending, not Pass
+            path = "%s/representation-map.md" % self.EX
+            row = [l for l in c.read(path).splitlines() if l.startswith("| Integrity.method |")][0]
+            c.edit(path, row, "| Integrity.method | method | `sha256-canonical-json` |")
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for rec in model["audit_records"]:
+                body = json.dumps({k: v for k, v in rec.items() if k != "digest"},
+                                  sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+                rec["digest"] = hashlib.sha256(body.encode("utf-8")).hexdigest()
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            c.write(path, c.read(path).replace("| Audit record.integrity | field | `id` |",
+                                               "| Audit record.integrity | field | `digest` |"))
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "pending", rows)
+            self.assertIn("match their own digest", self.report_text(c.dir) + self.run_on(c.dir)[1])
+        with Copy() as c:
+            # a record named by an erasure that granted nothing is verified like any other
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            erased = model["audit_records"][0]["id"]
+            model["audit_records"][0] = {"id": erased, "created_at": "2024-03-11T09:00:00Z",
+                                         "creator": "Branch Manager", "value": "still here"}
+            model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND",
+                                  "actor": "records-officer"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.map_erasures(c)
+            self.assertEqual(self.integrity_rows(c.dir).get("REQ-META-OWNERSHIP-022"), "Fail")
+            self.assertIn("still carries content under value", self.run_on(c.dir)[1])
+
+    def test_an_erased_record_with_no_demonstration_is_not_excluded(self):
+        """The leg of the Deleted-state check that asks for the demonstration itself: deleting it
+        turned a Fail into an exclusion with all tests passing."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            erased = model["audit_records"][0]["id"]
+            model["audit_records"][0] = {"label": "AUD-0001", "created_at": "2024-03-11T09:00:00Z",
+                                         "creator": "Branch Manager"}
+            model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND",
+                                  "actor": "records-officer"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.map_erasures(c)
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Fail", rows)
+
+    def test_a_judgment_row_in_an_indented_block_or_behind_a_marker_is_handled(self):
+        """Round 7: a row indented four spaces was applied as a judgment, and a blockquoted or
+        list-item row vanished with nothing printed and nothing in the report."""
+        illustration = "| REQ-META-OBJECT-004 | Review Pass | Nobody At All | 22 September 2026 | A reason long enough to be read. |"
+        with Copy() as c:                       # indented: illustration, counted, not applied
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\nAn illustration:\n\n    %s\n\n%s%s" % (illustration, self.HEADER, self.JUDGMENT),
+                            encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertEqual(code, 0, printed)
+            self.assertNotIn("Nobody At All", text)
+            self.assertIn("read as illustration", printed)
+        with Copy() as c:                       # blockquoted: a judgment a reader sees is read
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\n%s> %s\n" % (self.HEADER, self.JUDGMENT.strip()), encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertEqual(code, 0, printed)
+            self.assertIn("reviewed 1 pass", printed)
+
+    def test_a_second_binding_line_stops_the_run(self):
+        """Round 7: only the first was read, so a contradictory second line cost nothing, and a
+        line inside an HTML comment overrode the visible one."""
+        digests = {"model": "066a4ba34e504aee", "map": "0" * 16, "statement": "0" * 16,
+                   "register": "0" * 16, "alias file": "0" * 16, "catalogue": "0" * 16}
+        line = "**Recorded against:** " + ", ".join("%s `%s`" % (k, v) for k, v in digests.items())
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\n%s\n\n%s\n\n%s%s" % (line, line, self.HEADER, self.JUDGMENT), encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertNotEqual(code, 0, printed)
+            self.assertIn("carries 2 lines binding it", printed)
+        with Copy() as c:
+            # a binding line inside a comment binds nothing, and the report says the record
+            # declares no inputs rather than reading a line a reader does not see
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\n<!-- %s -->\n\n%s%s" % (line, self.HEADER, self.JUDGMENT), encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertEqual(code, 0, printed)
+            self.assertIn("declares no inputs", text)
+
     # --- round 5 of the all-packages test -------------------------------------------------
 
     def test_a_record_stored_as_an_object_value_is_not_invisible(self):
@@ -931,7 +1027,20 @@ class Validator(unittest.TestCase):
             c.write("%s/model.json" % self.EX, json.dumps(model))
             code, out = self.run_on(c.dir)
             self.assertNotEqual(code, 0, out)
-            self.assertIn("not a list of records", out)
+            self.assertIn("mixes records with values that are not records", out)
+
+    def test_a_collection_of_bare_strings_the_map_states_is_read_not_refused(self):
+        """Round 7: `state_names` says a State written as a bare string needs no field, and the
+        strict shape check raised on the first non-record, so an export whose States are strings
+        stopped the run and wrote no report for any of the 185 mandatory Statements."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for lc in model["lifecycles"]:
+                lc["states"] = [s["name"] for s in lc["states"]]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertEqual(code, 0, out)
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-LIFECYCLE-002"), "Pass")
 
     def test_an_identity_that_is_a_list_fails_rather_than_crashing(self):
         """Round 5: the uniqueness leg keyed a dict on the identity value, so an Object carrying two
@@ -1503,14 +1612,16 @@ class Validator(unittest.TestCase):
         # a dict at a map-stated path is one record stored as an object value, which the path
         # grammar reads; what is not a collection is a scalar, or a list carrying something that
         # is not a record
-        for label, value in (("a scalar", "not a list"), ("a list with a scalar", [{"id": "A-1"}, "x"])):
+        for label, value, marker in (("a scalar", "not a list", "not a list of records"),
+                                     ("records mixed with a scalar", [{"id": "A-1"}, "x"],
+                                      "mixes records with values that are not records")):
             with self.subTest(label), Copy() as c:
                 model = json.loads(c.read("%s/model.json" % self.EX))
                 model["audit_records"] = value
                 c.write("%s/model.json" % self.EX, json.dumps(model))
                 code, out = self.run_on(c.dir)
                 self.assertNotEqual(code, 0, out)
-                self.assertIn("not a list of records", out)
+                self.assertIn(marker, out)
 
     def test_a_map_may_state_a_collection_holding_one_record_as_an_object_value(self):
         """Round 6: the walk emitted that shape and the Declaration Test failed an export for not
@@ -1882,7 +1993,8 @@ class Validator(unittest.TestCase):
                 self.assertEqual(code, 0, printed)
                 self.assertIn("reviewed 1 pass", printed, name)
                 self.assertNotIn("Nobody At All", text, name)
-                self.assertIn("1 judgment-shaped row(s) inside a fenced block", printed, name)
+                self.assertIn("1 judgment-shaped row(s) inside a fenced or indented block", printed, name)
+                self.assertIn("sit inside a fenced or indented block", text, name)
 
     def test_a_comment_that_hides_a_judgment_row_stops_the_run(self):
         """Round 5: the comment filter removed spans, so a comment opening inside one row's Reason
@@ -2413,8 +2525,7 @@ def hunt_files(**changes):
         "/discovery.json": ("application/json", json.dumps({"resources": [{"url": "https://ocom.uno/x.json", "mediaType": "application/json"}]})),
         "/x.json": ("application/json", json.dumps({"ok": True})),
         # discovery.json calls this the primary discovery point, and the hunt reads it since round 6
-        "/.well-known/ocom.json": ("application/json", json.dumps({"site": "https://ocom.uno/",
-                                                                   "vocabulary": "https://ocom.uno/a"})),
+        "/.well-known/ocom.json": ("application/json", json.dumps({"vocabulary": "https://ocom.uno/a"})),
     }
     for k, v in changes.items():
         if v is None:
@@ -2587,6 +2698,9 @@ class PublicationHealth(unittest.TestCase):
                 site.files[path] = (ctype, body)
                 code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
                 self.assertNotEqual(code, 0, out)
+                # the row, not the path: asserting that the path appears anywhere in the output
+                # passed with the whole shape system deleted, since the drift lines name it too
+                self.assertRegex(out, r"(?m)^Core Vocabulary \S+.*FAIL")
                 self.assertIn(path, out)
 
     def test_a_figure_that_breaches_its_published_threshold_fails_the_check(self):

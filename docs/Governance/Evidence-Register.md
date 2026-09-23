@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 23 September 2026
+**Last Updated:** 24 September 2026
 
 ---
 
@@ -129,3 +129,4 @@ implied.
 | 0.1 | 22 September 2026 | Two rows added for Release v1.4.0 (the signed release and its Zenodo DOI). The register was one release behind `publication/llms.txt`, which `CAND-022` makes it the record of; found by the all-packages test of 22 September 2026. No Software Heritage row: the v1.4.0 tag is not archived there yet. |
 | 0.1 | 23 September 2026 | Counts brought current: 92 Architecture Observations (AO-001 to AO-093); the row had stood at 82 and AO-083 since 19 September. Found by round 2 of the all-packages test. |
 | 0.1 | 23 September 2026 | The ADR Candidates row this table never carried is added (34, CAND-001 to CAND-034). The row above recorded that count as brought current on the same day, and there was no row to bring current; round 5 of the all-packages test read the two against each other. |
+| 0.1 | 24 September 2026 | Architecture Observations brought to 94 (AO-001 to AO-095) as `AO-094` and `AO-095` were recorded; rounds 5 and 6 changed the count in the table and added no row, which round 7 read against the file. |

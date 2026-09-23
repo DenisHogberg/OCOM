@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 September 2026
+**Last Updated:** 23 September 2026
 
 ---
 
@@ -163,5 +163,6 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 18 September 2026 | v1.3.0: post-release note recording the `AO-069` finding, the Chief Architect's disposition of the same day, and the qualification the v1.0 claim now carries. |
 | 0.1 | 18 September 2026 | v1.1.1: two tallies each counted an Informative entry that neither register carried; corrected with a dated note. |
 | 0.1 | 22 September 2026 | Added the `v1.4.0` record before tagging: checks green, 93 observations disclosed, two open candidates non-blocking, deferred content named; Status pending publication. |
+| 0.1 | 23 September 2026 | Known Deferred Content for Release v1.4.0 names the commit the site's reading path is actually compiled from (`2b70b28`, 19 September 2026, between v1.3.0 and v1.4.0) rather than v1.3.0; round 6 of the all-packages test read the live `specification.json` against this record. |
 | 0.1 | 22 September 2026 | `v1.4.0` record: Status Pending to Released, with the GitHub Release timestamp, the commit and the Zenodo version DOI. |
 | 0.1 | 22 September 2026 | `v1.4.0` record: the count of counting Statements held at Review corrected from eleven to four (the all-packages test of the same day). |

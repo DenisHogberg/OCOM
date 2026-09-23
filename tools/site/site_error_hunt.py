@@ -327,6 +327,45 @@ def hunt(site):
                     failures.append("llms.txt names %s, which answers %s" % (url, st))
         if path == "/llms.txt" and not re.search(r"https?://", body):
             failures.append("/llms.txt names no URL, so nothing in it was checked")
+        if path == "/.well-known/ocom.json":
+            # round 6 added the path to this loop and gave it no branch, so its URLs stayed
+            # outside every check while the comment above said they had been brought inside
+            try:
+                record = json.loads(body)
+            except ValueError as e:
+                failures.append("/.well-known/ocom.json does not parse: %s" % e)
+                continue
+            urls = []
+
+            def walk(value):
+                if isinstance(value, dict):
+                    for item in value.values():
+                        walk(item)
+                elif isinstance(value, list):
+                    for item in value:
+                        walk(item)
+                elif isinstance(value, str) and value.startswith(("http://", "https://")):
+                    urls.append(value)
+
+            walk(record)
+            if not urls:
+                failures.append("/.well-known/ocom.json names no URL, so nothing in it was checked")
+            for url in sorted(set(urls)):
+                p_ = as_path(url, sitemap_host)
+                if p_ is None:
+                    continue
+                if "{" in p_:
+                    counts["templates"] += 1
+                    continue
+                st, final, note = resolve(site, p_)
+                counts["links"] += 1
+                away = re.search(r"to (https?://\S+)$", note or "")
+                if away:
+                    if not external_ok(away.group(1)):
+                        failures.append("/.well-known/ocom.json names %s, which redirects off the site to %s, and "
+                                        "that does not answer" % (url, away.group(1)))
+                elif st != 200:
+                    failures.append("/.well-known/ocom.json names %s, which answers %s" % (url, st))
         if path == "/discovery.json":
             try:
                 d = json.loads(body)

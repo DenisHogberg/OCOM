@@ -209,8 +209,14 @@ def instances(model, paths, strict=True):
                     continue    # one record stored as an object value, which collection_at reads and
                                 # the walk emits: refusing it here meant the map could not state the
                                 # one shape the Declaration Test failed the export for not stating
-                elif not isinstance(coll, list) or any(not isinstance(rec, dict) for rec in coll):
+                elif not isinstance(coll, list):
                     raise SystemExit("the export's %s is not a list of records, so nothing in it can be checked" % p)
+                elif any(isinstance(rec, dict) for rec in coll) and any(not isinstance(rec, dict) for rec in coll):
+                    raise SystemExit("the export's %s mixes records with values that are not records, so what the "
+                                     "map says lives there cannot be read" % p)
+                elif coll and not any(isinstance(rec, dict) for rec in coll):
+                    continue    # States written as bare strings: the map is right about where they
+                                # live, and the legs that read scalars read them
         for rec in collection_at(model, p):
             if id(rec) not in seen:
                 seen.add(id(rec))
@@ -591,12 +597,14 @@ def one_of(subject, element, records, r):
     for s, sy, i in r.identities():
         by_identity.setdefault(i, set()).add((s, sy))
     resolved, shared = 0, 0
+    failures, undecided = [], []
     for path, rec in records:
         value = rec.get(name)
         if isinstance(value, list):
             if len(value) != 1:
-                return ("%s record %s carries %d values for %s where the Statement asks for one"
-                        % (subject, rec.get("id", "?"), len(value), element)), "", None
+                failures.append("%s record %s carries %d values for %s where the Statement asks for one"
+                                % (subject, rec.get("id", "?"), len(value), element))
+                continue
             value = value[0]
         if not ownership or "owner" not in element:
             continue
@@ -604,37 +612,43 @@ def one_of(subject, element, records, r):
         if ident is None or is_absent(ident) or not keyable(ident):
             # None == None matched an Entity with no identity to an Ownership record with no owned
             # object, and the Pass reason then said "the one Ownership record that names it"
-            return None, "", ("%s record %s carries no identity the map binds, so no Ownership record could be "
-                              "resolved to it" % (subject, rec.get("id", "?")))
+            undecided.append("%s record %s carries no identity the map binds, so no Ownership record could be "
+                             "resolved to it" % (subject, rec.get("id", "?")))
+            continue
         spaces = by_identity.get(ident) or set()
         if len(spaces) > 1:
             # `Adoption/Reference Serialization.md`: a bare reference to an identity the export
             # declares in two namespaces is ambiguous and is not resolved to either. Comparing the
             # scope alone put every source system in one namespace, so a ServiceNow Entity resolved
             # to the SAP Entity's Ownership record and the reason claimed the one record that names it
-            return None, "", ("%s record %s carries an identity the export declares in %d namespaces (%s), so a bare "
-                              "reference to it names no one record and the Ownership record that names it could not "
-                              "be resolved"
-                              % (subject, ident, len(spaces),
-                                 "; ".join(sorted(" ".join(x for x in s if x) or "no declared scope" for s in spaces))))
+            undecided.append("%s record %s carries an identity the export declares in %d namespaces (%s), so a bare "
+                             "reference to it names no one record and the Ownership record that names it could not "
+                             "be resolved"
+                             % (subject, ident, len(spaces),
+                                "; ".join(sorted(" ".join(x for x in s if x) or "no declared scope" for s in spaces))))
+            continue
         naming = [o for _, o in ownership if not is_absent(o.get(owned)) and o.get(owned) == ident]
         by_id = [o for _, o in ownership if own_id and o.get(own_id) == value]
         if by_id and not any(o is x for o in by_id for x in naming):
-            return ("%s record %s names Ownership record %s, which names %s as its owned object and not it"
-                    % (subject, ident, value, by_id[0].get(owned, "nothing"))), "", None
+            failures.append("%s record %s names Ownership record %s, which names %s as its owned object and not it"
+                            % (subject, ident, value, by_id[0].get(owned, "nothing")))
+            continue
         if reads_type and naming:
             # the accountable Type is declared: the count CAND-025 asks for is over the records of
             # that Type, whatever the owner value points at
             of_type = [o for o in naming if str(o.get(type_field, "")).strip().lower() == accountable_type]
             if len(of_type) != 1:
-                return ("%d of the %d Ownership record(s) naming %s record %s carry the accountable Ownership Type "
-                        "the map declares (%s), where exactly one is accountable"
-                        % (len(of_type), len(naming), subject, ident, r.declarations.get("ownership.accountable type"))), "", None
+                failures.append("%d of the %d Ownership record(s) naming %s record %s carry the accountable Ownership "
+                                "Type the map declares (%s), where exactly one is accountable"
+                                % (len(of_type), len(naming), subject, ident,
+                                   r.declarations.get("ownership.accountable type")))
+                continue
             if not ((own_id and of_type[0].get(own_id) == value) or (owner_party and of_type[0].get(owner_party) == value)):
-                return ("%s record %s names %s as its %s, and the one Ownership record of the accountable Type that "
-                        "names it is %s, held by %s"
-                        % (subject, ident, value, element, of_type[0].get(own_id, "?") if own_id else "?",
-                           of_type[0].get(owner_party, "?") if owner_party else "?")), "", None
+                failures.append("%s record %s names %s as its %s, and the one Ownership record of the accountable "
+                                "Type that names it is %s, held by %s"
+                                % (subject, ident, value, element, of_type[0].get(own_id, "?") if own_id else "?",
+                                   of_type[0].get(owner_party, "?") if owner_party else "?"))
+                continue
             resolved += 1
             if len(naming) > 1:
                 shared += 1
@@ -646,9 +660,10 @@ def one_of(subject, element, records, r):
             accountable = [o for o in naming
                            if (own_id and o.get(own_id) == value) or (owner_party and o.get(owner_party) == value)]
             if len(accountable) != 1:
-                return ("%d Ownership records name %s record %s, and its %s (%s) singles out %d of them where "
-                        "exactly one is accountable"
-                        % (len(naming), subject, ident, element, value, len(accountable))), "", None
+                failures.append("%d Ownership records name %s record %s, and its %s (%s) singles out %d of them "
+                                "where exactly one is accountable"
+                                % (len(naming), subject, ident, element, value, len(accountable)))
+                continue
             resolved += 1
             shared += 1
         elif by_id:
@@ -659,15 +674,22 @@ def one_of(subject, element, records, r):
             if owner_party and one.get(owner_party) == value:
                 resolved += 1
             else:
-                return ("%s record %s names %s as its %s, which is neither the Ownership record that names it (%s) "
-                        "nor the party that record names (%s)"
-                        % (subject, ident, value, element, one.get(own_id, "?") if own_id else "?",
-                           one.get(owner_party, "?") if owner_party else "?")), "", None
+                failures.append("%s record %s names %s as its %s, which is neither the Ownership record that names "
+                                "it (%s) nor the party that record names (%s)"
+                                % (subject, ident, value, element, one.get(own_id, "?") if own_id else "?",
+                                   one.get(owner_party, "?") if owner_party else "?"))
         else:
             # no Ownership record names it and its owner names no Ownership record: nothing resolved,
             # and counting it as resolved let the Pass reason claim a resolution that never happened
-            return ("%s record %s names %s as its %s, and no Ownership record names either it or that value"
-                    % (subject, ident, value, element)), "", None
+            failures.append("%s record %s names %s as its %s, and no Ownership record names either it or that value"
+                            % (subject, ident, value, element))
+    # a violation already found outranks a record that could not be read: returning on the first
+    # unreadable record discarded the Fail a later record had already produced
+    if failures:
+        return "; ".join(failures[:3]), "", None
+    if undecided:
+        return None, "", ("%d of %d %s record(s) could not be resolved: %s"
+                          % (len(undecided), len(records), subject, "; ".join(undecided[:2])))
     if not ownership or "owner" not in element:
         return None, "", None
     note = (", each resolving to the one Ownership record that names it" if resolved == len(records)
@@ -758,17 +780,25 @@ def presence(test, text, r):
                 continue
             # unique within the scope the map declares for each record's collection (CAND-026):
             # the same bare value under two declared systems is two identities
-            counts = {}
+            counts, undeclared = {}, {}
             for path, rec in records:
                 value = rec.get(name)
                 if isinstance(value, (list, dict)):
                     # an unhashable value killed the run before any report was written, and "every
                     # Object shall possess a unique identity" is the Statement that input is about
                     return "Fail", ("%s record %s carries %d values for %s where the Statement asks for a unique one"
-                                    % (subject, path, len(value), element))
-                key = r.namespace_of(path) + (value,)
+                                    % (subject, rec.get("id", path), len(value), element))
+                scope = r.namespace_of(path)
+                key = scope + (value,)
                 counts[key] = counts.get(key, 0) + 1
-            repeated = sorted({str(k[2]) for k, n in counts.items() if n > 1})
+                if scope == ("", ""):
+                    undeclared[value] = undeclared.get(value, 0) + 1
+            # the reuse Invariant compares a record whose scope the map does not declare against
+            # every namespace, "otherwise one declaration row exempted the rest"; this leg had no
+            # such rule, so one declared collection and one undeclared made two keys of one identity
+            crossing = {value for value in undeclared
+                        if sum(c for k, c in counts.items() if k[2] == value) > 1}
+            repeated = sorted({str(k[2]) for k, n in counts.items() if n > 1} | {str(v) for v in crossing})
             if repeated:
                 return "Fail", "%s is not unique across %s: %s" % (element, subject, ", ".join(repeated[:3]))
         unique_note = ", each distinct"
@@ -812,6 +842,20 @@ class EntityIndex:
         return len(self.spaces.get(ident) or set()) > 1
 
 
+def lifecycle_for(lifecycles, named, namespace=None):
+    """The Lifecycle a bare reference names, or None where it is unknown or ambiguous.
+
+    The index is keyed by (namespace, identity) like every other index in this module, so a
+    reference resolves in its own namespace first and by bare key only where the export carries
+    that identity in one namespace; `Adoption/Reference Serialization.md` states that rule."""
+    if named is None:
+        return None
+    if namespace is not None and (namespace, named) in lifecycles:
+        return lifecycles[(namespace, named)]
+    hits = [lc for key, lc in lifecycles.items() if isinstance(key, tuple) and key[-1] == named]
+    return hits[0] if len(hits) == 1 else None
+
+
 def lifecycle_index(r):
     """Lifecycles by identity, and the Lifecycle each Entity names, both read through the map."""
     lifecycles, collisions = {}, []
@@ -826,9 +870,12 @@ def lifecycle_index(r):
         if is_absent(ident):
             collisions.append("a Lifecycle carries no identifier")
             continue
-        if ident in lifecycles:
-            collisions.append("two Lifecycles carry the identifier %s" % ident)
-        lifecycles[ident] = lc
+        # keyed by the bare identifier, two Lifecycles from two declared systems were a collision,
+        # which every other leg of this tool treats as two identities (CAND-026)
+        key = r.namespace_of(path) + (ident,)
+        if key in lifecycles:
+            collisions.append("two Lifecycles carry the identifier %s in one declared scope" % ident)
+        lifecycles[key] = lc
     if collisions:
         lifecycles["__collisions__"] = collisions
     by_entity = EntityIndex()
@@ -889,14 +936,14 @@ def transition_predicate(text, r, lifecycles, by_entity):
         return None, unreadable
 
     if "initial state" in low:
-        bad = [k for k, lc in lifecycles.items() if is_absent(r.value(lc, "lifecycle", "initial state"))]
+        bad = [k[-1] for k, lc in lifecycles.items() if is_absent(r.value(lc, "lifecycle", "initial state"))]
         if bad:
             return "Fail", "no initial State: %s" % ", ".join(bad)
         if "one and only one" in low or "one initial" in low:
-            multiple = [k for k, lc in lifecycles.items() if isinstance(r.value(lc, "lifecycle", "initial state"), list)]
+            multiple = [k[-1] for k, lc in lifecycles.items() if isinstance(r.value(lc, "lifecycle", "initial state"), list)]
             if multiple:
                 return "Fail", "more than one initial State: %s" % ", ".join(multiple)
-        outside = [k for k, lc in lifecycles.items()
+        outside = [k[-1] for k, lc in lifecycles.items()
                    if r.value(lc, "lifecycle", "initial state") not in state_names(r, lc)]
         if outside:
             return "Fail", "initial State is not one of the Lifecycle's States: %s" % ", ".join(outside)
@@ -914,7 +961,7 @@ def transition_predicate(text, r, lifecycles, by_entity):
             ident = r.identity_of(path, e)
             state = r.value(e, "entity", "state")
             named = by_entity.named(ident, r.namespace_of(path))
-            lc = lifecycles.get(named)
+            lc = lifecycle_for(lifecycles, named, r.namespace_of(path))
             if not isinstance(state, str) or is_absent(state):
                 bad.append("%s occupies no single State" % ident)
             elif named and lc is None:
@@ -933,7 +980,7 @@ def transition_predicate(text, r, lifecycles, by_entity):
             pairs = transitions_of(r, lc)
             total += len(pairs)
             if not pairs:
-                bad.append("%s defines no Transition" % k)
+                bad.append("%s defines no Transition" % (k[-1],))
                 continue
             names = state_names(r, lc)
             for a, b in pairs:
@@ -958,7 +1005,7 @@ def transition_predicate(text, r, lifecycles, by_entity):
             terminals = declared if isinstance(declared, list) else ([] if is_absent(declared) else [declared])
             for terminal in terminals:
                 if terminal in outgoing:
-                    left.append("%s: %s is terminal and has an outgoing Transition" % (k, terminal))
+                    left.append("%s: %s is terminal and has an outgoing Transition" % (k[-1], terminal))
         return ("Fail", "; ".join(left[:3])) if left else \
                ("Pass", "no terminal State is left in %d Lifecycle(s)" % len(lifecycles))
 
@@ -977,7 +1024,8 @@ def transition_predicate(text, r, lifecycles, by_entity):
 
     if "prohibit undefined" in low or "only perform" in low or "permitted by the lifecycle" in low:
         events = r.records("event")
-        permitted = {k: set(transitions_of(r, lc)) for k, lc in lifecycles.items()}
+        permitted = {k[-1]: set(transitions_of(r, lc)) for k, lc in lifecycles.items()}
+        by_name = {k[-1]: lc for k, lc in lifecycles.items()}
         compared, bad, unresolved, destination_only = 0, [], [], []
         for _, e in events:
             subject = r.value(e, "event", "subject")
@@ -994,9 +1042,9 @@ def transition_predicate(text, r, lifecycles, by_entity):
                 # and Models/Lifecycle.md makes entering the initial State the start rather than a
                 # Transition. Anything else is a State change that was not compared, and skipping it
                 # silently let an Event move an Entity into a State its Lifecycle does not define
-                if after not in state_names(r, lifecycles[named]):
+                if after not in state_names(r, by_name[named]):
                     bad.append("%s: to %s, a State the Lifecycle does not define" % (e.get("id"), after))
-                elif after != r.value(lifecycles[named], "lifecycle", "initial state"):
+                elif after != r.value(by_name[named], "lifecycle", "initial state"):
                     destination_only.append(str(e.get("id")))
                 continue
             compared += 1
@@ -1016,13 +1064,15 @@ def transition_predicate(text, r, lifecycles, by_entity):
         return "Pass", "%d recorded State change(s) compared, every one permitted by the Lifecycle" % compared
 
     if "belong to exactly one entity" in low:
-        bad = [k for k, lc in lifecycles.items() if is_absent(r.value(lc, "lifecycle", "entity"))]
+        bad = [k[-1] for k, lc in lifecycles.items() if is_absent(r.value(lc, "lifecycle", "entity"))]
         return ("Fail", "no single Entity: %s" % ", ".join(bad)) if bad else \
                ("Pass", "%d Lifecycle(s) each belong to exactly one Entity" % len(lifecycles))
 
     if "operational state" in low or "one or more state" in low:
-        bad = [k for k, lc in lifecycles.items() if len(state_names(r, lc)) < 2]
-        return ("Fail", "fewer than two States: %s" % ", ".join(bad)) if bad else \
+        # the Statement says "one or more"; the leg demanded two and failed a lawful export. A
+        # stricter rule than the text is a requirement, and a requirement goes through governance
+        bad = [k[-1] for k, lc in lifecycles.items() if len(state_names(r, lc)) < 1]
+        return ("Fail", "defines no State: %s" % ", ".join(bad)) if bad else \
                ("Pass", "%d Lifecycle(s) define %d States between them"
                 % (len(lifecycles), sum(len(state_names(r, lc)) for lc in lifecycles.values())))
 
@@ -1058,8 +1108,9 @@ def combine(parts, run_one):
 
 def transition(test, text, r):
     lifecycles, by_entity = lifecycle_index(r)
-    if "__collisions__" in lifecycles:
+    if "__collisions__" in lifecycles and reads_lifecycles(text):
         return "Fail", "; ".join(lifecycles["__collisions__"][:3])
+    lifecycles.pop("__collisions__", None)
     if not lifecycles:
         return "Fail", "the export carries no Lifecycle"
     return combine(compound(text), lambda part: transition_predicate(part, r, lifecycles, by_entity))
@@ -1181,7 +1232,7 @@ def invariant_predicate(text, r, lifecycles, by_entity):
                 % len(r.records("entity")))
 
     if "multiple initial state" in low:
-        bad = [k for k, lc in lifecycles.items() if isinstance(r.value(lc, "lifecycle", "initial state"), list)]
+        bad = [k[-1] for k, lc in lifecycles.items() if isinstance(r.value(lc, "lifecycle", "initial state"), list)]
         return ("Fail", "more than one initial State: %s" % ", ".join(bad)) if bad else \
                ("Pass", "%d Lifecycle(s), none with more than one initial State" % len(lifecycles))
 
@@ -1209,7 +1260,7 @@ def invariant_predicate(text, r, lifecycles, by_entity):
                         frontier.append(b)
             unreachable = [n for n in names if n not in reached]
             if unreachable:
-                bad.append("%s: %s" % (k, ", ".join(unreachable)))
+                bad.append("%s: %s" % (k[-1], ", ".join(unreachable)))
         return ("Fail", "States no Transition reaches from the initial State: %s" % "; ".join(bad[:3])) if bad else \
                ("Pass", "every State of %d Lifecycle(s) is reachable from its initial State" % len(lifecycles))
 
@@ -1219,7 +1270,7 @@ def invariant_predicate(text, r, lifecycles, by_entity):
             names = state_names(r, lc)
             for a, b in transitions_of(r, lc):
                 if a not in names or b not in names:
-                    bad.append("%s: %s to %s" % (k, a, b))
+                    bad.append("%s: %s to %s" % (k[-1], a, b))
         wf_bad, wf_steps, wf_unread = workflow_violations(r, lifecycles, by_entity)
         if wf_unread:
             return None, wf_unread
@@ -1278,7 +1329,7 @@ def workflow_violations(r, lifecycles, by_entity):
                 unread += 1
                 continue
             entity = tr.get(entity_field)
-            lc = lifecycles.get(by_entity.get(entity))
+            lc = lifecycle_for(lifecycles, by_entity.get(entity))
             if lc is None:
                 bad.append("%s acts on %s, %s" % (
                     wf.get("id"), entity,
@@ -1294,10 +1345,27 @@ def workflow_violations(r, lifecycles, by_entity):
     return bad, examined - unread, ""
 
 
+LIFECYCLE_LEG = ("lifecycle", "initial state", "unreachable state", "undefined transition",
+                 "undefined state transition", "terminal", "state change", "violate entity lifecycle",
+                 "violate lifecycle", "operational state", "one or more state", "multiple initial state",
+                 "prohibit undefined", "only perform", "permitted by the lifecycle", "exactly one")
+
+
+def reads_lifecycles(text):
+    """Whether a Statement's predicate consults the Lifecycle index at all.
+
+    A collision in that index was returned as the Fail of whatever Statement was under test, so
+    "Multiple Classifications shall not change the Identity of the Object" was reported unsatisfied
+    because two Lifecycles carried one identifier."""
+    low = text.lower()
+    return any(marker in low for marker in LIFECYCLE_LEG)
+
+
 def invariant(test, text, r):
     lifecycles, by_entity = lifecycle_index(r)
-    if "__collisions__" in lifecycles:
+    if "__collisions__" in lifecycles and reads_lifecycles(text):
         return "Fail", "; ".join(lifecycles["__collisions__"][:3])
+    lifecycles.pop("__collisions__", None)
     parts = compound(text) if ("never:" in text or "shall not:" in text) else [text]
     return combine(parts, lambda part: invariant_predicate(part, r, lifecycles, by_entity))
 
@@ -1771,18 +1839,27 @@ def review_rows(path):
                          % (path, len(hidden), hidden[0][:60]))
     text = re.sub(r"<!--.*?-->", " ", raw, flags=re.S)
     headers, rows, dropped = 0, [], 0
-    fenced = False
-    for line in text.splitlines():
-        line = line.strip()
+    fenced, blank_before = False, True
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
         # a row written inside a ``` fence illustrates the format; reading it as a judgment
         # credited a named reviewer who judged nothing and cleared a mandatory Test
         if line.startswith("```") or line.startswith("~~~"):
             fenced = not fenced
+            blank_before = False
             continue
-        if not line.startswith("|"):
+        # a Markdown indented code block is a fence written the other way, and a reader sees
+        # literal text there too
+        indented = blank_before and (raw_line.startswith("    ") or raw_line.startswith("\t"))
+        # a blockquoted or list-item row is a row a reader sees: stripping the marker reads it,
+        # and skipping the line silently dropped Review Fails with nothing printed anywhere
+        body = re.sub(r"^\s*(?:>\s?|[-*+]\s|\d+[.)]\s)+", "", raw_line).strip()
+        blank_before = not line
+        if not body.startswith("|"):
             continue
+        line = body
         cells = [c.strip() for c in line.strip("|").split("|")]
-        if fenced:
+        if fenced or indented:
             if len(cells) == 5 and not set("".join(cells)) <= set("-: ") and not line.startswith(REVIEW_HEADER):
                 dropped += 1
             continue
@@ -1795,9 +1872,9 @@ def review_rows(path):
     # a filter that silently removes something judgment-shaped is the defect this function has had
     # twice; what it removed is counted and printed beside the run
     if dropped:
-        print("%s: %d judgment-shaped row(s) inside a fenced block were read as illustration, not as judgments"
-              % (path, dropped))
-    return headers, rows
+        print("%s: %d judgment-shaped row(s) inside a fenced or indented block were read as illustration, not as "
+              "judgments" % (path, dropped))
+    return headers, rows, dropped
 
 
 def recorded_against(path):
@@ -1807,13 +1884,21 @@ def recorded_against(path):
     None when the record carries no such line, which Section 3 permits and the report says; a
     dictionary otherwise, empty when the line is there and names nothing this tool can read. The
     two were one value, so a line that bound nothing read as no line at all."""
-    text = pathlib.Path(path).read_text(encoding="utf-8")
+    raw = pathlib.Path(path).read_text(encoding="utf-8")
+    # the binding is the one thing tying a signed record to an export, and it was read from the raw
+    # file: a line inside an HTML comment or a fenced block overrode the visible one, and a second
+    # visible line was never read at all
+    text = re.sub(r"<!--.*?-->|```.*?```|~~~.*?~~~", " ", raw, flags=re.S)
+    found = re.findall(r"(?mi)^\s{0,3}(?:>\s*)?\*\*\s*Recorded against\s*:?\s*\*\*\s*:?(.+)$", text)
+    if len(found) > 1:
+        raise SystemExit("%s carries %d lines binding it to an export; a record is recorded against one export, "
+                         "and reading the first of several is reading whichever was written first" % (path, len(found)))
     m = re.search(r"(?mi)^\s{0,3}(?:>\s*)?\*\*\s*Recorded against\s*:?\s*\*\*\s*:?(.+)$", text)
     if not m:
         # two spaces of indentation, a blockquote marker or the colon outside the emphasis took the
         # most permissive branch of all: the record was accepted against any export and the report
         # said it declared nothing, of a file that says "Recorded against" in plain sight
-        if re.search(r"(?i)recorded against", re.sub(r"<!--.*?-->|```.*?```", " ", text, flags=re.S)):
+        if re.search(r"(?i)recorded against", text):
             raise SystemExit("%s carries the words 'Recorded against' in a line this tool cannot read; the line "
                              "Section 3 fixes is `**Recorded against:** model <digest>, map <digest>, statement "
                              "<digest>, register <digest>, alias file <digest>, catalogue <digest>`" % path)
@@ -1830,7 +1915,7 @@ def load_reviews(path, known_aliases):
     identity part of the report, so a row without a Test the catalogue carries, a permitted outcome,
     a name, a readable date or a reason, and a second row for one Test, stop the run rather than
     being skipped: a judgment that cannot be attributed is not a judgment."""
-    headers, rows = review_rows(path)
+    headers, rows, dropped = review_rows(path)
     if headers != 1:
         raise SystemExit("%s carries %d headers reading '%s'; a Reviewer Record is one table, so that no judgment "
                          "sits in the file unread" % (path, headers, REVIEW_HEADER))
@@ -1855,6 +1940,8 @@ def load_reviews(path, known_aliases):
         if alias in out:
             raise SystemExit("%s: two rows judge %s; a Test carries one judgment" % (path, alias))
         out[alias] = {"outcome": outcome, "reviewer": reviewer, "date": date, "reason": reason}
+    # what a filter removed belongs in the published artifact, not only on the console
+    out["__dropped__"] = dropped
     return out
 
 
@@ -2033,6 +2120,8 @@ def main(argv):
     # Pass to Statements no mechanical procedure can decide), and the rows it could not apply are reported
     claim_aliases = {row["alias"] for row in results if row["reason"] == NON_CONFORMANCE}
     reviews = load_reviews(a.reviews, {r["alias"] for r in results}) if a.reviews else {}
+    dropped_rows = reviews.pop("__dropped__", 0)
+    a_reviews = a.reviews
     declared, binding = ({}, "")
     if a.reviews:
         declared = recorded_against(a.reviews)
@@ -2245,6 +2334,9 @@ def main(argv):
     lines.append("")
     lines.append("## Reviewers")
     lines.append("")
+    if a_reviews and dropped_rows:
+        lines.append("%d judgment-shaped row(s) in `%s` sit inside a fenced or indented block and were read as "
+                     "illustration rather than as judgments.\n" % (dropped_rows, a_reviews))
     if not reviews:
         lines.append("No Reviewer Record was supplied. Section 4 requires the reviewer's identity for every Review outcome, "
                      "so a report without one carries no Review outcome.")

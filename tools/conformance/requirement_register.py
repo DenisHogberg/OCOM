@@ -277,6 +277,22 @@ def append_only_failures(revisions):
 GOVERNANCE_RECORD = re.compile(r"\b(CAND-\d+|AO-\d+|ADR-\d+|EPIC-[A-F])\b")
 
 
+def recorded_decisions():
+    """Every governance record a Disposition's Note may cite, read from the registers themselves.
+
+    Matching the shape of an identifier is not resolving it: `CAND-999` and `AO-404` looked like
+    records, and 334 Statements could be dispositioned Descriptive against records that exist
+    nowhere."""
+    out = set()
+    for name, pattern in (("Governance/ADR-Candidates.md", r"(?m)^## (CAND-\d+)"),
+                          ("Governance/Architecture-Observations.md", r"(?m)^## (AO-\d+)"),
+                          ("Governance/Master-Architecture-Backlog.md", r"\b(EPIC-[A-F])\b")):
+        path = DOCS / name
+        if path.exists():
+            out |= set(re.findall(pattern, path.read_text(encoding="utf-8")))
+    return out
+
+
 def disposition_failures(pairs, aliases, notes=None):
     """Every Disposition cell this tool cannot read, every supersession that names nothing, and
     every Descriptive or Review disposition whose Note names no governance record.
@@ -292,10 +308,18 @@ def disposition_failures(pairs, aliases, notes=None):
     for identity, (alias, disposition, _) in aliases.items():
         value = (disposition or "").strip()
         if value.lower() in DISPOSITIONS:
-            if value and notes is not None and not GOVERNANCE_RECORD.search(notes.get(alias, "")):
-                out.append("alias %s is dispositioned %s and its Note names no governance record; Section 2 makes "
-                           "a Disposition a recorded decision, and this cell is the one the append-only rule lets "
-                           "a row change" % (alias, value))
+            if value and notes is not None:
+                cited = GOVERNANCE_RECORD.findall(notes.get(alias, ""))
+                if not cited:
+                    out.append("alias %s is dispositioned %s and its Note names no governance record; Section 2 "
+                               "makes a Disposition a recorded decision, and this cell is the one the append-only "
+                               "rule lets a row change" % (alias, value))
+                else:
+                    known = recorded_decisions()
+                    unknown = [c for c in cited if c not in known]
+                    if unknown and known:
+                        out.append("alias %s is dispositioned %s and its Note cites %s, which no governance record "
+                                   "in this repository carries" % (alias, value, ", ".join(sorted(unknown))))
             continue
         m = SUPERSEDED.match(value)
         if not m:

@@ -30,6 +30,7 @@ catalogued in their own table, derived from that document's claim sections.
   test_catalogue.py --census    print the split by kind and by document
 """
 import argparse
+import datetime
 import pathlib
 import re
 import sys
@@ -94,10 +95,15 @@ BEHAVIOUR_VERBS = ("support", "preserve", "remain", "maintain", "participate", "
 
 
 def list_items(text):
-    """The items of a stem-plus-list obligation, or [] when the Statement carries no list."""
+    """The items of a stem-plus-list obligation, or [] when the Statement carries no list.
+
+    Split on semicolons alone, this returned one item for a list written with commas, so rule 4
+    ("one behaviour item makes the whole list unmechanical") inspected only the first fragment and
+    the Statement was promoted to a mechanical kind; `validate.required_elements` then split the
+    same tail on both and demanded a map field for every fragment. One splitter, both tools."""
     if ":" not in text:
         return []
-    return [re.sub(r"\s+", " ", i).strip(" .;") for i in text.split(":", 1)[1].split(";") if i.strip(" .;")]
+    return [re.sub(r"\s+", " ", i).strip(" .;") for i in re.split(r"[;,]", text.split(":", 1)[1]) if i.strip(" .;")]
 
 
 def item_is_checkable(item):
@@ -377,13 +383,26 @@ def render(today):
     return "\n".join(out) + "\n"
 
 
+def committed_date():
+    """The Last Updated date the committed catalogue carries, so a regeneration keeps it."""
+    if not DOC.exists():
+        return None
+    m = re.search(r"(?m)^\*\*Last Updated:\*\* (.+)$", DOC.read_text(encoding="utf-8"))
+    return m.group(1).strip() if m else None
+
+
 def main(argv):
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     p.add_argument("--write", action="store_true")
     p.add_argument("--check", action="store_true")
     p.add_argument("--census", action="store_true")
-    p.add_argument("--today", default="20 September 2026")
+    # a hard-coded default moved the committed dates backwards every time the remedy this tool
+    # prints was followed, and --check normalised exactly those two lines away, so nothing noticed
+    # while the file's digest changed under a Reviewer Record bound to it
+    p.add_argument("--today", default=None)
     a = p.parse_args(argv)
+    if a.today is None:
+        a.today = committed_date() or datetime.date.today().strftime("%-d %B %Y")
 
     if a.census:
         rows = statements()
