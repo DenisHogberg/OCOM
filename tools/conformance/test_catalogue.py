@@ -164,7 +164,11 @@ def statements():
                 raise SystemExit("alias %s is bound to two Statements (%s and %s); one alias, one Test"
                                  % (alias, seen[alias], "%s (%s)" % (path, section)))
             seen[alias] = "%s (%s)" % (path, section)
-            out.append((alias, path, section, cls, text, kind_of(text), disposition))
+            # Section 2's second Disposition: Review, "for a Statement that imposes an obligation
+            # no mechanical procedure can decide". Nothing read it, so the mechanical kind stayed,
+            # the engine decided the Statement anyway and the reviewer's judgment was discarded
+            kind = "Review" if (disposition or "").strip().lower() == "review" else kind_of(text)
+            out.append((alias, path, section, cls, text, kind, disposition))
     if not out:
         raise SystemExit("no Statements found; a catalogue over nothing cannot be checked")
     return out
@@ -287,7 +291,7 @@ def render(today):
                          % (printed, printed_mandatory, len(rows), len(mandatory)))
     out.append("")
     out.append("Beside the rows above, %d claim clauses of `%s` are catalogued separately below and carry "
-               "Declaration Tests read from the Conformance Statement; they are not register Statements and are "
+               "Declaration Tests, four of them read from the Conformance Statement; they are not register Statements and are "
                "counted in neither column, so the two columns sum to %d and %d, the figures this document's "
                "Purpose and `Requirement-Register.md` state.\n" % (len(claims), CLAIM_DOC, len(rows), len(mandatory)))
     out.append("Of the %d mandatory Statements, %d carry a mechanical kind and %d fall to Review. A Review outcome "
@@ -350,7 +354,11 @@ def render(today):
     out.append("")
     out.append("# Tests Bound to Claim Clauses")
     out.append("")
-    out.append("Derived from `%s`. Every one is kind Declaration and is read from the Conformance Statement." % CLAIM_DOC)
+    out.append("Derived from `%s`. Every one is kind Declaration. Four are read from the Conformance Statement "
+               "(the version clause, the single-version clause and the two extension clauses, which read the "
+               "`Extension attestation ...` fields). The Mandatory Requirements clause carries no procedure of its "
+               "own and falls to a reviewer. The Non-Conformance clause is decided by the run's own tally, as "
+               "`Conformance-Test-Suite.md` Section 3 states, and no reviewer may decide it." % CLAIM_DOC)
     out.append("")
     out.append("| Test | Section | Clause |")
     out.append("|---|---|---|")

@@ -55,7 +55,7 @@ Prefer the repository? Start with [`docs/README.md`](docs/README.md), then [`doc
 - [Constitution v1.0.1](docs/Core/Constitution.md): the canonical principles, amended only through an RFC-like process.
 - [Architecture Freeze](docs/Governance/ADR-Candidates.md) (ADR Candidate CAND-007): no new Core concept, no reworded Canonical Principle, until the freeze is lifted through the change process.
 - [ADR Candidates](docs/Governance/ADR-Candidates.md): 34 recorded decisions and proposals, CAND-001 to CAND-034.
-- [Architecture Observations](docs/Governance/Architecture-Observations.md): 92 recorded tensions, AO-001 to AO-093 with 072 reserved, including the ones the specification's own site found when it audited itself and the ones its own logic check found.
+- [Architecture Observations](docs/Governance/Architecture-Observations.md): 93 recorded tensions, AO-001 to AO-094 with 072 reserved, including the ones the specification's own site found when it audited itself and the ones its own logic check found.
 - [Standard Evolution Methodology](docs/Governance/Standard%20Evolution%20Methodology.md): how a Reference Case becomes an observation, a candidate and, eventually, a change.
 
 Found something the text gets wrong? Open a [Reference Case](.github/ISSUE_TEMPLATE/reference-case.md). Found two rules that contradict each other? Open an [Architecture Observation](.github/ISSUE_TEMPLATE/architecture-observation.md). Found a page on ocom.uno that disagrees with the file it names as its source? Open a [Projection defect](.github/ISSUE_TEMPLATE/projection-defect.md).

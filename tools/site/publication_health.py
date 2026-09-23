@@ -83,9 +83,28 @@ def looks_markdown(body):
     return bool(body.strip()) and not looks_html(body)
 
 
+def looks_xml(body):
+    head = body.lstrip()[:200].lower()
+    return head.startswith("<?xml") or head.startswith("<")
+
+
 # What a presence row requires of the body it finds. A row that asked only for a 200 asserted a
 # projection exists while the file behind it was any document at all.
-SHAPES = {"html": looks_html, "json": looks_json, "jsonld": looks_jsonld, "markdown": looks_markdown}
+SHAPES = {"html": looks_html, "json": looks_json, "jsonld": looks_jsonld, "markdown": looks_markdown,
+          "xml": looks_xml}
+
+# what a declared media type says the body should be. A row that asked for JSON because the type
+# began with "application/" failed the sitemap and the Atom feed, which are XML by design.
+BY_MEDIA_TYPE = (("application/ld+json", "jsonld"), ("json", "json"), ("xml", "xml"),
+                 ("text/html", "html"), ("text/markdown", "markdown"))
+
+
+def shape_for(media_type):
+    low = (media_type or "").lower()
+    for marker, shape in BY_MEDIA_TYPE:
+        if marker in low:
+            return shape
+    return None
 
 
 class Site:
@@ -205,25 +224,33 @@ def presence_rows(site, slugs, entries):
     explain = []
     for s in slugs:
         explain += ["/explain/%s" % i for i in ids_by_target.get("/vocabulary/%s" % s, [])]
-    every("Explain records", "Every term resolves under all three of its identifiers.", explain, "html")
+    # an api/v1-shaped endpoint: `.well-known/ocom.json` declares it under the Knowledge API and
+    # the site serves application/json. Asserting HTML here failed all 39 records against the live
+    # site while the fixture served HTML, which is how the shape fix shipped broken
+    every("Explain records", "Every term resolves under all three of its identifiers.", explain, "json")
 
     every("API term records", "Every term has an api/v1 record.", ["/api/v1/term/%s" % s for s in slugs], "json")
     every("API neighbor records", "Every term has an api/v1 neighbors record.", ["/api/v1/neighbors/%s" % s for s in slugs], "json")
     every("Inspect pages", "Every term has an inspect view.", ["/inspect/%s" % s for s in slugs], "html")
 
     comparisons = (site.json("/comparisons.json") or {}).get("comparisons", [])
-    paths = []
-    for c in comparisons:
-        for key in ("url", "record"):
-            if c.get(key):
-                paths.append(as_path(c[key]))
-    every("Comparison records", "Every comparison has an HTML page and a JSON record.", paths)
+    pages = [as_path(c["url"]) for c in comparisons if c.get("url")]
+    records = [as_path(c["record"]) for c in comparisons if c.get("record")]
+    # the row's own rule says one is a page and the other a record, and it checked both for a 200
+    missing = [p for p in pages if not site.ok(p, "html")] + [p for p in records if not site.ok(p, "json")]
+    rows.append(row("Comparison records", "Every comparison has an HTML page and a JSON record.",
+                    len(pages) + len(records), missing))
 
     discovery = site.json("/discovery.json") or {}
-    machine = sorted({as_path(r["url"]) for r in discovery.get("resources", [])
+    # each entry is checked against the media type discovery.json declares for it, so the sitemap
+    # and the Atom feed are read as XML rather than as JSON that failed to parse
+    machine = sorted({(as_path(r["url"]), shape_for(r.get("mediaType")))
+                      for r in discovery.get("resources", [])
                       if isinstance(r, dict) and r.get("mediaType", "").startswith("application/")
                       and "{" not in r.get("url", "")})
-    every("Machine entry points", "The discovery, manifest and index files are published.", machine)
+    missing = [path for path, shape in machine if not site.ok(path, shape)]
+    rows.append(row("Machine entry points", "The discovery, manifest and index files are published.",
+                    len(machine), missing))
     return rows
 
 
@@ -286,7 +313,7 @@ def published_records(site, slugs):
     for c in (site.json("/comparisons.json") or {}).get("comparisons", []):
         if c.get("record"):
             paths.append(as_path(c["record"]))
-    return [p for p in paths if site.ok(p)]
+    return [p for p in paths if site.ok(p, "json")]
 
 
 def ownership_row(site, slugs):
@@ -318,9 +345,9 @@ def ownership_row(site, slugs):
 def resolver_rows(site, entries):
     missing = []
     for identifier in entries:
-        if not site.ok("/resolve/%s" % identifier):
+        if not site.ok("/resolve/%s" % identifier, "html"):
             missing.append("/resolve/%s" % identifier)
-        if not site.ok("/api/v1/resolve/%s" % identifier):
+        if not site.ok("/api/v1/resolve/%s" % identifier, "json"):
             missing.append("/api/v1/resolve/%s" % identifier)
     resolver = row("Resolver coverage",
                    "Every identifier registered in resolve.json has both an HTML resolver stub and an api/v1/resolve record.",
@@ -619,9 +646,9 @@ def projection_parity(site, slugs):
     compared = []
     for c in comparisons:
         url, record = c.get("url", ""), c.get("record", "")
-        if record and not site.ok(as_path(record)):
+        if record and not site.ok(as_path(record), "json"):
             compared.append("%s: the record %s does not answer" % (url, record))
-        elif url and not site.ok(as_path(url)):
+        elif url and not site.ok(as_path(url), "html"):
             compared.append("%s: the page does not answer" % url)
     return {
         "ok": bool(chapters) and not term_disagreements and not compared,

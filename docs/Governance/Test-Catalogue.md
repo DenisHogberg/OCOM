@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 September 2026
+**Last Updated:** 23 September 2026
 
 ---
 
@@ -57,7 +57,7 @@ Declaration, the fifth kind, reaches one register Statement through rule 1, `Met
 | Review | 145 | 120 |
 | Declaration | 1 | 1 |
 
-Beside the rows above, 6 claim clauses of `Language/Conformance.md` are catalogued separately below and carry Declaration Tests read from the Conformance Statement; they are not register Statements and are counted in neither column, so the two columns sum to 208 and 182, the figures this document's Purpose and `Requirement-Register.md` state.
+Beside the rows above, 6 claim clauses of `Language/Conformance.md` are catalogued separately below and carry Declaration Tests, four of them read from the Conformance Statement; they are not register Statements and are counted in neither column, so the two columns sum to 208 and 182, the figures this document's Purpose and `Requirement-Register.md` state.
 
 Of the 182 mandatory Statements, 62 carry a mechanical kind and 120 fall to Review. A Review outcome is a named reviewer's recorded judgment, which Section 3 counts toward Core Conformance as Review Pass; it is not a gap in the suite, and it is not a machine result either, which is why the count is printed rather than buried.
 
@@ -311,7 +311,7 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 
 # Tests Bound to Claim Clauses
 
-Derived from `Language/Conformance.md`. Every one is kind Declaration and is read from the Conformance Statement.
+Derived from `Language/Conformance.md`. Every one is kind Declaration. Four are read from the Conformance Statement (the version clause, the single-version clause and the two extension clauses, which read the `Extension attestation ...` fields). The Mandatory Requirements clause carries no procedure of its own and falls to a reviewer. The Non-Conformance clause is decided by the run's own tally, as `Conformance-Test-Suite.md` Section 3 states, and no reviewer may decide it.
 
 | Test | Section | Clause |
 |---|---|---|
@@ -328,4 +328,4 @@ Derived from `Language/Conformance.md`. Every one is kind Declaration and is rea
 
 | Version | Date | Description |
 |----------|------|-------------|
-| 0.1 | 22 September 2026 | First generation: 208 Statements bound to a Test, 182 of them mandatory, and 6 claim clauses bound to Declaration. Completes the binding `Conformance-Test-Suite.md` Section 3 specifies. |
+| 0.1 | 23 September 2026 | First generation: 208 Statements bound to a Test, 182 of them mandatory, and 6 claim clauses bound to Declaration. Completes the binding `Conformance-Test-Suite.md` Section 3 specifies. |

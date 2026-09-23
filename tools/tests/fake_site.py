@@ -81,7 +81,9 @@ def base_files():
     for identifier in entries:
         h("/resolve/%s" % identifier, "<html><body>resolver stub</body></html>")
         j("/api/v1/resolve/%s" % identifier, {"identifier": identifier})
-        h("/explain/%s" % identifier, "<html><body>explain</body></html>")
+        # an api/v1-shaped record on the live site, and serving it as HTML here hid a shape
+        # assertion that failed all 39 of them in production
+        j("/explain/%s" % identifier, {"apiVersion": "v1", "input": identifier})
 
     edges = [("https://ocom.uno/vocabulary/object#term", "https://ocom.uno/vocabulary/identity#term"),
              ("https://ocom.uno/vocabulary/identity#term", "https://ocom.uno/vocabulary/object#term")]

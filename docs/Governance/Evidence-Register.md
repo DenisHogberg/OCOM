@@ -64,7 +64,8 @@ Published artifacts any reader can count and check, in this repository or on the
 | Specification chapters | 9 | SPEC-00 to SPEC-08, compiled from the canonical documents |
 | Informative comparisons | 9 | |
 | Reference Cases published | 1 | distilled from real rollouts under NDA, with the organization and details changed; non-normative |
-| Architecture Observations | 92 | recorded tensions, AO-001 to AO-093, AO-072 reserved |
+| Architecture Observations | 93 | recorded tensions, AO-001 to AO-094, AO-072 reserved |
+| ADR Candidates | 34 | recorded decisions and proposals, CAND-001 to CAND-034 |
 | Mandatory Statements enumerated | 182 of 335 | `Requirement-Register.md`, regenerated and checked on every build |
 | Reference implementations published | 0 | |
 | Public case studies | 0 | |
@@ -126,4 +127,5 @@ implied.
 |----------|------|-------------|
 | 0.1 | 19 September 2026 | Moved into the repository from `ocom.uno/evidence-register`, where it had been published since 5 September 2026 with no source here, per `CAND-022`. Counts brought current: 82 Architecture Observations, REUSE 426 of 426. The enumerated mandatory Statements and the reason the ladder stands at step 1 are stated here for the first time; the published page carried neither. |
 | 0.1 | 22 September 2026 | Two rows added for Release v1.4.0 (the signed release and its Zenodo DOI). The register was one release behind `publication/llms.txt`, which `CAND-022` makes it the record of; found by the all-packages test of 22 September 2026. No Software Heritage row: the v1.4.0 tag is not archived there yet. |
-| 0.1 | 23 September 2026 | Counts brought current: 92 Architecture Observations (AO-001 to AO-093) and 34 ADR Candidates (CAND-001 to CAND-034); the rows had stood at 82 and AO-083 since 19 September. Found by round 2 of the all-packages test. |
+| 0.1 | 23 September 2026 | Counts brought current: 92 Architecture Observations (AO-001 to AO-093); the row had stood at 82 and AO-083 since 19 September. Found by round 2 of the all-packages test. |
+| 0.1 | 23 September 2026 | The ADR Candidates row this table never carried is added (34, CAND-001 to CAND-034). The row above recorded that count as brought current on the same day, and there was no row to bring current; round 5 of the all-packages test read the two against each other. |

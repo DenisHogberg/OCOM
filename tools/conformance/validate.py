@@ -92,6 +92,12 @@ def load_map(path):
         # binding but its value is a method name, not a field of the export
         if len(cells) < 3:
             continue
+        if cells[0].lower() == "integrity.method" and cells[1] != "method":
+            # `Adoption/Reference Serialization.md` called this row a declaration until 23 September
+            # 2026, and a map written to that page had every Integrity Test report pending with a
+            # reason saying the map declares no method, which is a silence the map did not intend
+            raise SystemExit("%s carries Integrity.method as kind %r; it is kind `method`, and read as anything "
+                             "else it declares no demonstration method at all" % (path, cells[1]))
         if cells[1] == "declaration":
             # a row of kind declaration states something about the export as a whole, such as the
             # scope of its identities (CAND-026); it names no field and is read by Declaration Tests
@@ -137,7 +143,36 @@ def collection_at(node, path):
         return collection_at(value, rest)
     if through == "{}":
         return [x for x in value.values() if isinstance(x, dict)] if isinstance(value, dict) else []
+    if isinstance(value, dict):
+        return [value]          # one record, stored as an object value rather than in a list
     return [x for x in value if isinstance(x, dict)] if isinstance(value, list) else []
+
+
+def parents_of(model, path):
+    """Every node a path's last step is resolved from, so the leaf can be checked where it lives."""
+    head, _, leaf = path.rpartition(".")
+    if not head:
+        return [model]
+    out = []
+    node = model
+    for step in head.split("."):
+        through = step[-2:] if step.endswith(("[]", "{}")) else ""
+        key = step[:-2] if through else step
+        nodes = [node] if not isinstance(node, list) else node
+        nxt = []
+        for item in nodes:
+            if not isinstance(item, dict):
+                continue
+            value = item.get(key)
+            if through == "[]":
+                nxt += [x for x in (value if isinstance(value, list) else []) if isinstance(x, dict)]
+            elif through == "{}":
+                nxt += [x for x in (value.values() if isinstance(value, dict) else []) if isinstance(x, dict)]
+            elif isinstance(value, dict):
+                nxt.append(value)
+        node = nxt
+        out = nxt
+    return out if out else []
 
 
 def instances(model, paths, strict=True):
@@ -148,10 +183,19 @@ def instances(model, paths, strict=True):
     over collections the map does not list reads the same grammar without that demand."""
     out, seen = [], set()
     for p in dict.fromkeys(paths):
-        if strict and "." not in p and not p.endswith(("[]", "{}")):
-            coll = model.get(p, [])
-            if not isinstance(coll, list) or any(not isinstance(rec, dict) for rec in coll):
-                raise SystemExit("the export's %s is not a list of records, so nothing in it can be checked" % p)
+        if strict:
+            # the refusal applied to top-level paths only, so every nested collection the map
+            # states (`entities[].attributes`, `lifecycles[].states`) was exempt from it and a
+            # non-record member there was filtered away instead of stopping the run
+            for parent in parents_of(model, p):
+                leaf = p.rsplit(".", 1)[-1]
+                leaf = leaf[:-2] if leaf.endswith(("[]", "{}")) else leaf
+                coll = parent.get(leaf, [])
+                if p.endswith("{}"):
+                    if not isinstance(coll, dict) or any(not isinstance(rec, dict) for rec in coll.values()):
+                        raise SystemExit("the export's %s is not a collection of records, so nothing in it can be checked" % p)
+                elif not isinstance(coll, list) or any(not isinstance(rec, dict) for rec in coll):
+                    raise SystemExit("the export's %s is not a list of records, so nothing in it can be checked" % p)
         for rec in collection_at(model, p):
             if id(rec) not in seen:
                 seen.add(id(rec))
@@ -262,7 +306,9 @@ class Resolver:
             if not scope and d.get(prefix + "scope"):
                 scope = d[prefix + "scope"].strip().lower()
             if not system and d.get(prefix + "system"):
-                system = d[prefix + "system"].strip()
+                # the scope was folded and the system was not, so SAP and sap were two namespaces
+                # and one reused identity was counted as two identities
+                system = d[prefix + "system"].strip().casefold()
         # only an External System scope is split by the system it names. Keying every scope by a
         # declared system let one map row turn one Organization into two namespaces, and a reused
         # identity then passed the no-reuse Invariant
@@ -276,6 +322,8 @@ class Resolver:
         out = {}
         for path, rec in self.all_records():
             ident = self.identity_of(path, rec)
+            if isinstance(ident, (list, dict)):
+                ident = "%s (%d values)" % (path, len(ident))   # unhashable, and reported as one identity
             if ident is not None and not is_absent(ident):
                 key = self.namespace_of(path) + (ident,)
                 out.setdefault(key, [])
@@ -290,13 +338,18 @@ class Resolver:
         30. A nested value record with no identity binding (a State, a Transition) still falls out,
         because identity_of returns None for it."""
         declared = set(self.types.get("object", [])) | set(self.types.get("identity", []))
+        names = self.identity_field_names()
         out = []
         for path in self.all_paths():
             if path in declared:
                 out.append(path)            # an Object collection stays in even if nothing resolves,
                 continue                    # so the unresolved records are reported rather than dropped
             records = instances(self.model, [path])
-            if records and any(self.identity_of(p, rec) is not None for p, rec in records):
+            # a collection listed only under a type for which the map binds no identity resolved
+            # nothing here and was skipped by the unlisted-collection rule for being listed, so it
+            # fell out of both identity Tests; its records carry identities all the same
+            if records and any(self.identity_of(p, rec) is not None or
+                               any(not is_absent(rec.get(name)) for name in names) for p, rec in records):
                 out.append(path)
         return out
 
@@ -343,8 +396,14 @@ class Resolver:
                         out.append(path)          # records nested in a list of lists: no path names them
                 elif isinstance(sub_value, dict):
                     members = list(sub_value.values())
+                    # a single record stored as an object value is a collection of one: walking
+                    # into it as though it were a container emitted nothing, so the identity it
+                    # carries was compared against none of the others
+                    if any(not is_absent(sub_value.get(name)) for name in names):
+                        out.append(path)
+                        walk(sub_value, path + ".")
                     # an object keyed by identity is a collection of records however it is spelled
-                    if members and all(isinstance(x, dict) for x in members) \
+                    elif members and all(isinstance(x, dict) for x in members) \
                             and any(not is_absent(x.get(name)) for x in members for name in names):
                         out.append(path + "{}")
                         for record in members:
@@ -366,7 +425,12 @@ class Resolver:
         listed = set(self.all_paths())
         with_identity, without = [], []
         for path in self.record_collections():
-            if path in listed:
+            # listed is not the same as reachable: a collection listed under a type for which the
+            # map binds no identity is in no identity Test, and skipping it here for being listed
+            # is what let a reused identity through
+            if path in listed and (self.identity_field(path) or not any(
+                    not is_absent(rec.get(name)) for _, rec in instances(self.model, [path], strict=False)
+                    for name in names)):
                 continue
             records = instances(self.model, [path], strict=False)
             # a collection this tool could not read is not a collection that carries no identity:
@@ -661,7 +725,13 @@ def presence(test, text, r):
             # the same bare value under two declared systems is two identities
             counts = {}
             for path, rec in records:
-                key = r.namespace_of(path) + (rec.get(name),)
+                value = rec.get(name)
+                if isinstance(value, (list, dict)):
+                    # an unhashable value killed the run before any report was written, and "every
+                    # Object shall possess a unique identity" is the Statement that input is about
+                    return "Fail", ("%s record %s carries %d values for %s where the Statement asks for a unique one"
+                                    % (subject, path, len(value), element))
+                key = r.namespace_of(path) + (value,)
                 counts[key] = counts.get(key, 0) + 1
             repeated = sorted({str(k[2]) for k, n in counts.items() if n > 1})
             if repeated:
@@ -671,6 +741,40 @@ def presence(test, text, r):
     if optional:
         note += " (%s: the Statement calls %s optional)" % (", ".join(optional), "them" if len(optional) > 1 else "it")
     return "Pass", "%d %s record(s) carry %s%s%s%s" % (len(records), subject, ", ".join(elements), one_note, unique_note, note)
+
+
+class EntityIndex:
+    """The Lifecycle each Entity names, keyed by the namespace that Entity's identity is in.
+
+    Keyed by the bare identity alone, the ServiceNow twin of an SAP Entity overwrote the SAP one
+    and the SAP record's State was checked against the ServiceNow record's Lifecycle: two mandatory
+    Transition Tests passed over a violation, through the door `CAND-026` opens for two systems'
+    keys. A bare reference from an Event or a Workflow step resolves only where the identity is in
+    one namespace, which is the rule `Adoption/Reference Serialization.md` states for a reference."""
+
+    def __init__(self):
+        self.by_key, self.spaces = {}, {}
+
+    def add(self, namespace, ident, named):
+        if isinstance(ident, (list, dict)):
+            return          # not an identity this tool can key by; the uniqueness leg Fails on it
+        self.by_key[(namespace, ident)] = named
+        self.spaces.setdefault(ident, set()).add(namespace)
+
+    def named(self, ident, namespace=None):
+        if isinstance(ident, (list, dict)):
+            return None     # two identities are not one Entity, and keying on them killed the run
+        if namespace is not None:
+            return self.by_key.get((namespace, ident))
+        spaces = self.spaces.get(ident) or set()
+        return self.by_key.get((next(iter(spaces)), ident)) if len(spaces) == 1 else None
+
+    def get(self, ident, default=None):
+        out = self.named(ident)
+        return default if out is None else out
+
+    def ambiguous(self, ident):
+        return len(self.spaces.get(ident) or set()) > 1
 
 
 def lifecycle_index(r):
@@ -689,12 +793,12 @@ def lifecycle_index(r):
         lifecycles[ident] = lc
     if collisions:
         lifecycles["__collisions__"] = collisions
-    by_entity = {}
+    by_entity = EntityIndex()
     for path, e in r.records("entity"):
         ident = r.identity_of(path, e)
         named = r.value(e, "entity", "lifecycle")
         if not is_absent(ident):
-            by_entity[ident] = named
+            by_entity.add(r.namespace_of(path), ident, named)
     return lifecycles, by_entity
 
 
@@ -771,7 +875,7 @@ def transition_predicate(text, r, lifecycles, by_entity):
             # stale `id` left in the record checked its State against another Entity's Lifecycle
             ident = r.identity_of(path, e)
             state = r.value(e, "entity", "state")
-            named = by_entity.get(ident)
+            named = by_entity.named(ident, r.namespace_of(path))
             lc = lifecycles.get(named)
             if not isinstance(state, str) or is_absent(state):
                 bad.append("%s occupies no single State" % ident)
@@ -940,6 +1044,11 @@ def invariant_predicate(text, r, lifecycles, by_entity):
         counts, unreadable, undeclared_ids = {}, {}, {}
         for path, rec in instances(r.model, paths):
             ident = r.identity_of(path, rec)
+            if isinstance(ident, (list, dict)):
+                # a record carrying two identities is not one identity this leg can compare, and
+                # keying a dict on it killed the run; the uniqueness leg reports the record itself
+                return "Fail", ("a %s record carries %d identities where an identity is one value, so it could "
+                                "not be compared against the others" % (path, len(ident)))
             if ident is None or is_absent(ident):
                 unreadable[path] = unreadable.get(path, 0) + 1
                 continue
@@ -1112,18 +1221,30 @@ def workflow_violations(r, lifecycles, by_entity):
         # simply omits is not a violation the implementation committed, so it is pending, not Fail
         return [], 0, ("the Representation Map binds no field to %s, so no Workflow step could be read"
                        % " or ".join(unbound))
-    bad, examined = [], 0
+    bad, examined, unread = [], 0, 0
     for _, wf in r.records("workflow"):
         for tr in wf.get(steps_field) or []:
             examined += 1
+            if not isinstance(tr, dict):
+                # a Workflow may record its steps as references to Transition records, which the map
+                # lists as their own collection; reading one as a record killed the run
+                unread += 1
+                continue
             entity = tr.get(entity_field)
             lc = lifecycles.get(by_entity.get(entity))
             if lc is None:
-                bad.append("%s acts on %s, for which no Lifecycle resolves" % (wf.get("id"), entity))
+                bad.append("%s acts on %s, %s" % (
+                    wf.get("id"), entity,
+                    "an identity the export declares in %d namespaces, so no Lifecycle resolves without saying which"
+                    % len(by_entity.spaces.get(entity) or ()) if by_entity.ambiguous(entity)
+                    else "for which no Lifecycle resolves"))
             elif (tr.get(from_field), tr.get(to_field)) not in set(transitions_of(r, lc)):
                 bad.append("%s: %s to %s is not a Transition of %s's Lifecycle"
                            % (wf.get("id"), tr.get(from_field), tr.get(to_field), entity))
-    return bad, examined, ""
+    if unread and examined == unread:
+        return [], 0, ("%d Workflow step(s) are not records, so none could be read against a Lifecycle; a step "
+                       "written as a reference to a Transition record is not resolved by this tool" % unread)
+    return bad, examined - unread, ""
 
 
 def invariant(test, text, r):
@@ -1243,6 +1364,15 @@ def canonical_digest(record, field):
 MEMORY_TYPES = ("memory record", "audit record", "evidence record")
 
 
+def one_value(value):
+    """The single scalar a field holds, or None. An erasure record's fields were compared with `in`
+    against a set, so a list-valued Policy or erased record raised TypeError and the run wrote no
+    report at all for any of the 185 mandatory Statements."""
+    if isinstance(value, (list, tuple)):
+        return one_value(value[0]) if len(value) == 1 else None
+    return value if not isinstance(value, dict) else None
+
+
 def erasure_records(r):
     """Every erasure record the map declares (`Erasure` is the collection; `Erasure.erased record`,
     `Erasure.policy` and `Erasure.actor` its fields), as (identity, erased identity, reasons). The
@@ -1257,31 +1387,37 @@ def erasure_records(r):
     policy_f, _ = r.field("erasure", "policy")
     actor_f, _ = r.field("erasure", "actor")
     pol_id, _ = r.field("policy", "identifier")
-    policies = {p.get(pol_id) for _, p in r.records("policy")} if r.types.get("policy") and pol_id else set()
+    policies = {one_value(p.get(pol_id)) for _, p in r.records("policy")} if r.types.get("policy") and pol_id else set()
     declared = set(r.ids())
     out = []
     for path, rec in r.records("erasure"):
         why = []
         # the record's own identity is the one the rest of the tool resolves; reading it from
         # Erasure.identifier let a map point that row elsewhere and slip a self-naming erasure past
-        ident_here = r.identity_of(path, rec)
+        ident_here = one_value(r.identity_of(path, rec))
         if is_absent(ident_here) and ident_f:
-            ident_here = rec.get(ident_f)
-        names = {ident_here} | ({rec.get(ident_f)} if ident_f else set())
-        if erased_f is None or is_absent(rec.get(erased_f)):
+            ident_here = one_value(rec.get(ident_f))
+        names = {ident_here} | ({one_value(rec.get(ident_f))} if ident_f else set())
+        erased_value = one_value(rec.get(erased_f)) if erased_f else None
+        if erased_f is not None and not is_absent(rec.get(erased_f)) and erased_value is None:
+            why.append("names several erased records, so it does not say which record it erases")
+        elif erased_f is None or is_absent(rec.get(erased_f)):
             why.append("names no erased record")
-        elif rec.get(erased_f) in names:
+        elif erased_value in names:
             why.append("names itself, so it would exclude itself from the verification it authorizes")
-        elif declared and rec.get(erased_f) not in declared:
-            why.append("names %s, which the export does not declare, so it excludes nothing" % rec.get(erased_f))
+        elif declared and erased_value not in declared:
+            why.append("names %s, which the export does not declare, so it excludes nothing" % erased_value)
+        policy_value = one_value(rec.get(policy_f)) if policy_f else None
         if policy_f is None:
             why.append("the map binds no field to Erasure.policy")
         elif is_absent(rec.get(policy_f)):
             why.append("names no Policy")
+        elif policy_value is None:
+            why.append("names several Policies, so it does not say under which policy it was issued")
         elif not policies:
-            why.append("names Policy %s, but the export declares no Policy records to check it against" % rec.get(policy_f))
-        elif rec.get(policy_f) not in policies:
-            why.append("names Policy %s, which the export does not declare" % rec.get(policy_f))
+            why.append("names Policy %s, but the export declares no Policy records to check it against" % policy_value)
+        elif policy_value not in policies:
+            why.append("names Policy %s, which the export does not declare" % policy_value)
         if actor_f is None:
             why.append("the map binds no field to Erasure.actor")
         elif is_absent(rec.get(actor_f)):
@@ -1290,7 +1426,7 @@ def erasure_records(r):
         # namespace. Keying it by the namespace of the erasures collection let an erasure record
         # stored in one scope excise a record that merely shares its key in another, and content
         # addressing makes exactly that pair: the same content in two systems is the same key
-        named = rec.get(erased_f) if erased_f else None
+        named = erased_value
         spaces = {(s, sy) for s, sy, i in r.identities() if i == named} if named else set()
         if len(spaces) > 1:
             why.append("names %s, an identity the export declares in %d namespaces, so it does not say which record "
@@ -1333,12 +1469,33 @@ def erasure_incomplete(r, subject, path, rec, demonstration):
                    "calls its creation time holds something else" % (str(rec.get(created))[:40], created))
     if is_absent(rec.get(creator)):
         why.append("carries no creator")
+    elif not isinstance(rec.get(creator), (str, int, float)) or len(str(rec.get(creator))) > 120:
+        # the creator had no readability check at all, so a map row pointed it at the field still
+        # holding the record's content and the content counted as preserved metadata
+        why.append("carries %r under %s, which is not a name this tool can read, so the field the map calls "
+                   "its creator holds something else" % (str(rec.get(creator))[:40], creator))
     if is_absent(rec.get(demonstration)):
         why.append("carries no demonstration of integrity")
     preserved = {name for name in (r.identity_field(path), demonstration, created, creator) if name}
+    # the identity may be the demonstration (that is what content addressing means), but a creation
+    # time or a creator sharing a field with anything else is a map hiding content in a slot this
+    # check already trusts
+    for name, other in ((created, "creation time"), (creator, "creator")):
+        twins = [label for field, label in ((r.identity_field(path), "identity"), (demonstration, "demonstration"),
+                                            (created, "creation time"), (creator, "creator"))
+                 if field == name and label != other]
+        if twins:
+            why.append("is preserved through one field the map binds to both its %s and its %s (%s), so one of "
+                       "them holds something the Deleted state does not preserve" % (other, twins[0], name))
     remaining = sorted(k for k, v in rec.items() if k not in preserved and not is_absent(v))
     if remaining:
         why.append("still carries content under %s, so nothing was made irrecoverable" % ", ".join(remaining[:3]))
+    # what Retention.md preserves is an identity, a time, a name and a demonstration: four scalars.
+    # Checking the top-level keys only let the whole tampered record live inside one of them
+    nested = sorted(k for k in preserved if isinstance(rec.get(k), (dict, list)))
+    if nested:
+        why.append("carries a nested value under %s, where the Deleted state preserves a scalar, so content "
+                   "survives inside a field this check would otherwise trust" % ", ".join(nested[:3]))
     return why
 
 
@@ -1401,10 +1558,15 @@ def integrity(test, text, r):
     if bad:
         return "Fail", ("%d of %d %s record(s) fail their demonstration: %s%s"
                         % (len(bad), len(records), subject, "; ".join(bad[:3]), ignored_note))
-    if skipped and len(records) - skipped == 0:
-        return None, ("every %s record in the export (%d) is named by an erasure record, so no demonstration was "
-                      "verified; the exclusion is granted by records the claimant writes, and a reviewer decides "
-                      "whether the erasures are genuine" % (subject, len(records)))
+    if skipped:
+        # the exclusion rests on records and map rows the claimant writes: which field holds the
+        # creation time, which holds the creator, which record was erased. Every laundering path
+        # round 5 found ends here, so a Test that excluded anything reports what it verified and
+        # leaves the exclusion to a reviewer rather than passing on it
+        return None, ("%d of %d %s record(s) verified; %d excluded as `Memory/Retention.md`'s Deleted state "
+                      "provides, on the strength of erasure records and map rows the claimant writes, so a "
+                      "reviewer decides whether the erasures are genuine%s"
+                      % (len(records) - skipped, len(records), subject, skipped, ignored_note))
     note = "" if not skipped else ", %d erased record(s) excluded as Retention.md's Deleted state provides" % skipped
     note += ignored_note
     if method == SELF_CONTAINED:
@@ -1514,7 +1676,9 @@ def readable_time(value):
     if not isinstance(value, str):
         return False
     value = value.strip()
-    m = re.match(r"^(\d{4}-\d{2}-\d{2})[T ](\d{2}):(\d{2})(:(\d{2}))?", value)
+    # anchored at both ends: prefix-matching accepted the whole record content with a timestamp
+    # written in front of it, which is the hole this function was added to close
+    m = re.fullmatch(r"(\d{4}-\d{2}-\d{2})[T ](\d{2}):(\d{2})(:(\d{2})(\.\d+)?)?\s*(Z|[+-]\d{2}:?\d{2})?", value)
     if m:
         return readable_date(m.group(1)) and int(m.group(2)) < 24 and int(m.group(3)) < 60
     return readable_date(value)
@@ -1536,6 +1700,16 @@ def review_rows(path):
                          % (path, raw.count("<!--"), raw.count("-->")))
     # comments are removed as spans, so a row that merely mentions `<!--` in a cell is still a row;
     # testing the line for the marker dropped that row, and any row below an opener, without a word
+    hidden = [line.strip() for span in re.findall(r"<!--.*?-->", raw, flags=re.S)
+              for line in span.splitlines()
+              if line.strip().startswith("|") and len(line.strip().strip("|").split("|")) == 5
+              and not set("".join(line.strip().strip("|").split("|"))) <= set("-: ")]
+    if hidden:
+        # a comment opening inside one row's Reason cell and closing after a later row removed the
+        # rows between them, Review Fails included, with the markers balanced and nothing printed
+        raise SystemExit("%s hides %d judgment-shaped row(s) inside an HTML comment (%s); a judgment this tool "
+                         "cannot see is a judgment nobody recorded"
+                         % (path, len(hidden), hidden[0][:60]))
     text = re.sub(r"<!--.*?-->", " ", raw, flags=re.S)
     headers, rows, dropped = 0, [], 0
     fenced = False
@@ -1578,7 +1752,10 @@ def recorded_against(path):
     m = re.search(r"(?m)^\*\*Recorded against:\*\*(.+)$", text)
     if not m:
         return None
-    return {k: v for k, v in re.findall(r"\b(model|map|statement)\s+`?([0-9a-f]{8,64})`?", m.group(1))}
+    # every name-and-digest pair on the line, not the three this tool knows: a record naming more
+    # than three had the extra bindings silently dropped while the report said its inputs were
+    # verified, and the extra digests could be anything at all
+    return {k.lower(): v for k, v in re.findall(r"\b([A-Za-z][A-Za-z ]{2,30}?)\s+`?([0-9a-f]{8,64})`?", m.group(1))}
 
 
 def load_reviews(path, known_aliases):
@@ -1676,40 +1853,22 @@ def alias_revision():
 # which Section 3 makes Not Applicable; "-"; and a sentence declaring the very violation the
 # clauses forbid. A Declaration Test reads a declaration, so what it reads has to be there.
 ATTESTATIONS = (
-    ("that compatibility with the core language is preserved", ("compatib",)),
-    ("that normative semantics are unchanged", ("semantic",)),
-    ("that the extension is clearly identifiable", ("identifiab", "identified", "identification", "identify")),
-    ("that the extension is fully documented", ("document",)),
+    ("that compatibility with the core language is preserved", "compatibility"),
+    ("that normative semantics are unchanged", "semantics"),
+    ("that the extension is clearly identifiable", "identifiability"),
+    ("that the extension is fully documented", "documentation"),
 )
-PRESERVED = ("not invalidat", "preserv", "unaffect", "intact", "unchanged")
-# a keyword is not an assertion: "compatibility with the core language is NOT preserved" carries
-# every marker the four attestations look for and attests the opposite of each one
-DENIALS = ("not ", "n't", "no longer", "never", "without", "violat", "break", "broke", "fail",
-           "cannot", "can not", "except", "unless", "invalidat", "incompatib", "undocumented",
-           "unidentifi", "changes the", "changed the", "altered")
-# idioms that carry a negative word and assert the thing anyway. They are removed from a clause
-# before the denials are looked for, so "conformance is not invalidated" attests and
-# "compatibility is not preserved" still does not.
-AFFIRMATIVE = ("not invalidat", "not altered", "not changed", "not broken", "not affected",
-               "without change", "without alteration", "without modification")
+# Chapter 8 imposes four attestations on an extension, and Section 5 of the suite reads each from
+# its own field of the Conformance Statement, whose value is `yes` and nothing else. Reading them
+# out of a sentence by keyword polarity was a losing game twice over: every marker the four look
+# for appears verbatim in a sentence denying them, and a qualification outside a fixed blacklist
+# ("preserved only in part", "clearly identifiable in name only") read as an assertion.
+ATTESTED = ("yes", "attested", "confirmed")
 
 
-def attests(text, markers):
-    """Whether some clause of `text` carries one of `markers` and denies nothing.
-
-    A clause is what a semicolon, a comma or a full stop separates: an attestation is read from the
-    clause that makes it, so a denial elsewhere in the sentence does not disqualify the rest, and a
-    denial inside the clause disqualifies that one. A keyword is not an assertion: every marker the
-    four attestations look for appears verbatim in a sentence that attests the opposite."""
-    for clause in re.split(r"[;,.]", text.lower()):
-        if not any(m in clause for m in markers):
-            continue
-        rest = clause
-        for phrase in AFFIRMATIVE:
-            rest = rest.replace(phrase, " ")
-        if not any(d in rest for d in DENIALS):
-            return True
-    return False
+def attested(statement, key):
+    """Whether the Conformance Statement attests `key` in the closed vocabulary Section 5 fixes."""
+    return (statement.get("extension attestation %s" % key) or "").strip().strip(".").lower() in ATTESTED
 
 
 # the clause Chapter 8 states about claiming conformance at all. Its outcome is the run's own
@@ -1732,21 +1891,21 @@ def declaration(clause, statement):
         if is_absent(declared):
             return ("Not Applicable", "the Conformance Statement declares no extension (%r), so what Chapter 8 "
                                       "imposes on extensions applies to nothing in it" % declared)
-        attested = (statement.get("extension attestations") or "").lower()
         if "invalidate" in low:
-            if not attests(attested, ("conformance",)) or not attests(attested, PRESERVED):
-                return "Fail", ("the Conformance Statement declares extension(s) (%s) and does not attest, in a field "
-                                "`Extension attestations`, that conformance with the core specification is not "
-                                "invalidated" % declared[:60])
+            if not attested(statement, "conformance"):
+                return "Fail", ("the Conformance Statement declares extension(s) (%s) and does not carry "
+                                "`Extension attestation conformance: yes`, the attestation that conformance with "
+                                "the core specification is not invalidated" % declared[:60])
             return "Pass", ("extensions declared (%s), attested not to invalidate conformance with the core "
                             "specification" % declared[:60])
-        missing = [name for name, markers in ATTESTATIONS if not attests(attested, markers)]
+        missing = [(name, key) for name, key in ATTESTATIONS if not attested(statement, key)]
         if missing:
             return "Fail", ("the Conformance Statement declares extension(s) (%s) and attests %d of the four things "
-                            "Chapter 8 imposes on them, in a field `Extension attestations`: it does not attest %s"
-                            % (declared[:60], 4 - len(missing), "; ".join(missing)))
-        return "Pass", ("extensions declared (%s), with the four attestations Chapter 8 imposes: %s"
-                        % (declared[:60], attested[:80]))
+                            "Chapter 8 imposes on them: it does not carry %s"
+                            % (declared[:60], len(ATTESTATIONS) - len(missing),
+                               "; ".join("`Extension attestation %s: yes` (%s)" % (key, name) for name, key in missing)))
+        return "Pass", ("extensions declared (%s), with the four attestations Chapter 8 imposes, each carried in "
+                        "its own field" % declared[:60])
     if "shall not claim conformance" in low:
         # decided after the tally, in main(); left pending here it blocked establishment forever and
         # a reviewer could Review Pass it in the same run that recorded a mandatory Fail
@@ -1811,14 +1970,19 @@ def main(argv):
     declared, binding = ({}, "")
     if a.reviews:
         declared = recorded_against(a.reviews)
-        actual = {"model": file_digest(a.model), "map": file_digest(a.map), "statement": file_digest(a.statement)}
+        # the register decides what each Statement says, so a judgment recorded against another
+        # register is a judgment about another sentence; the report digested it and compared nothing
+        actual = {"model": file_digest(a.model), "map": file_digest(a.map), "statement": file_digest(a.statement),
+                  "register": file_digest(REGISTER)}
         if declared is not None and sorted(declared) != sorted(actual):
             # the run compared the keys the line happened to name, so a record naming one digest was
             # accepted against any map and any Conformance Statement while the report printed that
             # all three were verified. Section 3 fixes the grammar; a partial line is refused
             raise SystemExit("%s says it was recorded against %s; Section 3 of `Conformance-Test-Suite.md` writes "
-                             "that line as `model <digest>, map <digest>, statement <digest>`, and a record that "
-                             "names fewer binds its judgments to less than the export they were made against"
+                             "that line as `model <digest>, map <digest>, statement <digest>, register <digest>`, "
+                             "and a record that names fewer binds its judgments to less than the export and the "
+                             "Statements they were made against, while one that names more declares a binding "
+                             "this tool cannot verify"
                              % (a.reviews, ", ".join(sorted(declared)) or "nothing this tool can read"))
         if declared is not None:
             wrong = [k for k, v in declared.items() if not actual[k].startswith(v) and not v.startswith(actual[k])]
@@ -1826,8 +1990,8 @@ def main(argv):
                 raise SystemExit("%s says it was recorded against %s %s, and this run read %s; a judgment recorded "
                                  "against another export is a judgment about something else"
                                  % (a.reviews, wrong[0], declared[wrong[0]], actual[wrong[0]]))
-            binding = ("The record declares the inputs it was made against and they are the three above, which this "
-                       "run verified.")
+            binding = ("The record declares the model, the map, the Conformance Statement and the Requirement "
+                       "Register it was made against, and they are the four this run read.")
         else:
             binding = ("The record declares no inputs, so nothing ties its judgments to this export beyond the word "
                        "of whoever published them (`AO-093`).")
@@ -1974,10 +2138,13 @@ def main(argv):
                      "this is an observation and not a Test outcome.")
     else:
         granted = [e for e in erasures if not e[2]]
-        lines.append("%d erasure record(s); %d grant the exclusion `Memory/Retention.md`'s Deleted state provides, "
-                     "naming a Policy the export declares and an actor. The records the others name were verified "
-                     "like any other. `Memory/Retention.md` is outside the requirement set, so this is an observation "
-                     "and not a Test outcome." % (len(erasures), len(granted)))
+        lines.append("%d erasure record(s); %d are well formed in the sense `Memory/Retention.md` requires, naming "
+                     "a Policy the export declares, an actor, and one record the export declares. The records the "
+                     "others name were verified like any other. What is not checked: Retention.md also requires the "
+                     "erasure to be recorded as a Memory Record, and no Test reaches the erasures collection itself, "
+                     "so an erasure record carries no demonstration of its own here (`AO-094`). `Memory/Retention.md` "
+                     "is outside the requirement set, so this is an observation and not a Test outcome."
+                     % (len(erasures), len(granted)))
         lines.append("")
         listed = sorted(erasures, key=lambda e: (bool(e[2]), str(e[0])))
         for ident, erased, why, _ in listed[:50]:

@@ -8,13 +8,13 @@
 
 **Model:** `docs/Examples/Conformance/model.json`  **Representation Map:** `docs/Examples/Conformance/representation-map.md`
 
-**Inputs, by content:** model `066a4ba34e504aee`, map `bb6d9b8f2e25090e`, Conformance Statement `cf478add0bddcc36`, Requirement Register `e09cdd67d62d7951`, Alias File `44fcbf6a2466d9fe`, Test Catalogue `575a6c26c33d57eb` (SHA-256 of each file as read). The last three decide which Statements exist and which procedure each one gets, so a report that named only the first three did not say what produced its outcomes. The record declares the inputs it was made against and they are the three above, which this run verified.
+**Inputs, by content:** model `066a4ba34e504aee`, map `bb6d9b8f2e25090e`, Conformance Statement `cf478add0bddcc36`, Requirement Register `e09cdd67d62d7951`, Alias File `44fcbf6a2466d9fe`, Test Catalogue `deda54f26db781a0` (SHA-256 of each file as read). The last three decide which Statements exist and which procedure each one gets, so a report that named only the first three did not say what produced its outcomes. The record declares the model, the map, the Conformance Statement and the Requirement Register it was made against, and they are the four this run read.
 
-**Read from:** the checkout at `acf176c, with uncommitted changes`, whose `Governance/Publication-Manifest.md` names Release v1.4.0 at commit `73d73b95e10ebc808554985afe89466316273f45` as its latest. The run reads the working tree, not that commit: where the two differ, the digests above are what was read. Requirement Register: 335 Statements. Alias File revision: 335 aliases, last appended 17 September 2026.
+**Read from:** the checkout at `fb481f9, with uncommitted changes`, whose `Governance/Publication-Manifest.md` names Release v1.4.0 at commit `73d73b95e10ebc808554985afe89466316273f45` as its latest. The run reads the working tree, not that commit: where the two differ, the digests above are what was read. Requirement Register: 335 Statements. Alias File revision: 335 aliases, last appended 17 September 2026.
 
 **Published by:** the party that ran the suite. A report published by the claimant is self-validation; `Conformance-Test-Suite.md` Section 4 says the suite does not tell the two apart and the publisher does.
 
-**Reviewer Record:** `docs/Examples/Conformance/reviewer-record.md` (`364f8e529400bf69`), 3 judgment(s) by Example reviewer (first party). Whether a reviewer is independent of the claimant is a fact about the reviewer, not something this tool can read.
+**Reviewer Record:** `docs/Examples/Conformance/reviewer-record.md` (`d2ef6b3be46bc87d`), 3 judgment(s) by Example reviewer (first party). Whether a reviewer is independent of the claimant is a fact about the reviewer, not something this tool can read.
 
 ---
 

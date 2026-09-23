@@ -1842,7 +1842,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Resolved by the change that records this entry, within `CAND-007` Section 3: repository-scope publication metadata, no Core concept touched. `publication/` now holds the canonical copy of each machine-facing file the site serves and nothing here generates, `publication/README.md` names the published path for each, and `tools/site/published_source_parity.py` compares the served bytes with the source and lints the source for the defect that started this. The lint is a CI job because it needs no network; the comparison is not, for the reason `publication_health.py` is not. Only `llms.txt` qualifies today, and the README states the rule for admitting another file.
 
-**Status:** Closed. The gap `Publication-Model.md` records for the Publication Engine as a whole is unchanged and stays open there: this entry covers the files the Engine never generated.
+**Status:** Closed. The gap `Publication-Model.md` records for the Publication Engine as a whole is unchanged and stays open there: this entry covers the files the Engine never generated. **Postscript, 23 September 2026.** Round 5 of the all-packages test read the closure against the site: `/discovery.json`, `/resolve.json`, `/release.json`, `/.well-known/ocom.json`, `/graph.jsonld` and `/robots.txt` are machine-facing files this repository neither generates nor sources, and the sentence "Only llms.txt qualifies today" was a statement about what had been admitted rather than about what qualifies. The Status is the Chief Architect's to move; what is recorded here is that five further files meet the admission rule `publication/README.md` states and are not in `publication/`.
 
 **Architect Response:** Chief Architect, 19 September 2026: the directory, the rule and the checker are adopted as drafted.
 
@@ -2052,6 +2052,26 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-094
+
+**Title:** An Erasure Record Grants an Exclusion From an Integrity Test and Is Itself in No Test
+
+**Date observed:** 23 September 2026
+
+**Description:** Surfaced by round 5 of the all-packages test. `Memory/Retention.md`'s Deleted state requires an implementation to "record the erasure as a new Memory Record naming what was erased and under which policy", and justifies the gate `AO-085` closed by saying the exclusion is then "granted only by a record that can itself be checked". What the suite checks of an erasure record is that it names a Policy the export declares, an actor, and one record the export declares in one namespace. It does not check that the erasure record is a Memory Record: no creation time, no creator, no Layer, no demonstration of integrity, and no Integrity Test reaches the erasures collection, because the requirement set contains no Statement about erasure records. The record that authorizes skipping a verification is the one record in the export that nothing verifies.
+
+**Impact:** An implementation that erases a record and writes an erasure record can alter the erasure record afterwards, and nothing in a report would differ. The exclusion is as trustworthy as an unverified record, which is weaker than the sentence in `Memory/Retention.md` that justifies it. The report now says so where it lists erasure records rather than leaving the reader to infer it.
+
+**Recommendation:** Record. The closure is one of two: either the Representation Map binds `Erasure.creation time`, `Erasure.creator` and `Erasure.integrity` and the Integrity engine verifies the erasures collection like any other Memory type, which is a tooling change inside `CAND-024`'s rules; or `Memory/Retention.md`'s justification is narrowed to what it can support, which is a canonical text change and therefore a Decision. The first is preferable because it makes the sentence true rather than smaller.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2).
+
+**Architect Response:** *(pending)*
+
+**Related:** `AO-085`, `CAND-024`, `Memory/Retention.md`, `Governance/Conformance-Test-Suite.md` Section 3, `tools/conformance/validate.py`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -2115,3 +2135,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 22 September 2026 | Added AO-092 (an obligation written as a table row is in no register, catalogue or Test) and AO-093 (a reviewer's judgment is bound to its export by the report alone), both from the all-packages test of 22 September 2026, record only. |
 | 0.1 | 22 September 2026 | AO-033: the Terminology half recorded as closed by `EPIC-D`; the quoted sentence had been replaced on 16 September 2026 and the entry still read as if it stood. |
 | 0.1 | 23 September 2026 | AO-085: "names neither" restated as "does not name both" wherever this entry states the rule, matching `Memory/Retention.md` and the suite. |
+| 0.1 | 23 September 2026 | Added AO-094 (an erasure record grants an exclusion from an Integrity Test and is itself in no Test), from round 5 of the all-packages test; AO-083 carries a postscript naming five further machine-facing files the site serves and this repository does not source, and AO-087's claim that the requirement set takes no Statement from `Lifecycles/` is corrected to the eight it takes. |

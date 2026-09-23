@@ -285,7 +285,11 @@ rather than an inline script: round 4 of the all-packages test found the
 inline version passing on a repository whose files state the wrong counts in
 a wording it could not read, because a file that yielded no readable line
 was treated as agreeing. The tool fails on such a file and has negative
-tests beside the other tools.
+tests beside the other tools. Round 5 found those tests passing with the
+tool removed, because the fixture never carried `README.md` and the run
+failed on its absence; the fixture carries the repository-root files the
+tools read, and each stating document is now checked for the registers it
+is expected to state rather than for any readable range.
 
 The `Manifest commits must resolve` step of the same job now reads every
 `**Commit**` cell rather than only those already shaped like a hash, and
