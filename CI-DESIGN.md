@@ -280,6 +280,12 @@ them the machine-facing `publication/llms.txt` the site serves, against the
 registers themselves. All three said 82 observations up to AO-083 for two
 days after the registers reached 92 up to AO-093, including on the live
 site, and nothing compared them. It is a step, not a fourteenth check.
+Since 23 September 2026 the step runs `tools/governance/register_counts.py`
+rather than an inline script: round 4 of the all-packages test found the
+inline version passing on a repository whose files state the wrong counts in
+a wording it could not read, because a file that yielded no readable line
+was treated as agreeing. The tool fails on such a file and has negative
+tests beside the other tools.
 
 The `Manifest commits must resolve` step of the same job now reads every
 `**Commit**` cell rather than only those already shaped like a hash, and

@@ -88,6 +88,7 @@ that needs it fails rather than passing over an absence.
 | Contract | collection | `contracts` |
 | Constraint | collection | `constraints` |
 | Registry | collection | `registries` |
+| Attribute | collection | `entities[].attributes` |
 | Audit record | collection | `audit_records` |
 | Evidence record | collection | `evidence_records` |
 | Organization | collection | *(not represented: this export models one branch's lending service and carries no Organization records)* |
@@ -111,6 +112,10 @@ that needs it fails rather than passing over an absence.
 | Entity.owner | field | `owner` |
 | Entity.ownership | field | `owner` |
 | Entity.attributes | field | `attributes` |
+| Attribute.name | field | `name` |
+| Attribute.meaning | field | `meaning` |
+| Attribute.data type | field | `data_type` |
+| Attribute.constraints | field | `constraints` |
 | Entity.metadata | field | `metadata` |
 | Entity.classification | field | `classification` |
 | Entity.lifecycle | field | `lifecycle` |
@@ -230,4 +235,5 @@ that needs it fails rather than passing over an absence.
 | 0.1 | 20 September 2026 | First map, written for `model.json` so the Conformance Test Suite can be run end to end against a real file. |
 | 0.1 | 22 September 2026 | Row `Identity.scope` of kind `declaration`, declaring Organization as the scope of every identity this export carries, per `CAND-026`; the kind explained under How to Read a Row. |
 | 0.1 | 22 September 2026 | How to Read a Row: declarations may be keyed by collection path, and the suite keys identity by the declared scope and system. |
+| 0.1 | 23 September 2026 | The Attributes this export nests inside its Entities are listed (`entities[].attributes`) with their four fields: they were represented and named by no row, and a Statement whose subject the map lists nowhere used to be reported as unreadable rather than unrepresented. Round 4 of the all-packages test. |
 | 0.1 | 23 September 2026 | How to Read a Row: the rows that declare the accountable Ownership Type, and the rows that declare an erasure record and what the exclusion requires of the record one names, and what a collection the map does not list costs. Round 3 of the all-packages test found that vocabulary written down nowhere outside the validator. The rows themselves are unchanged: this export erases nothing. |

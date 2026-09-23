@@ -176,13 +176,28 @@ def file_at(rev, relative):
     return done.stdout if done.returncode == 0 else None
 
 
+def commit_of(rev):
+    """The commit `rev` resolves to, or None."""
+    try:
+        done = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--verify", "%s^{commit}" % rev],
+                              capture_output=True, text=True)
+    except OSError:
+        return None
+    return done.stdout.strip() if done.returncode == 0 else None
+
+
 def base_revisions():
-    """The revisions to compare the Alias File against, most meaningful first."""
+    """The revisions to compare the Alias File against, most meaningful first.
+
+    HEAD was in this list, and on a push to the default branch every candidate resolved to the
+    commit under test, so the comparison was the file against itself: it reported zero edits and
+    the "compared against nothing" branch was unreachable in any checkout. A revision that is the
+    commit under test is not a base, and `resolved_base` refuses it."""
     out = []
     base = os.environ.get("GITHUB_BASE_REF")
     if base:
         out += ["origin/" + base, base]
-    return out + ["origin/main", "main", "HEAD"]
+    return out + ["origin/main", "main"]
 
 
 # Only the Disposition may change after a row is committed, and only into a value the grammar
@@ -203,10 +218,19 @@ def append_only_failures(revisions):
     file's history, so history is what decides it.
     """
     relative = str(ALIASES.relative_to(REPO))
-    for rev in revisions:
+    head = commit_of("HEAD")
+    # a revision that is the commit under test can only show what is not committed yet: on a push
+    # to the default branch every candidate resolved to it, so the file was compared against itself
+    # and the check reported zero edits. It is used only when nothing else resolves, and it says so.
+    ordered = [rev for rev in revisions if commit_of(rev) != head or commit_of(rev) is None] \
+              + [rev for rev in revisions if commit_of(rev) is not None and commit_of(rev) == head]
+    for rev in ordered:
         text = file_at(rev, relative)
         if text is None:
             continue
+        if commit_of(rev) == head:
+            print("comparing against %s, which is the commit under test: this can only show edits that are not "
+                  "committed. Pass --against <the commit before this one> to check a push." % rev)
         before, now = alias_rows(text), alias_rows(ALIASES.read_text(encoding="utf-8"))
         failures = []
         for alias, cells in before.items():

@@ -247,37 +247,15 @@ jobs:
           fi
 
       - name: The records that count the registers agree with the registers
-        # Three documents state how many Architecture Observations and ADR Candidates exist, one of
-        # them the machine-facing llms.txt the site serves. All three said 82 and AO-083 for two days
-        # after the registers reached 92 and AO-093, and nothing compared them.
-        run: |
-          python3 - <<'PY'
-          import pathlib, re, sys
-          ao = pathlib.Path("docs/Governance/Architecture-Observations.md").read_text(encoding="utf-8")
-          cand = pathlib.Path("docs/Governance/ADR-Candidates.md").read_text(encoding="utf-8")
-          ao_ids = sorted(re.findall(r"(?m)^## (AO-\d+)", ao))
-          cand_ids = sorted(re.findall(r"(?m)^## (CAND-\d+)", cand))
-          facts = {"AO": (len(ao_ids), ao_ids[-1]), "CAND": (len(cand_ids), cand_ids[-1])}
-          fail = 0
-          for path in ("README.md", "publication/llms.txt", "docs/Governance/Evidence-Register.md"):
-              for lineno, line in enumerate(pathlib.Path(path).read_text(encoding="utf-8").splitlines(), 1):
-                  for prefix, label in (("AO", "Architecture Observation"), ("CAND", "ADR Candidate")):
-                      m = re.search(r"%s-001 to (%s-\d+)" % (prefix, prefix), line)
-                      if not m:
-                          continue
-                      count, last = facts[prefix]
-                      numbers = [int(n) for n in re.findall(r"(?<![\w-])(\d{1,4})(?![\w-])", line)]
-                      if m.group(1) != last:
-                          print("::error file=%s,line=%d::%s names %s as the last %s; the register holds %s"
-                                % (path, lineno, path, m.group(1), label, last))
-                          fail = 1
-                      if count not in numbers:
-                          print("::error file=%s,line=%d::%s states no count matching the %d %ss the register holds"
-                                % (path, lineno, path, count, label))
-                          fail = 1
-          print("registers: %d observations to %s, %d candidates to %s" % (facts["AO"] + facts["CAND"]))
-          sys.exit(fail)
-          PY
+        # Three documents state how many Architecture Observations and ADR
+        # Candidates exist, one of them the machine-facing llms.txt the site
+        # serves. All three said 82 and AO-083 for two days after the registers
+        # reached 92 and AO-093, and nothing compared them. The check lived
+        # here as an inline script with no test of its own, and round 4 of the
+        # all-packages test found it passing on a repository whose files state
+        # the wrong counts in a wording it could not read; it is a tool now,
+        # with negative tests beside the others.
+        run: python3 tools/governance/register_counts.py --check
 
       - name: Every document carries its metadata block and a revision table
         # Governance/Documentation-Standards.md requires Document ID, Status,
@@ -392,7 +370,15 @@ jobs:
         run: python3 tools/conformance/requirement_register.py --check
 
       - name: Every Statement has an alias, and no committed row was edited
-        run: python3 tools/conformance/requirement_register.py --check-aliases
+        # On a pull request the base is main and the tool finds it. On a push to
+        # main there is no base but the commit itself, which is the file
+        # compared against itself, so the push's own before-SHA is passed in.
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            python3 tools/conformance/requirement_register.py --check-aliases --against "${{ github.event.before }}"
+          else
+            python3 tools/conformance/requirement_register.py --check-aliases
+          fi
 
   principle-traceability:
     name: Principle traceability claims hold

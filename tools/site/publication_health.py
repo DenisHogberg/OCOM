@@ -59,6 +59,35 @@ def as_path(url):
     return u
 
 
+def looks_html(body):
+    head = body.lstrip()[:400].lower()
+    return head.startswith("<!doctype html") or head.startswith("<html") or "<html" in head
+
+
+def looks_json(body):
+    try:
+        json.loads(body)
+        return True
+    except Exception:
+        return False
+
+
+def looks_jsonld(body):
+    try:
+        return isinstance(json.loads(body), dict) and "@context" in json.loads(body)
+    except Exception:
+        return False
+
+
+def looks_markdown(body):
+    return bool(body.strip()) and not looks_html(body)
+
+
+# What a presence row requires of the body it finds. A row that asked only for a 200 asserted a
+# projection exists while the file behind it was any document at all.
+SHAPES = {"html": looks_html, "json": looks_json, "jsonld": looks_jsonld, "markdown": looks_markdown}
+
+
 class Site:
     """Fetches published files once each and remembers what was asked for."""
 
@@ -76,12 +105,20 @@ class Site:
             try:
                 req = urllib.request.Request(url, headers={"User-Agent": "ocom-publication-health/1.0 (+https://github.com/DenisHogberg/OCOM)"})
                 with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
-                    out = (r.status, r.read().decode("utf-8", "replace"))
+                    # a redirect is another file answering for this one: the rows below assert that
+                    # a projection is published at a path, and urlopen followed a 301 anywhere,
+                    # including to another host, and reported the result as this file
+                    if r.geturl() != url:
+                        out = (r.status, "", r.geturl())
+                        self.cache[path] = out
+                        time.sleep(self.pause)
+                        return out
+                    out = (r.status, r.read().decode("utf-8", "replace"), None)
                 self.cache[path] = out
                 time.sleep(self.pause)
                 return out
             except urllib.error.HTTPError as e:
-                out = (e.code, "")
+                out = (e.code, "", None)
                 self.cache[path] = out
                 time.sleep(self.pause)
                 return out
@@ -90,12 +127,20 @@ class Site:
                 time.sleep(1.5 * (attempt + 1))
         raise SystemExit("cannot reach %s after four attempts: %s" % (url, last))
 
-    def ok(self, path):
-        return self.raw(path)[0] == 200
+    def ok(self, path, shape=None):
+        """200, at this path rather than after a redirect, and a body of the shape asked for.
+
+        `ok` was status alone, so swapping a term's Markdown projection, JSON-LD alternate, HTML
+        page or api record for a completely different document left every presence row passing and
+        the projection-coverage figure at 100."""
+        code, body, redirect = self.raw(path)
+        if code != 200 or redirect:
+            return False
+        return SHAPES[shape](body) if shape else True
 
     def text(self, path):
-        code, body = self.raw(path)
-        return body if code == 200 else None
+        code, body, redirect = self.raw(path)
+        return body if code == 200 and not redirect else None
 
     def json(self, path):
         body = self.text(path)
@@ -145,14 +190,14 @@ def presence_rows(site, slugs, entries):
     """The rows that assert a file exists for every member of a published set."""
     rows = []
 
-    def every(name, rule, paths):
-        missing = [p for p in paths if not site.ok(p)]
+    def every(name, rule, paths, shape=None):
+        missing = [p for p in paths if not site.ok(p, shape)]
         rows.append(row(name, rule, len(paths), missing))
 
-    every("Core Vocabulary term pages", "Every term has an HTML page.", ["/vocabulary/%s" % s for s in slugs])
-    every("Core Vocabulary JSON records", "Every term has a canonical JSON record.", ["/vocabulary/%s.json" % s for s in slugs])
-    every("Core Vocabulary JSON-LD", "Every term has a standalone JSON-LD alternate.", ["/vocabulary/%s.jsonld" % s for s in slugs])
-    every("Core Vocabulary Markdown", "Every term has a Markdown projection.", ["/vocabulary/%s.md" % s for s in slugs])
+    every("Core Vocabulary term pages", "Every term has an HTML page.", ["/vocabulary/%s" % s for s in slugs], "html")
+    every("Core Vocabulary JSON records", "Every term has a canonical JSON record.", ["/vocabulary/%s.json" % s for s in slugs], "json")
+    every("Core Vocabulary JSON-LD", "Every term has a standalone JSON-LD alternate.", ["/vocabulary/%s.jsonld" % s for s in slugs], "jsonld")
+    every("Core Vocabulary Markdown", "Every term has a Markdown projection.", ["/vocabulary/%s.md" % s for s in slugs], "markdown")
 
     ids_by_target = {}
     for identifier, target in entries.items():
@@ -160,11 +205,11 @@ def presence_rows(site, slugs, entries):
     explain = []
     for s in slugs:
         explain += ["/explain/%s" % i for i in ids_by_target.get("/vocabulary/%s" % s, [])]
-    every("Explain records", "Every term resolves under all three of its identifiers.", explain)
+    every("Explain records", "Every term resolves under all three of its identifiers.", explain, "html")
 
-    every("API term records", "Every term has an api/v1 record.", ["/api/v1/term/%s" % s for s in slugs])
-    every("API neighbor records", "Every term has an api/v1 neighbors record.", ["/api/v1/neighbors/%s" % s for s in slugs])
-    every("Inspect pages", "Every term has an inspect view.", ["/inspect/%s" % s for s in slugs])
+    every("API term records", "Every term has an api/v1 record.", ["/api/v1/term/%s" % s for s in slugs], "json")
+    every("API neighbor records", "Every term has an api/v1 neighbors record.", ["/api/v1/neighbors/%s" % s for s in slugs], "json")
+    every("Inspect pages", "Every term has an inspect view.", ["/inspect/%s" % s for s in slugs], "html")
 
     comparisons = (site.json("/comparisons.json") or {}).get("comparisons", [])
     paths = []
