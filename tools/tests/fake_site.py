@@ -133,6 +133,15 @@ class Fixture:
         self.server.server_close()
 
     def publish(self, health, publication):
-        """Serve the two Observatory records, as the site publishes them."""
+        """Serve the two Observatory records and the two pages that render them, as the site does.
+        The pages exist here because the tool compares a rendering with its record since round 2 of
+        the all-packages test, where the live pages had drifted four counts from theirs."""
         self.files["/observatory/health.json"] = ("application/json", json.dumps(health))
         self.files["/observatory/publication-health.json"] = ("application/json", json.dumps(publication))
+        rows = "".join("<tr><td>%s</td><td>%d checked</td></tr>" % (r["name"], r["checked"])
+                       for r in publication.get("checks", []))
+        self.files["/observatory"] = ("text/html; charset=utf-8",
+                                      "<html><body><h2>Publication health</h2><table>%s</table></body></html>" % rows)
+        entries = len(json.loads(self.files["/resolve.json"][1]).get("entries", {})) if "/resolve.json" in self.files else 0
+        self.files["/resolve"] = ("text/html; charset=utf-8",
+                                  "<html><body><p>Identifiers %d</p></body></html>" % entries)

@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 September 2026
+**Last Updated:** 23 September 2026
 
 ---
 
@@ -1511,7 +1511,7 @@ It does not mandate hashing, signing, a ledger or any storage technology. It doe
 
 **Decision:** **Accountability is singular; responsibility is plural. An Entity has exactly one responsible Owner, the party accountable for it, which is what `Models/Entity.md` requires; that Ownership record carries the Ownership Type the organization declares as the accountable one. Further Ownership records of the other Ownership Types `Meta/Ownership.md` lists (Business, Operational, Technical, Data, Process, Product, AI, Custodian) may be assigned to the same Object, which is what Shared Ownership permits, and each of them assigns responsibilities and never accountability. The two documents describe one rule at two tiers, as `CAND-016` read Relationship: `Meta/` states what an Object may carry and `Models/` states what an Entity must have exactly one of.**
 
-Integration, when decided: one sentence in `Models/Entity.md` after "Every Entity shall have one responsible owner": "Further Ownership records may assign responsibilities to other parties under `Meta/Ownership.md`'s Shared Ownership; they never assign accountability, which rests with the one responsible owner." One sentence in `Meta/Ownership.md` Shared Ownership: "Where the Object is an Entity, exactly one of its Owners is the responsible owner `Models/Entity.md` requires, and shared ownership assigns responsibilities to the others." `Test-Catalogue.md` regenerated; the Presence Test for `REQ-MODELS-ENTITY-004` gains a cardinality leg, exactly one Ownership record of the accountable Type per Entity, so that a second accountable owner fails a Test that today passes on presence alone.
+Integration, when decided: one sentence in `Models/Entity.md` after "Every Entity shall have one responsible owner": "Further Ownership records assign responsibilities to other parties under `Meta/Ownership.md`'s Shared Ownership; they never assign accountability, which rests with the one responsible owner." One sentence in `Meta/Ownership.md` Shared Ownership: "Where the Object is an Entity, exactly one of its Owners is the responsible owner `Models/Entity.md` requires, and shared ownership assigns responsibilities to the others." `Test-Catalogue.md` regenerated; the Presence Test for `REQ-MODELS-ENTITY-004` gains a cardinality leg, exactly one Ownership record of the accountable Type per Entity, so that a second accountable owner fails a Test that today passes on presence alone.
 
 ### Rationale
 
@@ -1958,3 +1958,4 @@ It does not define closure or retroactivity. It does not close `AO-012`.
 | 0.1 | 22 September 2026 | Added CAND-029 (the Memory tier measured through Profile Conformance, as `CAND-002` defined it: tooling and an example declaration, no new level), CAND-030 (a scope is what an identity's assigner guarantees uniqueness within), CAND-031 (merge and split as Identity Resolution), CAND-032 (no precedence between Policies and Exceptions; the organization's rules decide and the outcome is recorded), CAND-033 (the kinds of Owner, Terminology restated) and CAND-034 (temporal boundaries not required for v1.0), each Open with a proposed Decision or disposition; CAND-008 carries a proposed disposition. All from the enterprise evaluation of 22 September 2026 and the observations it named. |
 | 0.1 | 22 September 2026 | CAND-025's Next Action: the count of Statements the catalogue's cardinality rule holds at Review corrected from eleven to four, which are named; found by the all-packages test of the same day. No Decision changed. |
 | 0.1 | 22 September 2026 | CAND-033 re-grounded: as filed it quoted a sentence `EPIC-D` removed from `Core/Terminology.md` on 16 September 2026 and proposed restating it, work already done. The quote and the Terminology half are withdrawn; the open question, which kinds of party may hold Ownership and whether an Owner is an Object, stands. Found by the all-packages test of the same day. |
+| 0.1 | 23 September 2026 | CAND-025's Integration line quotes the sentence as written into `Models/Entity.md` ("Further Ownership records assign"), not the draft's "may assign"; round 2 of the all-packages test found the record and the document quoting each other differently. No Decision changed. |

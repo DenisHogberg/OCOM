@@ -978,12 +978,12 @@ class Validator(unittest.TestCase):
             path.write_text("# Reviewer Record\n\n" + self.HEADER + good + "\n## Second thoughts\n\n" + self.HEADER + good, encoding="utf-8")
             code, printed, text = self.run_with_reviews(c.dir, path)
             self.assertNotEqual(code, 0, printed)
-            self.assertIn("carries 2 tables", printed)
+            self.assertIn("carries 2 headers", printed)
 
     def test_the_report_carries_what_section_4_says_a_report_carries(self):
         code, printed, text = self.run_with_reviews(ROOT, ROOT / self.REVIEWS)
         self.assertEqual(code, 0, printed)
-        for item in ("**Tested against:** Release", "commit `", "Requirement Register: 335 Statements",
+        for item in ("**Read from:** the checkout at", "Release v1.4.0", "Requirement Register: 335 Statements",
                      "Alias File revision:", "**Inputs, by content:**", "**Reviewer Record:**", "## Reviewers"):
             self.assertIn(item, text, item)
 
@@ -1170,7 +1170,9 @@ class Validator(unittest.TestCase):
                                     "from_state": None, "to_state": "Evaporated"})
             self.model_map(c, model)
             rows = self.outcomes(c.dir)
-            self.assertEqual(rows.get("REQ-MODELS-WORKFLOW-008"), "Fail", rows.get("REQ-MODELS-WORKFLOW-008"))
+            # the Event leg decides the Lifecycles Statement; REQ-MODELS-WORKFLOW-008 is about
+            # Workflow steps and is decided from the Workflow collection since round 2
+            self.assertEqual(rows.get("REQ-LIFECYCLES-003"), "Fail", rows.get("REQ-LIFECYCLES-003"))
             self.assertIn("a State the Lifecycle does not define", self.report_text(c.dir))
 
     def test_a_reference_inside_a_nested_object_is_resolved(self):
@@ -1180,6 +1182,131 @@ class Validator(unittest.TestCase):
                                                     provenance={"related_record": "AUD-NOWHERE"})
             self.model_map(c, model)
             self.assertIn("names AUD-NOWHERE, which the export does not declare", self.report_text(c.dir))
+
+    def test_a_stem_with_no_list_is_not_passed(self):
+        """combine([]) fell through to Pass, so a Statement that is a stem ending in a colon with no
+        list reported a mandatory Test as passed having run no procedure."""
+        sys.path.insert(0, str(ROOT / "tools" / "conformance"))
+        import importlib, validate as V
+        importlib.reload(V)
+        self.assertEqual(V.combine([], lambda p: (None, "x")), (None, "the Statement is a stem with no list, so no part of it could be run"))
+
+    def test_a_process_phrase_is_not_a_type_and_an_assignment_is(self):
+        """subject_of reads both ends of the subject phrase, so 'Every Ownership assignment shall
+        define:' resolves to Ownership, while 'Constraint governance shall define:' stays a process."""
+        sys.path.insert(0, str(ROOT / "tools" / "conformance"))
+        import importlib, validate as V
+        importlib.reload(V)
+        types = {"ownership": ["ownership"], "constraint": ["constraints"]}
+        self.assertEqual(V.subject_of("Every Ownership assignment shall define: Identifier;", types), "ownership")
+        self.assertIsNone(V.subject_of("Constraint governance shall define: ownership; approval;", types))
+
+    def test_a_declared_system_splits_the_namespace_only_under_external_system(self):
+        """One map row declaring a system under an Organization scope turned one namespace into two
+        and let a reused identity pass the no-reuse Invariant."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["capabilities"].append({"id": model["entities"][0]["id"], "name": "clash", "purpose": "probe"})
+            self.model_map(c, model, c.read("%s/representation-map.md" % self.EX)
+                           .replace("| Integrity.method |", "| Entity.identity system | declaration | `SAP` |\n"
+                                    "| Capability.identity system | declaration | `ServiceNow` |\n| Integrity.method |"))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-META-IDENTITY-008"), "Fail")
+
+    def test_the_reuse_invariant_compares_every_collection_that_carries_an_identity(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["ownership"].append(dict(model["ownership"][0]))      # a second record with the same id
+            self.model_map(c, model)
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-META-IDENTITY-008"), "Fail", rows.get("REQ-META-IDENTITY-008"))
+
+    def test_an_erasure_record_excludes_nothing_outside_the_memory_tier(self):
+        """Retention.md governs Memory Records; one erasure record used to exclude a tampered Event
+        from its Integrity Test and the report credited Retention.md for it."""
+        with Copy() as c:
+            sys.path.insert(0, str(c.dir / "tools" / "conformance"))
+            import importlib, validate as V
+            importlib.reload(V)
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            target = model["events"][0]["id"]
+            model["events"][0]["source"] = "tampered, and the digest no longer matches"
+            model["erasures"] = [{"id": "ERA-0001", "record": target, "policy": "POL-SUSPEND", "actor": "officer"}]
+            self.model_map(c, model)
+            self.map_erasures(c)
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-EVENT-010"), "Fail", rows)
+            self.assertIn("erasure record(s) naming", self.report_text(c.dir))
+
+    def test_a_workflow_statement_is_decided_from_workflow_steps(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["workflows"][0]["transitions"] = [{"entity": "LIB-000198", "from": "Available", "to": "Vaporized"}]
+            self.model_map(c, model)
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-WORKFLOW-008"), "Fail", rows.get("REQ-MODELS-WORKFLOW-008"))
+            self.assertIn("is not a Transition of", self.report_text(c.dir))
+
+    def test_a_workflow_whose_steps_the_map_cannot_find_is_pending(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for wf in model["workflows"]:
+                wf["steps"] = wf.pop("transitions")
+            self.model_map(c, model)
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-WORKFLOW-008"), "pending", rows.get("REQ-MODELS-WORKFLOW-008"))
+            self.assertIn("carry none under the field", self.report_text(c.dir))
+
+    def test_an_export_carrying_a_collection_the_map_does_not_list_fails_the_scope_rule(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["sap_partners"] = [{"id": "BP-1", "name": "one"}, {"id": "BP-2", "name": "two"}]
+            self.model_map(c, model)
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-META-IDENTITY-005"), "Fail", rows.get("REQ-META-IDENTITY-005"))
+            self.assertIn("the Representation Map does not list", self.report_text(c.dir))
+
+    def test_the_ownership_leg_is_pending_when_it_cannot_resolve_anything(self):
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            kept = [l for l in c.read(path).splitlines() if not l.startswith("| Ownership.owned object |")]
+            c.write(path, "\n".join(kept) + "\n")
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-ENTITY-004"), "pending", rows.get("REQ-MODELS-ENTITY-004"))
+            self.assertIn("binds no field to Ownership.owned object", self.report_text(c.dir))
+
+    def test_a_reviewer_record_row_after_a_blank_line_is_read(self):
+        """read_table stopped at the first non-row line, so every guard was disabled by one blank
+        line: unknown Tests, illegal outcomes and duplicate judgments all slipped through."""
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            good = "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | 22 September 2026 | examined the identifiers |\n"
+            bad = "| REQ-NOWHERE-001 | Review Pass | A. Reviewer | 22 September 2026 | a Test that does not exist |\n"
+            path.write_text("# Reviewer Record\n\n" + self.HEADER + good + "\n" + bad, encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertNotEqual(code, 0, printed)
+            self.assertIn("names a Test the catalogue does not carry", printed)
+
+    def test_a_reviewer_record_recorded_against_another_export_is_refused(self):
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["name"] = "changed after the reviewer read it"
+            self.model_map(c, model)
+            code, printed, text = self.run_with_reviews(c.dir, c.dir / self.REVIEWS)
+            self.assertNotEqual(code, 0, printed)
+            self.assertIn("recorded against", printed)
+
+    def test_a_judgment_keeps_the_mechanical_reason_it_replaced(self):
+        """A judgment used to overwrite the reason the procedure gave, hiding, for instance, that
+        the export models nothing the Statement is about."""
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# Reviewer Record\n\n" + self.HEADER +
+                            "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | 22 September 2026 | examined and met |\n",
+                            encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertEqual(code, 0, printed)
+            row = [l for l in text.splitlines() if l.startswith("| REQ-MODELS-ENTITY-003 |")][0]
+            self.assertIn("the procedure returned no outcome: awaiting a named reviewer", row)
 
     def test_the_scope_declaration_decides_the_identity_scope_rule(self):
         """CAND-026: REQ-META-IDENTITY-005 is read from the map's Identity.scope declaration."""
@@ -1355,7 +1482,7 @@ class SiteErrorHunt(unittest.TestCase):
         code, out = self.hunt(files)
         self.assertNotEqual(code, 0, out)
         self.assertIn("/b carries no <title>", out)
-        self.assertIn("/b carries robots noindex", out)
+        self.assertIn("/b asks not to be indexed", out)
         self.assertIn("/a: JSON-LD block 1 does not parse", out)
 
     def test_a_target_llms_or_discovery_names_that_is_gone_fails(self):
@@ -1402,14 +1529,21 @@ class PublicationHealth(unittest.TestCase):
     """Every case runs against the in-memory fixture; none of them touches the real site."""
 
     def healthy(self, site):
-        """Publish the records the tool itself computes, so the fixture starts consistent."""
-        out = tempfile.mkdtemp(prefix="ocom-health-")
-        code, text = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--write", out)
-        self.assertEqual(code, 0, text)
-        health = json.loads((pathlib.Path(out) / "observatory" / "health.json").read_text(encoding="utf-8"))
-        pub = json.loads((pathlib.Path(out) / "observatory" / "publication-health.json").read_text(encoding="utf-8"))
-        site.publish(health, pub)
-        shutil.rmtree(out, ignore_errors=True)
+        """Publish the records the tool computes, and the pages that render them, until the fixture
+        is consistent with itself. One pass is not enough since the tool compares a rendering with
+        its record: publishing the record changes what the next recomputation sees, exactly as a
+        deploy does on the real site."""
+        last = ""
+        for _ in range(4):
+            out = tempfile.mkdtemp(prefix="ocom-health-")
+            code, last = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--write", out)
+            health = json.loads((pathlib.Path(out) / "observatory" / "health.json").read_text(encoding="utf-8"))
+            pub = json.loads((pathlib.Path(out) / "observatory" / "publication-health.json").read_text(encoding="utf-8"))
+            site.publish(health, pub)
+            shutil.rmtree(out, ignore_errors=True)
+            if code == 0:
+                return health, pub
+        self.fail("the fixture never became self-consistent: %s" % last)
         return health, pub
 
     def test_healthy_fixture_passes(self):

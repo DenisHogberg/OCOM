@@ -1,6 +1,6 @@
 # Test Report
 
-**Run on:** 22 September 2026
+**Run on:** 23 September 2026
 
 **Implementation:** OCOM reference export, library lending example
 
@@ -8,13 +8,13 @@
 
 **Model:** `docs/Examples/Conformance/model.json`  **Representation Map:** `docs/Examples/Conformance/representation-map.md`
 
-**Inputs, by content:** model `066a4ba34e504aee`, map `394fc55a2e07d3dc`, Conformance Statement `cf478add0bddcc36` (SHA-256 of each file as read). A Review outcome below was recorded against these three; a judgment carried to a different export is a judgment about something else.
+**Inputs, by content:** model `066a4ba34e504aee`, map `394fc55a2e07d3dc`, Conformance Statement `cf478add0bddcc36`, Requirement Register `e09cdd67d62d7951`, Alias File `44fcbf6a2466d9fe`, Test Catalogue `575a6c26c33d57eb` (SHA-256 of each file as read). The last three decide which Statements exist and which procedure each one gets, so a report that named only the first three did not say what produced its outcomes. The record declares the inputs it was made against and they are the three above, which this run verified.
 
-**Tested against:** Release v1.4.0, commit `73d73b95e10ebc808554985afe89466316273f45`, per `Governance/Publication-Manifest.md`. Requirement Register: 335 Statements. Alias File revision: 335 aliases, last appended 17 September 2026.
+**Read from:** the checkout at `6b1efc3, with uncommitted changes`, whose `Governance/Publication-Manifest.md` names Release v1.4.0 at commit `73d73b95e10ebc808554985afe89466316273f45` as its latest. The run reads the working tree, not that commit: where the two differ, the digests above are what was read. Requirement Register: 335 Statements. Alias File revision: 335 aliases, last appended 17 September 2026.
 
 **Published by:** the party that ran the suite. A report published by the claimant is self-validation; `Conformance-Test-Suite.md` Section 4 says the suite does not tell the two apart and the publisher does.
 
-**Reviewer Record:** `docs/Examples/Conformance/reviewer-record.md`, 3 judgment(s) by Example reviewer (first party). Whether a reviewer is independent of the claimant is a fact about the reviewer, not something this tool can read.
+**Reviewer Record:** `docs/Examples/Conformance/reviewer-record.md` (`d6dabc9aa192da45`), 3 judgment(s) by Example reviewer (first party). Whether a reviewer is independent of the claimant is a fact about the reviewer, not something this tool can read.
 
 ---
 
@@ -23,14 +23,14 @@
 | | Count |
 |---|---|
 | Mandatory Tests | 187 |
-| Pass | 48 |
+| Pass | 49 |
 | Fail | 0 |
 | Review Pass | 3 |
 | Review Fail | 0 |
-| Awaiting a reviewer or evidence the export does not carry | 136 |
+| Awaiting a reviewer or evidence the export does not carry | 135 |
 | Not Applicable, dispositioned Descriptive | 1 |
 
-**Core Conformance: not established.** Section 3 establishes it when every mandatory Test is Pass or Review Pass. 0 mandatory Test(s) fail, 0 carry a Review Fail, and 136 await a reviewer or evidence this export does not carry.
+**Core Conformance: not established.** Section 3 establishes it when every mandatory Test is Pass or Review Pass. 0 mandatory Test(s) fail, 0 carry a Review Fail, and 135 await a reviewer or evidence this export does not carry.
 
 ---
 
@@ -69,7 +69,7 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-META-IDENTITY-003 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-IDENTITY-005 | `Meta/Identity.md` | Declaration | mandatory | Pass | the map declares Organization for every identity the export carries |
 | REQ-META-IDENTITY-007 | `Meta/Identity.md` | Presence | mandatory | pending | the Statement states a condition rather than an element (when an object is created); a reviewer decides it |
-| REQ-META-IDENTITY-008 | `Meta/Identity.md` | Invariant | mandatory | Pass | 30 Object identities, each carried by exactly one record within its declared scope |
+| REQ-META-IDENTITY-008 | `Meta/Identity.md` | Invariant | mandatory | Pass | 38 Object identities, each carried by exactly one record within its declared scope |
 | REQ-META-IDENTITY-009 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-IDENTITY-010 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-IDENTITY-012 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
@@ -157,7 +157,7 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-META-CONSTRAINT-020 | `Meta/Constraint.md` | Integrity | mandatory | Pass | 3 audit record record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-META-CONSTRAINT-021 | `Meta/Constraint.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-OWNERSHIP-001 | `Meta/Ownership.md` | Review | mandatory | Review Pass | Example reviewer (first party), 22 September 2026: Each Ownership record names its owner, its owned object and a responsibility scope in plain words; ownership ... (cut here; the whole reason is in the Reviewer Record) |
-| REQ-META-OWNERSHIP-002 | `Meta/Ownership.md` | Presence | mandatory | pending | the Statement's subject is not a type the Representation Map declares |
+| REQ-META-OWNERSHIP-002 | `Meta/Ownership.md` | Presence | mandatory | Pass | 5 ownership record(s) carry identifier, owner, owned object, responsibility scope, effective date |
 | REQ-META-OWNERSHIP-008 | `Meta/Ownership.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-OWNERSHIP-009 | `Meta/Ownership.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-OWNERSHIP-011 | `Meta/Ownership.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
@@ -244,14 +244,14 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-MODELS-WORKFLOW-003 | `Models/Workflow.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-WORKFLOW-004 | `Models/Workflow.md` | Presence | mandatory | Pass | 2 workflow record(s) carry required inputs |
 | REQ-MODELS-WORKFLOW-006 | `Models/Workflow.md` | Presence | mandatory | Pass | 2 workflow record(s) carry expected outputs |
-| REQ-MODELS-WORKFLOW-008 | `Models/Workflow.md` | Transition | mandatory | Pass | 3 recorded State change(s) compared, every one permitted by the Lifecycle |
+| REQ-MODELS-WORKFLOW-008 | `Models/Workflow.md` | Transition | mandatory | Pass | 2 Workflow step(s) perform only Transitions the Lifecycle permits |
 | REQ-MODELS-WORKFLOW-009 | `Models/Workflow.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-MODELS-WORKFLOW-011 | `Models/Workflow.md` | Invariant | mandatory | Pass | 2 Workflow(s) perform only Transitions their Entity's Lifecycle defines |
+| REQ-MODELS-WORKFLOW-011 | `Models/Workflow.md` | Invariant | mandatory | Pass | 2 Workflow step(s) perform only Transitions their Entity's Lifecycle defines |
 | REQ-MODELS-WORKFLOW-012 | `Models/Workflow.md` | Invariant | mandatory | pending | deciding this prohibition needs evidence the export does not carry (a history, or a refusal record) |
 | REQ-MODELS-WORKFLOW-013 | `Models/Workflow.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-WORKFLOW-015 | `Models/Workflow.md` | Invariant | mandatory | pending | 2 of this Statement's 4 parts are undecided (modify undefined Entities) |
 | REQ-MODELS-LIFECYCLE-001 | `Models/Lifecycle.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-MODELS-LIFECYCLE-002 | `Models/Lifecycle.md` | Transition | mandatory | Pass | 3 Lifecycle(s) each belong to exactly one Entity; 3 Lifecycle(s) define exactly one initial State, each among their own States; 3 Lifecycle(s) define 12 States ... (cut here; the whole reason is in the Reviewer Record) |
+| REQ-MODELS-LIFECYCLE-002 | `Models/Lifecycle.md` | Transition | mandatory | Pass | 3 Lifecycle(s) each belong to exactly one Entity; 3 Lifecycle(s) define exactly one initial State, each among their own States; 3 Lifecycle(s) define 12 States ... (cut here; the whole reason is in this run's output) |
 | REQ-MODELS-LIFECYCLE-003 | `Models/Lifecycle.md` | Transition | mandatory | Pass | 3 Lifecycle(s) define exactly one initial State, each among their own States |
 | REQ-MODELS-LIFECYCLE-005 | `Models/Lifecycle.md` | Presence | mandatory | pending | the Statement states a condition rather than an element (meaning within the lifecycle); a reviewer decides it |
 | REQ-MODELS-LIFECYCLE-007 | `Models/Lifecycle.md` | Transition | mandatory | Pass | 3 Lifecycle(s) define 15 Transitions, every endpoint a State they declare |

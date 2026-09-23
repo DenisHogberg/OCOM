@@ -272,6 +272,20 @@ records the instance and the directory that closes it.
 
 This is the twelfth required check on `main`.
 
+## The records that count the registers (added 23 September 2026)
+
+A step inside the publication-metadata job compares three documents that
+state how many Architecture Observations and ADR Candidates exist, one of
+them the machine-facing `publication/llms.txt` the site serves, against the
+registers themselves. All three said 82 observations up to AO-083 for two
+days after the registers reached 92 up to AO-093, including on the live
+site, and nothing compared them. It is a step, not a fourteenth check.
+
+The `Manifest commits must resolve` step of the same job now reads every
+`**Commit**` cell rather than only those already shaped like a hash, and
+refuses to pass having examined none: a cell holding anything else was
+silently skipped, so a manifest of skipped cells passed the step.
+
 ## Site error hunt (not a CI job, 22 September 2026)
 
 `tools/site/site_error_hunt.py --check` reads the live site: every URL
