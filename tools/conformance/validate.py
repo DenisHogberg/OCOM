@@ -29,6 +29,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 CATALOGUE = ROOT / "docs" / "Governance" / "Test-Catalogue.md"
 REGISTER = ROOT / "docs" / "Governance" / "Requirement-Register.md"
+ALIASES = ROOT / "docs" / "Governance" / "Requirement-Aliases.md"
 
 ARTICLES = ("a ", "an ", "the ")
 ADJECTIVES = ("unique ", "stable ", "defined ", "explicit ", "valid ", "primary ", "single ",
@@ -120,6 +121,16 @@ def load_statement(path):
     return out
 
 
+def keyable(value):
+    """An identity this tool can use as a dictionary key, or None.
+
+    A record carrying a list or an object where its identity should be is a record the engines
+    cannot index, and every leg that keyed on it directly raised TypeError and wrote no report at
+    all. The legs that decide identity (the uniqueness leg, the reuse Invariant) report it; the
+    legs that only index by it skip it."""
+    return None if isinstance(value, (list, dict)) else value
+
+
 def collection_at(node, path):
     """The records of the collection `path` names, resolved from `node`.
 
@@ -194,6 +205,10 @@ def instances(model, paths, strict=True):
                 if p.endswith("{}"):
                     if not isinstance(coll, dict) or any(not isinstance(rec, dict) for rec in coll.values()):
                         raise SystemExit("the export's %s is not a collection of records, so nothing in it can be checked" % p)
+                elif isinstance(coll, dict):
+                    continue    # one record stored as an object value, which collection_at reads and
+                                # the walk emits: refusing it here meant the map could not state the
+                                # one shape the Declaration Test failed the export for not stating
                 elif not isinstance(coll, list) or any(not isinstance(rec, dict) for rec in coll):
                     raise SystemExit("the export's %s is not a list of records, so nothing in it can be checked" % p)
         for rec in collection_at(model, p):
@@ -235,6 +250,12 @@ class Resolver:
     def __init__(self, model, types, fields, declarations=None):
         self.model, self.types, self.fields = model, types, fields
         self.declarations = declarations or {}
+        # the model is read once and never written, so what is derived from it is derived once.
+        # `identities()` walks every record, and the ownership leg called it per record: a
+        # 5,000-entity export produced no report in fifteen minutes because of it
+        self._identities = None
+        self._namespaces = {}
+        self._specific = {}
 
     def declared(self, type_name):
         return type_name.lower() in self.types
@@ -287,10 +308,20 @@ class Resolver:
     def specific_types(self, path):
         """The types the map lists `path` under, most specific first and deterministically ordered:
         a verdict must not depend on the order of rows in the map's Types table."""
-        return sorted(t for t, paths in self.types.items() if path in paths and t not in self.GENERIC) \
-               + sorted(t for t in self.GENERIC if path in self.types.get(t, []))
+        if path not in self._specific:
+            self._specific[path] = sorted(t for t, paths in self.types.items()
+                                          if path in paths and t not in self.GENERIC) \
+                                   + sorted(t for t in self.GENERIC if path in self.types.get(t, []))
+        return self._specific[path]
 
     def namespace_of(self, path):
+        if path in self._namespaces:
+            return self._namespaces[path]
+        out = self._namespace_of(path)
+        self._namespaces[path] = out
+        return out
+
+    def _namespace_of(self, path):
         """The (scope, system) the map declares for the identities at `path`: a declaration keyed
         by the collection path first, then by the most specific OCOM type the path is listed under,
         then the export-wide `Identity.scope`; ("", "") when the map declares none. CAND-026 binds
@@ -319,6 +350,8 @@ class Resolver:
     def identities(self):
         """Every identity the export declares, keyed by (scope, system, id), each record counted
         once: the same bare id under two declared systems is two identities, not one reused."""
+        if self._identities is not None:
+            return self._identities
         out = {}
         for path, rec in self.all_records():
             ident = self.identity_of(path, rec)
@@ -329,6 +362,7 @@ class Resolver:
                 out.setdefault(key, [])
                 if path not in out[key]:
                     out[key].append(path)
+        self._identities = out
         return out
 
     def object_paths(self):
@@ -417,29 +451,24 @@ class Resolver:
         return list(dict.fromkeys(out))
 
     def unlisted_collections(self):
-        """(collections carrying an identity the map binds, collections carrying none), each a
-        collection of records the map lists nowhere. The first are identities in no declared scope;
-        the second reach no Test either, and reporting them as identities was a claim about records
-        that carry none."""
+        """Three populations, because they are three different offences and each needs its own
+        sentence: collections of records the map lists nowhere; collections the map lists only
+        under a type for which it binds no identity, whose records carry an identity it binds
+        elsewhere; and collections whose records carry no identity this map binds at all. Returning
+        the first two as one list told a map author to list a collection their map already lists."""
         names = self.identity_field_names()
         listed = set(self.all_paths())
-        with_identity, without = [], []
+        unlisted, unbound, without = [], [], []
         for path in self.record_collections():
-            # listed is not the same as reachable: a collection listed under a type for which the
-            # map binds no identity is in no identity Test, and skipping it here for being listed
-            # is what let a reused identity through
-            if path in listed and (self.identity_field(path) or not any(
-                    not is_absent(rec.get(name)) for _, rec in instances(self.model, [path], strict=False)
-                    for name in names)):
-                continue
             records = instances(self.model, [path], strict=False)
             # a collection this tool could not read is not a collection that carries no identity:
             # classifying it as harmless is how a reused identity was named in a Pass reason
-            if not records or any(not is_absent(rec.get(name)) for _, rec in records for name in names):
-                with_identity.append(path)
-            else:
-                without.append(path)
-        return sorted(with_identity), sorted(without)
+            carries = not records or any(not is_absent(rec.get(name)) for _, rec in records for name in names)
+            if path not in listed:
+                (unlisted if carries else without).append(path)
+            elif not self.identity_field(path) and carries:
+                unbound.append(path)
+        return sorted(unlisted), sorted(unbound), sorted(without)
 
     def undeclared_paths(self):
         """The collection paths the map declares no identity scope for. An empty scope is not a
@@ -556,6 +585,11 @@ def one_of(subject, element, records, r):
                              else "the map declares an Ownership collection but binds no field to Ownership.owned object"
                              if not owned else
                              "the map declares an Ownership collection but the export carries no Ownership record"))
+    # one index for the whole leg: rebuilt per record, this walked every identity in the export
+    # once per record and made the run quadratic
+    by_identity = {}
+    for s, sy, i in r.identities():
+        by_identity.setdefault(i, set()).add((s, sy))
     resolved, shared = 0, 0
     for path, rec in records:
         value = rec.get(name)
@@ -567,11 +601,12 @@ def one_of(subject, element, records, r):
         if not ownership or "owner" not in element:
             continue
         ident = r.identity_of(path, rec)
-        # an Ownership record names its owned object by identity, and an identity the export declares
-        # in two namespaces names two records. Comparing the scope alone put every source system in
-        # one namespace, which is the case Reference Serialization.md is written around: a
-        # ServiceNow Entity then resolved to the SAP Entity's Ownership record
-        spaces = {(s, sy) for s, sy, i in r.identities() if i == ident}
+        if ident is None or is_absent(ident) or not keyable(ident):
+            # None == None matched an Entity with no identity to an Ownership record with no owned
+            # object, and the Pass reason then said "the one Ownership record that names it"
+            return None, "", ("%s record %s carries no identity the map binds, so no Ownership record could be "
+                              "resolved to it" % (subject, rec.get("id", "?")))
+        spaces = by_identity.get(ident) or set()
         if len(spaces) > 1:
             # `Adoption/Reference Serialization.md`: a bare reference to an identity the export
             # declares in two namespaces is ambiguous and is not resolved to either. Comparing the
@@ -582,7 +617,7 @@ def one_of(subject, element, records, r):
                               "be resolved"
                               % (subject, ident, len(spaces),
                                  "; ".join(sorted(" ".join(x for x in s if x) or "no declared scope" for s in spaces))))
-        naming = [o for _, o in ownership if o.get(owned) == ident]
+        naming = [o for _, o in ownership if not is_absent(o.get(owned)) and o.get(owned) == ident]
         by_id = [o for _, o in ownership if own_id and o.get(own_id) == value]
         if by_id and not any(o is x for o in by_id for x in naming):
             return ("%s record %s names Ownership record %s, which names %s as its owned object and not it"
@@ -785,6 +820,9 @@ def lifecycle_index(r):
         # through the Resolver, and the corners that still guessed passed a map that spells the
         # identity otherwise while comparing nothing
         ident = r.identity_of(path, lc)
+        if isinstance(ident, (list, dict)):
+            collisions.append("a Lifecycle carries %d identifiers where an identity is one value" % len(ident))
+            continue
         if is_absent(ident):
             collisions.append("a Lifecycle carries no identifier")
             continue
@@ -914,7 +952,11 @@ def transition_predicate(text, r, lifecycles, by_entity):
         left = []
         for k, lc in lifecycles.items():
             outgoing = {a for a, _ in transitions_of(r, lc)}
-            for terminal in r.value(lc, "lifecycle", "terminal states") or []:
+            declared = r.value(lc, "lifecycle", "terminal states")
+            # one terminal State written as a string was iterated character by character, so the
+            # leg compared nothing and reported that no terminal State is left
+            terminals = declared if isinstance(declared, list) else ([] if is_absent(declared) else [declared])
+            for terminal in terminals:
                 if terminal in outgoing:
                     left.append("%s: %s is terminal and has an outgoing Transition" % (k, terminal))
         return ("Fail", "; ".join(left[:3])) if left else \
@@ -1033,14 +1075,16 @@ def invariant_predicate(text, r, lifecycles, by_entity):
         if not paths:
             return None, ("the Representation Map lists no collection under Object or Identity, so the export "
                           "carries no Object whose identity could be compared")
-        outside, _ = r.unlisted_collections()
+        outside, unbound_paths, _ = r.unlisted_collections()
+        outside = outside + unbound_paths
         if outside:
             # every path this leg compares comes from the map, so identities in a collection the map
             # does not list were never counted: the reuse Invariant passed over an export carrying
             # the same identity twice, and said so
-            return None, ("%d collection(s) of records the Representation Map does not list carry identities it "
-                          "binds (%s), so not every identity the export carries could be compared"
-                          % (len(outside), ", ".join(outside[:3])))
+            return None, ("%d collection(s) carry identities the Representation Map binds and are outside the "
+                          "scopes it declares, either because the map lists them nowhere or because it lists them "
+                          "only under a type it binds no identity for (%s), so not every identity the export "
+                          "carries could be compared" % (len(outside), ", ".join(outside[:3])))
         counts, unreadable, undeclared_ids = {}, {}, {}
         for path, rec in instances(r.model, paths):
             ident = r.identity_of(path, rec)
@@ -1082,15 +1126,18 @@ def invariant_predicate(text, r, lifecycles, by_entity):
                    [("domain", rec) for _, rec in r.records("domain")]
         if not governed:
             return "Fail", "the export carries no governed record, so no Ownership could be checked"
-        bad = []
-        for type_name, rec in governed:
-            field, _ = r.field(type_name, "owner")
-            if field is None:
-                return None, "the Representation Map binds no field to %s.owner" % type_name
-            if is_absent(rec.get(field)):
-                bad.append(str(rec.get("id")))
-        return ("Fail", "no owner: %s" % ", ".join(bad[:3])) if bad else \
-               ("Pass", "%d governed records each name an owner" % len(governed))
+        # every field resolved before the loop: resolving inside it returned pending on the first
+        # unbound row and discarded the violations already found, which is the escape the sibling
+        # leg below had closed
+        fields = {name: r.field(name, "owner")[0] for name in {t for t, _ in governed}}
+        unbound = sorted(name for name, field in fields.items() if field is None)
+        bad = [str(rec.get("id")) for type_name, rec in governed
+               if fields[type_name] is not None and is_absent(rec.get(fields[type_name]))]
+        if bad:
+            return "Fail", "no owner: %s" % ", ".join(bad[:3])
+        if unbound:
+            return None, "the Representation Map binds no field to %s" % " or ".join("%s.owner" % n for n in unbound)
+        return "Pass", "%d governed records each name an owner" % len(governed)
 
     if "primary governance" in low and "shared" in low:
         if not r.records("entity"):
@@ -1489,7 +1536,12 @@ def erasure_incomplete(r, subject, path, rec, demonstration):
                        "them holds something the Deleted state does not preserve" % (other, twins[0], name))
     remaining = sorted(k for k, v in rec.items() if k not in preserved and not is_absent(v))
     if remaining:
-        why.append("still carries content under %s, so nothing was made irrecoverable" % ", ".join(remaining[:3]))
+        # `Memory/Memory Record.md` makes six attributes mandatory and `Memory/Retention.md`'s
+        # Deleted state names four preserved elements; a record that keeps the first is told it
+        # kept content, and one that drops them is no longer a conforming Memory Record (`AO-095`)
+        why.append("still carries content under %s, so nothing was made irrecoverable (Retention.md's Deleted "
+                   "state names four preserved elements and Memory Record.md makes six attributes mandatory, a "
+                   "tension `AO-095` records)" % ", ".join(remaining[:3]))
     # what Retention.md preserves is an identity, a time, a name and a demonstration: four scalars.
     # Checking the top-level keys only let the whole tampered record live inside one of them
     nested = sorted(k for k in preserved if isinstance(rec.get(k), (dict, list)))
@@ -1531,13 +1583,13 @@ def integrity(test, text, r):
     ignored = [] if subject in MEMORY_TYPES else [e for _, e, why, _ in erasure_records(r) if e and not why]
     bad, skipped, refused, granted = [], 0, [], set()
     for path, rec in records:
-        ident = r.identity_of(path, rec)
+        ident = keyable(r.identity_of(path, rec))
         uncovered = ""
         if (r.namespace_of(path), ident) in erased:
             not_erased = erasure_incomplete(r, subject, path, rec, field)
             if not not_erased:
                 skipped += 1      # an erased record no longer verifies by design; Retention.md says what its demonstration means
-                granted.add((r.namespace_of(path), ident))
+                granted.add((r.namespace_of(path), keyable(ident)))
                 continue
             # the record an erasure record names is excluded only where it shows the Deleted state;
             # otherwise it is verified like any other, and the refusal is reported beside it rather
@@ -1582,7 +1634,7 @@ def integrity(test, text, r):
         # the exclusion this loop honours is the one that was granted, not the one that was claimed:
         # keying it on "named by an erasure record" let an erasure that granted nothing switch off
         # the content-address check, and eight Integrity Tests went from pending to Pass
-        if (r.namespace_of(path), r.identity_of(path, rec)) in granted:
+        if (r.namespace_of(path), keyable(r.identity_of(path, rec))) in granted:
             continue
         if r.identity_of(path, rec) != rec.get(field):
             return None, ("%s binds %s.integrity to %s, but the identity this export resolves for record %s is not "
@@ -1623,11 +1675,15 @@ def scope_declaration(test, text, r):
     # the scan read the top level only, and the map's own grammar nests (`lifecycles[].states`), so
     # a collection of records placed inside a record was listed by nothing and reached no Test while
     # this Test passed saying the map declares a scope for every identity the export carries
-    unlisted, no_identity = r.unlisted_collections()
+    unlisted, unbound, no_identity = r.unlisted_collections()
     if unlisted:
         return "Fail", ("the export carries %d collection(s) of records the Representation Map does not list (%s), "
                         "so their identities are in no declared scope and reach no Test"
                         % (len(unlisted), ", ".join(unlisted[:3])))
+    if unbound:
+        return "Fail", ("the Representation Map lists %s only under type(s) for which it binds no identity, so the "
+                        "identities those records carry are in no declared scope; add a `<Type>.identity` row for "
+                        "the type the collection is listed under" % ", ".join(unbound[:3]))
     uncovered = [p for p in r.all_paths() if r.namespace_of(p) == ("", "")]
     if uncovered:
         return "Fail", ("the map declares %s, which covers no identity in %d of the export's collections (%s); "
@@ -1700,6 +1756,9 @@ def review_rows(path):
                          % (path, raw.count("<!--"), raw.count("-->")))
     # comments are removed as spans, so a row that merely mentions `<!--` in a cell is still a row;
     # testing the line for the marker dropped that row, and any row below an opener, without a word
+    if (raw.count("```") % 2) or (raw.count("~~~") % 2):
+        raise SystemExit("%s carries an unbalanced ``` or ~~~ fence; every judgment row after it is read as "
+                         "illustration, and a judgment this tool cannot see is a judgment nobody recorded" % path)
     hidden = [line.strip() for span in re.findall(r"<!--.*?-->", raw, flags=re.S)
               for line in span.splitlines()
               if line.strip().startswith("|") and len(line.strip().strip("|").split("|")) == 5
@@ -1749,8 +1808,15 @@ def recorded_against(path):
     dictionary otherwise, empty when the line is there and names nothing this tool can read. The
     two were one value, so a line that bound nothing read as no line at all."""
     text = pathlib.Path(path).read_text(encoding="utf-8")
-    m = re.search(r"(?m)^\*\*Recorded against:\*\*(.+)$", text)
+    m = re.search(r"(?mi)^\s{0,3}(?:>\s*)?\*\*\s*Recorded against\s*:?\s*\*\*\s*:?(.+)$", text)
     if not m:
+        # two spaces of indentation, a blockquote marker or the colon outside the emphasis took the
+        # most permissive branch of all: the record was accepted against any export and the report
+        # said it declared nothing, of a file that says "Recorded against" in plain sight
+        if re.search(r"(?i)recorded against", re.sub(r"<!--.*?-->|```.*?```", " ", text, flags=re.S)):
+            raise SystemExit("%s carries the words 'Recorded against' in a line this tool cannot read; the line "
+                             "Section 3 fixes is `**Recorded against:** model <digest>, map <digest>, statement "
+                             "<digest>, register <digest>, alias file <digest>, catalogue <digest>`" % path)
         return None
     # every name-and-digest pair on the line, not the three this tool knows: a record naming more
     # than three had the extra bindings silently dropped while the report said its inputs were
@@ -1972,14 +2038,20 @@ def main(argv):
         declared = recorded_against(a.reviews)
         # the register decides what each Statement says, so a judgment recorded against another
         # register is a judgment about another sentence; the report digested it and compared nothing
+        # the report's own sentence says the register, the Alias File and the Test Catalogue
+        # "decide which Statements exist and which procedure each one gets", and only the register
+        # was bound: one edited Kind cell turned a mechanical Fail into a Test a signed record
+        # decided Review Pass
         actual = {"model": file_digest(a.model), "map": file_digest(a.map), "statement": file_digest(a.statement),
-                  "register": file_digest(REGISTER)}
+                  "register": file_digest(REGISTER), "alias file": file_digest(ALIASES),
+                  "catalogue": file_digest(CATALOGUE)}
         if declared is not None and sorted(declared) != sorted(actual):
             # the run compared the keys the line happened to name, so a record naming one digest was
             # accepted against any map and any Conformance Statement while the report printed that
             # all three were verified. Section 3 fixes the grammar; a partial line is refused
             raise SystemExit("%s says it was recorded against %s; Section 3 of `Conformance-Test-Suite.md` writes "
-                             "that line as `model <digest>, map <digest>, statement <digest>, register <digest>`, "
+                             "that line as `model <digest>, map <digest>, statement <digest>, register <digest>, "
+                             "alias file <digest>, catalogue <digest>`, "
                              "and a record that names fewer binds its judgments to less than the export and the "
                              "Statements they were made against, while one that names more declares a binding "
                              "this tool cannot verify"
@@ -1990,8 +2062,10 @@ def main(argv):
                 raise SystemExit("%s says it was recorded against %s %s, and this run read %s; a judgment recorded "
                                  "against another export is a judgment about something else"
                                  % (a.reviews, wrong[0], declared[wrong[0]], actual[wrong[0]]))
-            binding = ("The record declares the model, the map, the Conformance Statement and the Requirement "
-                       "Register it was made against, and they are the four this run read.")
+            binding = ("The record declares the model, the map, the Conformance Statement, the Requirement "
+                       "Register, the Alias File and the Test Catalogue it was made against, and they are the "
+                       "six this run read: what a judgment is about is the Statement, and what decides which "
+                       "Statements exist and which procedure each one gets is those three.")
         else:
             binding = ("The record declares no inputs, so nothing ties its judgments to this export beyond the word "
                        "of whoever published them (`AO-093`).")
@@ -2062,7 +2136,7 @@ def main(argv):
                  "Statements exist and which procedure each one gets, so a report that named only the first three did "
                  "not say what produced its outcomes.%s"
                  % (file_digest(a.model), file_digest(a.map), file_digest(a.statement),
-                    file_digest(REGISTER), file_digest(ROOT / "docs" / "Governance" / "Requirement-Aliases.md"),
+                    file_digest(REGISTER), file_digest(ALIASES),
                     file_digest(CATALOGUE), " " + binding if binding else ""))
     lines.append("")
     release, commit = manifest_release()
@@ -2098,6 +2172,10 @@ def main(argv):
     lines.append("| Not Applicable (dispositioned Descriptive, or a capability the Conformance Statement does not "
                  "claim) | %d |" % len(not_applicable))
     lines.append("")
+    lines.append("**Measured set:** %d of the %d mandatory Tests the catalogue carries; %d are Not Applicable, "
+                 "dispositioned Descriptive in the Alias File or a capability this Conformance Statement does not "
+                 "claim. A claim rests on what was measured, so the size of the measured set is stated beside the "
+                 "outcome.\n" % (len(mandatory), len(mandatory) + len(not_applicable), len(not_applicable)))
     lines.append("**Core Conformance: %s.** Section 3 establishes it when every mandatory Test is Pass or "
                  "Review Pass. %s" % ("established" if established else "not established",
                                       "" if established else
@@ -2151,9 +2229,14 @@ def main(argv):
             if why:
                 lines.append("- %s names %s and grants no exclusion: %s" % (ident or "?", erased or "no record", "; ".join(why)))
             else:
-                lines.append("- %s names %s: well formed, and the Integrity Test covering that record grants the "
-                             "exclusion where the record shows `Memory/Retention.md`'s Deleted state"
-                             % (ident or "?", erased))
+                covered = [s for s in MEMORY_TYPES if any(r.identity_of(p, rec) == erased
+                                                          for p, rec in r.records(s))]
+                lines.append("- %s names %s: well formed, and %s"
+                             % (ident or "?", erased,
+                                "the Integrity Test covering that record grants the exclusion where the record "
+                                "shows `Memory/Retention.md`'s Deleted state" if covered else
+                                "no Integrity Test over a Memory type covers that record, so the exclusion "
+                                "changes nothing: `Memory/Retention.md`'s Deleted state governs Memory Records"))
         if len(listed) > 50:
             lines.append("- (%d further erasure record(s) not listed; the ones that grant an exclusion are listed first)"
                          % (len(listed) - 50))
@@ -2196,6 +2279,7 @@ def main(argv):
         cut = len(row.get("reason") or "") > 180
         if row["outcome"] in ("Fail", "Review Fail") or cut:
             print("%s %s: %s" % (row["outcome"] or "pending", row["alias"], row["reason"]))
+    print("Not Applicable %d (dispositioned Descriptive, or a capability not claimed)" % len(not_applicable))
     print("mandatory %d: Pass %d, Fail %d, pending %d, reviewed %d pass and %d fail. Core Conformance %s."
           % (len(mandatory), len(passed), len(failed), len(pending), len(review_passed), len(review_failed),
              "established" if established else "not established"))

@@ -105,14 +105,24 @@ def base_files():
 class Fixture:
     """Serves `files` on a loopback port for the lifetime of the with-block."""
 
-    def __init__(self, files=None):
+    def __init__(self, files=None, redirects=None):
         self.files = base_files() if files is None else files
+        # a handler that can only answer 200 or 404 tests no redirect guard, and three of them
+        # shipped with nothing exercising them
+        self.redirects = dict(redirects or {})
 
     def __enter__(self):
-        files = self.files
+        files, redirects = self.files, self.redirects
 
         class Handler(http.server.BaseHTTPRequestHandler):
             def do_GET(self):
+                if self.path in redirects:
+                    code, location = redirects[self.path]
+                    self.send_response(code)
+                    self.send_header("Location", location)
+                    self.send_header("Content-Length", "0")
+                    self.end_headers()
+                    return
                 entry = files.get(self.path)
                 if entry is None:
                     self.send_response(404)

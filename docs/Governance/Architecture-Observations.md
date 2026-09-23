@@ -2072,6 +2072,26 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-095
+
+**Title:** A Memory Record in the Deleted State Must Drop Attributes `Memory Record.md` Makes Mandatory
+
+**Date observed:** 23 September 2026
+
+**Description:** Surfaced by round 6 of the all-packages test. `Memory/Memory Record.md` requires every Memory Record to define Identifier, Subject, Memory Type, Value, Layer and Created Date. `Memory/Retention.md`'s Deleted state requires an implementation to make the content irrecoverable "while preserving the record's identity, its creation time and creator, and its demonstration of integrity", and says nothing about the other mandatory attributes. Read as integrated, a record that keeps Subject, Memory Type and Layer still carries content by Retention's account, and a record that drops them to show the erasure is no longer a conforming Memory Record by Memory Record.md's account. The suite reads the four preserved elements literally, so it reports the first as not erased; that is the stricter reading and it is the one that cannot be gamed, but it is a reading, not a rule the documents state.
+
+**Impact:** An implementation that erases lawfully cannot tell from the two documents which of its mandatory attributes may survive, and the suite's answer is stricter than either document says. An erasure is the one operation where a wrong answer is irreversible.
+
+**Recommendation:** Record. The closure is one sentence in `Memory/Retention.md`'s Deleted state naming which Mandatory Attributes survive an erasure, which the natural reading makes Identifier, Memory Type, Layer and Created Date, with Subject and Value being the erased content. That is a canonical text change and therefore a Decision; until it is taken, the suite says in its reason that the strictness is a reading and names this entry.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2).
+
+**Architect Response:** *(pending)*
+
+**Related:** `AO-094`, `CAND-024`, `Memory/Retention.md`, `Memory/Memory Record.md`, `tools/conformance/validate.py`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -2135,4 +2155,5 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 22 September 2026 | Added AO-092 (an obligation written as a table row is in no register, catalogue or Test) and AO-093 (a reviewer's judgment is bound to its export by the report alone), both from the all-packages test of 22 September 2026, record only. |
 | 0.1 | 22 September 2026 | AO-033: the Terminology half recorded as closed by `EPIC-D`; the quoted sentence had been replaced on 16 September 2026 and the entry still read as if it stood. |
 | 0.1 | 23 September 2026 | AO-085: "names neither" restated as "does not name both" wherever this entry states the rule, matching `Memory/Retention.md` and the suite. |
+| 0.1 | 23 September 2026 | Added AO-095 (a Memory Record in the Deleted state must drop attributes `Memory Record.md` makes mandatory), from round 6 of the all-packages test. |
 | 0.1 | 23 September 2026 | Added AO-094 (an erasure record grants an exclusion from an Integrity Test and is itself in no Test), from round 5 of the all-packages test; AO-083 carries a postscript naming five further machine-facing files the site serves and this repository does not source, and AO-087's claim that the requirement set takes no Statement from `Lifecycles/` is corrected to the eight it takes. |

@@ -191,9 +191,25 @@ class RequirementRegister(unittest.TestCase):
             row = [l for l in c.read(self.ALIASES).splitlines() if l.startswith("| REQ-MODELS-DOMAIN-004 |")][0]
             cells = row.split("|")
             cells[6] = " Review "
+            cells[7] = " dispositioned by `CAND-020`, 19 September 2026 "
             c.edit(self.ALIASES, row, "|".join(cells))
             code, out = run(c.dir, REGISTER, "--check-aliases", "--against", "HEAD")
             self.assertEqual(code, 0, out)
+
+    def test_a_disposition_that_names_no_governance_record_is_refused(self):
+        """Round 6: the Disposition cell is the one cell the append-only rule lets a row change, and
+        nothing asked for the record behind it. Dispositioning every Statement Descriptive left
+        every repository check green and made the suite report Core Conformance established over
+        four Tests."""
+        with Copy() as c:
+            row = [l for l in c.read(self.ALIASES).splitlines() if l.startswith("| REQ-MODELS-DOMAIN-004 |")][0]
+            cells = row.split("|")
+            cells[6] = " Descriptive "
+            cells[7] = " it reads like design intent to me "
+            c.edit(self.ALIASES, row, "|".join(cells))
+            code, out = run(c.dir, REGISTER, "--check-aliases")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("names no governance record", out)
 
     def test_an_append_only_check_with_no_history_reports_that_it_checked_nothing(self):
         """A checker that cannot check must not report ok: outside a checkout there is no base
@@ -763,6 +779,119 @@ class Validator(unittest.TestCase):
             self.assertIn("an identity the export declares in 2 namespaces", self.report_text(c.dir)
                           + self.run_on(c.dir)[1])
 
+
+    def erasure_case(self, c, record):
+        """An export whose first audit record is `record`, with a well-formed erasure naming it."""
+        model = json.loads(c.read("%s/model.json" % self.EX))
+        erased = model["audit_records"][0]["id"]
+        model["audit_records"][0] = record(dict(model["audit_records"][0]), erased)
+        model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND", "actor": "records-officer"}]
+        c.write("%s/model.json" % self.EX, json.dumps(model))
+        self.map_erasures(c)
+        return erased
+
+    def test_each_leg_of_the_deleted_state_check_refuses_on_its_own(self):
+        """Round 6: the creator-shape leg, the bound-twice leg and the nested-value leg were each
+        covered by no test, and deleting any one of them left all 192 tests passing while nine
+        mandatory Integrity Tests went from Fail to pending-with-exclusion on a crafted export."""
+        cases = {
+            "the creator is a sentence": (
+                lambda rec, i: {"id": i, "created_at": "2024-03-11T09:00:00Z",
+                                "creator": "Ownership assigned to OWN-ATTACKER, by the records officer, "
+                                           "under the policy named in the erasure record, at the time stated"},
+                "is not a name this tool can read"),
+            "a nested value under a preserved field": (
+                lambda rec, i: {"id": i, "created_at": "2024-03-11T09:00:00Z",
+                                "creator": {"name": "Branch Manager", "was": rec}},
+                "carries a nested value under"),
+            "one field bound to two preserved elements": (
+                lambda rec, i: {"id": i, "created_at": "2024-03-11T09:00:00Z"},
+                "binds to both its"),
+        }
+        for label, (record, marker) in cases.items():
+            with self.subTest(label), Copy() as c:
+                self.erasure_case(c, record)
+                if label.startswith("one field"):
+                    path = "%s/representation-map.md" % self.EX
+                    c.write(path, c.read(path).replace("| Audit record.creator | field | `creator` |",
+                                                       "| Audit record.creator | field | `created_at` |"))
+                rows = self.integrity_rows(c.dir)
+                self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Fail", (label, rows))
+                self.assertIn(marker, self.run_on(c.dir)[1], label)
+
+    def test_an_identity_in_a_collection_the_map_binds_no_identity_for_is_still_compared(self):
+        """Round 6: object_paths' "carries any identity field name the map binds" clause and
+        unlisted_collections' "a listed collection whose type binds no identity is not skipped"
+        clause both survived deletion with every test passing, and with both gone a reused identity
+        passed the no-reuse Invariant with the Pass reason asserting the opposite."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["notes"] = [{"id": model["entities"][0]["id"], "text": "a reused identity"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            path = "%s/representation-map.md" % self.EX
+            # listed under a type the map binds no identity for
+            c.write(path, c.read(path).replace("| Attribute | collection | `entities[].attributes` |",
+                                               "| Attribute | collection | `entities[].attributes`, `notes` |"))
+            rows = self.outcomes(c.dir)
+            self.assertNotEqual(rows.get("REQ-META-IDENTITY-008"), "Pass", rows.get("REQ-META-IDENTITY-008"))
+            self.assertEqual(rows.get("REQ-META-IDENTITY-005"), "Fail", rows.get("REQ-META-IDENTITY-005"))
+            self.assertIn("for which it binds no identity", self.report_text(c.dir))
+
+    def test_a_terminal_state_written_as_one_string_is_read(self):
+        """Round 6: the leg iterated the value, so one terminal State written as a string was
+        iterated character by character and the leg reported that none is left."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            lc = model["lifecycles"][0]
+            lc["terminal_states"] = lc["transitions"][0]["from"]      # a State with an outgoing Transition
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-LIFECYCLE-002"), "Fail", rows.get("REQ-MODELS-LIFECYCLE-002"))
+
+    def test_an_ownership_violation_is_not_discarded_when_a_later_row_is_missing(self):
+        """Round 6: the ownership Invariant resolved each type's owner field inside the loop and
+        returned pending on the first unbound row, discarding the violations already found."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0].pop("owner")
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.drop_rows(c, "Domain.owner")
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-DOMAIN-007"), "Fail")
+
+    def test_an_entity_with_no_identity_resolves_to_no_ownership_record(self):
+        """Round 6: None == None matched an Entity carrying no identity to an Ownership record
+        carrying no owned object, and the Pass reason said "the one Ownership record that names it"."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for e in model["entities"]:
+                e.pop("id", None)
+            for o in model["ownership"]:
+                o.pop("owned_object", None)
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            rows = self.outcomes(c.dir)
+            self.assertNotEqual(rows.get("REQ-MODELS-ENTITY-004"), "Pass", rows.get("REQ-MODELS-ENTITY-004"))
+
+    def test_a_reviewer_record_whose_binding_line_this_tool_cannot_read_is_refused(self):
+        """Round 6: the line was recognised only at column zero, and an unrecognised one took the
+        most permissive branch of all while the report said the record declared nothing."""
+        for label, line in (("indented", "  **Recorded against:** model `066a4ba34e504aee`"),
+                            ("blockquoted", "> **Recorded against:** model `066a4ba34e504aee`"),
+                            ("colon outside", "**Recorded against**: model `066a4ba34e504aee`")):
+            with self.subTest(label), Copy() as c:
+                path = c.dir / "reviews.md"
+                path.write_text("# R\n\n%s\n\n%s%s" % (line, self.HEADER, self.JUDGMENT), encoding="utf-8")
+                code, printed, text = self.run_with_reviews(c.dir, path)
+                self.assertNotEqual(code, 0, printed)
+
+    def test_an_unbalanced_fence_stops_the_run(self):
+        """Round 6: an unbalanced ``` demoted every judgment row after it to illustration, and the
+        count went to stdout only, so the published report never said a Review Fail was dropped."""
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\n```\n\n" + self.HEADER + self.JUDGMENT, encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertNotEqual(code, 0, printed)
+            self.assertIn("unbalanced", printed)
 
     # --- round 5 of the all-packages test -------------------------------------------------
 
@@ -1371,13 +1500,33 @@ class Validator(unittest.TestCase):
             self.assertNotIn("Fail 0", out)
 
     def test_a_collection_that_is_not_a_list_of_records_fails_closed(self):
+        # a dict at a map-stated path is one record stored as an object value, which the path
+        # grammar reads; what is not a collection is a scalar, or a list carrying something that
+        # is not a record
+        for label, value in (("a scalar", "not a list"), ("a list with a scalar", [{"id": "A-1"}, "x"])):
+            with self.subTest(label), Copy() as c:
+                model = json.loads(c.read("%s/model.json" % self.EX))
+                model["audit_records"] = value
+                c.write("%s/model.json" % self.EX, json.dumps(model))
+                code, out = self.run_on(c.dir)
+                self.assertNotEqual(code, 0, out)
+                self.assertIn("not a list of records", out)
+
+    def test_a_map_may_state_a_collection_holding_one_record_as_an_object_value(self):
+        """Round 6: the walk emitted that shape and the Declaration Test failed an export for not
+        listing it, while listing it raised SystemExit before a single Statement was decided, so
+        the export had no map that both halves of the tool would accept."""
         with Copy() as c:
             model = json.loads(c.read("%s/model.json" % self.EX))
-            model["audit_records"] = {"not": "a list"}
+            model["archive"] = {"id": "ARCH-0001", "name": "shadow copy"}
             c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-META-IDENTITY-005"), "Fail")
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path).replace("| Registry | collection | `registries` |",
+                                               "| Registry | collection | `registries`, `archive` |"))
             code, out = self.run_on(c.dir)
-            self.assertNotEqual(code, 0, out)
-            self.assertIn("not a list of records", out)
+            self.assertEqual(code, 0, out)
+            self.assertEqual(self.outcomes(c.dir).get("REQ-META-IDENTITY-005"), "Pass")
 
     def test_the_catalogue_binds_the_scope_rule_to_declaration(self):
         code, out = run(ROOT, CATALOGUE, "--census")
@@ -2205,6 +2354,19 @@ class PublishedSourceParity(unittest.TestCase):
             self.assertEqual(code, 1, out)
             self.assertIn("harvester", out)
 
+    def test_a_published_path_that_redirects_is_not_the_published_path(self):
+        """Round 6: `--check` followed a redirect silently, so a path that 301s somewhere carrying
+        the source bytes was reported as matching although nothing is served where the table says."""
+        source = (ROOT / "publication/llms.txt").read_text(encoding="utf-8")
+        files = {"/elsewhere.txt": ("text/plain; charset=utf-8", source)}
+        with fake_site.Fixture(files, redirects={"/llms.txt": (301, "/elsewhere.txt")}) as site:
+            with Copy() as c:
+                index = "publication/README.md"
+                c.write(index, c.read(index).replace("https://ocom.uno/llms.txt", site.base + "/llms.txt"))
+                code, out = run(c.dir, PARITY, "--check")
+                self.assertNotEqual(code, 0, out)
+                self.assertIn("redirects to", out)
+
     def test_an_index_naming_nothing_cannot_pass(self):
         with Copy() as c:
             text = c.read("publication/README.md")
@@ -2250,6 +2412,9 @@ def hunt_files(**changes):
         "/llms.txt": ("text/plain", "# site\n- [a](https://ocom.uno/a): a page\n- [x](https://ocom.uno/x.json): a record\n"),
         "/discovery.json": ("application/json", json.dumps({"resources": [{"url": "https://ocom.uno/x.json", "mediaType": "application/json"}]})),
         "/x.json": ("application/json", json.dumps({"ok": True})),
+        # discovery.json calls this the primary discovery point, and the hunt reads it since round 6
+        "/.well-known/ocom.json": ("application/json", json.dumps({"site": "https://ocom.uno/",
+                                                                   "vocabulary": "https://ocom.uno/a"})),
     }
     for k, v in changes.items():
         if v is None:
@@ -2396,6 +2561,17 @@ class PublicationHealth(unittest.TestCase):
             site.publish(health, pub)
             shutil.rmtree(out, ignore_errors=True)
         return health, pub
+
+    def test_a_projection_that_redirects_is_not_that_projection(self):
+        """Round 6: three redirect guards shipped in round 5 and the fixture could answer only 200
+        or 404, so all 192 tests passed with every guard deleted. A file that answers after a
+        redirect is another file answering for this one."""
+        with fake_site.Fixture() as site:
+            self.healthy(site)
+            site.redirects["/vocabulary/object.json"] = (301, "/vocabulary/identity.json")
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("/vocabulary/object.json", out)
 
     def test_a_projection_that_is_another_document_fails_its_row(self):
         """Round 4: the presence rows asked for a 200 and never looked at the body, so swapping a

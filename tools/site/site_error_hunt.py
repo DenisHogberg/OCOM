@@ -301,7 +301,9 @@ def hunt(site):
         if status != 200:
             failures.append("%s (linked from %s) answers %s%s" % (target, source, status, ", " + note if note else ""))
 
-    for path in ("/robots.txt", "/llms.txt", "/discovery.json"):
+    # discovery.json calls /.well-known/ocom.json the primary discovery point, and nothing read it:
+    # its URLs, 48 of them, were outside every check this repository runs
+    for path in ("/robots.txt", "/llms.txt", "/discovery.json", "/.well-known/ocom.json"):
         status, ctype, body, _, robots = site.get(path)
         if status != 200:
             failures.append("%s answers %s" % (path, status))

@@ -64,7 +64,7 @@ Published artifacts any reader can count and check, in this repository or on the
 | Specification chapters | 9 | SPEC-00 to SPEC-08, compiled from the canonical documents |
 | Informative comparisons | 9 | |
 | Reference Cases published | 1 | distilled from real rollouts under NDA, with the organization and details changed; non-normative |
-| Architecture Observations | 93 | recorded tensions, AO-001 to AO-094, AO-072 reserved |
+| Architecture Observations | 94 | recorded tensions, AO-001 to AO-095, AO-072 reserved |
 | ADR Candidates | 34 | recorded decisions and proposals, CAND-001 to CAND-034 |
 | Mandatory Statements enumerated | 182 of 335 | `Requirement-Register.md`, regenerated and checked on every build |
 | Reference implementations published | 0 | |
