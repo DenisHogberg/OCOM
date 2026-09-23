@@ -8,13 +8,13 @@
 
 **Model:** `docs/Examples/Conformance/model.json`  **Representation Map:** `docs/Examples/Conformance/representation-map.md`
 
-**Inputs, by content:** model `066a4ba34e504aee`, map `394fc55a2e07d3dc`, Conformance Statement `cf478add0bddcc36`, Requirement Register `e09cdd67d62d7951`, Alias File `44fcbf6a2466d9fe`, Test Catalogue `575a6c26c33d57eb` (SHA-256 of each file as read). The last three decide which Statements exist and which procedure each one gets, so a report that named only the first three did not say what produced its outcomes. The record declares the inputs it was made against and they are the three above, which this run verified.
+**Inputs, by content:** model `066a4ba34e504aee`, map `bb6d9b8f2e25090e`, Conformance Statement `cf478add0bddcc36`, Requirement Register `e09cdd67d62d7951`, Alias File `44fcbf6a2466d9fe`, Test Catalogue `575a6c26c33d57eb` (SHA-256 of each file as read). The last three decide which Statements exist and which procedure each one gets, so a report that named only the first three did not say what produced its outcomes. The record declares the inputs it was made against and they are the three above, which this run verified.
 
-**Read from:** the checkout at `6b1efc3, with uncommitted changes`, whose `Governance/Publication-Manifest.md` names Release v1.4.0 at commit `73d73b95e10ebc808554985afe89466316273f45` as its latest. The run reads the working tree, not that commit: where the two differ, the digests above are what was read. Requirement Register: 335 Statements. Alias File revision: 335 aliases, last appended 17 September 2026.
+**Read from:** the checkout at `acf176c, with uncommitted changes`, whose `Governance/Publication-Manifest.md` names Release v1.4.0 at commit `73d73b95e10ebc808554985afe89466316273f45` as its latest. The run reads the working tree, not that commit: where the two differ, the digests above are what was read. Requirement Register: 335 Statements. Alias File revision: 335 aliases, last appended 17 September 2026.
 
 **Published by:** the party that ran the suite. A report published by the claimant is self-validation; `Conformance-Test-Suite.md` Section 4 says the suite does not tell the two apart and the publisher does.
 
-**Reviewer Record:** `docs/Examples/Conformance/reviewer-record.md` (`d6dabc9aa192da45`), 3 judgment(s) by Example reviewer (first party). Whether a reviewer is independent of the claimant is a fact about the reviewer, not something this tool can read.
+**Reviewer Record:** `docs/Examples/Conformance/reviewer-record.md` (`364f8e529400bf69`), 3 judgment(s) by Example reviewer (first party). Whether a reviewer is independent of the claimant is a fact about the reviewer, not something this tool can read.
 
 ---
 
@@ -22,21 +22,21 @@
 
 | | Count |
 |---|---|
-| Mandatory Tests | 187 |
-| Pass | 49 |
+| Mandatory Tests | 185 |
+| Pass | 48 |
 | Fail | 0 |
 | Review Pass | 3 |
 | Review Fail | 0 |
-| Awaiting a reviewer or evidence the export does not carry | 135 |
-| Not Applicable, dispositioned Descriptive | 1 |
+| Awaiting a reviewer or evidence the export does not carry | 134 |
+| Not Applicable (dispositioned Descriptive, or a capability the Conformance Statement does not claim) | 3 |
 
-**Core Conformance: not established.** Section 3 establishes it when every mandatory Test is Pass or Review Pass. 0 mandatory Test(s) fail, 0 carry a Review Fail, and 135 await a reviewer or evidence this export does not carry.
+**Core Conformance: not established.** Section 3 establishes it when every mandatory Test is Pass or Review Pass. 0 mandatory Test(s) fail, 0 carry a Review Fail, and 134 await a reviewer or evidence this export does not carry.
 
 ---
 
 ## Reference Integrity
 
-101 field value(s) were resolved against the 38 identities this export declares, and every one of them names a record it carries in exactly one declared scope. Fields holding prose, and a Reference's target, which may legitimately name another system, are not resolved.
+101 field value(s) were resolved against the 38 identities this export declares, and every one of them names a record it carries in exactly one declared scope. Not resolved: a field the map binds to prose, at any depth; a record's own identity and the fields listed beside it in this tool's skip list at the top level of a record (`id`, `type`, `name`, `label`, `purpose`, `meaning`, `note`, `rule`, `expression`, `trigger`, `data_type`, `state`, `initial_state`); a value carrying a space or shaped like a date; and a Reference's target, which may legitimately name another system.
 
 ---
 
@@ -67,7 +67,7 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-META-IDENTITY-001 | `Meta/Identity.md` | Review | mandatory | Review Pass | Example reviewer (first party), 22 September 2026: The export carries one snapshot, so stability over time cannot be observed in it; the identifiers are the one ... (cut here; the whole reason is in the Reviewer Record) |
 | REQ-META-IDENTITY-002 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-META-IDENTITY-003 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
-| REQ-META-IDENTITY-005 | `Meta/Identity.md` | Declaration | mandatory | Pass | the map declares Organization for every identity the export carries |
+| REQ-META-IDENTITY-005 | `Meta/Identity.md` | Declaration | mandatory | Pass | the map declares Organization for every identity the export carries; 1 collection(s) the map does not list carry no identity it binds (workflows[].transitions), ... (cut here; the whole reason is in this run's output) |
 | REQ-META-IDENTITY-007 | `Meta/Identity.md` | Presence | mandatory | pending | the Statement states a condition rather than an element (when an object is created); a reviewer decides it |
 | REQ-META-IDENTITY-008 | `Meta/Identity.md` | Invariant | mandatory | Pass | 38 Object identities, each carried by exactly one record within its declared scope |
 | REQ-META-IDENTITY-009 | `Meta/Identity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
@@ -196,8 +196,8 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-MODELS-ENTITY-001 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-ENTITY-002 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-ENTITY-003 | `Models/Entity.md` | Review | mandatory | Review Pass | Example reviewer (first party), 22 September 2026: The identifiers P-10432, LIB-000198 and LOAN-2026-08-0431 are accession and membership numbers the library as ... (cut here; the whole reason is in the Reviewer Record) |
-| REQ-MODELS-ENTITY-004 | `Models/Entity.md` | Presence | mandatory | Pass | 3 entity record(s) carry responsible owner, one each, each resolving to the one Ownership record that names it |
-| REQ-MODELS-ENTITY-006 | `Models/Entity.md` | Presence | mandatory | pending | the Statement's subject is not a type the Representation Map declares |
+| REQ-MODELS-ENTITY-004 | `Models/Entity.md` | Presence | mandatory | Pass | 3 entity record(s) carry responsible owner, one each, each resolving to the one Ownership record that names it, with no accountable Ownership Type declared (row ... (cut here; the whole reason is in this run's output) |
+| REQ-MODELS-ENTITY-006 | `Models/Entity.md` | Presence | mandatory | Pass | 6 attribute record(s) carry name, meaning, data type (optional constraints: the Statement calls it optional) |
 | REQ-MODELS-ENTITY-007 | `Models/Entity.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-ENTITY-008 | `Models/Entity.md` | Transition | mandatory | Pass | 3 Entities each occupy exactly one State defined by their Lifecycle |
 | REQ-MODELS-ENTITY-009 | `Models/Entity.md` | Presence | mandatory | Pass | 3 entity record(s) carry lifecycle |
@@ -265,8 +265,8 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-LIFECYCLES-004 | `Lifecycles/Lifecycles.md` | Review | mandatory | Not Applicable | dispositioned Descriptive in the Alias File |
 | REQ-LIFECYCLES-005 | `Lifecycles/Lifecycles.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | DECL-001 | `Language/Conformance.md` | Declaration | mandatory | pending | no procedure is bound to this clause |
-| DECL-002 | `Language/Conformance.md` | Declaration | mandatory | Pass | extensions declared: none |
-| DECL-003 | `Language/Conformance.md` | Declaration | mandatory | Pass | extensions declared: none |
+| DECL-002 | `Language/Conformance.md` | Declaration | mandatory | Not Applicable | the Conformance Statement declares no extension ('none'), so what Chapter 8 imposes on extensions applies to nothing in it |
+| DECL-003 | `Language/Conformance.md` | Declaration | mandatory | Not Applicable | the Conformance Statement declares no extension ('none'), so what Chapter 8 imposes on extensions applies to nothing in it |
 | DECL-004 | `Language/Conformance.md` | Declaration | mandatory | Pass | the Conformance Statement names version 1.0 |
 | DECL-005 | `Language/Conformance.md` | Declaration | mandatory | Pass | one version declared: 1.0 |
-| DECL-006 | `Language/Conformance.md` | Declaration | mandatory | pending | decided by the outcome of every other mandatory Test, reported in the summary |
+| DECL-006 | `Language/Conformance.md` | Declaration | mandatory | pending | 133 mandatory Test(s) are undecided (REQ-META-OBJECT-001, REQ-META-OBJECT-004, REQ-META-OBJECT-018), so whether a mandatory requirement is unsatisfied is not yet known |

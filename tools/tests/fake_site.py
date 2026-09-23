@@ -41,6 +41,13 @@ def base_files():
     entries = dict(IDS)
     entries.update(PRINTED)
     j("/resolve.json", {"entries": entries})
+    # the live health record publishes the thresholds its figures are held to, and recompute()
+    # carries the notes block forward; a fixture without one is a record whose figures are held to
+    # nothing, which the tool reports rather than passing over
+    j("/observatory/health.json", {"notes": {"thresholds": {"brokenLinks": 0, "orphans": 0,
+                                                            "duplicateIdentities": 0,
+                                                            "coreVocabularyProjectionCoverage": 100,
+                                                            "projectionParity": True}}})
     j("/comparisons.json", {"comparisons": [{"url": "https://ocom.uno/compare/x", "record": "https://ocom.uno/compare/x.json"}]})
     j("/discovery.json", {"resources": [{"url": "https://ocom.uno/api/v1/index.json", "mediaType": "application/json"}]})
     j("/api/v1/index.json", {"ok": True})

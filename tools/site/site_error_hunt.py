@@ -88,8 +88,33 @@ def as_path(url, host):
 
 
 def links_of(body):
-    """Every href and src an HTML body carries, as written."""
-    return re.findall(r"""(?:href|src)\s*=\s*["']([^"']+)["']""", body, re.I)
+    """Every reference an HTML body carries, as written.
+
+    One regex over quoted href and src left four ways of pointing at a file unread: `srcset`, which
+    carries a comma-separated list of candidates; an unquoted attribute value; `poster`; and the
+    references inside a stylesheet, which `css_links_of` reads. A page with four dead references of
+    those kinds reported zero failures."""
+    out = []
+    for m in re.finditer(r"""(?:href|src|poster)\s*=\s*(?:["']([^"']+)["']|([^\s"'>]+))""", body, re.I):
+        value = m.group(1) if m.group(1) is not None else m.group(2)
+        # an escaped attribute inside a code sample is markup a page is showing, not a reference it
+        # makes: reading it as one reported two 404s on a page that links to neither
+        if "&quot;" in value or "&#" in value or value.startswith("&"):
+            continue
+        out.append(value)
+    for m in re.finditer(r"""srcset\s*=\s*(?:["']([^"']+)["']|([^\s"'>]+))""", body, re.I):
+        value = m.group(1) if m.group(1) is not None else m.group(2)
+        for candidate in value.split(","):
+            url = candidate.strip().split()[0] if candidate.strip() else ""
+            if url:
+                out.append(url)
+    return out
+
+
+def css_links_of(body):
+    """Every url() a stylesheet references, as written."""
+    return [m.group(1).strip("'\"") for m in re.finditer(r"url\(\s*([^)]+?)\s*\)", body, re.I)
+            if not m.group(1).strip("'\"").startswith("data:")]
 
 
 def canonicals_of(body):
@@ -231,8 +256,9 @@ def hunt(site):
             if raw.startswith(SKIP_SCHEMES) or raw.startswith("#"):
                 continue
             if raw.startswith("//"):
-                counts["external"] += 1
-                continue
+                # a protocol-relative URL on this site's own host is an internal target; filing it
+                # as external skipped it without ever comparing the host
+                raw = "https:" + raw
             target = as_path(urllib.parse.urljoin(site.base + path, raw.split("#")[0]), sitemap_host) if not raw.startswith("/") else raw.split("#")[0]
             u = urllib.parse.urlparse(raw)
             if u.scheme in ("http", "https") and u.netloc and u.netloc != sitemap_host:
@@ -241,6 +267,23 @@ def hunt(site):
             if target is None or not target:
                 continue
             targets.setdefault(target, path)
+
+    # a stylesheet was fetched for its status and never read, so every image and font it names was
+    # outside the hunt; its own references are resolved against its own path
+    for target, source in sorted(targets.items()):
+        if not target.split("?")[0].lower().endswith(".css"):
+            continue
+        status, ctype, body, location, robots = site.get(target)
+        if status != 200:
+            continue
+        for raw in css_links_of(body):
+            if raw.startswith(SKIP_SCHEMES) or raw.startswith("#"):
+                continue
+            if raw.startswith("//"):
+                raw = "https:" + raw
+            inner = as_path(urllib.parse.urljoin(site.base + target, raw.split("#")[0]), sitemap_host)
+            if inner:
+                targets.setdefault(inner, target)
 
     for target, source in sorted(targets.items()):
         status, final, note = resolve(site, target)

@@ -14,7 +14,7 @@
 
 **Version:** 0.2
 
-**Last Updated:** 21 September 2026
+**Last Updated:** 23 September 2026
 
 ---
 
@@ -234,6 +234,14 @@ Defined in `Memory/Confidence.md`.
 
 ---
 
+# Evidence
+
+An Evidence Record is the retained account of why a Memory Record holds its value: what was observed or asserted, from which source, and how reliable that source was judged to be at the time.
+
+Defined in `Memory/Evidence Overlay.md` since `CAND-023` (21 September 2026), which defines the record that carries it; `Core/Constitution.md` uses the bare term in Canonical Principle 3. `AO-021` and `AO-053` record what the definition still leaves open at the Object tier.
+
+---
+
 # Knowledge
 
 Knowledge is governed, persistent, and reusable organizational understanding.
@@ -262,7 +270,6 @@ Defined here; no other document carries a Definition for the term.
 
 `Core/Constitution.md` uses the following terms for which no document in this specification carries a Definition. Each is reserved for a future version in the sense `Governance/Documentation-Standards.md` gives that word, and the observation that tracks it is named, so that the term is locatable here even where it is not yet defined. Nothing in this section defines anything.
 
-- **Evidence** (Canonical Principle 3): defined in `Memory/Evidence Overlay.md` since `CAND-023` (21 September 2026): "An Evidence Record is the retained account of why a Memory Record holds its value: what was observed or asserted, from which source, and how reliable that source was judged to be at the time." `AO-021` and `AO-053` record what the definition still leaves open at the Object tier.
 - **World Model** (Canonical Principles 5 and 6): its relationship to Memory and Knowledge is decided by `CAND-014` Layer 1; the document itself is Layer 2 and not yet authored.
 - **Autonomy level** (Canonical Principles 7 and 14): no scale is defined anywhere; tracked as `AO-067`.
 - **Provenance** (Canonical Principle 12): three AI documents carry a Provenance section and none defines the term; tracked as `AO-068`.
@@ -280,3 +287,4 @@ Defined here; no other document carries a Definition for the term.
 | 0.2 | 16 September 2026 | Restated as a verbatim index of canonical definitions, per `AO-066`: every existing entry now carries the Definition sentence of the document that owns the term, with that document named; the Purpose no longer claims this document is authoritative. Added Object, Ownership, Identity, Metadata, Classification, Reference, Capability, Policy, Contract, Constraint, Registry, Memory, Memory Record, Confidence, Knowledge and Context, closing `GAP-002`. Added Reserved Terms for the Constitution terms no document defines (Evidence, World Model, Autonomy level, Provenance, Static and Dynamic World Modelling, and the Architectural Principles vocabulary), each naming the observation that tracks it. EPIC-D, executed under `CAND-007` Section 3. |
 | 0.2 | 16 September 2026 | Relationship entry now restates `Meta/Relationship.md`'s Definition and names `Models/Relationship.md` as its specialization for Entities, per `CAND-016`; the `AO-002` tracker note is removed as that observation is Closed. |
 | 0.2 | 21 September 2026 | Evidence moved out of Reserved Terms: its Definition is in `Memory/Evidence Overlay.md` since `CAND-023`, quoted here verbatim as the index requires. |
+| 0.2 | 23 September 2026 | The move that row records is made: Evidence is an entry of the index, between Confidence and Knowledge, and no longer a bullet under Reserved Terms, whose preamble says nothing in it defines anything. Round 3 of the all-packages test found the document contradicting its own revision history for two days. |

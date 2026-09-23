@@ -16,7 +16,9 @@ this implementation is narrower than the rule, the record says so in its own not
   publication_health.py --write <dir>   recompute and write both records into <dir>
   publication_health.py --check         recompute and compare against what is published,
                                         printing every difference; exit 1 if any row fails
-                                        its threshold or a published figure disagrees
+                                        its rule, any figure breaches the threshold the
+                                        record publishes for it, or a published figure
+                                        disagrees with the recomputed one
   publication_health.py --summary       recompute and print the counts only
 
 Figures the published records mark as not reproducible are carried forward as constants in
@@ -57,6 +59,35 @@ def as_path(url):
     return u
 
 
+def looks_html(body):
+    head = body.lstrip()[:400].lower()
+    return head.startswith("<!doctype html") or head.startswith("<html") or "<html" in head
+
+
+def looks_json(body):
+    try:
+        json.loads(body)
+        return True
+    except Exception:
+        return False
+
+
+def looks_jsonld(body):
+    try:
+        return isinstance(json.loads(body), dict) and "@context" in json.loads(body)
+    except Exception:
+        return False
+
+
+def looks_markdown(body):
+    return bool(body.strip()) and not looks_html(body)
+
+
+# What a presence row requires of the body it finds. A row that asked only for a 200 asserted a
+# projection exists while the file behind it was any document at all.
+SHAPES = {"html": looks_html, "json": looks_json, "jsonld": looks_jsonld, "markdown": looks_markdown}
+
+
 class Site:
     """Fetches published files once each and remembers what was asked for."""
 
@@ -74,12 +105,20 @@ class Site:
             try:
                 req = urllib.request.Request(url, headers={"User-Agent": "ocom-publication-health/1.0 (+https://github.com/DenisHogberg/OCOM)"})
                 with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
-                    out = (r.status, r.read().decode("utf-8", "replace"))
+                    # a redirect is another file answering for this one: the rows below assert that
+                    # a projection is published at a path, and urlopen followed a 301 anywhere,
+                    # including to another host, and reported the result as this file
+                    if r.geturl() != url:
+                        out = (r.status, "", r.geturl())
+                        self.cache[path] = out
+                        time.sleep(self.pause)
+                        return out
+                    out = (r.status, r.read().decode("utf-8", "replace"), None)
                 self.cache[path] = out
                 time.sleep(self.pause)
                 return out
             except urllib.error.HTTPError as e:
-                out = (e.code, "")
+                out = (e.code, "", None)
                 self.cache[path] = out
                 time.sleep(self.pause)
                 return out
@@ -88,12 +127,20 @@ class Site:
                 time.sleep(1.5 * (attempt + 1))
         raise SystemExit("cannot reach %s after four attempts: %s" % (url, last))
 
-    def ok(self, path):
-        return self.raw(path)[0] == 200
+    def ok(self, path, shape=None):
+        """200, at this path rather than after a redirect, and a body of the shape asked for.
+
+        `ok` was status alone, so swapping a term's Markdown projection, JSON-LD alternate, HTML
+        page or api record for a completely different document left every presence row passing and
+        the projection-coverage figure at 100."""
+        code, body, redirect = self.raw(path)
+        if code != 200 or redirect:
+            return False
+        return SHAPES[shape](body) if shape else True
 
     def text(self, path):
-        code, body = self.raw(path)
-        return body if code == 200 else None
+        code, body, redirect = self.raw(path)
+        return body if code == 200 and not redirect else None
 
     def json(self, path):
         body = self.text(path)
@@ -143,14 +190,14 @@ def presence_rows(site, slugs, entries):
     """The rows that assert a file exists for every member of a published set."""
     rows = []
 
-    def every(name, rule, paths):
-        missing = [p for p in paths if not site.ok(p)]
+    def every(name, rule, paths, shape=None):
+        missing = [p for p in paths if not site.ok(p, shape)]
         rows.append(row(name, rule, len(paths), missing))
 
-    every("Core Vocabulary term pages", "Every term has an HTML page.", ["/vocabulary/%s" % s for s in slugs])
-    every("Core Vocabulary JSON records", "Every term has a canonical JSON record.", ["/vocabulary/%s.json" % s for s in slugs])
-    every("Core Vocabulary JSON-LD", "Every term has a standalone JSON-LD alternate.", ["/vocabulary/%s.jsonld" % s for s in slugs])
-    every("Core Vocabulary Markdown", "Every term has a Markdown projection.", ["/vocabulary/%s.md" % s for s in slugs])
+    every("Core Vocabulary term pages", "Every term has an HTML page.", ["/vocabulary/%s" % s for s in slugs], "html")
+    every("Core Vocabulary JSON records", "Every term has a canonical JSON record.", ["/vocabulary/%s.json" % s for s in slugs], "json")
+    every("Core Vocabulary JSON-LD", "Every term has a standalone JSON-LD alternate.", ["/vocabulary/%s.jsonld" % s for s in slugs], "jsonld")
+    every("Core Vocabulary Markdown", "Every term has a Markdown projection.", ["/vocabulary/%s.md" % s for s in slugs], "markdown")
 
     ids_by_target = {}
     for identifier, target in entries.items():
@@ -158,11 +205,11 @@ def presence_rows(site, slugs, entries):
     explain = []
     for s in slugs:
         explain += ["/explain/%s" % i for i in ids_by_target.get("/vocabulary/%s" % s, [])]
-    every("Explain records", "Every term resolves under all three of its identifiers.", explain)
+    every("Explain records", "Every term resolves under all three of its identifiers.", explain, "html")
 
-    every("API term records", "Every term has an api/v1 record.", ["/api/v1/term/%s" % s for s in slugs])
-    every("API neighbor records", "Every term has an api/v1 neighbors record.", ["/api/v1/neighbors/%s" % s for s in slugs])
-    every("Inspect pages", "Every term has an inspect view.", ["/inspect/%s" % s for s in slugs])
+    every("API term records", "Every term has an api/v1 record.", ["/api/v1/term/%s" % s for s in slugs], "json")
+    every("API neighbor records", "Every term has an api/v1 neighbors record.", ["/api/v1/neighbors/%s" % s for s in slugs], "json")
+    every("Inspect pages", "Every term has an inspect view.", ["/inspect/%s" % s for s in slugs], "html")
 
     comparisons = (site.json("/comparisons.json") or {}).get("comparisons", [])
     paths = []
@@ -399,15 +446,63 @@ def rendered_figures_row(site):
         missing.append("/resolve does not answer")
     elif entries:
         text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", resolve_page))
-        printed = set(int(n) for n in re.findall(r"(?:Identifiers|identifiers)\D{0,12}(\d{1,4})", text))
-        checked += 1
-        if printed and entries not in printed:
-            missing.append("/resolve prints %s identifiers and resolve.json holds %d"
-                           % (", ".join(str(x) for x in sorted(printed)), entries))
+        printed = [int(n) for n in re.findall(r"(?:Identifiers|identifiers)\D{0,12}(\d{1,4})", text)]
+        # the count was incremented before the comparison and the test was set membership, so a
+        # page printing no number in this shape was reported ok having compared nothing, and a page
+        # whose headline figure was wrong passed whenever any other number beside the word
+        # "identifiers" happened to equal the registry size
+        if not printed:
+            missing.append("/resolve prints no identifier count this tool can read, so the figure resolve.json "
+                           "publishes (%d) was compared against nothing" % entries)
+        else:
+            checked += 1
+            if printed[0] != entries:
+                missing.append("/resolve prints %d identifiers and resolve.json holds %d" % (printed[0], entries))
     return row("Rendered figures match their records",
                "Every count the /observatory page prints for a publication-health row, and the identifier count "
                "printed on /resolve, equals the figure in the record the page renders.",
                checked, missing)
+
+
+# The health record publishes a thresholds block and nothing ever compared a figure against one:
+# --check compared the recomputed figures with the published figures, and since the same tool
+# writes the record, a deploy republished the breached numbers and the next run found perfect
+# agreement. The direction is per figure, and a threshold this tool cannot read is a failure
+# rather than a silent skip.
+THRESHOLD_DIRECTION = {
+    "brokenLinks": "at most",
+    "orphans": "at most",
+    "duplicateIdentities": "at most",
+    "cycles": "at most",
+    "missingReverse": "at most",
+    "coreVocabularyProjectionCoverage": "at least",
+    "projectionParity": "exactly",
+}
+
+
+def threshold_failures(health):
+    """Every figure of the health record that breaches the threshold the record publishes for it."""
+    thresholds = (health.get("notes") or {}).get("thresholds") or {}
+    if not thresholds:
+        return ["the health record publishes no thresholds block, so no figure could be held to one"]
+    out = []
+    for key in sorted(thresholds):
+        want = thresholds[key]
+        direction = THRESHOLD_DIRECTION.get(key)
+        got = (health.get("projectionParity") or {}).get("ok") if key == "projectionParity" else health.get(key)
+        if direction is None:
+            out.append("the record publishes a threshold for %s and this tool does not know which way it points, "
+                       "so the figure was compared against nothing" % key)
+        elif direction == "exactly":
+            if got != want:
+                out.append("%s is %r and the record publishes a threshold of %r" % (key, got, want))
+        elif not isinstance(got, (int, float)) or isinstance(got, bool):
+            out.append("%s is %r, which is not a number the published threshold %r can be applied to" % (key, got, want))
+        elif direction == "at most" and got > want:
+            out.append("%s is %s and the record publishes a maximum of %s" % (key, got, want))
+        elif direction == "at least" and got < want:
+            out.append("%s is %s and the record publishes a minimum of %s" % (key, got, want))
+    return out
 
 
 def coined_names_row(site):
@@ -621,6 +716,9 @@ def main(argv):
     site = Site(a.base, a.pause)
     health, pub = recompute(site, a.today)
     failed = [r for r in pub["checks"] if not r["ok"]]
+    breached = threshold_failures(health)
+    for line in breached:
+        print("THRESHOLD", line)
     for r in pub["checks"]:
         tail = ""
         if not r["ok"]:
@@ -637,14 +735,14 @@ def main(argv):
     spec = health["projectionParity"]["specification"]
     print("specification projection: version=%s chapters=%d commit=%s" % (spec["version"], spec["chapters"], spec["sourceCommit"]))
     if a.summary:
-        return 1 if failed else 0
+        return 1 if (failed or breached) else 0
     if a.write:
         d = pathlib.Path(a.write)
         (d / "observatory").mkdir(parents=True, exist_ok=True)
         (d / "observatory" / "health.json").write_text(json.dumps(health, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (d / "observatory" / "publication-health.json").write_text(json.dumps(pub, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print("wrote %s/observatory/{health,publication-health}.json" % d)
-        return 1 if failed else 0
+        return 1 if (failed or breached) else 0
     live_h = site.json("/observatory/health.json") or {}
     live_p = site.json("/observatory/publication-health.json") or {}
     diffs = []
@@ -708,8 +806,9 @@ def main(argv):
         diffs.append("publication-health: published row %r is computed by nothing" % name)
     for d in diffs:
         print("DIFF", d)
-    print("published records differ in %d place(s); %d row(s) fail their rule" % (len(diffs), len(failed)))
-    return 1 if (diffs or failed) else 0
+    print("published records differ in %d place(s); %d row(s) fail their rule; %d figure(s) breach a published "
+          "threshold" % (len(diffs), len(failed), len(breached)))
+    return 1 if (diffs or failed or breached) else 0
 
 
 if __name__ == "__main__":

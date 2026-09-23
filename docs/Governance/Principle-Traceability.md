@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 September 2026
+**Last Updated:** 23 September 2026
 
 ---
 
@@ -138,7 +138,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 | `docs/Memory/Overview.md:48` | binding rule |   | Memory shall preserve evidence. |
 | `docs/Memory/Confidence.md:35` | binding rule |   | Confidence is metadata associated with a Memory Record and shall not replace evidence or business validation. |
 | `docs/Memory/Evidence Overlay.md:37` | restatement |   | A Memory Record without Evidence is a belief, and Constitution Principle 3 does not permit a retained belief without traceable Evidence. |
-| `docs/Core/Terminology.md:265` | restatement |   | An Evidence Record is the retained account of why a Memory Record holds its value: what was observed or asserted, from which source, and how reliable that source was judged to be at the time. |
+| `docs/Core/Terminology.md:239` | restatement |   | An Evidence Record is the retained account of why a Memory Record holds its value: what was observed or asserted, from which source, and how reliable that source was judged to be at the time. |
 
 **Test:** A Presence Test failing on any exported Memory Record with no reference to an Evidence Record (`Memory/Memory Record.md:189`). It cannot run under Core Conformance, because no `Memory/` Statement is in the requirement set; it becomes runnable only under a Profile Declaration whose Included Set adds the two Memory documents.
 
@@ -181,9 +181,9 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 | Carrier | Kind | Alias | Quote |
 |---|---|---|---|
 | `docs/AI/Knowledge/Knowledge.md:35` | restatement |   | Per Constitution Principle 5, Knowledge is always derived from Memory |
-| `docs/Core/Terminology.md:241` | restatement |   | Defined in `AI/Knowledge/Knowledge.md`; derived from Memory per `Core/Constitution.md` Principle 5 and `CAND-014`. |
+| `docs/Core/Terminology.md:249` | restatement |   | Defined in `AI/Knowledge/Knowledge.md`; derived from Memory per `Core/Constitution.md` Principle 5 and `CAND-014`. |
 | `docs/Entities/Overview.md:115` | restatement |   | The current state of an Entity is not a Memory Record |
-| `docs/Core/Terminology.md:266` | reserved |   | **World Model** (Canonical Principles 5 and 6): its relationship to Memory and Knowledge is decided by `CAND-014` Layer 1; the document itself is Layer 2 and not yet authored. |
+| `docs/Core/Terminology.md:273` | reserved |   | **World Model** (Canonical Principles 5 and 6): its relationship to Memory and Knowledge is decided by `CAND-014` Layer 1; the document itself is Layer 2 and not yet authored. |
 | `docs/AI/Knowledge/Knowledge Sources.md:129` | binding rule |   | Every Knowledge Source shall preserve: |
 
 **Test:** No Test of any kind can fail today. The nearest candidate is an Invariant Test failing on the first Knowledge item whose provenance chain terminates anywhere other than a Memory Record, and it has no Statement to anchor to: the strongest provenance obligation in the corpus, the last carrier above, binds a Knowledge Source and never names Memory.
@@ -203,7 +203,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 | Carrier | Kind | Alias | Quote |
 |---|---|---|---|
 | `docs/AI/Knowledge/Knowledge.md:35` | restatement |   | it must be reproducible from Memory without requiring access to the original external systems |
-| `docs/Core/Terminology.md:266` | reserved |   | **World Model** (Canonical Principles 5 and 6): its relationship to Memory and Knowledge is decided by `CAND-014` Layer 1; the document itself is Layer 2 and not yet authored. |
+| `docs/Core/Terminology.md:273` | reserved |   | **World Model** (Canonical Principles 5 and 6): its relationship to Memory and Knowledge is decided by `CAND-014` Layer 1; the document itself is Layer 2 and not yet authored. |
 | `docs/Memory/Memory Record.md:168` | definition |  | Status is a derived projection, not a stored attribute of a Memory Record |
 
 **Test:** No Test of any kind can fail today. An Invariant Test would read a derivation record linking each Knowledge item to the Memory Records it was computed from, and no Statement requires one to exist; a Declaration Test asking a claimant to assert reconstructability would be unfalsifiable rather than a test.
@@ -222,7 +222,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 
 | Carrier | Kind | Alias | Quote |
 |---|---|---|---|
-| `docs/Core/Terminology.md:267` | reserved |   | **Autonomy level** (Canonical Principles 7 and 14): no scale is defined anywhere; tracked as `AO-067`. |
+| `docs/Core/Terminology.md:274` | reserved |   | **Autonomy level** (Canonical Principles 7 and 14): no scale is defined anywhere; tracked as `AO-067`. |
 | `docs/Domains/AI/AI_Policies.md:181` | binding rule |   | autonomous execution shall remain policy-controlled; |
 
 **Test:** No Test of any kind can fail today: no Statement names the three dimensions or forbids inferring one from another. A Declaration Test could be written once a scale exists, failing when a claimant reports one combined level or derives an Autonomy claim from a Core Conformance result.
@@ -241,7 +241,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 
 | Carrier | Kind | Alias | Quote |
 |---|---|---|---|
-| `docs/Core/Terminology.md:269` | reserved |   | **Static World Modelling** and **Dynamic World Modelling** (Canonical Principle 8): defined nowhere; tracked as `AO-068`. |
+| `docs/Core/Terminology.md:276` | reserved |   | **Static World Modelling** and **Dynamic World Modelling** (Canonical Principle 8): defined nowhere; tracked as `AO-068`. |
 
 **Test:** No Test of any kind can fail today. `Governance/Conformance-Test-Suite.md` states that the suite does not test the World Model, and neither Static nor Dynamic World Modelling is defined anywhere, so a Declaration Test would have nothing to check a declaration against.
 
@@ -333,7 +333,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 | `docs/Memory/Confidence.md:35` | binding rule |   | Confidence is metadata associated with a Memory Record and shall not replace evidence or business validation. |
 | `docs/AI/Context/Context Optimization.md:120` | binding rule |   | Optimization shall preserve provenance for every Context element. |
 | `docs/AI/Knowledge/Knowledge Sources.md:95` | binding rule |   | System-generated Knowledge shall preserve system provenance. |
-| `docs/Core/Terminology.md:268` | reserved |   | **Provenance** (Canonical Principle 12): three AI documents carry a Provenance section and none defines the term; tracked as `AO-068`. |
+| `docs/Core/Terminology.md:275` | reserved |   | **Provenance** (Canonical Principle 12): three AI documents carry a Provenance section and none defines the term; tracked as `AO-068`. |
 
 **Test:** A Presence Test failing when an exported Memory Record carries no Memory Type, a type outside the enumeration Fact, Observation and Inference, no provenance, or no confidence linked to Evidence. It can fail only under a Profile Declaration that adds the Memory documents, because no Core Conformance Test reaches any of these Statements.
 
@@ -379,7 +379,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 | `docs/Meta/Ownership.md:122` | binding rule | REQ-META-OWNERSHIP-009 | Shared ownership shall preserve accountability. |
 | `docs/AI/Overview.md:179` | binding rule |   | an AI Agent shall preserve context and route the matter to the responsible organizational function rather than reaching the professional conclusion itself |
 | `docs/Core/Principles.md:119` | binding rule |   | OCOM shall not substitute for professional expertise |
-| `docs/Core/Terminology.md:267` | reserved |   | **Autonomy level** (Canonical Principles 7 and 14): no scale is defined anywhere; tracked as `AO-067`. |
+| `docs/Core/Terminology.md:274` | reserved |   | **Autonomy level** (Canonical Principles 7 and 14): no scale is defined anywhere; tracked as `AO-067`. |
 
 **Test:** A Review Test on REQ-MODELS-WORKFLOW-012 and REQ-MODELS-WORKFLOW-013: Review Fail when a Workflow whose outcome is a judgment reserved to a professional function records that judgment as its own outcome, or records it without preserving context and assigning the review to a named responsible function.
 
@@ -407,3 +407,4 @@ Three things follow, none of them decided here. A profile is the existing mechan
 | 0.1 | 19 September 2026 | How to Read It now cites `Language/Conformance.md` for the definition of Core Conformance and names the twenty-two-document enumeration as the suite's reading, per `CAND-021`. |
 | 0.1 | 21 September 2026 | Memory-tier line references re-pointed after `CAND-023` and `CAND-024` were integrated; the Principle 3 row that recorded Evidence's Definition as reserved now carries the Definition itself; Principle 4 gains the integrity guarantee of `Memory Record.md` as a binding-rule carrier. |
 | 0.1 | 22 September 2026 | Two carriers re-pointed after a paragraph was added above each (`Meta/Organization.md`, `CAND-027`; `Memory/Retention.md`, `AO-085`); no row added or removed. |
+| 0.1 | 23 September 2026 | Eight carriers in `Core/Terminology.md` re-pointed after Evidence moved from Reserved Terms into an entry of the index, which that document's revision history had recorded on 21 September without the move being made; no row added or removed. |
