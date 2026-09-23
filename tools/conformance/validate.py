@@ -38,21 +38,28 @@ THING_VERBS = ("possess", "contain", "define", "have", "carry", "include", "spec
                "reference", "assign", "state", "identify", "be assigned")
 
 
-def read_table(path, header_starts):
-    """Rows of the first Markdown table whose header line starts with header_starts."""
-    rows, in_table = [], False
+def read_table(path, header_starts, whole_file=True):
+    """Every row of the table whose header starts with `header_starts`.
+
+    Reading it as one contiguous block stopped at the first line that is not a row, so a single
+    blank line inside the Tests table dropped every row below it: the run reported no error and the
+    report computed the size of the measured set from the same truncated read."""
+    rows, in_table, width = [], False, None
     for line in pathlib.Path(path).read_text(encoding="utf-8").splitlines():
         if line.startswith(header_starts):
             in_table = True
+            width = len(line.strip().strip("|").split("|"))
             continue
-        if in_table:
-            if not line.startswith("|"):
-                if rows:
-                    break
-                continue
-            if set(line.replace("|", "").strip()) <= set("-: "):
-                continue
-            rows.append([c.strip() for c in line.strip().strip("|").split("|")])
+        if in_table and line.startswith("#"):
+            break                       # the table ends with its section, not with its first gap
+        if not in_table or not line.startswith("|"):
+            continue
+        if set(line.replace("|", "").strip()) <= set("-: "):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if width is not None and len(cells) != width:
+            continue                    # a row of another table under the same heading
+        rows.append(cells)
     return rows
 
 
@@ -850,8 +857,8 @@ def lifecycle_for(lifecycles, named, namespace=None):
     that identity in one namespace; `Adoption/Reference Serialization.md` states that rule."""
     if named is None:
         return None
-    if namespace is not None and (namespace, named) in lifecycles:
-        return lifecycles[(namespace, named)]
+    if namespace is not None and tuple(namespace) + (named,) in lifecycles:
+        return lifecycles[tuple(namespace) + (named,)]
     hits = [lc for key, lc in lifecycles.items() if isinstance(key, tuple) and key[-1] == named]
     return hits[0] if len(hits) == 1 else None
 
@@ -985,7 +992,7 @@ def transition_predicate(text, r, lifecycles, by_entity):
             names = state_names(r, lc)
             for a, b in pairs:
                 if is_absent(a) or is_absent(b):
-                    bad.append("%s has a Transition with no from or to" % k)
+                    bad.append("%s has a Transition with no from or to" % (k[-1],))
                 elif a not in names or b not in names:
                     bad.append("%s: %s to %s names a State the Lifecycle does not define" % (k, a, b))
         return ("Fail", "; ".join(bad[:3])) if bad else \
@@ -1024,8 +1031,10 @@ def transition_predicate(text, r, lifecycles, by_entity):
 
     if "prohibit undefined" in low or "only perform" in low or "permitted by the lifecycle" in low:
         events = r.records("event")
-        permitted = {k[-1]: set(transitions_of(r, lc)) for k, lc in lifecycles.items()}
-        by_name = {k[-1]: lc for k, lc in lifecycles.items()}
+        # keyed by the bare identifier, two declared systems collapse into whichever the map
+        # listed last, and a State change is compared against the other system's Lifecycle
+        permitted = {k: set(transitions_of(r, lc)) for k, lc in lifecycles.items()}
+        by_name = dict(lifecycles)
         compared, bad, unresolved, destination_only = 0, [], [], []
         for _, e in events:
             subject = r.value(e, "event", "subject")
@@ -1034,9 +1043,11 @@ def transition_predicate(text, r, lifecycles, by_entity):
             if before is None and after is None:
                 continue                      # records no State change at all
             named = by_entity.get(subject)
-            if named is None or named not in permitted:
+            key = next((k for k in lifecycles if k[-1] == named), None) if named is not None else None
+            if key is None or len([k for k in lifecycles if k[-1] == named]) > 1:
                 unresolved.append(str(subject))
                 continue
+            named = key
             if before is None:
                 # a destination without a prior State is a creation when it names the initial State,
                 # and Models/Lifecycle.md makes entering the initial State the start rather than a
@@ -1167,6 +1178,11 @@ def invariant_predicate(text, r, lifecycles, by_entity):
             return None, ("%d Object record(s) carry no identity the Representation Map binds, so they could not "
                           "be compared (%s); bind the identity of every collection the map lists under Object"
                           % (sum(unreadable.values()), ", ".join(sorted(unreadable)[:3])))
+        if not counts:
+            # every sibling engine refuses to pass over nothing, and this leg reported "0 Object
+            # identities, each carried by exactly one record" as a Pass toward Core Conformance
+            return "Fail", ("the export carries no Object identity the Representation Map binds, so no identity "
+                            "could be compared against another")
         undeclared = [p for p in paths if r.namespace_of(p) == ("", "")]
         note = "" if not undeclared else (", %d of them in collection(s) whose scope the map does not declare (%s), compared against every namespace"
                                           % (sum(undeclared_ids.values()), ", ".join(sorted(undeclared)[:3])))
@@ -1366,6 +1382,10 @@ def invariant(test, text, r):
     if "__collisions__" in lifecycles and reads_lifecycles(text):
         return "Fail", "; ".join(lifecycles["__collisions__"][:3])
     lifecycles.pop("__collisions__", None)
+    # `transition()` refuses an export with no Lifecycle and these legs did not, so three of them
+    # reported Pass over zero Lifecycles ("none with more than one initial State")
+    if not lifecycles and reads_lifecycles(text):
+        return "Fail", "the export carries no Lifecycle, so no Lifecycle could be examined"
     parts = compound(text) if ("never:" in text or "shall not:" in text) else [text]
     return combine(parts, lambda part: invariant_predicate(part, r, lifecycles, by_entity))
 
@@ -1537,6 +1557,14 @@ def erasure_records(r):
             why.append("the map binds no field to Erasure.actor")
         elif is_absent(rec.get(actor_f)):
             why.append("names no actor")
+        elif actor_f in {f for k, f in r.fields.items() if k.startswith("erasure.") and k != "erasure.actor"}:
+            # one cell of the claimant's own map pointed the actor row at the field already holding
+            # the Policy or the erased record, and the gate AO-085 added was satisfied by it
+            why.append("names its actor in %s, which the map also binds to another element of the erasure record, "
+                       "so the record names no actor of its own" % actor_f)
+        elif not isinstance(rec.get(actor_f), (str, int, float)) or len(str(rec.get(actor_f))) > 120:
+            why.append("carries %r under %s, which is not an actor this tool can read"
+                       % (str(rec.get(actor_f))[:40], actor_f))
         # the exclusion belongs to the record the erasure names, so it is keyed by that record's
         # namespace. Keying it by the namespace of the erasures collection let an erasure record
         # stored in one scope excise a record that merely shares its key in another, and content
@@ -1625,7 +1653,10 @@ def integrity(test, text, r):
     declares none is pending, not passed (`Conformance-Test-Suite.md` Section 3)."""
     low = text.lower()
     if "audit record" in low:
-        subject = "audit record"
+        # CAND-024 clause 2 defines an Audit Record by reference to Memory Record, so a map that
+        # lists the collection under either name is naming the same records; demanding one spelling
+        # reported an export that uses the other as carrying no Audit Record at all
+        subject = next((name for name in ("audit record", "memory record") if r.types.get(name)), "audit record")
     else:
         subject = subject_of(text, r.types) or pathlib.Path(test["document"]).stem.lower()
     if not r.types.get(subject):
@@ -1839,7 +1870,7 @@ def review_rows(path):
                          % (path, len(hidden), hidden[0][:60]))
     text = re.sub(r"<!--.*?-->", " ", raw, flags=re.S)
     headers, rows, dropped = 0, [], 0
-    fenced, blank_before = False, True
+    fenced, blank_before, indented = False, True, False
     for raw_line in text.splitlines():
         line = raw_line.strip()
         # a row written inside a ``` fence illustrates the format; reading it as a judgment
@@ -1849,8 +1880,12 @@ def review_rows(path):
             blank_before = False
             continue
         # a Markdown indented code block is a fence written the other way, and a reader sees
-        # literal text there too
-        indented = blank_before and (raw_line.startswith("    ") or raw_line.startswith("\t"))
+        # literal text there too. Deciding it per line demoted the first row of such a block and
+        # applied every row below it as a judgment
+        if raw_line.startswith("    ") or raw_line.startswith("\t"):
+            indented = indented or blank_before
+        elif line:
+            indented = False
         # a blockquoted or list-item row is a row a reader sees: stripping the marker reads it,
         # and skipping the line silently dropped Review Fails with nothing printed anywhere
         body = re.sub(r"^\s*(?:>\s?|[-*+]\s|\d+[.)]\s)+", "", raw_line).strip()
@@ -2033,10 +2068,18 @@ def declaration(clause, statement):
     low = clause.lower()
     if "specification version" in low:
         v = statement.get("supported specification version")
-        return ("Pass", "the Conformance Statement names version %s" % v) if v else ("Fail", "no supported specification version is declared")
+        # "none", "-", "n/a" and "tbd" are absences by this module's own vocabulary, and both
+        # version clauses passed on them, which is the defect the extension clauses were cured of
+        if is_absent(v):
+            return "Fail", "no supported specification version is declared (%r)" % (v if v is not None else "")
+        return "Pass", "the Conformance Statement names version %s" % v
     if "multiple versions" in low:
         v = statement.get("supported specification version", "")
-        return ("Pass", "one version declared: %s" % v) if v else ("Fail", "no version declared")
+        if is_absent(v):
+            return "Fail", "no version declared (%r)" % v
+        if re.search(r"[,;]| and |\bor\b", str(v)):
+            return "Fail", "more than one version declared: %s" % v
+        return "Pass", "one version declared: %s" % v
     if "extension" in low:
         declared = statement.get("supported extensions")
         if declared is None:
@@ -2072,9 +2115,13 @@ def main(argv):
     p.add_argument("--map", required=True)
     p.add_argument("--statement", required=True)
     p.add_argument("--report")
-    p.add_argument("--today", default="20 September 2026")
+    # a hard-coded default stamped every report with one day in the past, including the report the
+    # README tells a reader to produce and the committed example a Reviewer Record is bound to
+    p.add_argument("--today", default=None)
     p.add_argument("--reviews", help="the Reviewer Record: a Markdown table of named judgments on the Tests no procedure decided")
     a = p.parse_args(argv)
+    if a.today is None:
+        a.today = datetime.date.today().strftime("%-d %B %Y")
 
     model = json.loads(pathlib.Path(a.model).read_text(encoding="utf-8"))
     types, fields, declarations = load_map(a.map)
@@ -2083,6 +2130,11 @@ def main(argv):
     catalogue = load_catalogue()
     register = load_register()
 
+    missing_text = sorted(t["alias"] for t in catalogue if t["alias"] not in register)
+    if missing_text:
+        raise SystemExit("the Test Catalogue names %d Statement(s) the Requirement Register does not carry (%s); a "
+                         "Test over an empty Statement is a Test about nothing, and the engines answered it with "
+                         "sentences about the claimant's map" % (len(missing_text), ", ".join(missing_text[:3])))
     results = []
     for test in catalogue:
         text = register.get(test["alias"], "")

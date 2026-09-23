@@ -272,6 +272,18 @@ records the instance and the directory that closes it.
 
 This is the twelfth required check on `main`.
 
+## The example Test Report matches a run (added 24 September 2026)
+
+A step inside the Test Catalogue job runs the suite against
+`docs/Examples/Conformance/` and compares the result with the committed
+`report.md`, normalising the two lines a run stamps for itself: the date and
+the checkout it read. That report is the headline artifact of Package 1 and
+the document every conformance claim in `README.md`, `Release-Readiness.md`
+and the Evidence Register rests on, and nothing regenerated or compared it:
+round 8 of the all-packages test rewrote its verdict to "Core Conformance:
+established" and every check stayed green. It is a step, not a fourteenth
+check.
+
 ## The records that count the registers (added 23 September 2026)
 
 A step inside the publication-metadata job compares three documents that

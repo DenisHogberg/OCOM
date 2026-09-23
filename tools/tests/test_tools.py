@@ -989,6 +989,162 @@ class Validator(unittest.TestCase):
             self.assertEqual(code, 0, printed)
             self.assertIn("declares no inputs", text)
 
+    # --- round 8 of the all-packages test -------------------------------------------------
+
+    def test_no_engine_passes_over_an_empty_set(self):
+        """Round 8: the identity-reuse Invariant reported "0 Object identities, each carried by
+        exactly one record" as a Pass, and three Lifecycle legs of invariant() passed over an export
+        with no Lifecycle, while every sibling engine refuses to pass on nothing."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"], model["lifecycles"] = [], []
+            for key in ("domains", "relationships", "references", "events", "workflows", "models",
+                        "classifications", "capabilities", "policies", "contracts", "constraints",
+                        "registries", "ownership", "audit_records", "evidence_records"):
+                model[key] = []
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            rows = self.outcomes(c.dir)
+            for alias in ("REQ-META-IDENTITY-008", "REQ-MODELS-LIFECYCLE-012"):
+                self.assertNotEqual(rows.get(alias), "Pass", (alias, rows.get(alias)))
+
+    def test_a_lifecycle_in_a_second_system_is_not_a_collision_and_is_not_confused(self):
+        """Round 8: round 7's namespace-first resolution never matched, because the index writes a
+        three-part key and the lookup asked for a two-part one; and the Event leg threw the
+        namespace away a line below the fix that kept it."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            twin = dict(model["lifecycles"][0])
+            model["lifecycles_snow"] = [twin]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path)
+                    .replace("| Lifecycle | collection | `lifecycles` |",
+                             "| Lifecycle | collection | `lifecycles`, `lifecycles_snow` |")
+                    .replace("| Integrity.method |",
+                             "| Lifecycle.identity scope | declaration | `External System` |\n"
+                             "| lifecycles.identity system | declaration | `SAP` |\n"
+                             "| lifecycles_snow.identity system | declaration | `ServiceNow` |\n| Integrity.method |"))
+            rows = self.outcomes(c.dir)
+            # two systems carrying one identifier are two Lifecycles, not a collision
+            self.assertNotIn("carry the identifier", self.report_text(c.dir))
+            self.assertNotEqual(rows.get("REQ-MODELS-LIFECYCLE-002"), "Fail", rows.get("REQ-MODELS-LIFECYCLE-002"))
+
+    def test_a_transition_with_no_endpoints_is_reported_not_fatal(self):
+        """Round 8: `"%s" % k` with the tuple key round 7 introduced raised TypeError and the run
+        wrote no report at all."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["lifecycles"][0]["transitions"].append({"trigger": "nothing"})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertEqual(code, 0, out)
+            self.assertIn("has a Transition with no from or to", self.report_text(c.dir))
+
+    def test_the_catalogue_is_read_whole(self):
+        """Round 8: the table reader stopped at the first line that is not a row, so one blank line
+        inside the Tests table halved the catalogue and the run said nothing."""
+        with Copy() as c:
+            path = "docs/Governance/Test-Catalogue.md"
+            text = c.read(path)
+            row = [l for l in text.splitlines() if l.startswith("| REQ-META-OWNERSHIP-022 ")][0]
+            c.edit(path, row, "\n" + row)          # a gap in the middle of the table
+            code, out = self.run_on(c.dir)
+            self.assertIn("mandatory 185", out)
+
+    def test_a_version_field_that_is_an_absence_is_not_a_version(self):
+        """Round 8: both Version Conformance clauses kept the truthiness test the extension clauses
+        were cured of, so "none", "-" and "n/a" passed."""
+        statement = "%s/conformance-statement.md" % self.EX
+        for value in ("none", "-", "n/a", "TBD"):
+            with self.subTest(value), Copy() as c:
+                c.edit(statement, "**Supported specification version:** 1.0",
+                       "**Supported specification version:** %s" % value)
+                rows = self.outcomes(c.dir)
+                failed = [a for a, o in rows.items() if a.startswith("DECL-") and o == "Fail"]
+                self.assertTrue(failed, rows)
+                self.assertIn("no supported specification version is declared", self.report_text(c.dir))
+
+    def test_an_actor_row_pointed_at_another_element_grants_nothing(self):
+        """Round 8: AO-085's actor gate asked only that a field was non-empty, and the claimant
+        writes the map: pointing `Erasure.actor` at the field holding the Policy satisfied it."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            erased = model["audit_records"][0]["id"]
+            model["audit_records"][0] = {"id": erased, "created_at": "2024-03-11T09:00:00Z",
+                                         "creator": "Branch Manager"}
+            model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.map_erasures(c)
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path).replace("| Erasure.actor | field | `actor` |",
+                                               "| Erasure.actor | field | `policy` |"))
+            self.assertIn("names no actor of its own", self.report_text(c.dir))
+            self.assertEqual(self.integrity_rows(c.dir).get("REQ-META-OWNERSHIP-022"), "Fail")
+
+    def test_an_erased_record_without_its_demonstration_is_verified(self):
+        """Round 8: the test that claimed to cover this deleted the record's identity too, so the
+        erasure named nothing and the leg under test was never reached."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            erased = model["audit_records"][0]["id"]
+            # identity preserved under `label`, demonstration (the content address) gone
+            model["audit_records"][0] = {"label": erased, "created_at": "2024-03-11T09:00:00Z",
+                                         "creator": "Branch Manager"}
+            model["erasures"] = [{"id": "ERA-0001", "record": erased, "policy": "POL-SUSPEND",
+                                  "actor": "records-officer"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.map_erasures(c)
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path).replace("| Audit record.identity | field | `id` |",
+                                               "| Audit record.identity | field | `label` |"))
+            self.assertIn("carries no demonstration of integrity", self.run_on(c.dir)[1] + self.report_text(c.dir))
+
+    def test_every_row_of_an_indented_illustration_is_illustration(self):
+        """Round 8: the guard was recomputed per line and only the first row of an indented block
+        was demoted; every row below it was applied as a judgment."""
+        rows = "".join("    | REQ-META-OBJECT-00%d | Review Pass | Nobody At All | 22 September 2026 | A reason long enough to be read. |\n" % i
+                       for i in (4, 5, 6))
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\nAn illustration:\n\n%s\n%s%s" % (rows, self.HEADER, self.JUDGMENT), encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertEqual(code, 0, printed)
+            self.assertNotIn("Nobody At All", text)
+            self.assertIn("3 judgment-shaped row(s)", printed)
+
+    def test_the_guards_on_a_reviewer_record_each_decide_something(self):
+        """Round 8: the outcome-vocabulary guard, the duplicate-row guard and the
+        unterminated-comment guard each had no test that reached them."""
+        cases = {
+            "an outcome the grammar does not carry":
+                "| REQ-META-OBJECT-001 | Reviewed | A. Reviewer | 22 September 2026 | A reason long enough here. |\n",
+            "two rows for one Test":
+                self.JUDGMENT + self.JUDGMENT.replace("Review Pass", "Review Fail"),
+        }
+        for label, rows in cases.items():
+            with self.subTest(label), Copy() as c:
+                path = c.dir / "reviews.md"
+                path.write_text("# R\n\n" + self.HEADER + rows, encoding="utf-8")
+                code, printed, text = self.run_with_reviews(c.dir, path)
+                self.assertNotEqual(code, 0, printed)
+        with Copy() as c:       # an unterminated comment makes the whole table invisible
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\n<!-- hidden\n\n" + self.HEADER + self.JUDGMENT, encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertNotEqual(code, 0, printed)
+            self.assertIn("unterminated comment", printed)
+
+    def test_a_catalogue_row_the_register_does_not_carry_stops_the_run(self):
+        """Round 8: the register lookup fell back to an empty Statement, and the engines answered a
+        Test about nothing with a sentence about the claimant's map."""
+        with Copy() as c:
+            path = "docs/Governance/Test-Catalogue.md"
+            row = [l for l in c.read(path).splitlines() if l.startswith("| REQ-META-OWNERSHIP-022 ")][0]
+            c.edit(path, row, row.replace("REQ-META-OWNERSHIP-022", "REQ-NOWHERE-001"))
+            code, out = self.run_on(c.dir)
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("the Requirement Register does not carry", out)
+
     # --- round 5 of the all-packages test -------------------------------------------------
 
     def test_a_record_stored_as_an_object_value_is_not_invisible(self):

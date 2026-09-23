@@ -485,6 +485,12 @@ def rendered_figures_row(site):
             checked += 1
             if printed[0] != entries:
                 missing.append("/resolve prints %d identifiers and resolve.json holds %d" % (printed[0], entries))
+            # the page prints a second figure in its own prose ("N of them today"), and comparing
+            # the headline alone left it unread: 79 stood beside 81 for as long as anyone looked
+            for m in re.finditer(r"(\d{1,4}) of them (?:today|resolve)", text):
+                checked += 1
+                if int(m.group(1)) != entries:
+                    missing.append("/resolve says %s of them resolve and resolve.json holds %d" % (m.group(1), entries))
     return row("Rendered figures match their records",
                "Every count the /observatory page prints for a publication-health row, and the identifier count "
                "printed on /resolve, equals the figure in the record the page renders.",

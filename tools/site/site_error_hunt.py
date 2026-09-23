@@ -102,6 +102,22 @@ def links_of(body):
         if "&quot;" in value or "&#" in value or value.startswith("&"):
             continue
         out.append(value)
+    # og:image, twitter:image, og:url, a refresh target, a form action and every URL inside a
+    # JSON-LD block are references a page makes and this hunt did not read
+    for m in re.finditer(r"""<meta[^>]+(?:property|name)\s*=\s*["'](?:og:image|og:url|twitter:image)["'][^>]*>""",
+                         body, re.I):
+        c = re.search(r"""content\s*=\s*["']([^"']+)["']""", m.group(0), re.I)
+        if c:
+            out.append(c.group(1))
+    for m in re.finditer(r"""<meta[^>]+http-equiv\s*=\s*["']refresh["'][^>]*>""", body, re.I):
+        c = re.search(r"""url\s*=\s*([^"';>]+)""", m.group(0), re.I)
+        if c:
+            out.append(c.group(1).strip())
+    for m in re.finditer(r"""<form[^>]+action\s*=\s*["']([^"']+)["']""", body, re.I):
+        out.append(m.group(1))
+    for block in re.findall(r"""<script[^>]+type\s*=\s*["']application/ld\+json["'][^>]*>(.*?)</script>""",
+                            body, re.I | re.S):
+        out += [u for u in re.findall(r"https?://[^\s\"',<>]+", block)]
     for m in re.finditer(r"""srcset\s*=\s*(?:["']([^"']+)["']|([^\s"'>]+))""", body, re.I):
         value = m.group(1) if m.group(1) is not None else m.group(2)
         for candidate in value.split(","):
@@ -325,6 +341,19 @@ def hunt(site):
                                         % (url, away.group(1)))
                 elif st != 200:
                     failures.append("llms.txt names %s, which answers %s" % (url, st))
+        if path == "/robots.txt":
+            # fetched only to see that it answers, so a file disallowing the whole site and naming
+            # a sitemap that 404s was read by nobody
+            if re.search(r"(?mi)^\s*Disallow:\s*/\s*$", body) and not re.search(r"(?mi)^\s*Allow:", body):
+                failures.append("/robots.txt disallows the whole site, which is not what a published "
+                                "specification means to say")
+            for m in re.finditer(r"(?mi)^\s*Sitemap:\s*(\S+)", body):
+                target = as_path(m.group(1), sitemap_host)
+                if target:
+                    st, _, note = resolve(site, target)
+                    counts["links"] += 1
+                    if st != 200:
+                        failures.append("/robots.txt names the sitemap %s, which answers %s" % (m.group(1), st))
         if path == "/llms.txt" and not re.search(r"https?://", body):
             failures.append("/llms.txt names no URL, so nothing in it was checked")
         if path == "/.well-known/ocom.json":
