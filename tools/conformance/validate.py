@@ -56,7 +56,10 @@ def read_table(path, header_starts, whole_file=True):
             continue
         if set(line.replace("|", "").strip()) <= set("-: "):
             continue
-        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        # the generators escape a pipe inside a cell as `\|`; splitting on a bare pipe made such a
+        # row one cell too wide, and round 8's width filter then dropped it in silence
+        cells = [c.replace("\x00", "|").strip()
+                 for c in line.strip().strip("|").replace("\\|", "\x00").split("|")]
         if width is not None and len(cells) != width:
             continue                    # a row of another table under the same heading
         rows.append(cells)
@@ -77,7 +80,10 @@ def load_register():
     for line in text.splitlines():
         if not line.startswith("| REQ-"):
             continue
-        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        # the same escaping the register writes: a Statement carrying a pipe was truncated here,
+        # so the engines tested half a sentence and a lawful export failed a mandatory Test
+        cells = [c.replace("\x00", "|").strip()
+                 for c in line.strip().strip("|").replace("\\|", "\x00").split("|")]
         if len(cells) >= 5:
             out[cells[0]] = cells[4]
     if not out:
@@ -439,8 +445,14 @@ class Resolver:
                         for record in sub_value:
                             if isinstance(record, dict):
                                 walk(record, path + "[].")
-                    elif any(isinstance(x, list) and any(isinstance(y, dict) for y in x) for x in sub_value):
-                        out.append(path)          # records nested in a list of lists: no path names them
+                    elif any(isinstance(x, list) for x in sub_value):
+                        def nested(items):
+                            return any(isinstance(y, dict) for y in items) or \
+                                   any(isinstance(y, list) and nested(y) for y in items)
+                        # records nested in lists of lists at any depth: no path of the map's
+                        # grammar names them, and stopping at one level let three levels through
+                        if nested(sub_value):
+                            out.append(path)
                 elif isinstance(sub_value, dict):
                     members = list(sub_value.values())
                     # a single record stored as an object value is a collection of one: walking
@@ -474,6 +486,11 @@ class Resolver:
         unlisted, unbound, without = [], [], []
         for path in self.record_collections():
             records = instances(self.model, [path], strict=False)
+            if path in listed and not records:
+                # a path the map lists whose records this tool cannot reach (a list of lists) is in
+                # no Test either, and being listed made it invisible to all three populations
+                unlisted.append(path)
+                continue
             # a collection this tool could not read is not a collection that carries no identity:
             # classifying it as harmless is how a reused identity was named in a Pass reason
             carries = not records or any(not is_absent(rec.get(name)) for _, rec in records for name in names)
@@ -1656,7 +1673,17 @@ def integrity(test, text, r):
         # CAND-024 clause 2 defines an Audit Record by reference to Memory Record, so a map that
         # lists the collection under either name is naming the same records; demanding one spelling
         # reported an export that uses the other as carrying no Audit Record at all
-        subject = next((name for name in ("audit record", "memory record") if r.types.get(name)), "audit record")
+        # the two names CAND-024 uses for one thing, and a map that says the first is not
+        # represented while listing the second moved all eight Tests onto another collection
+        # a map that carries an Audit record row has said where they are, including by saying they
+        # are not represented, and reading another collection instead moved all eight Tests onto
+        # records the Statement is not about. The second name is a fallback for a map with no row.
+        if "audit record" in r.types:
+            subject = "audit record"
+        elif r.types.get("memory record"):
+            subject = "memory record"      # CAND-024 defines the one by reference to the other
+        else:
+            subject = "audit record"
     else:
         subject = subject_of(text, r.types) or pathlib.Path(test["document"]).stem.lower()
     if not r.types.get(subject):
@@ -1680,7 +1707,7 @@ def integrity(test, text, r):
     # removed a tampered Event, and another removed a record that merely shared a key in another scope
     erased = erased_records(r) if subject in MEMORY_TYPES else set()
     ignored = [] if subject in MEMORY_TYPES else [e for _, e, why, _ in erasure_records(r) if e and not why]
-    bad, skipped, refused, granted = [], 0, [], set()
+    bad, skipped, refused = [], 0, []
     for path, rec in records:
         ident = keyable(r.identity_of(path, rec))
         uncovered = ""
@@ -1688,7 +1715,6 @@ def integrity(test, text, r):
             not_erased = erasure_incomplete(r, subject, path, rec, field)
             if not not_erased:
                 skipped += 1      # an erased record no longer verifies by design; Retention.md says what its demonstration means
-                granted.add((r.namespace_of(path), keyable(ident)))
                 continue
             # the record an erasure record names is excluded only where it shows the Deleted state;
             # otherwise it is verified like any other, and the refusal is reported beside it rather
@@ -1729,12 +1755,10 @@ def integrity(test, text, r):
     # the demonstration must be the identity this export resolves for the record, not a second field
     # beside it: comparing two map rows let a map bind Type.identity to the same column as
     # Type.integrity while every other leg resolved a different, mutable identity for the record
+    # every granted exclusion returns above (a Test that excluded anything is pending), so nothing
+    # reaches this loop with an exclusion in hand: the skip that used to stand here was unreachable
+    # and its comment described a defect it could no longer prevent
     for path, rec in records:
-        # the exclusion this loop honours is the one that was granted, not the one that was claimed:
-        # keying it on "named by an erasure record" let an erasure that granted nothing switch off
-        # the content-address check, and eight Integrity Tests went from pending to Pass
-        if (r.namespace_of(path), keyable(r.identity_of(path, rec))) in granted:
-            continue
         if r.identity_of(path, rec) != rec.get(field):
             return None, ("%s binds %s.integrity to %s, but the identity this export resolves for record %s is not "
                           "that value, so the identity does not address the content and the digest is a field beside "
@@ -1869,8 +1893,8 @@ def review_rows(path):
                          "cannot see is a judgment nobody recorded"
                          % (path, len(hidden), hidden[0][:60]))
     text = re.sub(r"<!--.*?-->", " ", raw, flags=re.S)
-    headers, rows, dropped = 0, [], 0
-    fenced, blank_before, indented = False, True, False
+    headers, rows, dropped, outside_rows = 0, [], 0, 0
+    fenced, blank_before, indented, in_table = False, True, False, False
     for raw_line in text.splitlines():
         line = raw_line.strip()
         # a row written inside a ``` fence illustrates the format; reading it as a judgment
@@ -1879,6 +1903,8 @@ def review_rows(path):
             fenced = not fenced
             blank_before = False
             continue
+        if line.startswith("#"):
+            in_table = False            # a heading closes the section, and with it the table
         # a Markdown indented code block is a fence written the other way, and a reader sees
         # literal text there too. Deciding it per line demoted the first row of such a block and
         # applied every row below it as a judgment
@@ -1900,12 +1926,26 @@ def review_rows(path):
             continue
         if line.startswith(REVIEW_HEADER):
             headers += 1
+            in_table = True
             continue
         if set("".join(cells)) <= set("-: "):
+            continue
+        if not in_table:
+            # a five-cell line under another heading is text a reader sees as text, and reading it
+            # as a judgment applied rows nobody tabled
+            outside_rows += 1
             continue
         rows.append(cells)
     # a filter that silently removes something judgment-shaped is the defect this function has had
     # twice; what it removed is counted and printed beside the run
+    if outside_rows:
+        raise SystemExit("%s carries %d judgment-shaped row(s) outside the table under '%s'; a judgment sits in the "
+                         "record's one table, and a row a reader sees as text is not a judgment"
+                         % (path, outside_rows, REVIEW_HEADER))
+    if re.search(r"(?i)<table[\s>]", raw):
+        # an HTML table renders as a table and this reader sees none of it, including a Review Fail
+        raise SystemExit("%s carries an HTML table; this tool reads the Markdown table Section 3 fixes, so a "
+                         "judgment written that way is a judgment nobody recorded" % path)
     if dropped:
         print("%s: %d judgment-shaped row(s) inside a fenced or indented block were read as illustration, not as "
               "judgments" % (path, dropped))
@@ -2310,8 +2350,8 @@ def main(argv):
     lines.append("| Review Pass | %d |" % len(review_passed))
     lines.append("| Review Fail | %d |" % len(review_failed))
     lines.append("| Awaiting a reviewer or evidence the export does not carry | %d |" % len(pending))
-    lines.append("| Not Applicable (dispositioned Descriptive, or a capability the Conformance Statement does not "
-                 "claim) | %d |" % len(not_applicable))
+    lines.append("| Not Applicable (dispositioned Descriptive in the Alias File, or an extension clause where the "
+                 "Conformance Statement declares no extension) | %d |" % len(not_applicable))
     lines.append("")
     lines.append("**Measured set:** %d of the %d mandatory Tests the catalogue carries; %d are Not Applicable, "
                  "dispositioned Descriptive in the Alias File or a capability this Conformance Statement does not "

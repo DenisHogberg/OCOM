@@ -989,6 +989,101 @@ class Validator(unittest.TestCase):
             self.assertEqual(code, 0, printed)
             self.assertIn("declares no inputs", text)
 
+    # --- round 9 of the all-packages test -------------------------------------------------
+
+    def test_a_pipe_in_a_cell_does_not_delete_a_test(self):
+        """Round 9: the generators escape a pipe inside a cell and the readers split on a bare one,
+        so a Section heading carrying a pipe made the row one cell too wide and round 8's width
+        filter dropped it: the run measured fewer mandatory Tests and said nothing."""
+        with Copy() as c:
+            path = "docs/Governance/Test-Catalogue.md"
+            row = [l for l in c.read(path).splitlines() if l.startswith("| REQ-META-OWNERSHIP-022 ")][0]
+            cells = row.split("|")
+            cells[3] = cells[3].rstrip() + " \\| Scope "
+            c.edit(path, row, "|".join(cells))
+            code, out = self.run_on(c.dir)
+            self.assertEqual(code, 0, out)
+            self.assertIn("mandatory 185", out)
+
+    def test_the_two_names_for_an_audit_record_cannot_be_two_collections(self):
+        """Round 9: round 8 resolved the subject to whichever name the map declares, so declaring
+        Audit record not represented and Memory record as another collection moved all eight
+        Integrity Tests onto records that are not the ones the Statement is about."""
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path).replace("| Audit record | collection | `audit_records` |",
+                                               "| Audit record | collection | *(not represented here)* |\n"
+                                               "| Memory record | collection | `evidence_records` |"))
+            rows = self.integrity_rows(c.dir)
+            self.assertEqual(rows.get("REQ-META-OWNERSHIP-022"), "Fail", rows)
+
+    def test_a_judgment_row_outside_the_table_is_refused(self):
+        """Round 9: every five-cell pipe line in the file was read as a judgment, including rows a
+        reader sees as text because no delimiter row tables them."""
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\n%s%s\n# Notes\n\n%s" % (self.HEADER, self.JUDGMENT,
+                            "| REQ-META-OBJECT-004 | Review Pass | Nobody | 22 September 2026 | A reason long enough. |\n"),
+                            encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertNotEqual(code, 0, printed)
+            self.assertIn("outside the table", printed)
+
+    def test_a_judgment_in_an_html_table_stops_the_run(self):
+        """Round 9: an HTML table renders as a table and this reader saw none of it, so a Review
+        Fail written that way reached neither the run nor the report."""
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\n%s%s\n<table><tr><td>REQ-META-OBJECT-004</td><td>Review Fail</td></tr></table>\n"
+                            % (self.HEADER, self.JUDGMENT), encoding="utf-8")
+            code, printed, text = self.run_with_reviews(c.dir, path)
+            self.assertNotEqual(code, 0, printed)
+            self.assertIn("HTML table", printed)
+
+    def test_records_nested_deeper_than_one_list_are_found(self):
+        """Round 9: the walk stopped at a list of lists, so records three levels deep were in no
+        population at all and a duplicated identity passed both identity Tests."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["staged"] = [[[{"id": model["entities"][0]["id"], "name": "deep shadow"}]]]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-META-IDENTITY-005"), "Fail")
+
+    def test_a_listed_collection_that_yields_no_record_is_reported(self):
+        """Round 9: a listed path whose value is a list of lists produced no records, and being
+        listed kept it out of all three populations."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["registries"] = [[{"id": "REG-1", "name": "nested"}]]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-META-IDENTITY-005"), "Fail")
+
+    def test_the_three_engine_guards_round_8_added_each_decide_something(self):
+        """Round 9: round 8's three engine fixes had no test, and each is decisive."""
+        with Copy() as c:       # the identity-reuse Invariant over records that carry no identity
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            for key in list(model):
+                if isinstance(model[key], list):
+                    model[key] = []
+            # a record in a collection the map lists under no identity-bearing type: all_records()
+            # is satisfied, object_paths() finds none, and the leg reported "0 Object identities,
+            # each carried by exactly one record" as a Pass toward Core Conformance
+            model["attributes"] = [{"name": "membership_number", "meaning": "the number on the card",
+                                    "data_type": "string"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            path = "%s/representation-map.md" % self.EX
+            c.write(path, c.read(path).replace("| Attribute | collection | `entities[].attributes` |",
+                                               "| Attribute | collection | `attributes` |"))
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-META-IDENTITY-008"), "Fail", rows.get("REQ-META-IDENTITY-008"))
+            self.assertIn("no Object identity", self.report_text(c.dir))
+        with Copy() as c:       # a Lifecycle leg of invariant() over no Lifecycle
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["lifecycles"] = []
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-LIFECYCLE-012"), "Fail", rows.get("REQ-MODELS-LIFECYCLE-012"))
+
     # --- round 8 of the all-packages test -------------------------------------------------
 
     def test_no_engine_passes_over_an_empty_set(self):
@@ -2776,6 +2871,34 @@ class SiteErrorHunt(unittest.TestCase):
         self.assertNotEqual(code, 0, out)
         self.assertIn("names no URL", out)
 
+    def test_the_references_round_8_taught_it_to_read_are_read(self):
+        """Round 9: every guard round 8 added to this tool passed with the guard deleted, because
+        no test named one of them."""
+        cases = {
+            "og:image": '<meta property="og:image" content="/missing-og.png">',
+            "meta refresh": '<meta http-equiv="refresh" content="0; url=/missing-refresh">',
+            "form action": '<form action="/missing-action"></form>',
+            "json-ld url": '<script type="application/ld+json">{"url": "https://ocom.uno/missing-ld"}</script>',
+        }
+        for label, markup in cases.items():
+            with self.subTest(label):
+                page = ('<html><head><title>A page</title><link rel="canonical" href="https://ocom.uno/a">%s'
+                        '</head><body>x</body></html>' % markup)
+                code, out = self.hunt(hunt_files(**{"/a": ("text/html; charset=utf-8", page)}))
+                self.assertNotEqual(code, 0, out)
+                self.assertIn("missing", out)
+
+    def test_a_robots_file_that_hides_the_site_is_reported(self):
+        code, out = self.hunt(hunt_files(**{"/robots.txt": ("text/plain", "User-agent: *\nDisallow: /\n")}))
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("disallows the whole site", out)
+
+    def test_a_sitemap_directive_that_answers_404_is_reported(self):
+        code, out = self.hunt(hunt_files(**{"/robots.txt": ("text/plain",
+                                                            "User-agent: *\nAllow: /\nSitemap: https://ocom.uno/missing-sitemap.xml\n")}))
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("missing-sitemap.xml", out)
+
     def test_a_dead_reference_the_regex_used_to_miss_is_found(self):
         """Round 4: one regex over quoted href and src left srcset, unquoted attributes and
         protocol-relative URLs on this site's own host unread, so dead references of those kinds
@@ -2828,6 +2951,19 @@ class PublicationHealth(unittest.TestCase):
             site.publish(health, pub)
             shutil.rmtree(out, ignore_errors=True)
         return health, pub
+
+    def test_every_identifier_figure_a_page_prints_is_compared(self):
+        """Round 9: round 8 taught the row to compare more than the headline and no test named it,
+        so the whole comparison could be deleted with every test green."""
+        with fake_site.Fixture() as site:
+            self.healthy(site)
+            entries = len(json.loads(site.files["/resolve.json"][1])["entries"])
+            site.files["/resolve"] = ("text/html; charset=utf-8",
+                                      "<html><body><p>Identifiers %d</p><p>%d of them today</p></body></html>"
+                                      % (entries, entries - 2))
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("of them resolve", out)
 
     def test_a_projection_that_redirects_is_not_that_projection(self):
         """Round 6: three redirect guards shipped in round 5 and the fixture could answer only 200

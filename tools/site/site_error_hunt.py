@@ -275,7 +275,11 @@ def hunt(site):
                 # a protocol-relative URL on this site's own host is an internal target; filing it
                 # as external skipped it without ever comparing the host
                 raw = "https:" + raw
-            target = as_path(urllib.parse.urljoin(site.base + path, raw.split("#")[0]), sitemap_host) if not raw.startswith("/") else raw.split("#")[0]
+            # resolved against the host being fetched and classified against the host the sitemap
+            # declares: where those differ, every relative reference was dropped in silence
+            joined = urllib.parse.urljoin(site.base + path, raw.split("#")[0])
+            target = raw.split("#")[0] if raw.startswith("/") else (
+                as_path(joined, sitemap_host) or as_path(joined, urllib.parse.urlparse(site.base).netloc))
             u = urllib.parse.urlparse(raw)
             if u.scheme in ("http", "https") and u.netloc and u.netloc != sitemap_host:
                 counts["external"] += 1
@@ -297,7 +301,8 @@ def hunt(site):
                 continue
             if raw.startswith("//"):
                 raw = "https:" + raw
-            inner = as_path(urllib.parse.urljoin(site.base + target, raw.split("#")[0]), sitemap_host)
+            joined = urllib.parse.urljoin(site.base + target, raw.split("#")[0])
+            inner = as_path(joined, sitemap_host) or as_path(joined, urllib.parse.urlparse(site.base).netloc)
             if inner:
                 targets.setdefault(inner, target)
 

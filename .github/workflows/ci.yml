@@ -464,7 +464,10 @@ jobs:
               sys.exit("the suite does not run against its own example")
           def normalise(text):
               text = re.sub(r"(?m)^\*\*Run on:\*\* .+$", "**Run on:** (date)", text)
-              return re.sub(r"(?m)^\*\*Read from:\*\* the checkout at [^,]+,", "**Read from:** the checkout at (commit),", text)
+              # to "whose", not to the first comma: the dirty marker lives inside the same code
+              # span ("`c51645f, with uncommitted changes`"), so a comma-bounded normaliser left it
+              # in one side and not the other and the step failed on a clean checkout
+              return re.sub(r"(?m)^\*\*Read from:\*\* the checkout at .*?, whose", "**Read from:** the checkout at (commit), whose", text)
           committed = normalise((ex / "report.md").read_text(encoding="utf-8"))
           fresh = normalise(out.read_text(encoding="utf-8"))
           if committed != fresh:

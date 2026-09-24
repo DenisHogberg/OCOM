@@ -10,7 +10,7 @@
 
 **Inputs, by content:** model `066a4ba34e504aee`, map `bb6d9b8f2e25090e`, Conformance Statement `cf478add0bddcc36`, Requirement Register `e09cdd67d62d7951`, Alias File `44fcbf6a2466d9fe`, Test Catalogue `deda54f26db781a0` (SHA-256 of each file as read). The last three decide which Statements exist and which procedure each one gets, so a report that named only the first three did not say what produced its outcomes. The record declares the model, the map, the Conformance Statement, the Requirement Register, the Alias File and the Test Catalogue it was made against, and they are the six this run read: what a judgment is about is the Statement, and what decides which Statements exist and which procedure each one gets is those three.
 
-**Read from:** the checkout at `c51645f, with uncommitted changes`, whose `Governance/Publication-Manifest.md` names Release v1.4.0 at commit `73d73b95e10ebc808554985afe89466316273f45` as its latest. The run reads the working tree, not that commit: where the two differ, the digests above are what was read. Requirement Register: 335 Statements. Alias File revision: 335 aliases, last appended 17 September 2026.
+**Read from:** the checkout at `d05fbc9, with uncommitted changes`, whose `Governance/Publication-Manifest.md` names Release v1.4.0 at commit `73d73b95e10ebc808554985afe89466316273f45` as its latest. The run reads the working tree, not that commit: where the two differ, the digests above are what was read. Requirement Register: 335 Statements. Alias File revision: 335 aliases, last appended 17 September 2026.
 
 **Published by:** the party that ran the suite. A report published by the claimant is self-validation; `Conformance-Test-Suite.md` Section 4 says the suite does not tell the two apart and the publisher does.
 
@@ -28,7 +28,7 @@
 | Review Pass | 3 |
 | Review Fail | 0 |
 | Awaiting a reviewer or evidence the export does not carry | 134 |
-| Not Applicable (dispositioned Descriptive, or a capability the Conformance Statement does not claim) | 3 |
+| Not Applicable (dispositioned Descriptive in the Alias File, or an extension clause where the Conformance Statement declares no extension) | 3 |
 
 **Measured set:** 185 of the 188 mandatory Tests the catalogue carries; 3 are Not Applicable, dispositioned Descriptive in the Alias File or a capability this Conformance Statement does not claim. A claim rests on what was measured, so the size of the measured set is stated beside the outcome.
 
