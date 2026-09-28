@@ -102,6 +102,22 @@ def links_of(body):
         if "&quot;" in value or "&#" in value or value.startswith("&"):
             continue
         out.append(value)
+    # og:image, twitter:image, og:url, a refresh target, a form action and every URL inside a
+    # JSON-LD block are references a page makes and this hunt did not read
+    for m in re.finditer(r"""<meta[^>]+(?:property|name)\s*=\s*["'](?:og:image|og:url|twitter:image)["'][^>]*>""",
+                         body, re.I):
+        c = re.search(r"""content\s*=\s*["']([^"']+)["']""", m.group(0), re.I)
+        if c:
+            out.append(c.group(1))
+    for m in re.finditer(r"""<meta[^>]+http-equiv\s*=\s*["']refresh["'][^>]*>""", body, re.I):
+        c = re.search(r"""url\s*=\s*([^"';>]+)""", m.group(0), re.I)
+        if c:
+            out.append(c.group(1).strip())
+    for m in re.finditer(r"""<form[^>]+action\s*=\s*["']([^"']+)["']""", body, re.I):
+        out.append(m.group(1))
+    for block in re.findall(r"""<script[^>]+type\s*=\s*["']application/ld\+json["'][^>]*>(.*?)</script>""",
+                            body, re.I | re.S):
+        out += [u for u in re.findall(r"https?://[^\s\"',<>]+", block)]
     for m in re.finditer(r"""srcset\s*=\s*(?:["']([^"']+)["']|([^\s"'>]+))""", body, re.I):
         value = m.group(1) if m.group(1) is not None else m.group(2)
         for candidate in value.split(","):
@@ -259,7 +275,11 @@ def hunt(site):
                 # a protocol-relative URL on this site's own host is an internal target; filing it
                 # as external skipped it without ever comparing the host
                 raw = "https:" + raw
-            target = as_path(urllib.parse.urljoin(site.base + path, raw.split("#")[0]), sitemap_host) if not raw.startswith("/") else raw.split("#")[0]
+            # resolved against the host being fetched and classified against the host the sitemap
+            # declares: where those differ, every relative reference was dropped in silence
+            joined = urllib.parse.urljoin(site.base + path, raw.split("#")[0])
+            target = raw.split("#")[0] if raw.startswith("/") else (
+                as_path(joined, sitemap_host) or as_path(joined, urllib.parse.urlparse(site.base).netloc))
             u = urllib.parse.urlparse(raw)
             if u.scheme in ("http", "https") and u.netloc and u.netloc != sitemap_host:
                 counts["external"] += 1
@@ -281,7 +301,8 @@ def hunt(site):
                 continue
             if raw.startswith("//"):
                 raw = "https:" + raw
-            inner = as_path(urllib.parse.urljoin(site.base + target, raw.split("#")[0]), sitemap_host)
+            joined = urllib.parse.urljoin(site.base + target, raw.split("#")[0])
+            inner = as_path(joined, sitemap_host) or as_path(joined, urllib.parse.urlparse(site.base).netloc)
             if inner:
                 targets.setdefault(inner, target)
 
@@ -301,7 +322,9 @@ def hunt(site):
         if status != 200:
             failures.append("%s (linked from %s) answers %s%s" % (target, source, status, ", " + note if note else ""))
 
-    for path in ("/robots.txt", "/llms.txt", "/discovery.json"):
+    # discovery.json calls /.well-known/ocom.json the primary discovery point, and nothing read it:
+    # its URLs, 48 of them, were outside every check this repository runs
+    for path in ("/robots.txt", "/llms.txt", "/discovery.json", "/.well-known/ocom.json"):
         status, ctype, body, _, robots = site.get(path)
         if status != 200:
             failures.append("%s answers %s" % (path, status))
@@ -323,8 +346,60 @@ def hunt(site):
                                         % (url, away.group(1)))
                 elif st != 200:
                     failures.append("llms.txt names %s, which answers %s" % (url, st))
+        if path == "/robots.txt":
+            # fetched only to see that it answers, so a file disallowing the whole site and naming
+            # a sitemap that 404s was read by nobody
+            if re.search(r"(?mi)^\s*Disallow:\s*/\s*$", body) and not re.search(r"(?mi)^\s*Allow:", body):
+                failures.append("/robots.txt disallows the whole site, which is not what a published "
+                                "specification means to say")
+            for m in re.finditer(r"(?mi)^\s*Sitemap:\s*(\S+)", body):
+                target = as_path(m.group(1), sitemap_host)
+                if target:
+                    st, _, note = resolve(site, target)
+                    counts["links"] += 1
+                    if st != 200:
+                        failures.append("/robots.txt names the sitemap %s, which answers %s" % (m.group(1), st))
         if path == "/llms.txt" and not re.search(r"https?://", body):
             failures.append("/llms.txt names no URL, so nothing in it was checked")
+        if path == "/.well-known/ocom.json":
+            # round 6 added the path to this loop and gave it no branch, so its URLs stayed
+            # outside every check while the comment above said they had been brought inside
+            try:
+                record = json.loads(body)
+            except ValueError as e:
+                failures.append("/.well-known/ocom.json does not parse: %s" % e)
+                continue
+            urls = []
+
+            def walk(value):
+                if isinstance(value, dict):
+                    for item in value.values():
+                        walk(item)
+                elif isinstance(value, list):
+                    for item in value:
+                        walk(item)
+                elif isinstance(value, str) and value.startswith(("http://", "https://")):
+                    urls.append(value)
+
+            walk(record)
+            if not urls:
+                failures.append("/.well-known/ocom.json names no URL, so nothing in it was checked")
+            for url in sorted(set(urls)):
+                p_ = as_path(url, sitemap_host)
+                if p_ is None:
+                    continue
+                if "{" in p_:
+                    counts["templates"] += 1
+                    continue
+                st, final, note = resolve(site, p_)
+                counts["links"] += 1
+                away = re.search(r"to (https?://\S+)$", note or "")
+                if away:
+                    if not external_ok(away.group(1)):
+                        failures.append("/.well-known/ocom.json names %s, which redirects off the site to %s, and "
+                                        "that does not answer" % (url, away.group(1)))
+                elif st != 200:
+                    failures.append("/.well-known/ocom.json names %s, which answers %s" % (url, st))
         if path == "/discovery.json":
             try:
                 d = json.loads(body)

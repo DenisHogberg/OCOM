@@ -37,6 +37,11 @@ CHAPTERS = ["04 Meta Model.md", "05 Object Model.md", "06 Lifecycle Model.md"]
 REGISTER = DOCS / "Governance" / "Requirement-Register.md"
 ALIASES = DOCS / "Governance" / "Requirement-Aliases.md"
 KEYWORD = re.compile(r"\b(shall|must|should|may)\b", re.IGNORECASE)
+# Section 2 reads the requirement set from the chapters' Source lines. This tool has always
+# filtered those paths to the three canonical tiers, which is a rule the document does not state:
+# a chapter that compiles a document outside them yielded no Statements, no aliases and no Tests,
+# with every check green. The filter stays, because the enumeration Section 1 states is those
+# tiers, and a path outside them now stops the run rather than disappearing.
 CANONICAL_PREFIXES = ("Meta/", "Models/", "Lifecycles/")
 
 
@@ -50,7 +55,13 @@ def requirement_set():
             raise SystemExit("%s: expected exactly one Source line, found %d" % (name, len(source_lines)))
         for path in re.findall(r"`([^`]+\.md)`", source_lines[0]):
             path = path[len("docs/"):] if path.startswith("docs/") else path
-            if path.startswith(CANONICAL_PREFIXES) and path not in paths:
+            if not path.startswith(CANONICAL_PREFIXES):
+                raise SystemExit("%s compiles %s, which is outside the tiers Section 1 of "
+                                 "`Conformance-Test-Suite.md` enumerates (%s). A document a chapter compiles and "
+                                 "this tool skips yields no Statement, no alias and no Test, with every check "
+                                 "green; reconcile the chapter or the enumeration."
+                                 % (name, path, ", ".join(CANONICAL_PREFIXES)))
+            if path not in paths:
                 paths.append(path)
     return paths
 
@@ -127,7 +138,7 @@ def derive():
     return paths, {path: statements(path) for path in paths}
 
 
-def read_aliases(pairs=None):
+def read_aliases(pairs=None, notes=None):
     """alias file rows keyed by identity: {identity: (alias, disposition, superseded)}.
 
     Keying by identity loses a collision, so a caller that needs to see one passes a list in
@@ -144,6 +155,8 @@ def read_aliases(pairs=None):
         disposition = cells[5] if len(cells) > 5 else ""
         if pairs is not None:
             pairs.append((alias, identity))
+        if notes is not None:
+            notes[alias] = cells[6] if len(cells) > 6 else ""
         rows[identity] = (alias, disposition, disposition.strip().lower().startswith("superseded by"))
     return rows
 
@@ -206,7 +219,10 @@ def base_revisions():
 # Only the Disposition may change after a row is committed, and only into a value the grammar
 # above reads. Everything else in a row is fixed: the identity is the SHA-256 of the document
 # path, the section and the text, so a changed sentence is a new identity and therefore a new row.
+# The Note may change with it and only with it: Section 2 makes a Disposition "a recorded decision
+# with a reason and a date", and the reason lives in the Note, so recording one changes both cells.
 EDITABLE_CELL = 5
+NOTE_CELL = 6
 
 
 def append_only_failures(revisions):
@@ -242,8 +258,11 @@ def append_only_failures(revisions):
                 failures.append("alias %s was committed at %s and is no longer in the file; rows are appended, "
                                 "never removed" % (alias, rev))
                 continue
+            disposition_changed = len(current) > EDITABLE_CELL and current[EDITABLE_CELL] != cells[EDITABLE_CELL]
             for i, cell in enumerate(cells):
                 if i == EDITABLE_CELL:
+                    continue
+                if i == NOTE_CELL and disposition_changed:
                     continue
                 if i >= len(current) or current[i] != cell:
                     failures.append("alias %s was edited in place since %s: column %d read %r and now reads %r; a "
@@ -255,14 +274,52 @@ def append_only_failures(revisions):
              % ", ".join(revisions)], None)
 
 
-def disposition_failures(pairs, aliases):
-    """Every Disposition cell this tool cannot read, and every supersession that names nothing."""
+GOVERNANCE_RECORD = re.compile(r"\b(CAND-\d+|AO-\d+|ADR-\d+|EPIC-[A-F])\b")
+
+
+def recorded_decisions():
+    """Every governance record a Disposition's Note may cite, read from the registers themselves.
+
+    Matching the shape of an identifier is not resolving it: `CAND-999` and `AO-404` looked like
+    records, and 334 Statements could be dispositioned Descriptive against records that exist
+    nowhere."""
+    out = set()
+    for name, pattern in (("Governance/ADR-Candidates.md", r"(?m)^## (CAND-\d+)"),
+                          ("Governance/Architecture-Observations.md", r"(?m)^## (AO-\d+)"),
+                          ("Governance/Master-Architecture-Backlog.md", r"\b(EPIC-[A-F])\b")):
+        path = DOCS / name
+        if path.exists():
+            out |= set(re.findall(pattern, path.read_text(encoding="utf-8")))
+    return out
+
+
+def disposition_failures(pairs, aliases, notes=None):
+    """Every Disposition cell this tool cannot read, every supersession that names nothing, and
+    every Descriptive or Review disposition whose Note names no governance record.
+
+    Section 2: "A Disposition is a recorded decision with a reason and a date; it never edits the
+    source and never removes a Statement from the register." The Disposition cell is also the one
+    cell the append-only rule lets a row change, so nothing but this check stands between the
+    register and a file in which every Statement is Descriptive: 184 of 188 mandatory Tests Not
+    Applicable, Core Conformance reported established, and every repository check green."""
     names = {a for a, _ in pairs}
     live = {a for identity, (a, _, _) in aliases.items()}
     out = []
     for identity, (alias, disposition, _) in aliases.items():
         value = (disposition or "").strip()
         if value.lower() in DISPOSITIONS:
+            if value and notes is not None:
+                cited = GOVERNANCE_RECORD.findall(notes.get(alias, ""))
+                if not cited:
+                    out.append("alias %s is dispositioned %s and its Note names no governance record; Section 2 "
+                               "makes a Disposition a recorded decision, and this cell is the one the append-only "
+                               "rule lets a row change" % (alias, value))
+                else:
+                    known = recorded_decisions()
+                    unknown = [c for c in cited if c not in known]
+                    if unknown and known:
+                        out.append("alias %s is dispositioned %s and its Note cites %s, which no governance record "
+                                   "in this repository carries" % (alias, value, ", ".join(sorted(unknown))))
             continue
         m = SUPERSEDED.match(value)
         if not m:
@@ -406,8 +463,8 @@ def main(argv):
         ALIASES.write_text(render_aliases(paths, derived, today), encoding="utf-8")
         print("wrote %s with %d aliases" % (ALIASES, total))
         return 0
-    pairs = []
-    aliases = read_aliases(pairs)
+    pairs, notes = [], {}
+    aliases = read_aliases(pairs, notes)
     if mode == "--check-aliases":
         identities = {identity for path in paths for _, _, _, identity in derived[path]}
         missing = [(path, section, text[:80]) for path in paths for section, _, text, identity in derived[path] if identity not in aliases]
@@ -426,7 +483,7 @@ def main(argv):
             print("alias %s is bound to more than one Statement identity" % alias)
         for identity in dup_identity:
             print("Statement identity %s carries more than one alias" % identity[:16])
-        grammar = disposition_failures(pairs, aliases)
+        grammar = disposition_failures(pairs, aliases, notes)
         for failure in grammar:
             print(failure)
         edits, compared_to = append_only_failures([against] if against else base_revisions())

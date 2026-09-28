@@ -441,6 +441,44 @@ jobs:
       - name: Reference Serialization schema matches a regeneration and the model satisfies it
         run: python3 tools/conformance/reference_schema.py --check
 
+      - name: The example Test Report matches a run of the suite
+        # report.md is the headline artifact of the suite and the document every
+        # conformance claim in README.md, Release-Readiness.md and the Evidence
+        # Register rests on. Nothing regenerated it or compared it, so its verdict
+        # could be rewritten to "Core Conformance: established" with every check
+        # green; round 8 of the all-packages test did exactly that. The run stamps
+        # its own date and reads the checkout, so those two lines are normalised
+        # and everything else must match.
+        run: |
+          python3 - <<'PY'
+          import pathlib, re, subprocess, sys
+          ex = pathlib.Path("docs/Examples/Conformance")
+          out = pathlib.Path("/tmp/report-regenerated.md")
+          done = subprocess.run([sys.executable, "tools/conformance/validate.py",
+                                 "--model", str(ex / "model.json"), "--map", str(ex / "representation-map.md"),
+                                 "--statement", str(ex / "conformance-statement.md"),
+                                 "--reviews", str(ex / "reviewer-record.md"), "--report", str(out)],
+                                capture_output=True, text=True)
+          if done.returncode != 0:
+              print(done.stdout + done.stderr)
+              sys.exit("the suite does not run against its own example")
+          def normalise(text):
+              text = re.sub(r"(?m)^\*\*Run on:\*\* .+$", "**Run on:** (date)", text)
+              # to "whose", not to the first comma: the dirty marker lives inside the same code
+              # span ("`c51645f, with uncommitted changes`"), so a comma-bounded normaliser left it
+              # in one side and not the other and the step failed on a clean checkout
+              return re.sub(r"(?m)^\*\*Read from:\*\* the checkout at .*?, whose", "**Read from:** the checkout at (commit), whose", text)
+          committed = normalise((ex / "report.md").read_text(encoding="utf-8"))
+          fresh = normalise(out.read_text(encoding="utf-8"))
+          if committed != fresh:
+              import difflib
+              for line in list(difflib.unified_diff(committed.splitlines(), fresh.splitlines(),
+                                                    "committed", "regenerated", lineterm="", n=1))[:40]:
+                  print(line)
+              sys.exit("docs/Examples/Conformance/report.md is not what a run of the suite produces")
+          print("the example report matches a run of the suite")
+          PY
+
   published-sources:
     name: Published sources are readable by machines
     # publication/ holds the canonical text of the files ocom.uno serves that nothing else here

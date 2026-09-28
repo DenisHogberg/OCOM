@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 September 2026
+**Last Updated:** 23 September 2026
 
 ---
 
@@ -136,7 +136,7 @@ Every release entry from this point forward **shall** confirm the following:
 
 **Critical Documentation Debt:** None critical. FW-001 closed by `CAND-023` (the reserved sections of `Memory/Evidence Overlay.md` written); GAP-007 stays open for the documents outside the reading path it still names; DEBT-DOC-001, GAP-001, FW-002, FW-005 and FW-009 carry not-required-for-v1.0 dispositions; FW-006 stays open and is disclosed in the Manifest entry.
 
-**Known Deferred Content:** Layer 2 of `CAND-014`; the `CAND-002` declaration Projection and CI validator; the Memory tier outside the Core Conformance requirement set (`AO-081`; a candidate for a Memory conformance level is being prepared); the four counting Statements the catalogue holds at Review and the twenty-five unfalsifiable predicates of `AO-076` (`AO-089`); the first submitted Test Report from a party other than the author; the reading-path pages on the site, which stay at the `v1.3.0` compilation since the reading path is unchanged.
+**Known Deferred Content:** Layer 2 of `CAND-014`; the `CAND-002` declaration Projection and CI validator; the Memory tier outside the Core Conformance requirement set (`AO-081`; a candidate for a Memory conformance level is being prepared); the four counting Statements the catalogue holds at Review and the twenty-five unfalsifiable predicates of `AO-076` (`AO-089`); the first submitted Test Report from a party other than the author; the reading-path pages on the site, which stay at the projection compiled from `2b70b28` on 19 September 2026, a commit between `v1.3.0` and `v1.4.0` rather than either of them, which round 6 of the all-packages test read off the live `specification.json`; the four chapter files differ from `v1.3.0` by two further mandatory clauses in Chapter 5.
 
 **Standard Evolution Methodology reviewed:** Yes. Every canonical change in this Release carries a recorded Decision: `CAND-023` and `CAND-024` as `CAND-007` Section 5 exceptions on Reference Case `RC-012`; `CAND-025` and `CAND-027` under `EPIC-B` and `EPIC-C`, Section 3; `CAND-026` and `CAND-028` as publication decisions on the `CAND-012` form; the `AO-085` closure as a postscript to `CAND-024`. No new Core concept entered; independent Reference Cases toward Rule 2 stand where `v1.3.0` left them.
 
@@ -163,5 +163,6 @@ Every release entry from this point forward **shall** confirm the following:
 | 0.1 | 18 September 2026 | v1.3.0: post-release note recording the `AO-069` finding, the Chief Architect's disposition of the same day, and the qualification the v1.0 claim now carries. |
 | 0.1 | 18 September 2026 | v1.1.1: two tallies each counted an Informative entry that neither register carried; corrected with a dated note. |
 | 0.1 | 22 September 2026 | Added the `v1.4.0` record before tagging: checks green, 93 observations disclosed, two open candidates non-blocking, deferred content named; Status pending publication. |
+| 0.1 | 23 September 2026 | Known Deferred Content for Release v1.4.0 names the commit the site's reading path is actually compiled from (`2b70b28`, 19 September 2026, between v1.3.0 and v1.4.0) rather than v1.3.0; round 6 of the all-packages test read the live `specification.json` against this record. |
 | 0.1 | 22 September 2026 | `v1.4.0` record: Status Pending to Released, with the GitHub Release timestamp, the commit and the Zenodo version DOI. |
 | 0.1 | 22 September 2026 | `v1.4.0` record: the count of counting Statements held at Review corrected from eleven to four (the all-packages test of the same day). |

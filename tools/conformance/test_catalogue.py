@@ -30,6 +30,7 @@ catalogued in their own table, derived from that document's claim sections.
   test_catalogue.py --census    print the split by kind and by document
 """
 import argparse
+import datetime
 import pathlib
 import re
 import sys
@@ -94,10 +95,15 @@ BEHAVIOUR_VERBS = ("support", "preserve", "remain", "maintain", "participate", "
 
 
 def list_items(text):
-    """The items of a stem-plus-list obligation, or [] when the Statement carries no list."""
+    """The items of a stem-plus-list obligation, or [] when the Statement carries no list.
+
+    Split on semicolons alone, this returned one item for a list written with commas, so rule 4
+    ("one behaviour item makes the whole list unmechanical") inspected only the first fragment and
+    the Statement was promoted to a mechanical kind; `validate.required_elements` then split the
+    same tail on both and demanded a map field for every fragment. One splitter, both tools."""
     if ":" not in text:
         return []
-    return [re.sub(r"\s+", " ", i).strip(" .;") for i in text.split(":", 1)[1].split(";") if i.strip(" .;")]
+    return [re.sub(r"\s+", " ", i).strip(" .;") for i in re.split(r"[;,]", text.split(":", 1)[1]) if i.strip(" .;")]
 
 
 def item_is_checkable(item):
@@ -164,7 +170,11 @@ def statements():
                 raise SystemExit("alias %s is bound to two Statements (%s and %s); one alias, one Test"
                                  % (alias, seen[alias], "%s (%s)" % (path, section)))
             seen[alias] = "%s (%s)" % (path, section)
-            out.append((alias, path, section, cls, text, kind_of(text), disposition))
+            # Section 2's second Disposition: Review, "for a Statement that imposes an obligation
+            # no mechanical procedure can decide". Nothing read it, so the mechanical kind stayed,
+            # the engine decided the Statement anyway and the reviewer's judgment was discarded
+            kind = "Review" if (disposition or "").strip().lower() == "review" else kind_of(text)
+            out.append((alias, path, section, cls, text, kind, disposition))
     if not out:
         raise SystemExit("no Statements found; a catalogue over nothing cannot be checked")
     return out
@@ -287,7 +297,7 @@ def render(today):
                          % (printed, printed_mandatory, len(rows), len(mandatory)))
     out.append("")
     out.append("Beside the rows above, %d claim clauses of `%s` are catalogued separately below and carry "
-               "Declaration Tests read from the Conformance Statement; they are not register Statements and are "
+               "Declaration Tests, four of them read from the Conformance Statement; they are not register Statements and are "
                "counted in neither column, so the two columns sum to %d and %d, the figures this document's "
                "Purpose and `Requirement-Register.md` state.\n" % (len(claims), CLAIM_DOC, len(rows), len(mandatory)))
     out.append("Of the %d mandatory Statements, %d carry a mechanical kind and %d fall to Review. A Review outcome "
@@ -350,7 +360,11 @@ def render(today):
     out.append("")
     out.append("# Tests Bound to Claim Clauses")
     out.append("")
-    out.append("Derived from `%s`. Every one is kind Declaration and is read from the Conformance Statement." % CLAIM_DOC)
+    out.append("Derived from `%s`. Every one is kind Declaration. Four are read from the Conformance Statement "
+               "(the version clause, the single-version clause and the two extension clauses, which read the "
+               "`Extension attestation ...` fields). The Mandatory Requirements clause carries no procedure of its "
+               "own and falls to a reviewer. The Non-Conformance clause is decided by the run's own tally, as "
+               "`Conformance-Test-Suite.md` Section 3 states, and no reviewer may decide it." % CLAIM_DOC)
     out.append("")
     out.append("| Test | Section | Clause |")
     out.append("|---|---|---|")
@@ -369,13 +383,26 @@ def render(today):
     return "\n".join(out) + "\n"
 
 
+def committed_date():
+    """The Last Updated date the committed catalogue carries, so a regeneration keeps it."""
+    if not DOC.exists():
+        return None
+    m = re.search(r"(?m)^\*\*Last Updated:\*\* (.+)$", DOC.read_text(encoding="utf-8"))
+    return m.group(1).strip() if m else None
+
+
 def main(argv):
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     p.add_argument("--write", action="store_true")
     p.add_argument("--check", action="store_true")
     p.add_argument("--census", action="store_true")
-    p.add_argument("--today", default="20 September 2026")
+    # a hard-coded default moved the committed dates backwards every time the remedy this tool
+    # prints was followed, and --check normalised exactly those two lines away, so nothing noticed
+    # while the file's digest changed under a Reviewer Record bound to it
+    p.add_argument("--today", default=None)
     a = p.parse_args(argv)
+    if a.today is None:
+        a.today = committed_date() or datetime.date.today().strftime("%-d %B %Y")
 
     if a.census:
         rows = statements()

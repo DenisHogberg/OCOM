@@ -55,12 +55,15 @@ def rows():
 
 
 def fetch(url):
+    """(status, body, final url). urlopen follows redirects, so a published path that 301s
+    somewhere carrying the source bytes was reported as matching although nothing is served at the
+    path `publication/README.md` names, which is what that document states the rule to be."""
     req = urllib.request.Request(url, headers={"User-Agent": "ocom-published-source-parity/1.0 (+https://github.com/DenisHogberg/OCOM)"})
     try:
         with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
-            return r.status, r.read()
+            return r.status, r.read(), r.geturl()
     except urllib.error.HTTPError as e:
-        return e.code, b""
+        return e.code, b"", url
 
 
 def lint():
@@ -93,10 +96,14 @@ def check():
             failures.append("%s names `%s`, which does not exist" % (INDEX.name, rel))
             print("%-28s MISSING SOURCE" % rel)
             continue
-        status, body = fetch(url)
+        status, body, final = fetch(url)
         if status != 200:
             failures.append("%s answered %s" % (url, status))
             print("%-28s HTTP %s" % (rel, status))
+            continue
+        if final != url:
+            failures.append("%s redirects to %s; the table names this path, not what answers for it" % (url, final))
+            print("%-28s REDIRECTS" % rel)
             continue
         want = path.read_bytes()
         if body != want:
