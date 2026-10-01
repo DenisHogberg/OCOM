@@ -49,7 +49,10 @@ def base_files():
                                                             "coreVocabularyProjectionCoverage": 100,
                                                             "projectionParity": True}}})
     j("/comparisons.json", {"comparisons": [{"url": "https://ocom.uno/compare/x", "record": "https://ocom.uno/compare/x.json"}]})
-    j("/discovery.json", {"resources": [{"url": "https://ocom.uno/api/v1/index.json", "mediaType": "application/json"}]})
+    # an XML entry point beside the JSON one: without it nothing in the fixture exercised the XML
+    # shape, so `looks_xml` accepted an HTML page as the sitemap with every test green
+    j("/discovery.json", {"resources": [{"url": "https://ocom.uno/api/v1/index.json", "mediaType": "application/json"},
+                                        {"url": "https://ocom.uno/sitemap.xml", "mediaType": "application/xml"}]})
     j("/api/v1/index.json", {"ok": True})
     j("/compare/x.json", {"id": "CMP-01"})
     h("/compare/x", "<html><body>comparison</body></html>")
@@ -64,8 +67,12 @@ def base_files():
 
     for t in TERMS:
         cite = CITATION % t.capitalize()
+        # the ownership block the live records carry: without one, the Ownership row counted the
+        # assignment alone and the leg that catches a record pointing at another assignment was
+        # reached by no test at all
         j("/vocabulary/%s.json" % t, {"identifier": "OCOM-META-0%d" % (TERMS.index(t) + 1), "citation": cite,
-                                       "definition_lead": DEFINITION % t.capitalize(), "headings": ["Purpose"]})
+                                       "definition_lead": DEFINITION % t.capitalize(), "headings": ["Purpose"],
+                                       "ownership": {"assignment": "OWN-01"}})
         # the JSON-LD alternate publishes its nodes under @graph, as the real site does
         j("/vocabulary/%s.jsonld" % t, {"@context": {"ocom": "https://ocom.uno/vocabulary/"},
                                         "@graph": [{"@id": "https://ocom.uno/vocabulary/%s#term" % t, "citation": cite}]})

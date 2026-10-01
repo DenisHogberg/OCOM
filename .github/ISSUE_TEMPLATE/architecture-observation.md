@@ -24,7 +24,7 @@ One sentence: what cannot both be true, or what cannot be done.
 
 ## Already recorded?
 
-Check `docs/Governance/Architecture-Observations.md` (AO-001 to AO-058). If a recorded observation covers this, name it and say what is new.
+Check `docs/Governance/Architecture-Observations.md`: 95 recorded observations, AO-001 to AO-096 with AO-072 reserved. If a recorded observation covers this, name it and say what is new.
 
 ## Impact
 

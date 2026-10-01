@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 24 September 2026
+**Last Updated:** 1 October 2026
 
 ---
 
@@ -64,7 +64,7 @@ Published artifacts any reader can count and check, in this repository or on the
 | Specification chapters | 9 | SPEC-00 to SPEC-08, compiled from the canonical documents |
 | Informative comparisons | 9 | |
 | Reference Cases published | 1 | distilled from real rollouts under NDA, with the organization and details changed; non-normative |
-| Architecture Observations | 94 | recorded tensions, AO-001 to AO-095, AO-072 reserved |
+| Architecture Observations | 95 | recorded tensions, AO-001 to AO-096, AO-072 reserved |
 | ADR Candidates | 34 | recorded decisions and proposals, CAND-001 to CAND-034 |
 | Mandatory Statements enumerated | 182 of 335 | `Requirement-Register.md`, regenerated and checked on every build |
 | Reference implementations published | 0 | |
@@ -130,3 +130,4 @@ implied.
 | 0.1 | 23 September 2026 | Counts brought current: 92 Architecture Observations (AO-001 to AO-093); the row had stood at 82 and AO-083 since 19 September. Found by round 2 of the all-packages test. |
 | 0.1 | 23 September 2026 | The ADR Candidates row this table never carried is added (34, CAND-001 to CAND-034). The row above recorded that count as brought current on the same day, and there was no row to bring current; round 5 of the all-packages test read the two against each other. |
 | 0.1 | 24 September 2026 | Architecture Observations brought to 94 (AO-001 to AO-095) as `AO-094` and `AO-095` were recorded; rounds 5 and 6 changed the count in the table and added no row, which round 7 read against the file. |
+| 0.1 | 1 October 2026 | Architecture Observations brought to 95 (AO-001 to AO-096) as `AO-096` was recorded, from round 10 of the all-packages test. |

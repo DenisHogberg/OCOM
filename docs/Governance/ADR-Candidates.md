@@ -30,7 +30,7 @@ Every candidate uses the same template, so every candidate follows the same life
 |---|---|
 | **ID** | Candidate identifier. |
 | **Title** | Short name of the question to be decided. |
-| **Status** | `Open` — queued, no decision yet. `Promoted to ADR-<ID>` / `Rejected` / `Merged` / `Closed without ADR` — per the Governance Proposal v1.1 decision set. |
+| **Status** | `Open` — queued, no decision yet. `Decided` — the Chief Architect recorded the decision in this entry, which is the terminal state every downstream document and tool reads; `Decided in part` where one question of several is answered and the rest stands. `Promoted to ADR-<ID>` where the decision is carried into an Architecture Decision Record, `Rejected`, `Merged` or `Closed without ADR` where a candidate ends without one. |
 | **Owner** | Who currently needs to act — the Chief Architect while `Open`. |
 | **Created** | Date the candidate was queued. |
 | **Related Documents** | Source Observation, specification chapters, or other documents involved. |

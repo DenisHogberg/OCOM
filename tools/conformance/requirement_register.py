@@ -61,8 +61,16 @@ def requirement_set():
                                  "this tool skips yields no Statement, no alias and no Test, with every check "
                                  "green; reconcile the chapter or the enumeration."
                                  % (name, path, ", ".join(CANONICAL_PREFIXES)))
+            if not (DOCS / path).exists():
+                raise SystemExit("%s compiles %s, which this repository does not carry. A document a chapter "
+                                 "compiles and this tool cannot read yields no Statement, no alias and no Test; "
+                                 "reconcile the chapter or restore the document."
+                                 % (name, path))
             if path not in paths:
                 paths.append(path)
+        if not re.findall(r"`([^`]+\.md)`", source_lines[0]) and "synthesized" not in source_lines[0]:
+            raise SystemExit("%s carries a Source line naming no document, so the requirement set took nothing "
+                             "from it" % name)
     return paths
 
 
@@ -74,11 +82,20 @@ def classify(text):
 # A metadata field line, the only thing a leading ** is allowed to mean here. A sentence that
 # merely opens with a bold term ("**Ownership** shall be explicit.") is a Statement like any other,
 # and skipping every line that starts with ** dropped it silently.
+# a line opening with a bold field-shaped label (`**Name:**`) is metadata, not a Statement:
+# `Conformance-Test-Suite.md` Section 2 states the rule. It removes nothing from the corpus as
+# written today, which is the point: it keeps a metadata line a document gains later from
+# entering the requirement set as an obligation nobody wrote
 FIELD = re.compile(r"^\*\*[A-Z][A-Za-z ]{2,30}:\*\*")
 
 
 def statements(path):
     """Statements of one document, in document order: (section, class, text, identity)."""
+    if not (DOCS / path).exists():
+        # `requirement_set` refuses a path outside the canonical tiers with a diagnostic; this read
+        # had none, so a moved or renamed document ended two tools in a FileNotFoundError traceback
+        raise SystemExit("%s names no document this repository carries, so no Statement could be derived "
+                         "from it" % path)
     text = (DOCS / path).read_text(encoding="utf-8")
     body = text.split("<!-- nav:end -->", 1)[-1]
     body = body.split("\n# Revision History", 1)[0]

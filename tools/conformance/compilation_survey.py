@@ -27,6 +27,13 @@ A Statement counts as carried verbatim when the chapter's text contains it once 
 case are normalized away, and as paraphrase when it is at least 0.70 similar to a unit of the
 chapter extracted by the same parser as the sources, so a stem-plus-list obligation is compared
 against the same shape on both sides rather than against a fragment of itself.
+
+The chapter's units are the parser's and, beside them, every sentence and list line of the chapter
+over 25 characters. Both are needed and the docstring once named only the first: a chapter
+restates an obligation in prose the parser does not derive a Statement from, and against the
+parser's units alone eleven classifications in the census move from paraphrase to absent for
+obligations the chapters demonstrably carry. A `verbatim` chapter is held to the first rule
+regardless: there a near match is a failure, not a paraphrase.
 """
 import argparse
 import difflib
@@ -63,23 +70,29 @@ def declaration(path):
         form = "verbatim" if "verbatim" in first else "compiled"
     else:
         raise SystemExit("%s declares no form: %s" % (path.name, line[:120]))
-    sources = []
+    sources, unresolved = [], []
     for rel in re.findall(r"`([^`]+\.md)`", body):
         rel = rel[len("docs/"):] if rel.startswith("docs/") else rel
-        if (ROOT / "docs" / rel).exists() and rel not in sources:
-            sources.append(rel)
-    return form, sources
+        if (ROOT / "docs" / rel).exists():
+            if rel not in sources:
+                sources.append(rel)
+        elif rel not in unresolved:
+            # a Source line naming a document that is not there was skipped in silence, so a
+            # chapter declaring `verbatim` over a source nobody could read carried no Statement
+            # to compare and passed the check with nothing surveyed
+            unresolved.append(rel)
+    return form, sources, unresolved
 
 
 def survey(path):
-    """(form, sources, counts, [(source, section, text) for each Statement not carried])."""
-    form, sources = declaration(path)
+    """(form, sources, counts, [(source, section, text) for each Statement not carried], unresolved)."""
+    form, sources, unresolved = declaration(path)
     body = norm(path.read_text(encoding="utf-8"))
     rel = path.relative_to(ROOT / "docs").as_posix()
     units = [norm(text) for _, _, text, _ in rr.statements(rel)]
     units += [norm(s) for s in re.split(r"(?<=[.;:])\s+|\n", path.read_text(encoding="utf-8")) if len(s) > 25]
     counts = {"verbatim": 0, "paraphrase": 0, "absent": 0}
-    absent = []
+    absent, paraphrased = [], []
     for source in sources:
         for section, kind, text, _ in rr.statements(source):
             if kind != "mandatory":
@@ -90,10 +103,15 @@ def survey(path):
             best = max((difflib.SequenceMatcher(None, norm(text), u).ratio() for u in units), default=0.0)
             if best >= THRESHOLD:
                 counts["paraphrase"] += 1
+                if form == "verbatim":
+                    # a chapter that declares verbatim and carries a near-match carries a sentence
+                    # a reader can tell apart from the one it claims: a truncation that drops the
+                    # obligation scored above the paraphrase threshold and passed the check
+                    paraphrased.append((source, section, text))
             else:
                 counts["absent"] += 1
                 absent.append((source, section, text))
-    return form, sources, counts, absent
+    return form, sources, counts, absent + paraphrased, unresolved
 
 
 def main(argv):
@@ -109,7 +127,7 @@ def main(argv):
     failures = []
     print("%-26s %-12s %7s %9s %11s %7s" % ("chapter", "form", "source", "verbatim", "paraphrase", "absent"))
     for chapter in chapters:
-        form, sources, counts, absent = survey(chapter)
+        form, sources, counts, absent, unresolved = survey(chapter)
         total = sum(counts.values())
         print("%-26s %-12s %7d %9d %11d %7d"
               % (chapter.name[:26], form, total, counts["verbatim"], counts["paraphrase"], counts["absent"]))
@@ -119,6 +137,12 @@ def main(argv):
                                 % (chapter.name, source, section, re.sub(r"\s+", " ", text)[:110]))
         if form == "compiled" and not sources:
             failures.append("%s declares `compiled from` and names no source document" % chapter.name)
+        for rel in unresolved:
+            failures.append("%s names `%s` as a source and this repository does not carry it, so what it "
+                            "declares was compared against nothing" % (chapter.name, rel))
+        if form in ("verbatim", "compiled") and not sources and not unresolved and counts["verbatim"] == 0:
+            failures.append("%s declares %s and no Statement of any source was read, so the form it declares "
+                            "was checked against nothing" % (chapter.name, form))
 
     print("\n%d chapter(s) surveyed, %d failure(s)" % (len(chapters), len(failures)))
     for f in failures:

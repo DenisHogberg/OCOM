@@ -79,13 +79,30 @@ def looks_jsonld(body):
         return False
 
 
+MARKDOWN_MARK = re.compile(r"(?m)^\s{0,3}(#{1,6}\s|[-*+]\s|>\s|\d+\.\s|---\s*$|```)")
+MARKDOWN_LINK = re.compile(r"\[[^\]]*\]\([^)]*\)")
+XML_ROOT = re.compile(r"^<[a-z_:][a-z0-9_.:-]*(\s|>|/)", re.I)
+
+
 def looks_markdown(body):
-    return bool(body.strip()) and not looks_html(body)
+    """Markdown is the only shape with no envelope, so "not HTML" admitted every other document:
+    a term's own JSON record served at its `.md` path passed this row, and passed Citation parity
+    and term parity with it, because the record carries the citation and the definition too."""
+    if not body.strip() or looks_html(body) or looks_json(body):
+        return False
+    return bool(MARKDOWN_MARK.search(body) or MARKDOWN_LINK.search(body))
 
 
 def looks_xml(body):
-    head = body.lstrip()[:200].lower()
-    return head.startswith("<?xml") or head.startswith("<")
+    """An HTML page begins with "<" too, and passed as the sitemap and as the Atom feed. A comment,
+    a legacy doctype and a bare fragment tag all open an HTML document that way, so HTML is
+    rejected by the HTML reader rather than by a list of openings."""
+    head = body.lstrip()
+    if not head or looks_html(body):
+        return False
+    if head[:5].lower() == "<?xml":
+        return True
+    return bool(XML_ROOT.match(head))
 
 
 # What a presence row requires of the body it finds. A row that asked only for a 200 asserted a
@@ -502,6 +519,18 @@ def rendered_figures_row(site):
 # writes the record, a deploy republished the breached numbers and the next run found perfect
 # agreement. The direction is per figure, and a threshold this tool cannot read is a failure
 # rather than a silent skip.
+# the bound each figure is held to, carried here rather than read back from the record under
+# test: `recompute` copied the published `notes` wholesale, so editing a threshold in the
+# published record and running --write made the looser bound permanent and the next --check
+# agreed with it perfectly
+THRESHOLDS = {
+    "brokenLinks": 0,
+    "orphans": 0,
+    "duplicateIdentities": 0,
+    "coreVocabularyProjectionCoverage": 100,
+    "projectionParity": True,
+}
+
 THRESHOLD_DIRECTION = {
     "brokenLinks": "at most",
     "orphans": "at most",
@@ -513,12 +542,20 @@ THRESHOLD_DIRECTION = {
 }
 
 
-def threshold_failures(health):
-    """Every figure of the health record that breaches the threshold the record publishes for it."""
-    thresholds = (health.get("notes") or {}).get("thresholds") or {}
-    if not thresholds:
-        return ["the health record publishes no thresholds block, so no figure could be held to one"]
+def threshold_failures(health, was=None):
+    """Every figure of the health record that breaches its threshold, and the published thresholds
+    block where it is not the one this file holds."""
+    thresholds = dict(THRESHOLDS)
     out = []
+    if was is not None:
+        if not was:
+            out.append("the published health record carries no thresholds block, so a reader of the site is "
+                       "told of no bound at all")
+        elif was != thresholds:
+            # the record is written by this tool: a threshold loosened in the published record was
+            # copied forward on the next --write and nothing ever disagreed with it again
+            out.append("the published thresholds are %r and this tool holds %r; a bound read back from the "
+                       "record it is meant to check can never disagree with it" % (was, thresholds))
     for key in sorted(thresholds):
         want = thresholds[key]
         direction = THRESHOLD_DIRECTION.get(key)
@@ -709,6 +746,8 @@ def recompute(site, today):
         "checkedAt": today,
         "notes": dict(published.get("notes", {})),
     }
+    # the thresholds this tool holds, never the ones the record under test publishes
+    health["notes"]["thresholds"] = dict(THRESHOLDS)
     health["notes"]["cycles"] = ("Directed cycles as counted by the site generator at build time. The counting rule was never published and that "
                                  "generator no longer exists, so this figure is carried forward from " + CYCLES_LAST_COMPUTED + " and is not recomputed; "
                                  "the reproducible figure is mutualPairs.")
@@ -730,7 +769,7 @@ def recompute(site, today):
         "ownership": (site.json("/observatory/publication-health.json") or {}).get("ownership"),
         "carriedForward": ["ownership"],
     }
-    return health, pub
+    return health, pub, ((published.get("notes") or {}).get("thresholds") or {})
 
 
 def main(argv):
@@ -747,9 +786,9 @@ def main(argv):
         import datetime
         a.today = datetime.date.today().isoformat()
     site = Site(a.base, a.pause)
-    health, pub = recompute(site, a.today)
+    health, pub, was = recompute(site, a.today)
     failed = [r for r in pub["checks"] if not r["ok"]]
-    breached = threshold_failures(health)
+    breached = threshold_failures(health, was)
     for line in breached:
         print("THRESHOLD", line)
     for r in pub["checks"]:
