@@ -36,6 +36,7 @@ No prior document defined how an entry in this register moves or ends. This sect
 - **Open in part**: one part of the entry is resolved by a recorded decision and the rest is not. The Status says which part.
 - **Escalated**: carried to an ADR Candidate, which now holds the question. The Status names the candidate, and the Architect Response is recorded there rather than here.
 - **Closed**: resolved by an Architect Response, either because the finding was accepted and acted on, or because it was considered and no change follows. Closure is always visible: an entry is never closed by silence or by the passage of time.
+- **Closed in part**: one part of the entry is resolved by a recorded decision and closed, and the rest stands. The same state as Open in part, reached from the resolved side rather than from the open one; the Status says which half is closed and which stands, and the entry is counted as open work until the rest closes.
 - **Informative**: recorded for the record rather than as a defect to resolve. It has no closure condition and is not counted as open work.
 
 ## Numbering

@@ -101,6 +101,12 @@ def load_register():
     return out
 
 
+# elements that state something about the export as a whole rather than naming a field. A row of
+# any other kind for one of these is read as a field binding and declares nothing, which is the
+# silence `Integrity.method` was guarded against and these were not
+DECLARED_ELEMENTS = ("identity.scope", "identity.system")
+
+
 def load_map(path):
     types, fields, declarations = {}, {}, {}
     for cells in read_table(path, "| OCOM type | Kind | Where it is in this export |"):
@@ -116,6 +122,13 @@ def load_map(path):
         # binding but its value is a method name, not a field of the export
         if len(cells) < 3:
             continue
+        if cells[0].lower() in DECLARED_ELEMENTS and cells[1] != "declaration":
+            # the same mistake as Integrity.method below, and it was not guarded: a scope row
+            # written as a field put its value in `fields`, every namespace became ("", ""), and a
+            # mandatory Declaration Test reported that the map declares no scope over a map that
+            # declares one in plain sight
+            raise SystemExit("%s carries %s as kind %r; it is kind `declaration`, and read as anything else it "
+                             "declares nothing at all" % (path, cells[0], cells[1]))
         if cells[0].lower() == "integrity.method" and cells[1] != "method":
             # `Adoption/Reference Serialization.md` called this row a declaration until 23 September
             # 2026, and a map written to that page had every Integrity Test report pending with a
@@ -405,7 +418,11 @@ class Resolver:
         every identity to a declared scope, and an External System names the system, so two
         systems' keys coexist in one export as identities of two scopes."""
         d = self.declarations
-        keys = [path.lower()] + self.specific_types(path) + ["identity"]
+        # `identity` is a type name as well as the export-wide key, and it sorts ahead of `object`
+        # in the type list: an `Object.identity scope` row was shadowed by the export-wide
+        # `Identity.scope` it is supposed to outrank, and the Pass reason then printed both
+        types = [t for t in self.specific_types(path) if t != "identity"]
+        keys = [path.lower()] + types + ["identity"]
         # the scope and the system are resolved separately along the same order, so a type may
         # declare the scope once and each of its collections name its own source system
         scope = system = ""

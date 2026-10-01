@@ -49,7 +49,10 @@ def base_files():
                                                             "coreVocabularyProjectionCoverage": 100,
                                                             "projectionParity": True}}})
     j("/comparisons.json", {"comparisons": [{"url": "https://ocom.uno/compare/x", "record": "https://ocom.uno/compare/x.json"}]})
-    j("/discovery.json", {"resources": [{"url": "https://ocom.uno/api/v1/index.json", "mediaType": "application/json"}]})
+    # an XML entry point beside the JSON one: without it nothing in the fixture exercised the XML
+    # shape, so `looks_xml` accepted an HTML page as the sitemap with every test green
+    j("/discovery.json", {"resources": [{"url": "https://ocom.uno/api/v1/index.json", "mediaType": "application/json"},
+                                        {"url": "https://ocom.uno/sitemap.xml", "mediaType": "application/xml"}]})
     j("/api/v1/index.json", {"ok": True})
     j("/compare/x.json", {"id": "CMP-01"})
     h("/compare/x", "<html><body>comparison</body></html>")

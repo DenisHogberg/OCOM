@@ -36,8 +36,10 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 INDEX = ROOT / "publication" / "README.md"
 TIMEOUT = 30
 ROW = re.compile(r"^\|\s*`(https?://[^`]+)`\s*\|\s*`([^`]+)`\s*\|")
-# a URL that ends a sentence: the punctuation is not part of it, but a harvester cannot know that
-GLUED = re.compile(r"(https?://[^\s<>()\[\]`]*[^\s<>()\[\]`.,;])([.,;])(\s|$)")
+# a bare URL followed by `.`, `,` or `;` wherever the next character cannot continue the URL: the
+# punctuation is not part of it, but a harvester cannot know that. Requiring whitespace after it
+# missed the same string written inside parentheses or quotes, which is AO-083's own instance
+GLUED = re.compile(r"(https?://[^\s<>()\[\]`]*[^\s<>()\[\]`.,;])([.,;])(?![\w/])")
 
 
 def rows():

@@ -187,6 +187,23 @@ def external_ok(url, timeout=TIMEOUT):
         return False
 
 
+def json_parse_error(site, final):
+    """The error a record that looks like JSON raises when it does not parse, or None.
+
+    Keyed on the response rather than on a declaration: the module docstring says every JSON
+    `llms.txt` and `discovery.json` name parses, and the only parse lived in the discovery branch
+    behind that resource's declared mediaType, so the term records named by neither were read by
+    nobody."""
+    ctype, body = site.get(final)[1], site.get(final)[2]
+    if not (final.split("?")[0].lower().endswith((".json", ".jsonld")) or "json" in (ctype or "").lower()):
+        return None
+    try:
+        json.loads(body)
+    except ValueError as e:
+        return str(e)
+    return None
+
+
 def resolve(site, path, hops=3):
     """Follow a redirect only while it stays on the site; (final status, final path, note)."""
     seen = []
@@ -346,6 +363,10 @@ def hunt(site):
                                         % (url, away.group(1)))
                 elif st != 200:
                     failures.append("llms.txt names %s, which answers %s" % (url, st))
+                else:
+                    bad = json_parse_error(site, final)
+                    if bad:
+                        failures.append("llms.txt names %s, which does not parse as JSON: %s" % (url, bad))
         if path == "/robots.txt":
             # fetched only to see that it answers, so a file disallowing the whole site and naming
             # a sitemap that 404s was read by nobody
@@ -400,18 +421,34 @@ def hunt(site):
                                         "that does not answer" % (url, away.group(1)))
                 elif st != 200:
                     failures.append("/.well-known/ocom.json names %s, which answers %s" % (url, st))
+                else:
+                    bad = json_parse_error(site, final)
+                    if bad:
+                        failures.append("/.well-known/ocom.json names %s, which does not parse as JSON: %s"
+                                        % (url, bad))
         if path == "/discovery.json":
             try:
                 d = json.loads(body)
             except ValueError as e:
                 failures.append("/discovery.json does not parse: %s" % e)
                 continue
+            # counted after the loop: an entry this hunt cannot read is an entry it did not check,
+            # and reporting zero failures over it said the resource answers
             resources = d.get("resources") if isinstance(d, dict) else None
             if not resources:
                 failures.append("/discovery.json carries no resources, so nothing in it was checked")
-            for res in resources or []:
+            elif not isinstance(resources, list):
+                # keyed by name, or a list of bare URL strings, every entry yielded an empty url
+                # and was skipped without a word: a dead URL was invisible under either reshaping
+                failures.append("/discovery.json writes resources as %s, and this hunt reads a list of records, "
+                                "so none of what it names was checked" % type(resources).__name__)
+            unreadable = 0
+            for res in resources if isinstance(resources, list) else []:
                 url = res.get("url", "") if isinstance(res, dict) else ""
-                p = as_path(url, sitemap_host) if url else None
+                if not isinstance(url, str) or not url.strip():
+                    unreadable += 1
+                    continue
+                p = as_path(url, sitemap_host)
                 if p is None:
                     continue
                 if "{" in p:
@@ -426,11 +463,15 @@ def hunt(site):
                                         % (url, away.group(1)))
                 elif st != 200:
                     failures.append("discovery.json names %s, which answers %s" % (url, st))
-                elif st == 200 and "json" in (res.get("mediaType") or ""):
-                    try:
-                        json.loads(site.get(final)[2])
-                    except ValueError as e:
-                        failures.append("discovery.json resource %s does not parse as JSON: %s" % (url, e))
+                elif st == 200:
+                    # keyed on the response, not on the declared mediaType: a record declared as
+                    # anything else was never read, and the docstring says every JSON parses
+                    bad = json_parse_error(site, final)
+                    if bad:
+                        failures.append("discovery.json resource %s does not parse as JSON: %s" % (url, bad))
+            if unreadable:
+                failures.append("/discovery.json carries %d resource(s) this hunt cannot read a URL out of, so "
+                                "what they name was checked against nothing" % unreadable)
     return sorted(set(failures)), counts
 
 
