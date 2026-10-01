@@ -1,6 +1,6 @@
 # Test Report
 
-**Run on:** 24 September 2026
+**Run on:** 1 October 2026
 
 **Implementation:** OCOM reference export, library lending example
 
@@ -10,7 +10,7 @@
 
 **Inputs, by content:** model `066a4ba34e504aee`, map `bb6d9b8f2e25090e`, Conformance Statement `cf478add0bddcc36`, Requirement Register `e09cdd67d62d7951`, Alias File `44fcbf6a2466d9fe`, Test Catalogue `deda54f26db781a0` (SHA-256 of each file as read). The last three decide which Statements exist and which procedure each one gets, so a report that named only the first three did not say what produced its outcomes. The record declares the model, the map, the Conformance Statement, the Requirement Register, the Alias File and the Test Catalogue it was made against, and they are the six this run read: what a judgment is about is the Statement, and what decides which Statements exist and which procedure each one gets is those three.
 
-**Read from:** the checkout at `d05fbc9, with uncommitted changes`, whose `Governance/Publication-Manifest.md` names Release v1.4.0 at commit `73d73b95e10ebc808554985afe89466316273f45` as its latest. The run reads the working tree, not that commit: where the two differ, the digests above are what was read. Requirement Register: 335 Statements. Alias File revision: 335 aliases, last appended 17 September 2026.
+**Read from:** the checkout at `f5f9e02, with uncommitted changes`, whose `Governance/Publication-Manifest.md` names Release v1.4.0 at commit `73d73b95e10ebc808554985afe89466316273f45` as its latest. The run reads the working tree, not that commit: where the two differ, the digests above are what was read. Requirement Register: 335 Statements. Alias File revision: 335 aliases, last appended 17 September 2026.
 
 **Published by:** the party that ran the suite. A report published by the claimant is self-validation; `Conformance-Test-Suite.md` Section 4 says the suite does not tell the two apart and the publisher does.
 
@@ -23,16 +23,16 @@
 | | Count |
 |---|---|
 | Mandatory Tests | 185 |
-| Pass | 48 |
+| Pass | 50 |
 | Fail | 0 |
 | Review Pass | 3 |
 | Review Fail | 0 |
-| Awaiting a reviewer or evidence the export does not carry | 134 |
+| Awaiting a reviewer or evidence the export does not carry | 132 |
 | Not Applicable (dispositioned Descriptive in the Alias File, or an extension clause where the Conformance Statement declares no extension) | 3 |
 
 **Measured set:** 185 of the 188 mandatory Tests the catalogue carries; 3 are Not Applicable, dispositioned Descriptive in the Alias File or a capability this Conformance Statement does not claim. A claim rests on what was measured, so the size of the measured set is stated beside the outcome.
 
-**Core Conformance: not established.** Section 3 establishes it when every mandatory Test is Pass or Review Pass. 0 mandatory Test(s) fail, 0 carry a Review Fail, and 134 await a reviewer or evidence this export does not carry.
+**Core Conformance: not established.** Section 3 establishes it when every mandatory Test is Pass or Review Pass. 0 mandatory Test(s) fail, 0 carry a Review Fail, and 132 await a reviewer or evidence this export does not carry.
 
 ---
 
@@ -227,7 +227,7 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-MODELS-RELATIONSHIP-013 | `Models/Relationship.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-EVENT-001 | `Models/Event.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-EVENT-002 | `Models/Event.md` | Presence | mandatory | Pass | 4 event record(s) carry identifier, each distinct |
-| REQ-MODELS-EVENT-003 | `Models/Event.md` | Presence | mandatory | pending | the Statement states a condition rather than an element (time at which it occurred); a reviewer decides it |
+| REQ-MODELS-EVENT-003 | `Models/Event.md` | Presence | mandatory | Pass | 4 event record(s) carry time at which it occurred |
 | REQ-MODELS-EVENT-004 | `Models/Event.md` | Integrity | mandatory | Pass | 4 event record(s) are identified by the digest of their own content, so an altered record is a different record |
 | REQ-MODELS-EVENT-005 | `Models/Event.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-EVENT-008 | `Models/Event.md` | Invariant | mandatory | pending | deciding this prohibition needs evidence the export does not carry (a history, or a refusal record) |
@@ -255,7 +255,7 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | REQ-MODELS-LIFECYCLE-001 | `Models/Lifecycle.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
 | REQ-MODELS-LIFECYCLE-002 | `Models/Lifecycle.md` | Transition | mandatory | Pass | 3 Lifecycle(s) each belong to exactly one Entity; 3 Lifecycle(s) define exactly one initial State, each among their own States; 3 Lifecycle(s) define 12 States ... (cut here; the whole reason is in this run's output) |
 | REQ-MODELS-LIFECYCLE-003 | `Models/Lifecycle.md` | Transition | mandatory | Pass | 3 Lifecycle(s) define exactly one initial State, each among their own States |
-| REQ-MODELS-LIFECYCLE-005 | `Models/Lifecycle.md` | Presence | mandatory | pending | the Statement states a condition rather than an element (meaning within the lifecycle); a reviewer decides it |
+| REQ-MODELS-LIFECYCLE-005 | `Models/Lifecycle.md` | Presence | mandatory | Pass | 12 state record(s) carry meaning within the lifecycle, each distinct |
 | REQ-MODELS-LIFECYCLE-007 | `Models/Lifecycle.md` | Transition | mandatory | Pass | 3 Lifecycle(s) define 15 Transitions, every endpoint a State they declare |
 | REQ-MODELS-LIFECYCLE-009 | `Models/Lifecycle.md` | Transition | mandatory | Pass | 3 Entities each occupy exactly one State defined by their Lifecycle |
 | REQ-MODELS-LIFECYCLE-010 | `Models/Lifecycle.md` | Review | mandatory | pending | awaiting a named reviewer, per the kind this Test carries |
@@ -270,5 +270,5 @@ The Representation Map declares no Erasure records, so no record was excluded fr
 | DECL-002 | `Language/Conformance.md` | Declaration | mandatory | Not Applicable | the Conformance Statement declares no extension ('none'), so what Chapter 8 imposes on extensions applies to nothing in it |
 | DECL-003 | `Language/Conformance.md` | Declaration | mandatory | Not Applicable | the Conformance Statement declares no extension ('none'), so what Chapter 8 imposes on extensions applies to nothing in it |
 | DECL-004 | `Language/Conformance.md` | Declaration | mandatory | Pass | the Conformance Statement names version 1.0 |
-| DECL-005 | `Language/Conformance.md` | Declaration | mandatory | Pass | one version declared: 1.0 |
-| DECL-006 | `Language/Conformance.md` | Declaration | mandatory | pending | 133 mandatory Test(s) are undecided (REQ-META-OBJECT-001, REQ-META-OBJECT-004, REQ-META-OBJECT-018), so whether a mandatory requirement is unsatisfied is not yet known |
+| DECL-005 | `Language/Conformance.md` | Declaration | mandatory | Pass | the Conformance Statement explicitly declares 1 supported version(s): 1.0 |
+| DECL-006 | `Language/Conformance.md` | Declaration | mandatory | pending | 131 mandatory Test(s) are undecided (REQ-META-OBJECT-001, REQ-META-OBJECT-004, REQ-META-OBJECT-018), so whether a mandatory requirement is unsatisfied is not yet known |

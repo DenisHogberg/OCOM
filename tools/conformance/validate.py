@@ -66,6 +66,16 @@ def read_table(path, header_starts, whole_file=True):
     return rows
 
 
+def pipe_cells(line):
+    """The cells of a Markdown row, with `\\|` read as a pipe inside a cell rather than a divider.
+
+    `read_table` has done this since round 8; the Reviewer Record reader split on a bare pipe, so a
+    judgment whose Reason escaped one had six cells: hidden in a comment it was not judgment-shaped
+    and vanished with the comment span, and visible it was refused for having six cells."""
+    return [c.replace("\x00", "|").strip()
+            for c in line.strip().strip("|").replace("\\|", "\x00").split("|")]
+
+
 def load_catalogue():
     rows = read_table(CATALOGUE, "| Alias | Document | Section | Class | Kind | Disposition |")
     if not rows:
@@ -115,7 +125,16 @@ def load_map(path):
         if cells[1] == "declaration":
             # a row of kind declaration states something about the export as a whole, such as the
             # scope of its identities (CAND-026); it names no field and is read by Declaration Tests
-            declarations[cells[0].lower()] = cells[2].strip("`")
+            value = cells[2].strip("`")
+            previous = declarations.get(cells[0].lower())
+            if previous is not None and previous != value:
+                # the map is written by the claimant, and a second row simply overwrote the first:
+                # `Identity.scope` declared Banana then Organization passed a mandatory Test whose
+                # reason named only the survivor, and the two rows swapped made the same map Fail
+                raise SystemExit("%s declares %s twice and differently (%r, then %r); a declaration states one "
+                                 "thing about this export, and reading the last of several is reading whichever "
+                                 "was written last" % (path, cells[0], previous, value))
+            declarations[cells[0].lower()] = value
             continue
         if cells[1] not in ("field", "method"):
             continue
@@ -170,6 +189,26 @@ def collection_at(node, path):
     if isinstance(value, dict):
         return [value]          # one record, stored as an object value rather than in a list
     return [x for x in value if isinstance(x, dict)] if isinstance(value, list) else []
+
+
+def enclosing(r, scope_type):
+    """Which record of `scope_type` holds each record nested inside it, by object identity.
+
+    A Statement that asks for uniqueness within something names the records it is unique within;
+    read without them the leg counted across the whole export, and two Lifecycles that each define
+    Available with its own meaning were a violation of a Statement that describes neither."""
+    owners = {}
+    for path, holder in r.records(scope_type):
+        key = (path, str(r.identity_of(path, holder)))
+        stack = [v for v in holder.values()]
+        while stack:
+            node = stack.pop()
+            if isinstance(node, dict):
+                owners.setdefault(id(node), key)
+                stack.extend(node.values())
+            elif isinstance(node, list):
+                stack.extend(node)
+    return owners
 
 
 def parents_of(model, path):
@@ -294,6 +333,25 @@ class Resolver:
     def value(self, record, type_name, element):
         name, _ = self.field(type_name, element)
         return None if name is None else record.get(name)
+
+    def listed(self, record, type_name, element):
+        """A list-valued element, read through the map, refused if the export writes it otherwise.
+
+        `or []` was the whole shape check at every site that iterates one of these: a scalar is
+        truthy, survives it, and raises TypeError, so the run died with a traceback and no report at
+        all. A map row binding a list-valued element to a key holding a scalar has said something
+        false about the export, exactly as a collection row naming a path holding a scalar has, and
+        `instances` already stops the run for that."""
+        name, _ = self.field(type_name, element)
+        if name is None:
+            return []
+        value = record.get(name)
+        if value is None:
+            return []
+        if not isinstance(value, list):
+            raise SystemExit("the export writes %s.%s at `%s` as %s, and it is a list; a value that is "
+                             "not one cannot be read" % (type_name, element, name, type(value).__name__))
+        return value
 
     def all_paths(self):
         """Every distinct collection path the map declares. The map lists one collection under
@@ -570,7 +628,16 @@ def required_elements(text):
 
 
 # a phrase carrying a clause is a condition, not an element: "when an Object is created"
-CLAUSE = re.compile(r"\b(when|where|unless|while|after|before|if|through|within|that|which)\b")
+# anchored: unanchored, these words matched inside a noun phrase, so "the time at which it
+# occurred" and "a unique meaning within the Lifecycle" were called conditions rather than
+# elements and two mandatory Presence Tests could not fail for any export at all, over map rows
+# their own example writes
+CLAUSE = re.compile(r"^(when|where|unless|while|after|before|if|through|within|that|which)\b")
+
+# the scope a uniqueness Statement names: "a unique meaning within the Lifecycle" is unique within
+# one Lifecycle, and counted across the export two Lifecycles defining Available read as a
+# violation the Statement does not describe
+WITHIN = re.compile(r"\bunique\b[^.;]*?\bwithin (?:each |the |its |their )?([A-Za-z][A-Za-z ]*?)\s*[.;,]?$", re.I)
 
 # a Statement that asks for one of something: "Every Entity shall have one responsible owner"
 ONE = re.compile(r"\bshall (?:have|possess|define|carry|reference|belong to|contain|include) (?:exactly )?(?:one|a single)\b", re.I)
@@ -798,6 +865,15 @@ def presence(test, text, r):
     # a Statement asking for a unique value is not established by the value being there
     unique_note = ""
     if re.search(r"\bunique\b", text, re.I):
+        scope_type, owners = None, {}
+        within = WITHIN.search(text)
+        if within:
+            candidate = within.group(1).strip().lower()
+            if candidate in r.types:
+                scope_type, owners = candidate, enclosing(r, candidate)
+            else:
+                return None, ("the Statement asks for uniqueness within %s, which the Representation Map does "
+                              "not list, so the records it is unique within could not be read" % candidate)
         for element in elements:
             name, _ = r.field(subject, element)
             if name is None:
@@ -813,18 +889,22 @@ def presence(test, text, r):
                     return "Fail", ("%s record %s carries %d values for %s where the Statement asks for a unique one"
                                     % (subject, rec.get("id", path), len(value), element))
                 scope = r.namespace_of(path)
-                key = scope + (value,)
+                # within the scope the Statement names, where it names one: the key carries the
+                # record that holds this one, so uniqueness is counted where it is asked for
+                key = scope + owners.get(id(rec), ()) + (value,)
                 counts[key] = counts.get(key, 0) + 1
-                if scope == ("", ""):
+                if scope == ("", "") and scope_type is None:
                     undeclared[value] = undeclared.get(value, 0) + 1
             # the reuse Invariant compares a record whose scope the map does not declare against
             # every namespace, "otherwise one declaration row exempted the rest"; this leg had no
             # such rule, so one declared collection and one undeclared made two keys of one identity
             crossing = {value for value in undeclared
-                        if sum(c for k, c in counts.items() if k[2] == value) > 1}
-            repeated = sorted({str(k[2]) for k, n in counts.items() if n > 1} | {str(v) for v in crossing})
+                        if sum(c for k, c in counts.items() if k[-1] == value) > 1}
+            repeated = sorted({str(k[-1]) for k, n in counts.items() if n > 1} | {str(v) for v in crossing})
             if repeated:
-                return "Fail", "%s is not unique across %s: %s" % (element, subject, ", ".join(repeated[:3]))
+                return "Fail", ("%s is not unique across %s: %s" % (element, subject, ", ".join(repeated[:3]))
+                                if scope_type is None else
+                                "%s is not unique within one %s: %s" % (element, scope_type, ", ".join(repeated[:3])))
         unique_note = ", each distinct"
     note = "" if not borrowed else " (%s)" % "; ".join(borrowed)
     if optional:
@@ -872,7 +952,10 @@ def lifecycle_for(lifecycles, named, namespace=None):
     The index is keyed by (namespace, identity) like every other index in this module, so a
     reference resolves in its own namespace first and by bare key only where the export carries
     that identity in one namespace; `Adoption/Reference Serialization.md` states that rule."""
-    if named is None:
+    if keyable(named) is None:
+        # the Lifecycle an Entity names is a key like any other: a list or an object here raised
+        # TypeError on the namespaced lookup and wrote no report at all, while the index that
+        # carries it already skips what it cannot key on
         return None
     if namespace is not None and tuple(namespace) + (named,) in lifecycles:
         return lifecycles[tuple(namespace) + (named,)]
@@ -911,23 +994,52 @@ def lifecycle_index(r):
     return lifecycles, by_entity
 
 
+def state_label(name):
+    """How a State reads in a report.
+
+    A State record carrying no name under the field the map binds has no name to print: printing it
+    as None said nothing, and joining it raised TypeError and wrote no report at all."""
+    return "a State record carrying no name" if is_absent(name) else str(name)
+
+
+def comparable(name):
+    """A State name as a walk or a membership test compares it.
+
+    A name written as a list or a record is not a name and is hashable by nothing, which killed the
+    set membership before any of the mandatory Statements got a row. It is compared under its own
+    representation instead, so it matches itself and nothing else."""
+    return name if isinstance(name, (str, int, float, bool)) or name is None else repr(name)
+
+
 def state_names(r, lc):
     """The States a Lifecycle defines, read through the map. A State written as a bare string needs
     no field; one written as a record is read through State.name and never through a literal key."""
     name, _ = r.field("state", "name")
     out = []
-    for s in r.value(lc, "lifecycle", "states") or []:
+    for s in r.listed(lc, "lifecycle", "states"):
         out.append(s.get(name) if isinstance(s, dict) else s)
     return out
+
+
+def named_state(r, value):
+    """A State named anywhere else in the export, read the way `state_names` reads one.
+
+    An initial State and a terminal State are States: an export that writes its States as records
+    writes these as records too, and comparing the record itself against a set of names raised
+    TypeError and wrote no report."""
+    name, _ = r.field("state", "name")
+    return value.get(name) if isinstance(value, dict) and name else value
 
 
 def transitions_of(r, lc):
     from_field, _ = r.field("transition", "from")
     to_field, _ = r.field("transition", "to")
     out = []
-    for tr in r.value(lc, "lifecycle", "transitions") or []:
+    for tr in r.listed(lc, "lifecycle", "transitions"):
         if isinstance(tr, dict):
-            out.append((tr.get(from_field), tr.get(to_field)))
+            # an endpoint written as a list or a record is unhashable, and every leg that builds a
+            # set of these pairs died on it with no report
+            out.append((comparable(tr.get(from_field)), comparable(tr.get(to_field))))
     return out
 
 
@@ -939,8 +1051,8 @@ def lifecycle_reading(r, lifecycles):
     them otherwise was compared against fields its records do not carry, every value came back None,
     and the legs passed over nothing. Seven map rows could be deleted with no verdict changing."""
     need = []
-    states = [s for lc in lifecycles.values() for s in (r.value(lc, "lifecycle", "states") or [])]
-    steps = [tr for lc in lifecycles.values() for tr in (r.value(lc, "lifecycle", "transitions") or [])]
+    states = [s for lc in lifecycles.values() for s in r.listed(lc, "lifecycle", "states")]
+    steps = [tr for lc in lifecycles.values() for tr in r.listed(lc, "lifecycle", "transitions")]
     if any(isinstance(s, dict) for s in states) and r.field("state", "name")[0] is None:
         need.append("State.name")
     if any(isinstance(tr, dict) for tr in steps):
@@ -988,6 +1100,9 @@ def transition_predicate(text, r, lifecycles, by_entity):
             lc = lifecycle_for(lifecycles, named, r.namespace_of(path))
             if not isinstance(state, str) or is_absent(state):
                 bad.append("%s occupies no single State" % ident)
+            elif isinstance(named, (list, dict)):
+                bad.append("%s names %d Lifecycle(s) where an Entity names one, so no single Lifecycle "
+                           "defines the State it shall occupy" % (ident, len(named)))
             elif named and lc is None:
                 bad.append("%s names Lifecycle %s, which the export does not carry" % (ident, named))
             elif lc is not None and state not in state_names(r, lc):
@@ -1020,7 +1135,7 @@ def transition_predicate(text, r, lifecycles, by_entity):
         if field is None:
             return None, ("the Representation Map binds no field to Lifecycle.terminal states, so no terminal State "
                           "could be read; an export that declares none says so through the map")
-        left = []
+        left, unread = [], []
         for k, lc in lifecycles.items():
             outgoing = {a for a, _ in transitions_of(r, lc)}
             declared = r.value(lc, "lifecycle", "terminal states")
@@ -1028,10 +1143,23 @@ def transition_predicate(text, r, lifecycles, by_entity):
             # leg compared nothing and reported that no terminal State is left
             terminals = declared if isinstance(declared, list) else ([] if is_absent(declared) else [declared])
             for terminal in terminals:
+                # a terminal State written as a record is read through State.name, exactly as the
+                # States it is one of are. Comparing the record itself against the outgoing set
+                # raised TypeError and killed the run with no report at all, and a serialization
+                # this tool cannot read is not a violation the implementation committed
+                terminal = named_state(r, terminal)
+                if isinstance(terminal, (list, dict)) or is_absent(terminal):
+                    unread.append(k[-1])
+                    continue
                 if terminal in outgoing:
                     left.append("%s: %s is terminal and has an outgoing Transition" % (k[-1], terminal))
-        return ("Fail", "; ".join(left[:3])) if left else \
-               ("Pass", "no terminal State is left in %d Lifecycle(s)" % len(lifecycles))
+        if left:
+            return "Fail", "; ".join(left[:3])
+        if unread:
+            return None, ("%d terminal State(s) of %s are written in a form this tool cannot read as a State "
+                          "name, so they could not be compared against the Transitions"
+                          % (len(unread), ", ".join(sorted(set(str(u) for u in unread)))))
+        return "Pass", "no terminal State is left in %d Lifecycle(s)" % len(lifecycles)
 
     if ("only perform" in low or "permitted by the lifecycle" in low) and subject_of(text, r.types) == "workflow":
         # a Statement about Workflows is decided from Workflow steps: routing it into the Event leg
@@ -1065,6 +1193,12 @@ def transition_predicate(text, r, lifecycles, by_entity):
                 unresolved.append(str(subject))
                 continue
             named = key
+            if isinstance(before, (list, dict)) or isinstance(after, (list, dict)):
+                # a State change whose endpoints are not single States was compared by keying on
+                # them, which raised TypeError and wrote no report at all
+                bad.append("%s records a State change this tool cannot read as one State to another"
+                           % e.get("id"))
+                continue
             if before is None:
                 # a destination without a prior State is a creation when it names the initial State,
                 # and Models/Lifecycle.md makes entering the initial State the start rather than a
@@ -1256,7 +1390,7 @@ def invariant_predicate(text, r, lifecycles, by_entity):
                           % types_field)
         for path, d in r.records("domain"):
             ident = r.identity_of(path, d)
-            for name in d.get(types_field) or []:
+            for name in r.listed(d, "domain", "entity types"):
                 if name in seen and seen[name] != ident:
                     bad.append("%s is governed by %s and %s" % (name, seen[name], ident))
                 seen[name] = ident
@@ -1278,11 +1412,15 @@ def invariant_predicate(text, r, lifecycles, by_entity):
     if "unreachable state" in low:
         bad = []
         for k, lc in lifecycles.items():
-            names = state_names(r, lc)
+            # a State record carrying no name, or a name written as a list or a record, is still a
+            # State this walk has to place: compared raw it was unhashable, or joined as None, and
+            # the run died before any of the mandatory Statements got a row
+            names = [comparable(n) for n in state_names(r, lc)]
             start = r.value(lc, "lifecycle", "initial state")
             # several initial States is itself a violation, and this leg used to die on it with an
             # unhashable list, so the one input the Statement exists to catch wrote no report at all
-            starts = start if isinstance(start, list) else [start]
+            starts = [comparable(named_state(r, s))
+                      for s in (start if isinstance(start, list) else [start])]
             reached, frontier = set(starts), list(starts)
             pairs = transitions_of(r, lc)
             while frontier:
@@ -1291,7 +1429,7 @@ def invariant_predicate(text, r, lifecycles, by_entity):
                     if a == here and b not in reached:
                         reached.add(b)
                         frontier.append(b)
-            unreachable = [n for n in names if n not in reached]
+            unreachable = [state_label(n) for n in names if n not in reached]
             if unreachable:
                 bad.append("%s: %s" % (k[-1], ", ".join(unreachable)))
         return ("Fail", "States no Transition reaches from the initial State: %s" % "; ".join(bad[:3])) if bad else \
@@ -1354,7 +1492,7 @@ def workflow_violations(r, lifecycles, by_entity):
                        % " or ".join(unbound))
     bad, examined, unread = [], 0, 0
     for _, wf in r.records("workflow"):
-        for tr in wf.get(steps_field) or []:
+        for tr in r.listed(wf, "workflow", "transitions"):
             examined += 1
             if not isinstance(tr, dict):
                 # a Workflow may record its steps as references to Transition records, which the map
@@ -1415,12 +1553,16 @@ def dangling_references(r):
     still printed that every reference resolved. It now asks the only question worth asking, over
     every scalar and every member of every list: is this value an identity this export declares?
     """
-    known = set(r.ids())
+    # an export that numbers its records reached the separator test below with an int, and
+    # `"-" in 7` raised TypeError after every Test had been decided and before the report was
+    # written. The normalisation is local: `ids()` feeds erasure_records a like-for-like
+    # comparison against values that are not strings either
+    known = {str(i) for i in r.ids()}
     if not known:
         return ["the export declares no identity, so no reference could be resolved"], 0
     scopes = {}
     for (scope, system, ident), _ in r.identities().items():
-        scopes.setdefault(ident, set()).add((scope, system))
+        scopes.setdefault(str(ident), set()).add((scope, system))
     external = set(r.types.get("reference") or [])
     # fields the map binds to prose are not references. Reading them off a list of literal key names
     # was the one place in the engine that did not go through the map, so an export that spelled a
@@ -1884,8 +2026,8 @@ def review_rows(path):
                          "illustration, and a judgment this tool cannot see is a judgment nobody recorded" % path)
     hidden = [line.strip() for span in re.findall(r"<!--.*?-->", raw, flags=re.S)
               for line in span.splitlines()
-              if line.strip().startswith("|") and len(line.strip().strip("|").split("|")) == 5
-              and not set("".join(line.strip().strip("|").split("|"))) <= set("-: ")]
+              if line.strip().startswith("|") and len(pipe_cells(line)) == 5
+              and not set("".join(pipe_cells(line))) <= set("-: ")]
     if hidden:
         # a comment opening inside one row's Reason cell and closing after a later row removed the
         # rows between them, Review Fails included, with the markers balanced and nothing printed
@@ -1917,9 +2059,15 @@ def review_rows(path):
         body = re.sub(r"^\s*(?:>\s?|[-*+]\s|\d+[.)]\s)+", "", raw_line).strip()
         blank_before = not line
         if not body.startswith("|"):
+            # a table ends at the first line that is not a row. Closing it only on `#` read every
+            # row under a Setext heading, a thematic break or an HTML wrapper as a judgment: a
+            # record whose rows sat under "Illustration, not judgments" was applied in full and the
+            # run reported Core Conformance established
+            if line and in_table and not fenced and not indented:
+                in_table = False
             continue
         line = body
-        cells = [c.strip() for c in line.strip("|").split("|")]
+        cells = pipe_cells(line)
         if fenced or indented:
             if len(cells) == 5 and not set("".join(cells)) <= set("-: ") and not line.startswith(REVIEW_HEADER):
                 dropped += 1
@@ -1932,8 +2080,10 @@ def review_rows(path):
             continue
         if not in_table:
             # a five-cell line under another heading is text a reader sees as text, and reading it
-            # as a judgment applied rows nobody tabled
-            outside_rows += 1
+            # as a judgment applied rows nobody tabled. A row of any other width is another table,
+            # and refusing a record for carrying one called two cells of prose judgments
+            if len(cells) >= 5:
+                outside_rows += 1
             continue
         rows.append(cells)
     # a filter that silently removes something judgment-shaped is the defect this function has had
@@ -1978,10 +2128,21 @@ def recorded_against(path):
                              "Section 3 fixes is `**Recorded against:** model <digest>, map <digest>, statement "
                              "<digest>, register <digest>, alias file <digest>, catalogue <digest>`" % path)
         return None
-    # every name-and-digest pair on the line, not the three this tool knows: a record naming more
-    # than three had the extra bindings silently dropped while the report said its inputs were
-    # verified, and the extra digests could be anything at all
-    return {k.lower(): v for k, v in re.findall(r"\b([A-Za-z][A-Za-z ]{2,30}?)\s+`?([0-9a-f]{8,64})`?", m.group(1))}
+    # every name-and-digest pair on the line, not the six this tool knows: a record naming more
+    # had the extra bindings silently dropped while the report said its inputs were verified, and
+    # the extra digests could be anything at all
+    pairs = [(k.lower(), v) for k, v in
+             re.findall(r"\b([A-Za-z][A-Za-z ]{2,30}?)\s+`?([0-9a-f]{8,64})`?", m.group(1))]
+    # one name, one digest: collected into a dict, a name written twice kept whichever copy was
+    # written last, so `model <wrong>, model <real>` was accepted and `model <real>, model <wrong>`
+    # was refused, and acceptance turned on write order alone
+    seen = [k for k, _ in pairs]
+    twice = sorted({k for k in seen if seen.count(k) > 1})
+    if twice:
+        raise SystemExit("%s binds %s twice in one line; a record is recorded against one input per name, and "
+                         "reading the last of several is reading whichever was written last"
+                         % (path, ", ".join(twice)))
+    return dict(pairs)
 
 
 def load_reviews(path, known_aliases):
@@ -2064,6 +2225,18 @@ def register_count():
     return sum(1 for line in REGISTER.read_text(encoding="utf-8").splitlines() if line.startswith("| REQ-"))
 
 
+def recorded_key(date):
+    """A `D Month YYYY` cell as a sortable tuple, read through the month table `readable_date`
+    fixes. Sorted as strings, "1 October 2026" came before "17 September 2026"."""
+    try:
+        day, month, year = date.split(" ", 2)
+        return (int(year), MONTHS.index(month) + 1, int(day))
+    except (ValueError, IndexError):
+        # a date this tool cannot read sorts first and never wins: the revision line is read by a
+        # later reader, and a crash here costs the whole report
+        return (0, 0, 0)
+
+
 def alias_revision():
     """The Alias File is append-only and carries no version, so its revision is the date it was last
     updated and the number of aliases it holds: what a later reader needs to reproduce this run."""
@@ -2071,7 +2244,7 @@ def alias_revision():
     m = re.search(r"(?m)^\*\*Last Updated:\*\* (.+)$", text)
     dates = re.findall(r"(?m)^\| REQ-[^|]+\|[^|]*\|[^|]*\|[^|]*\| (\d{1,2} [A-Z][a-z]+ \d{4}) \|", text)
     rows = sum(1 for line in text.splitlines() if line.startswith("| REQ-"))
-    last = sorted(set(dates))[-1] if dates else (m.group(1).strip() if m else "(no date)")
+    last = max(set(dates), key=recorded_key) if dates else (m.group(1).strip() if m else "(no date)")
     return "%d aliases, last appended %s" % (rows, last)
 
 
@@ -2117,9 +2290,13 @@ def declaration(clause, statement):
         v = statement.get("supported specification version", "")
         if is_absent(v):
             return "Fail", "no version declared (%r)" % v
-        if re.search(r"[,;]| and |\bor\b", str(v)):
-            return "Fail", "more than one version declared: %s" % v
-        return "Pass", "one version declared: %s" % v
+        # "Where multiple versions are supported, each supported version shall be explicitly
+        # declared." This leg Failed a field naming two, which is the one thing the clause asks
+        # for: an implementation supporting 1.0 and 1.1 and declaring both was reported as
+        # non-conformant, and nothing anywhere in this specification requires a single version
+        named = [part.strip() for part in re.split(r"[,;]| and |\bor\b", str(v)) if part.strip()]
+        return "Pass", ("the Conformance Statement explicitly declares %d supported version(s): %s"
+                        % (len(named), ", ".join(named)))
     if "extension" in low:
         declared = statement.get("supported extensions")
         if declared is None:

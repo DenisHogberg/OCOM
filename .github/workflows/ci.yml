@@ -28,8 +28,10 @@ concurrency:
 
 jobs:
   # 5 minutes on every job below: none of these checks take more than a
-  # minute in practice against 373 files — this is a safety net against
-  # a hung process, not a real budget, so it is generous on purpose.
+  # minute in practice against this repository — this is a safety net
+  # against a hung process, not a real budget, so it is generous on
+  # purpose. Run `git ls-files '*.md' | wc -l` for the size it works
+  # over; a count written here is the thing that goes stale.
   required-documents:
     name: Required project documents present
     runs-on: ubuntu-latest
@@ -104,9 +106,11 @@ jobs:
         # API before use.
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
         with:
-          # No external links exist in this repository today (verified
-          # directly) — lychee is still ready to check them at no
-          # extra cost if any are ever added.
+          # External links exist and are checked, which is why the
+          # exclusion below is here at all: run
+          # `git grep -oE "https?://[^)\" ]+" -- '*.md'` for what is
+          # reachable from the Markdown at any moment, rather than
+          # trusting a count or a claim written here.
           #
           # --include-fragments (checking that "file.md#anchor" targets
           # a real heading, not just a real file) was deliberately left

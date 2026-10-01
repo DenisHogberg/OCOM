@@ -6,7 +6,7 @@ scratch or, worse, guessed.
 
 ## What this repository actually is
 
-401 Markdown files and zero code (September 2026). Outside Markdown
+Markdown and zero code (September 2026); `git ls-files '*.md' | wc -l` is the count at any moment, and a figure written here goes stale without anything noticing. Outside Markdown
 the repository holds only its own configuration and metadata, each
 validated by the tool that consumes it: the workflows and Dependabot
 file under `.github/`, `.markdownlint-cli2.jsonc`, `REUSE.toml`,
@@ -53,7 +53,7 @@ file's own comments for the specifics — a default-configured
 markdownlint would fail on the majority of existing files.
 
 **`link-check`** — internal link integrity via lychee. This is the
-highest-value check in this repository specifically: 359 of 373 files
+highest-value check in this repository specifically: most files
 depend on the nav-block convention (`[← Back]` / `[↑ Up]` /
 `[Next →]`), and broken relative links from a renamed or moved file
 have been a real, repeated, hand-caught problem in this project's own
@@ -76,7 +76,7 @@ third-party outage from turning `main` red; no other host is excluded.
 **`publication-metadata`** (added 21 August 2026) keeps the
 repository's own publication metadata consistent with itself, per
 `docs/Governance/Publication-Model.md` and `Release-Workflow.md`.
-Three blocking steps and one advisory. Every commit named in
+Five blocking steps, no advisory one. Every commit named in
 `docs/Governance/Publication-Manifest.md` must exist in this
 repository's history. The manifest's current Specification Version
 must match the `**Version:**` field of every file in
@@ -105,10 +105,6 @@ own section below.
   file is wrong, as `v1.1.0` showed for `CITATION.cff`. The one Mermaid
   block is illustrative. A second check here would duplicate those, not
   add safety margin.
-- **A hard requirement that every document carry `**Document ID:**`**
-  — not a universal convention: only 25 of 51 files in `Entities/`
-  have it. Enforcing it today would fail on legitimate, existing
-  content, not on a real problem.
 - **Nav-chain consistency** (alphabetical Back/Up/Next ordering) —
   real and repository-specific, but no existing tool checks it; it
   would need bespoke, unreviewed script code. Deliberately deferred
@@ -226,11 +222,11 @@ The practical effect is that the map cannot rot silently. An edit that moves a c
 
 ## Tool tests (added 18 September 2026)
 
-The job `Tool tests` runs `python3 tools/tests/test_tools.py`: thirty-one cases, standard library only, no network. Most of them break exactly one thing and assert that the tool exits non-zero and names what broke; the rest assert that the healthy corpus stays green.
+The job `Tool tests` runs `python3 tools/tests/test_tools.py`: standard library only, no network, and the CHANGELOG entry for each round of the all-packages test states the count the suite had reached. Most of them break exactly one thing and assert that the tool exits non-zero and names what broke; the rest assert that the healthy corpus stays green.
 
 They exist because a review of the three tools on 18 September 2026 found six defects of one kind: the tool passed while doing no work. A presence row computed over an empty set reported ok having checked nothing. The JSON-LD leg of the citation rule compared nothing on every term, because the citation sits under `@graph` and a missing value counted as agreement. A traceability row that did not match the row pattern was dropped before the unparsable-row failure could fire, so a row naming a file that does not exist passed. An alias edited to a name already in use bound two Statements and both alias checks stayed green. A principle with two contradictory blocks passed a checker whose docstring promised exactly one. And the health tool's `--check` compared six of the eleven figures the record publishes.
 
-All six are fixed, and each one has a test that fails without the fix. The re-check of 19 September 2026 found four more of the same kind in the code written to fix them, and each of those has a test too. The site tool is tested against an in-memory fixture (`tools/tests/fake_site.py`) that serves an ocom.uno-shaped site on loopback: a test removes an index, corrupts a citation inside `@graph`, deletes a projection or tampers with a published figure, and asserts the tool notices. Nothing in the suite touches the live site, and the whole run takes about six seconds.
+All six are fixed, and each one has a test that fails without the fix. The re-check of 19 September 2026 found four more of the same kind in the code written to fix them, and each of those has a test too. The site tool is tested against an in-memory fixture (`tools/tests/fake_site.py`) that serves an ocom.uno-shaped site on loopback: a test removes an index, corrupts a citation inside `@graph`, deletes a projection or tampers with a published figure, and asserts the tool notices. Nothing in the suite touches the live site. The run takes minutes rather than seconds, which is why the job carries `timeout-minutes: 10`.
 
 This is the tenth required check on `main`.
 
@@ -281,7 +277,7 @@ the checkout it read. That report is the headline artifact of Package 1 and
 the document every conformance claim in `README.md`, `Release-Readiness.md`
 and the Evidence Register rests on, and nothing regenerated or compared it:
 round 8 of the all-packages test rewrote its verdict to "Core Conformance:
-established" and every check stayed green. It is a step, not a fourteenth
+established" and every check stayed green. It is a step, not a thirteenth
 check.
 
 ## The records that count the registers (added 23 September 2026)
@@ -291,7 +287,7 @@ state how many Architecture Observations and ADR Candidates exist, one of
 them the machine-facing `publication/llms.txt` the site serves, against the
 registers themselves. All three said 82 observations up to AO-083 for two
 days after the registers reached 92 up to AO-093, including on the live
-site, and nothing compared them. It is a step, not a fourteenth check.
+site, and nothing compared them. It is a step, not a thirteenth check.
 Since 23 September 2026 the step runs `tools/governance/register_counts.py`
 rather than an inline script: round 4 of the all-packages test found the
 inline version passing on a repository whose files state the wrong counts in

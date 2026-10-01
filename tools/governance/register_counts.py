@@ -26,7 +26,10 @@ CANDIDATES = REPO / "docs/Governance/ADR-Candidates.md"
 # candidates had its candidate count compared against nothing and the tool reported agreement.
 STATING = {"README.md": ("AO", "CAND"),
            "publication/llms.txt": ("AO",),
-           "docs/Governance/Evidence-Register.md": ("AO", "CAND")}
+           "docs/Governance/Evidence-Register.md": ("AO", "CAND"),
+           # the one file an outside contributor reads before filing an observation, and the one
+           # this check did not read: it named AO-058 while the register held AO-095
+           ".github/ISSUE_TEMPLATE/architecture-observation.md": ("AO",)}
 LABELS = {"AO": "Architecture Observation", "CAND": "ADR Candidate"}
 
 
@@ -73,9 +76,12 @@ def failures(facts, root=REPO, stating=STATING):
         # stating the observations and not the candidates reported zero disagreements
         for prefix, label in sorted(LABELS.items()):
             if prefix in required and not read[prefix]:
+                # the remedy named a fixed identifier, which went stale the day the register
+                # grew past it: a reader who pasted the wording back was rejected by this tool
                 out.append("%s states no %s range this tool can read (the wording it reads is "
-                           "\"%s-001 to %s-093\"), so its %s count was compared against nothing"
-                           % (name, label, prefix, prefix, label))
+                           "\"%s-001 to %s\", beside the count %d), so its %s count was compared "
+                           "against nothing"
+                           % (name, label, prefix, facts[prefix][1], facts[prefix][0], label))
     return out
 
 

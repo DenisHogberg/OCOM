@@ -59,6 +59,13 @@ class Copy:
         for name in ("README.md", "CHANGELOG.md", "CI-DESIGN.md"):
             if (ROOT / name).exists():
                 shutil.copy2(ROOT / name, self.dir / name)
+        # and the files outside docs/ and tools/ a tool reads: the issue template states the
+        # observation range an outside contributor checks against, and round 10 found it naming
+        # AO-058 while the register held AO-095
+        for rel in (".github/ISSUE_TEMPLATE/architecture-observation.md",):
+            if (ROOT / rel).exists():
+                (self.dir / rel).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(ROOT / rel, self.dir / rel)
         return self
 
     def __exit__(self, *exc):
@@ -242,6 +249,35 @@ class RegisterCounts(unittest.TestCase):
     def stating_line(self, c, rel="publication/llms.txt"):
         return [l for l in c.read(rel).splitlines() if "AO-001 to AO-" in l][0]
 
+    def test_the_issue_template_states_the_range_a_contributor_checks(self):
+        """Round 10: the template is the first thing an outside contributor reads before filing an
+        observation, and it told them to check AO-001 to AO-058 while the register held AO-095. It
+        was the one stating file this check did not read."""
+        rel = ".github/ISSUE_TEMPLATE/architecture-observation.md"
+        with Copy() as c:
+            line = self.stating_line(c, rel)
+            c.edit(rel, line, re.sub(r"AO-0\d\d\b", "AO-058", line.replace("94 recorded", "58 recorded")))
+            code, out = run(c.dir, COUNTS, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn(rel, out)
+        with Copy() as c:
+            (c.dir / rel).unlink()
+            code, out = run(c.dir, COUNTS, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("does not exist", out)
+
+    def test_the_remedy_names_the_range_the_register_actually_holds(self):
+        """Round 10: the wording the tool offered a reader named a fixed identifier, which went
+        stale the day the register grew past it; pasting it back was rejected by this tool."""
+        with Copy() as c:
+            line = self.stating_line(c)
+            c.edit("publication/llms.txt", line, line.replace("AO-001 to AO-", "AO-one to AO-"))
+            code, out = run(c.dir, COUNTS, "--check")
+            self.assertNotEqual(code, 0, out)
+            remedy = [l for l in out.splitlines() if "the wording it reads is" in l][0]
+            self.assertIn("AO-001 to AO-095", remedy)
+            self.assertNotIn("AO-093", remedy)
+
     def test_a_stale_count_is_reported(self):
         with Copy() as c:
             line = self.stating_line(c)
@@ -374,6 +410,37 @@ class CompilationSurvey(unittest.TestCase):
             code, out = run(c.dir, SURVEY, "--check")
             self.assertNotEqual(code, 0, out)
             self.assertIn("carries no Source line", out)
+
+    def test_a_source_this_repository_does_not_carry_is_a_failure(self):
+        """Round 10: an unresolvable source name was skipped in silence, so a chapter declaring
+        verbatim over a document nobody could read had no Statement to compare and passed the
+        check with nothing surveyed at all."""
+        with Copy() as c:
+            chapter = "docs/Specification/02 Design Principles.md"
+            text = c.read(chapter)
+            line = text[text.rindex("*Source:"):].split("\n")[0]
+            c.edit(chapter, line, line.replace("Principles.md`", "Principles-that-are-not-here.md`"))
+            code, out = run(c.dir, SURVEY, "--check")
+            self.assertEqual(code, 1, out)
+            self.assertIn("this repository does not carry it", out)
+
+    def test_a_verbatim_chapter_that_only_paraphrases_is_a_failure(self):
+        """Round 10: a near match scored above the paraphrase threshold and counted as carried, so
+        a chapter declaring verbatim passed while carrying a sentence a reader can tell apart from
+        the obligation its source states."""
+        added = ("\n# Late Addition\n\nEvery Principle shall be restated in the reading path for the "
+                 "reader who arrives at the chapter first.\n\n---\n\n# Revision History")
+        nearly = ("\n# Late Addition\n\nEvery Principle shall be restated in the reading path for a "
+                  "reader arriving at the chapter.\n\n---\n\n# Revision History")
+        with Copy() as c:
+            c.edit("docs/Core/Principles.md", "\n# Revision History", added)
+            c.edit("docs/Specification/02 Design Principles.md", "\n## Revision History",
+                   nearly.replace("# Late Addition", "## Late Addition").replace("# Revision History", "## Revision History"))
+            code, out = run(c.dir, SURVEY, "--check")
+            row = [l for l in out.splitlines() if l.startswith("02 Design Principles")][0]
+            self.assertEqual(row.split()[-2], "1", row)      # counted as a paraphrase, not absent
+            self.assertEqual(code, 1, out)
+            self.assertIn("declares verbatim but does not carry", out)
 
     def test_census_reports_the_abridgement_it_permits(self):
         code, out = run(ROOT, SURVEY, "--census")
@@ -1795,6 +1862,129 @@ class Validator(unittest.TestCase):
                 self.assertEqual(rows.get("DECL-002"), decl2, (extensions, rows.get("DECL-002")))
                 self.assertEqual(rows.get("DECL-003"), decl3, (extensions, rows.get("DECL-003")))
 
+    def test_a_shape_the_engine_cannot_key_on_still_writes_a_report(self):
+        """Round 10: eight legs keyed, joined or iterated a record value without checking its shape,
+        and every one of them raised after the Tests were decided and before the report was written.
+        A malformed export is a verdict the reader can read, never a traceback and 185 silences."""
+        def numbered(m):
+            m["entities"][0]["id"] = 10432
+            return m
+        def two_lifecycles(m):
+            m["entities"][0]["lifecycle"] = ["LC-ITEM", "LC-LOAN"]
+            return m
+        def initial_state_record(m):
+            m["lifecycles"][0]["initial_state"] = {"name": "Available"}
+            return m
+        def terminal_record(m):
+            m["lifecycles"][0]["terminal_states"] = [{"spelled": "Withdrawn"}]
+            return m
+        def event_state_list(m):
+            m["events"][0]["from_state"] = ["Available", "On Loan"]
+            return m
+        def state_without_a_name(m):
+            m["lifecycles"][0]["states"].append({"meaning": "a State record carrying no name"})
+            return m
+        def transition_endpoint_record(m):
+            m["lifecycles"][0]["transitions"][0]["from"] = {"name": "Available"}
+            return m
+        for label, change in (("an identity written as a number", numbered),
+                              ("an Entity naming two Lifecycles", two_lifecycles),
+                              ("an initial State written as a record", initial_state_record),
+                              ("a terminal State written as a record", terminal_record),
+                              ("an Event whose prior State is a list", event_state_list),
+                              ("a State record carrying no name", state_without_a_name),
+                              ("a Transition endpoint written as a record", transition_endpoint_record)):
+            with self.subTest(label), Copy() as c:
+                model = change(json.loads(c.read("%s/model.json" % self.EX)))
+                c.write("%s/model.json" % self.EX, json.dumps(model))
+                code, out = self.run_on(c.dir)
+                self.assertEqual(code, 0, out)          # a report is written, which is the point
+                rows = self.outcomes(c.dir)
+                self.assertGreater(len(rows), 180, "the report decides the mandatory Statements")
+
+    def test_an_entity_naming_two_lifecycles_fails_the_statement_that_exists_to_catch_it(self):
+        """Round 10: `lifecycle_for` keyed the namespaced lookup on the value an Entity names, so a
+        list there raised TypeError. Resolving it to None is not enough either: the Entity then read
+        as naming no Lifecycle, which is a different violation from naming two."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"][0]["lifecycle"] = ["LC-ITEM", "LC-LOAN"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-ENTITY-008"), "Fail")
+            self.assertIn("names 2 Lifecycle(s) where an Entity names one", self.report_text(c.dir))
+
+    def test_an_event_whose_endpoints_are_not_states_fails_rather_than_crashing(self):
+        """Round 10: the recorded-State-change leg tested `(before, after) not in permitted`, which
+        hashes both; a list there killed the run. It is a State change, and it is not one the
+        Lifecycle permits, so it is a Fail and not a silence."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["events"][0]["from_state"] = ["Available", "On Loan"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-LIFECYCLES-003"), "Fail")
+            self.assertIn("cannot read as one State to another", self.report_text(c.dir))
+
+    def test_a_terminal_state_written_as_a_record_is_read_through_state_name(self):
+        """Round 10: a terminal State is a State, and an export that writes its States as records
+        writes this one as a record too. Comparing the record against the outgoing set raised; and
+        a terminal State this tool cannot read as a name is pending, never a Pass over nothing."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            lc = model["lifecycles"][0]
+            outgoing = lc["transitions"][0]["from"]
+            lc["terminal_states"] = [{"name": outgoing}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-LIFECYCLE-002"), "Fail")
+            self.assertIn("is terminal and has an outgoing Transition", self.report_text(c.dir))
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["lifecycles"][0]["terminal_states"] = [{"spelled": "Withdrawn"}]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-LIFECYCLE-002"), "pending")
+            self.assertIn("optionally define one or more terminal States", self.report_text(c.dir))
+
+    def test_an_initial_state_written_as_a_record_is_not_a_walk_from_nowhere(self):
+        """Round 10: the reachability walk seeded itself with the raw initial State, so a record
+        there was unhashable and killed the run; dropping it instead would have started the walk
+        from nothing and called every State of a lawful export unreachable."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            lc = model["lifecycles"][0]
+            lc["initial_state"] = {"name": lc["initial_state"]}
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            text = self.report_text(c.dir)
+            self.assertNotIn("States no Transition reaches", text)
+
+    def test_a_state_record_carrying_no_name_is_named_in_the_report(self):
+        """Round 10: `state_names` returned None for it and the leg joined the names, which raised
+        TypeError. A State with no name is unreachable from the initial State, and the report has to
+        say so in words rather than print None or die."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["lifecycles"][0]["states"].append({"meaning": "no name under the mapped field"})
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-LIFECYCLE-012"), "Fail")
+            self.assertIn("a State record carrying no name", self.report_text(c.dir))
+
+    def test_a_list_valued_element_the_export_writes_otherwise_is_refused(self):
+        """Round 10: `or []` was the whole shape check at six read sites. A scalar is truthy,
+        survives it and raises TypeError; a string survived it and was iterated one character at a
+        time. The same malformation at a collection path already stops the run, and the two agree."""
+        for label, change in (("a Lifecycle's States", lambda m: m["lifecycles"][0].update({"states": 7})),
+                              ("a Lifecycle's Transitions", lambda m: m["lifecycles"][0].update({"transitions": "TR-1"})),
+                              ("a Workflow's steps", lambda m: m["workflows"][0].update({"transitions": 3})),
+                              ("a Domain's entity types", lambda m: m["domains"][0].update({"entity_types": "Patron"}))):
+            with self.subTest(label), Copy() as c:
+                model = json.loads(c.read("%s/model.json" % self.EX))
+                change(model)
+                c.write("%s/model.json" % self.EX, json.dumps(model))
+                code, out = self.run_on(c.dir)
+                self.assertNotEqual(code, 0, out)
+                # the same malformation refuses at a collection path and at a field binding, and the
+                # two must agree: before round 10 one of them wrote a traceback and no report
+                self.assertTrue("and it is a list; a value that is not one cannot be read" in out
+                                or "is not a list of records" in out, out)
+
     def map_erasures(self, c):
         path = "%s/representation-map.md" % self.EX
         c.write(path, c.read(path)
@@ -2200,6 +2390,148 @@ class Validator(unittest.TestCase):
         text = out.read_text(encoding="utf-8") if out.exists() else ""
         shutil.rmtree(out.parent, ignore_errors=True)
         return code, printed, text
+
+    def test_a_table_ends_at_the_first_line_that_is_not_a_row(self):
+        """Round 10: the table closed only on an ATX heading, so every row under a Setext heading,
+        a thematic break or an HTML wrapper was applied as a judgment. A record whose rows sat
+        under "Illustration, not judgments" was applied in full and the run reported Core
+        Conformance established."""
+        for label, closer in (("a Setext heading", "Illustration, not judgments\n---------------------------\n"),
+                              ("a thematic break", "---\n"),
+                              ("a paragraph", "The rows below only show the format.\n"),
+                              ("an HTML wrapper", "<div hidden>\n")):
+            with self.subTest(label), Copy() as c:
+                path = c.dir / "reviews.md"
+                path.write_text("# R\n\n%s%s\n%s\n%s" % (self.HEADER, self.JUDGMENT, closer, self.JUDGMENT),
+                                encoding="utf-8")
+                code, printed, _ = self.run_with_reviews(ROOT, path)
+                self.assertNotEqual(code, 0, printed)
+                self.assertIn("outside the table", printed)
+
+    def test_a_table_of_another_width_after_the_judgments_is_not_a_judgment(self):
+        """Round 10: the outside-the-table refusal counted every pipe row, so an ordinary two-column
+        table a reader sees as a table made a lawful record illegal, with a reason naming judgments
+        that cannot be judgments."""
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\n%s%s\n## Documents read\n\n| Document | Read |\n|---|---|\n| `Meta/Object.md` | yes |\n"
+                            % (self.HEADER, self.JUDGMENT), encoding="utf-8")
+            code, printed, _ = self.run_with_reviews(ROOT, path)
+            self.assertEqual(code, 0, printed)
+            self.assertIn("reviewed 1 pass", printed)
+
+    def test_a_judgment_whose_reason_escapes_a_pipe_is_read_as_one_judgment(self):
+        """Round 10: the reviewer reader split on a bare pipe where read_table has not since round
+        8. Visible, such a row was refused for having six cells; hidden inside a comment it was not
+        judgment-shaped, so the comment span deleted a Review Fail and nothing was printed."""
+        escaped = "| REQ-MODELS-ENTITY-003 | Review Pass | A. Reviewer | 22 September 2026 | Read as `a \\| b` in one cell. |\n"
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\n%s%s" % (self.HEADER, escaped), encoding="utf-8")
+            code, printed, _ = self.run_with_reviews(ROOT, path)
+            self.assertEqual(code, 0, printed)
+            self.assertIn("reviewed 1 pass", printed)
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\n%s%s\n<!--\n%s-->\n"
+                            % (self.HEADER, self.JUDGMENT,
+                               escaped.replace("Review Pass", "Review Fail")), encoding="utf-8")
+            code, printed, _ = self.run_with_reviews(ROOT, path)
+            self.assertNotEqual(code, 0, printed)
+            self.assertIn("inside an HTML comment", printed)
+
+    def test_a_binding_line_that_names_one_input_twice_is_refused(self):
+        """Round 10: the pairs were collected into a dict, so a name written twice kept whichever
+        copy was written last. `model <wrong>, model <real>` was accepted and the same record with
+        the two swapped was refused: acceptance turned on write order alone."""
+        C = ROOT / self.EX
+        digests = {k: hashlib.sha256((C / f).read_bytes()).hexdigest()[:16]
+                   for k, f in (("model", "model.json"), ("map", "representation-map.md"),
+                                ("statement", "conformance-statement.md"))}
+        digests["register"] = hashlib.sha256((ROOT / "docs/Governance/Requirement-Register.md").read_bytes()).hexdigest()[:16]
+        digests["alias file"] = hashlib.sha256((ROOT / "docs/Governance/Requirement-Aliases.md").read_bytes()).hexdigest()[:16]
+        digests["catalogue"] = hashlib.sha256((ROOT / "docs/Governance/Test-Catalogue.md").read_bytes()).hexdigest()[:16]
+        line = "**Recorded against:** model `%s`, " % ("d" * 16) + ", ".join("%s `%s`" % (k, v) for k, v in digests.items())
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\n%s\n\n%s%s" % (line, self.HEADER, self.JUDGMENT), encoding="utf-8")
+            code, printed, _ = self.run_with_reviews(ROOT, path)
+            self.assertNotEqual(code, 0, printed)
+            self.assertIn("binds model twice", printed)
+
+    def test_the_declaration_permits_the_multiple_versions_its_clause_asks_for(self):
+        """Round 10: DECL-005 is bound to "Where multiple versions are supported, each supported
+        version shall be explicitly declared", and it Failed any field naming two. An
+        implementation that supports 1.0 and 1.1 and declares both was reported non-conformant."""
+        with Copy() as c:
+            path = "%s/conformance-statement.md" % self.EX
+            c.edit(path, "**Supported specification version:** 1.0",
+                   "**Supported specification version:** 1.0, 1.1")
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("DECL-005"), "Pass")
+            self.assertIn("explicitly declares 2 supported version(s)", self.report_text(c.dir))
+
+    def test_a_map_that_declares_one_thing_twice_and_differently_is_refused(self):
+        """Round 10: a second declaration row overwrote the first, so the claimant chose a mandatory
+        Test's outcome by row order: Banana then Organization passed, the two swapped failed. A
+        second row stating the same thing is not that, and the shipped example writes two."""
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            row = "| Identity.scope | declaration | `Organization` |"
+            c.edit(path, row, "| Identity.scope | declaration | `Banana` |\n" + row)
+            code, out = self.run_on(c.dir)
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("declares Identity.scope twice and differently", out)
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            row = "| Identity.scope | declaration | `Organization` |"
+            c.edit(path, row, row + "\n" + row)
+            code, out = self.run_on(c.dir)
+            self.assertEqual(code, 0, out)
+
+    def test_the_alias_file_revision_names_the_latest_date_not_the_last_string(self):
+        """Round 10: the dates were sorted as strings, so "1 October 2026" came before "17 September
+        2026" and the report published a stale revision of the Alias File the day after the next
+        append."""
+        with Copy() as c:
+            path = "docs/Governance/Requirement-Aliases.md"
+            text = c.read(path)
+            row = [l for l in text.splitlines() if l.startswith("| REQ-")][-1]
+            c.write(path, text.replace(row, row + "\n" + re.sub(r"\| \d{1,2} [A-Z][a-z]+ \d{4} \|",
+                                                                "| 1 October 2026 |", row, count=1)))
+            self.assertIn("last appended 1 October 2026", self.report_text(c.dir))
+
+    def test_a_statement_that_names_an_element_is_not_a_condition(self):
+        """Round 10: CLAUSE matched `which`, `that` and `within` anywhere in the element, so "the
+        time at which it occurred" and "a unique meaning within the Lifecycle" were called
+        conditions. Two mandatory Presence Tests could not fail for any export at all, over map rows
+        the example writes for them."""
+        rows = self.outcomes(ROOT)
+        self.assertEqual(rows.get("REQ-MODELS-EVENT-003"), "Pass")
+        self.assertEqual(rows.get("REQ-MODELS-LIFECYCLE-005"), "Pass")
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            del model["events"][0]["occurred_at"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-EVENT-003"), "Fail")
+
+    def test_uniqueness_is_counted_within_the_scope_the_statement_names(self):
+        """Round 10: "Each State shall have a unique meaning within the Lifecycle" is unique within
+        one Lifecycle. Counted across the export, two Lifecycles that each define Available with the
+        same meaning read as a violation the Statement does not describe."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            first, second = model["lifecycles"][0], model["lifecycles"][1]
+            second["states"][0]["meaning"] = first["states"][0]["meaning"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-LIFECYCLE-005"), "Pass")
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            lc = model["lifecycles"][0]
+            lc["states"][1]["meaning"] = lc["states"][0]["meaning"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-LIFECYCLE-005"), "Fail")
+            self.assertIn("is not unique within one lifecycle", self.report_text(c.dir))
 
     def test_the_reviewer_record_decides_review_tests_under_the_reviewers_name(self):
         """Section 3: a Review Pass is a named reviewer's recorded judgment; Section 4: the report
