@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 24 September 2026
+**Last Updated:** 1 October 2026
 
 ---
 
