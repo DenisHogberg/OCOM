@@ -2093,6 +2093,26 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 ---
 
+## AO-096
+
+**Title:** An Optional Statement Has No Test, and the Outcome Section 3 Defines for One Cannot Be Produced
+
+**Date observed:** 1 October 2026
+
+**Description:** Surfaced by round 10 of the all-packages test. `Conformance-Test-Suite.md` Section 3 said "Every mandatory and recommended Statement has exactly one Test; an optional Statement has a Test that applies only when the Conformance Statement claims the capability", and defines an outcome for it: "Not Applicable (an optional capability not claimed)". The Test Catalogue carries 208 rows, 182 mandatory and 26 recommended, and none for any of the 127 optional Statements the register enumerates: `test_catalogue.statements()` drops every Statement whose class is neither. Nothing anywhere maps an optional Statement to a capability a Conformance Statement could claim, and the Conformance Statement grammar `validate.py` reads carries no field naming implemented capabilities. So the outcome exists in the normative text and can be produced by nothing.
+
+**Impact:** A claimant who implements an optional capability has no way to be measured on it, and a reader of Section 3 is told of an outcome the suite cannot reach. The Section 3 sentence has been corrected to state what the catalogue does and why, which removes the contradiction and leaves the gap visible rather than closing it.
+
+**Recommendation:** Record. Closing it needs two things that are Decisions rather than tooling: a field in the Conformance Statement naming the capabilities an implementation claims, and a rule binding each optional Statement to one of them. Until both exist, an optional Statement is reported by the register and tested by nothing, which is what the corrected sentence now says.
+
+**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2).
+
+**Architect Response:** *(pending)*
+
+**Related:** `CAND-002`, `Governance/Conformance-Test-Suite.md`, `Governance/Test-Catalogue.md`, `tools/conformance/test_catalogue.py`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -2157,4 +2177,5 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 22 September 2026 | AO-033: the Terminology half recorded as closed by `EPIC-D`; the quoted sentence had been replaced on 16 September 2026 and the entry still read as if it stood. |
 | 0.1 | 23 September 2026 | AO-085: "names neither" restated as "does not name both" wherever this entry states the rule, matching `Memory/Retention.md` and the suite. |
 | 0.1 | 23 September 2026 | Added AO-095 (a Memory Record in the Deleted state must drop attributes `Memory Record.md` makes mandatory), from round 6 of the all-packages test. |
+| 0.1 | 1 October 2026 | Added AO-096 (an optional Statement has no Test, and the outcome Section 3 defines for an unclaimed optional capability can be produced by nothing), from round 10 of the all-packages test. The Entry Lifecycle declares `Closed in part`, which two entries carried and the section did not define. |
 | 0.1 | 23 September 2026 | Added AO-094 (an erasure record grants an exclusion from an Integrity Test and is itself in no Test), from round 5 of the all-packages test; AO-083 carries a postscript naming five further machine-facing files the site serves and this repository does not source, and AO-087's claim that the requirement set takes no Statement from `Lifecycles/` is corrected to the eight it takes. |

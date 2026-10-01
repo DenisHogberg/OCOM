@@ -2814,6 +2814,37 @@ class Validator(unittest.TestCase):
             self.assertEqual(code, 0, out)
             self.assertLess(time.time() - started, 60, "the run took %.0fs over 3,000 records" % (time.time() - started))
 
+    def test_a_row_of_another_width_under_the_same_heading_is_reported(self):
+        """Round 10: the width filter round 8 added was reached by no test and dropped the row in
+        silence, which is the shape of the defect round 9 found: a Test deleted by a reader that
+        said nothing. What this reader cannot read as a row of that table it names."""
+        with Copy() as c:
+            path = "docs/Governance/Test-Catalogue.md"
+            row = [l for l in c.read(path).splitlines() if l.startswith("| REQ-")][0]
+            c.edit(path, row, row + "\n| a foreign row | under the same heading |")
+            code, out = self.run_on(c.dir)
+            self.assertEqual(code, 0, out)
+            self.assertIn("carry another width and were not read as rows of it", out)
+
+    def test_a_record_that_declares_no_binding_is_not_refused_for_saying_the_words(self):
+        """Round 10: the fallback refused any record whose prose contained the phrase, with a
+        message asserting a line the file does not carry. Section 3 permits a record that declares
+        no binding; what is refused is a line that sets out to be one and cannot be read."""
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\nThis record is not recorded against any particular export.\n\n%s%s"
+                            % (self.HEADER, self.JUDGMENT), encoding="utf-8")
+            code, printed, _ = self.run_with_reviews(ROOT, path)
+            self.assertEqual(code, 0, printed)
+            self.assertIn("reviewed 1 pass", printed)
+        with Copy() as c:
+            path = c.dir / "reviews.md"
+            path.write_text("# R\n\nRecorded against - model, map and the rest\n\n%s%s"
+                            % (self.HEADER, self.JUDGMENT), encoding="utf-8")
+            code, printed, _ = self.run_with_reviews(ROOT, path)
+            self.assertNotEqual(code, 0, printed)
+            self.assertIn("in a line this tool cannot read", printed)
+
     def test_the_reviewer_record_decides_review_tests_under_the_reviewers_name(self):
         """Section 3: a Review Pass is a named reviewer's recorded judgment; Section 4: the report
         carries the reviewer's identity. The example's illustrative record decides three Statements."""

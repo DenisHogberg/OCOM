@@ -44,7 +44,7 @@ def read_table(path, header_starts, whole_file=True):
     Reading it as one contiguous block stopped at the first line that is not a row, so a single
     blank line inside the Tests table dropped every row below it: the run reported no error and the
     report computed the size of the measured set from the same truncated read."""
-    rows, in_table, width = [], False, None
+    rows, foreign, in_table, width = [], [], False, None
     for line in pathlib.Path(path).read_text(encoding="utf-8").splitlines():
         if line.startswith(header_starts):
             in_table = True
@@ -61,8 +61,15 @@ def read_table(path, header_starts, whole_file=True):
         cells = [c.replace("\x00", "|").strip()
                  for c in line.strip().strip("|").replace("\\|", "\x00").split("|")]
         if width is not None and len(cells) != width:
-            continue                    # a row of another table under the same heading
+            # a row of another table under the same heading. Round 8 dropped it in silence and
+            # round 9 found a Test deleted exactly that way, so what this reader cannot read it
+            # says out loud rather than passing over
+            foreign.append(line.strip()[:70])
+            continue
         rows.append(cells)
+    if foreign:
+        print("%s: %d row(s) under `%s` carry another width and were not read as rows of it (%s)"
+              % (path, len(foreign), header_starts[:40], foreign[0]))
     return rows
 
 
@@ -2153,7 +2160,10 @@ def recorded_against(path):
         # two spaces of indentation, a blockquote marker or the colon outside the emphasis took the
         # most permissive branch of all: the record was accepted against any export and the report
         # said it declared nothing, of a file that says "Recorded against" in plain sight
-        if re.search(r"(?i)recorded against", text):
+        # the phrase in prose is not a binding line: a record that declares none, which Section 3
+        # permits, was refused with a message asserting a line the file does not contain. What is
+        # refused is a line that sets out to be the binding and cannot be read as one
+        if re.search(r"(?mi)^\s*(?:>\s*)?[*_]{0,2}\s*recorded against\b", text):
             raise SystemExit("%s carries the words 'Recorded against' in a line this tool cannot read; the line "
                              "Section 3 fixes is `**Recorded against:** model <digest>, map <digest>, statement "
                              "<digest>, register <digest>, alias file <digest>, catalogue <digest>`" % path)
