@@ -537,4 +537,4 @@ jobs:
         # v5.0.0 tag, resolved with `git ls-remote --tags` and dereferenced
         # through the annotated tag before pinning. Dependabot proposes
         # bumps as reviewable PRs, same as the other pinned actions here.
-        uses: fsfe/reuse-action@bb774aa972c2a89ff34781233d275075cbddf542 # v5.0.0
+        uses: fsfe/reuse-action@676e2d560c9a403aa252096d99fcab3e1132b0f5 # v6.0.0
