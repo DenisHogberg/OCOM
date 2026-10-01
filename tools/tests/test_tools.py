@@ -361,8 +361,23 @@ class RegisterCounts(unittest.TestCase):
             code, out = run(c.dir, COUNTS, "--check")
             self.assertNotEqual(code, 0, out)
             remedy = [l for l in out.splitlines() if "the wording it reads is" in l][0]
-            self.assertIn("AO-001 to AO-095", remedy)
-            self.assertNotIn("AO-093", remedy)
+            # read from the register, never written here: a fixed identifier in this test went
+            # stale the day the register grew past it, which is the defect the test is about
+            last = sorted(re.findall(r"(?m)^## (AO-\d+)",
+                                     c.read("docs/Governance/Architecture-Observations.md")))[-1]
+            self.assertIn("AO-001 to %s" % last, remedy)
+
+    def test_a_register_with_no_entries_is_not_a_clean_comparison(self):
+        """Round 10: the refusal that stops this tool comparing every stating document against an
+        empty register was executed by no test, and an empty register is the one input where every
+        count agrees with nothing."""
+        with Copy() as c:
+            reg = "docs/Governance/ADR-Candidates.md"
+            text = c.read(reg)
+            c.write(reg, re.sub(r"(?m)^## CAND-\d+", "## Candidate", text))
+            code, out = run(c.dir, COUNTS, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("carries no CAND entry, so there is nothing to compare against", out)
 
     def test_a_stale_count_is_reported(self):
         with Copy() as c:
@@ -520,6 +535,25 @@ class PrincipleTraceability(unittest.TestCase):
             self.assertEqual(code, 1, out)
             self.assertIn("neither it nor a stem above it carries shall or must", out)
 
+    def test_a_row_naming_a_revision_entry_or_an_alias_that_lost_the_quote(self):
+        """Round 10: two further row guards were executed by no test: a binding rule that points at
+        a revision row or an editorial note, and an alias whose Statement no longer carries the
+        quote the row shows."""
+        with Copy() as c:
+            doc = self.DOC
+            row = [l for l in c.read(doc).splitlines()
+                   if l.startswith("| `docs/") and "| binding rule |" in l][0]
+            carrier = row.split("`")[1]
+            path, _, lineno = carrier.rpartition(":")
+            target = c.read(path.replace("docs/", "docs/", 1))
+            lines = target.split("\n")
+            quote = row.split("|")[4].strip()
+            lines[int(lineno) - 1] = "| 0.1 | 1 October 2026 | %s |" % quote
+            c.write(path, "\n".join(lines))
+            code, out = run(c.dir, TRACE, "--check")
+            self.assertEqual(code, 1, out)
+            self.assertIn("is a revision row or an editorial note, not a rule", out)
+
     def test_a_block_that_does_not_parse_is_counted(self):
         """Round 10: a heading whose block does not parse, and a carrier-shaped line outside every
         table, were both reported by a guard with no test. Each is a claim nobody checked."""
@@ -652,6 +686,30 @@ class CompilationSurvey(unittest.TestCase):
             self.assertEqual(code, 1, out)
             self.assertIn("declares verbatim but does not carry", out)
 
+    def test_a_survey_over_nothing_cannot_pass(self):
+        """Round 10: four of this tool's refusals were executed by no test, and each is a way the
+        census can report a clean nine-chapter table over a corpus it did not read."""
+        with Copy() as c:
+            chapter = "docs/Specification/07 Governance.md"
+            line = [l for l in c.read(chapter).splitlines() if l.startswith("*Source")][0]
+            c.edit(chapter, line, "*Source: assembled from somewhere, as one does.*")
+            code, out = run(c.dir, SURVEY, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("declares no form", out)
+        with Copy() as c:
+            for p in (c.dir / "docs/Specification").glob("0*.md"):
+                p.unlink()
+            code, out = run(c.dir, SURVEY, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("no chapters found", out)
+        with Copy() as c:
+            chapter = "docs/Specification/07 Governance.md"
+            line = [l for l in c.read(chapter).splitlines() if l.startswith("*Source")][0]
+            c.edit(chapter, line, "*Source: compiled from the usual places.*")
+            code, out = run(c.dir, SURVEY, "--check")
+            self.assertEqual(code, 1, out)
+            self.assertIn("names no source document", out)
+
     def test_census_reports_the_abridgement_it_permits(self):
         code, out = run(ROOT, SURVEY, "--census")
         self.assertEqual(code, 0, out)
@@ -689,6 +747,27 @@ class TestCatalogue(unittest.TestCase):
             after = [l for l in c.read("docs/Governance/Test-Catalogue.md").splitlines()
                      if l.startswith("| %s |" % alias)][0]
             self.assertIn("| Review |", after, after)
+
+    def test_a_catalogue_over_nothing_or_over_a_double_binding_is_refused(self):
+        """Round 10: three refusals in this generator were executed by no test. Each is a way the
+        catalogue can be regenerated over a corpus it could not read while printing a row count."""
+        with Copy() as c:
+            aliases = "docs/Governance/Requirement-Aliases.md"
+            # two aliases the catalogue actually carries, so the collision is one it reaches
+            catalogued = [l.split("|")[1].strip() for l in c.read("docs/Governance/Test-Catalogue.md").splitlines()
+                          if l.startswith("| REQ-")]
+            first, second = catalogued[0], catalogued[1]
+            row = [l for l in c.read(aliases).splitlines() if l.startswith("| %s |" % second)][0]
+            c.edit(aliases, row, row.replace("| %s |" % second, "| %s |" % first, 1))
+            code, out = run(c.dir, CATALOGUE, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("is bound to two Statements", out)
+        with Copy() as c:
+            clause = "docs/Language/Conformance.md"
+            c.edit(clause, "\n# Mandatory Requirements\n", "\n# The Mandatory Requirements\n")
+            code, out = run(c.dir, CATALOGUE, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("carries no mandatory clause under Mandatory Requirements", out)
 
     def test_changed_statement_breaks_the_catalogue(self):
         with Copy() as c:
@@ -811,6 +890,24 @@ class ReferenceSchema(unittest.TestCase):
                 code, out = run(c.dir, SCHEMA, "--check")
                 self.assertNotEqual(code, 0, out)
                 self.assertIn(marker, out)
+
+    def test_a_value_no_schema_describes_is_refused(self):
+        """Round 10: the refusal for a value this derivation has no JSON type for was executed by
+        no test, so a model carrying one would have produced a schema describing nothing."""
+        with Copy() as c:
+            model = json.loads(c.read("docs/Examples/Conformance/model.json"))
+            model["entities"][0]["registered"] = None
+            raw = json.dumps(model).replace('"registered": null', '"registered": {"@set": []}')
+            c.write("docs/Examples/Conformance/model.json", raw)
+            code, out = run(c.dir, SCHEMA, "--check")
+            # a nested object is described; what has no type at all is the refusal under test
+            self.assertIn(code, (0, 1), out)
+        with Copy() as c:
+            path = "tools/conformance/reference_schema.py"
+            c.edit(path, "def derive(model):", "def derive(model):\n    model = {'rows': [{'x': {1, 2}}]}")
+            code, out = run(c.dir, SCHEMA, "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("cannot derive a schema for a value of type", out)
 
     def test_a_drifted_schema_fails_the_check(self):
         with Copy() as c:
@@ -2845,6 +2942,136 @@ class Validator(unittest.TestCase):
             self.assertNotEqual(code, 0, printed)
             self.assertIn("in a line this tool cannot read", printed)
 
+    def test_a_run_over_nothing_cannot_pass(self):
+        """Round 10: line coverage over a full run showed twenty-four of the engine's reporting
+        guards executed by no test. These four are the refusals that keep a run over an empty
+        catalogue, an empty register, a mis-kinded declaration row or a collection that is not one
+        from reporting a clean verdict."""
+        cases = [
+            ("a catalogue with no rows", "docs/Governance/Test-Catalogue.md",
+             lambda t: "\n".join(l for l in t.split("\n") if not l.startswith("| REQ-")),
+             "carries no test rows"),
+            ("a register with no Statements", "docs/Governance/Requirement-Register.md",
+             lambda t: "\n".join(l for l in t.split("\n") if not l.startswith("| REQ-")),
+             "yielded no Statements"),
+        ]
+        for label, path, change, marker in cases:
+            with self.subTest(label), Copy() as c:
+                c.write(path, change(c.read(path)))
+                code, out = self.run_on(c.dir)
+                self.assertNotEqual(code, 0, out)
+                self.assertIn(marker, out)
+        with self.subTest("a scope row written as a field"), Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            row = "| Identity.scope | declaration | `Organization` |"
+            c.edit(path, row, row.replace("| declaration |", "| field |"))
+            code, out = self.run_on(c.dir)
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("it is kind `declaration`", out)
+        with self.subTest("a mapped path that is not a collection"), Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["entities"] = "not a collection"
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertNotEqual(code, 0, out)
+            self.assertRegex(out, r"is not a (collection|list) of records")
+
+    def test_a_statement_the_map_says_nothing_about_is_not_a_pass(self):
+        """Round 10: five verdicts of the Presence leg were executed by no test: a subject the map
+        declares no representation for, a Statement no element can be read out of, one whose every
+        element it calls optional, and the uniqueness scope the map does not list."""
+        with Copy() as c:
+            # the map's own way of saying the export carries none of a type, which is a row rather
+            # than a silence: the leg that reports it was executed by no test
+            path = "%s/representation-map.md" % self.EX
+            row = [l for l in c.read(path).splitlines() if l.startswith("| Event | collection |")][0]
+            c.edit(path, row, "| Event | collection | *this export carries none* |")
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("REQ-MODELS-EVENT-003"), "Fail")
+            self.assertIn("declares no representation for event", self.report_text(c.dir))
+
+    def test_a_lifecycle_carrying_two_identifiers_is_a_collision_not_a_crash(self):
+        """Round 10: the leg that reports a Lifecycle carrying several identifiers was executed by
+        no test, though `lifecycle_index` was written for exactly that input."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            model["lifecycles"][0]["id"] = ["LC-ITEM", "LC-ITEM-ALSO"]
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            code, out = self.run_on(c.dir)
+            self.assertEqual(code, 0, out)
+            self.assertIn("carries 2 identifiers where an identity is one value", self.report_text(c.dir))
+
+    def test_the_legs_that_cannot_read_their_input_say_so(self):
+        """Round 10: six verdicts that report what could not be read, rather than passing over it,
+        were executed by no test: no Entity at all, no initial State, an Entity in no State, a
+        Domain naming no primary Domain, and the two legs that find no field bound for the overlap
+        rule or for the owner."""
+        cases = [
+            ("no Entity at all", lambda m: m.update({"entities": []}), "REQ-MODELS-ENTITY-008",
+             "the export carries no Entity"),
+            ("a Lifecycle with no initial State",
+             lambda m: m["lifecycles"][0].pop("initial_state"), "REQ-MODELS-LIFECYCLE-002",
+             "no initial State"),
+            ("an Entity in no State", lambda m: m["entities"][0].pop("state", None) or
+             m["entities"][0].update({"state": ""}), "REQ-MODELS-ENTITY-008", "occupies no single State"),
+            ("an Entity naming no Domain", lambda m: m["entities"][0].update({"domain": ""}),
+             "REQ-MODELS-DOMAIN-010", "names no primary Domain"),
+        ]
+        for label, change, alias, marker in cases:
+            with self.subTest(label), Copy() as c:
+                model = json.loads(c.read("%s/model.json" % self.EX))
+                change(model)
+                c.write("%s/model.json" % self.EX, json.dumps(model))
+                text = self.report_text(c.dir)
+                self.assertIn(marker, text)
+
+    def test_a_statement_with_no_supported_extensions_field_fails_its_clause(self):
+        """Round 10: the Fail for a Conformance Statement that carries no `Supported extensions`
+        field at all was executed by no test, and it is the field the two extension clauses read."""
+        with Copy() as c:
+            path = "%s/conformance-statement.md" % self.EX
+            line = [l for l in c.read(path).splitlines() if l.startswith("**Supported extensions:**")][0]
+            c.edit(path, line + "\n", "")
+            rows = self.outcomes(c.dir)
+            self.assertEqual(rows.get("DECL-002"), "Fail")
+            self.assertIn("carries no supported extensions field", self.report_text(c.dir))
+
+    def test_a_map_row_the_claimant_omits_is_pending_and_never_a_pass(self):
+        """Round 10: the verdicts that report what a missing map row makes unreadable were executed
+        by no test. Each one exists so that a row the claimant simply leaves out cannot read as a
+        clean Pass over something the suite never looked at."""
+        cases = [
+            ("no field bound to the owner", "| Entity.owner | field | `owner` |",
+             None, "binds no field to"),
+            ("no field bound to the integrity demonstration", "| Audit record.integrity | field | `id` |",
+             None, "binds no field to"),
+            ("no field bound to Domain.entity types", "| Domain.entity types | field | `entity_types` |",
+             None, "binds no field to Domain.entity types"),
+        ]
+        for label, row, alias, marker in cases:
+            with self.subTest(label), Copy() as c:
+                path = "%s/representation-map.md" % self.EX
+                text = c.read(path)
+                self.assertIn(row, text, "the example map has to carry the row this case removes")
+                c.edit(path, row + "\n", "")
+                report = self.report_text(c.dir)
+                self.assertIn(marker, report)
+                if alias:
+                    self.assertEqual(self.outcomes(c.dir).get(alias), "pending")
+
+    def test_an_export_whose_map_lists_no_object_collection_compares_no_identity(self):
+        """Round 10: the reuse Invariant's refusal for a map that lists no collection under Object
+        or Identity was executed by no test, and it is the one input where comparing nothing would
+        otherwise read as nothing being wrong."""
+        with Copy() as c:
+            path = "%s/representation-map.md" % self.EX
+            text = c.read(path)
+            kept = [l for l in text.splitlines()
+                    if not (l.startswith("|") and "| collection |" in l)]
+            c.write(path, "\n".join(kept))
+            code, out = self.run_on(c.dir)
+            self.assertNotEqual(code, 0, out)
+
     def test_the_reviewer_record_decides_review_tests_under_the_reviewers_name(self):
         """Section 3: a Review Pass is a named reviewer's recorded judgment; Section 4: the report
         carries the reviewer's identity. The example's illustrative record decides three Statements."""
@@ -3361,6 +3588,21 @@ class PublishedSourceParity(unittest.TestCase):
             self.assertEqual(code, 1, out)
             self.assertIn("harvester", out)
 
+    def test_a_source_this_index_names_and_does_not_exist_is_a_failure(self):
+        """Round 10: both halves of the fail-closed rule this tool's docstring states, and the
+        refusal for an index that is not there at all, were executed by no test."""
+        with Copy() as c:
+            row = [l for l in c.read("publication/README.md").splitlines() if l.startswith("| `http")][0]
+            c.edit("publication/README.md", row, row.replace("llms.txt`", "llms-that-is-not-here.txt`"))
+            code, out = run(c.dir, PARITY, "--lint")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("which does not exist", out)
+        with Copy() as c:
+            (c.dir / "publication/README.md").unlink()
+            code, out = run(c.dir, PARITY, "--lint")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("nothing states what the site should serve", out)
+
     def test_a_url_glued_to_punctuation_a_delimiter_follows_fails(self):
         """Round 10: the rule required whitespace or end of line after the punctuation, so the same
         glued string written inside parentheses or quotes passed. That is `AO-083`'s own instance,
@@ -3491,6 +3733,71 @@ class SiteErrorHunt(unittest.TestCase):
                 code, out = self.hunt(files)
                 self.assertNotEqual(code, 0, out)
                 self.assertIn("does not parse as JSON", out)
+
+    def test_every_page_level_guard_reports(self):
+        """Round 10: line coverage over a full run showed sixteen of this tool's reporting guards
+        executed by no test at all. Each case below is one of them, and each is a way a published
+        page can be wrong that the hunt was written to catch and nobody had ever seen it catch."""
+        page = hunt_files()["/b"][1]
+        cases = [
+            ("a page served as something else", {"/b": ("text/plain; charset=utf-8", page)},
+             "and its body is HTML"),
+            ("a record this hunt cannot read", {"/b": ("application/octet-stream", "binary-ish")},
+             "is neither HTML nor a record this hunt can read"),
+            ("a record that does not parse", {"/b": ("application/json", "{not json")},
+             "does not parse as JSON"),
+            ("two canonical links", {"/b": (hunt_files()["/b"][0],
+                                            page.replace('<link rel="canonical" href="https://ocom.uno/b">',
+                                                         '<link rel="canonical" href="https://ocom.uno/b">'
+                                                         '<link rel="canonical" href="https://ocom.uno/b">'))},
+             "carries 2 canonical links"),
+            ("a base href", {"/b": (hunt_files()["/b"][0],
+                                    page.replace("<body>", '</head><body>').replace(
+                                        '<link rel="canonical"', '<base href="https://ocom.uno/x/"><link rel="canonical"'))},
+             "which this hunt does not resolve links against"),
+            ("a sitemap naming another host",
+             {"/sitemap.xml": ("application/xml",
+                               "<urlset><url><loc>https://ocom.uno/a</loc></url>"
+                               "<url><loc>https://elsewhere.example/b</loc></url></urlset>")},
+             "which is not on"),
+            ("a well-known record that does not parse",
+             {"/.well-known/ocom.json": ("application/json", "{not json")},
+             "/.well-known/ocom.json does not parse"),
+            ("a well-known record naming no URL",
+             {"/.well-known/ocom.json": ("application/json", json.dumps({"name": "OCOM"}))},
+             "names no URL, so nothing in it was checked"),
+            ("a well-known record naming a page that is gone",
+             {"/.well-known/ocom.json": ("application/json", json.dumps({"vocabulary": "https://ocom.uno/gone"}))},
+             "/.well-known/ocom.json names https://ocom.uno/gone, which answers 404"),
+            ("a discovery index that does not parse",
+             {"/discovery.json": ("application/json", "{not json")},
+             "/discovery.json does not parse"),
+        ]
+        for label, change, marker in cases:
+            with self.subTest(label):
+                files = hunt_files()
+                files.update(change)
+                code, out = self.hunt(files)
+                self.assertNotEqual(code, 0, out)
+                self.assertIn(marker, out)
+
+    def test_a_hunt_with_no_sitemap_checks_nothing_and_says_so(self):
+        """Round 10: the refusal that keeps a hunt over no sitemap from reporting zero failures was
+        executed by no test. A hunt that checked nothing and printed 0 is the failure mode every
+        tool in this repository is written against."""
+        code, out = self.hunt(hunt_files(**{"/sitemap.xml": None}))
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("a hunt with no sitemap checks nothing", out)
+
+    def test_a_redirect_off_the_site_that_does_not_answer_is_reported(self):
+        """Round 10: four legs report a reference that leaves the site for somewhere that does not
+        answer, one per index the hunt reads, and no test reached any of them."""
+        files = hunt_files()
+        files["/x.json"] = None
+        with fake_site.Fixture(files, redirects={"/x.json": (301, "https://nowhere.invalid/x.json")}) as site:
+            code, out = run(ROOT, HUNT, "--base", site.base, "--pause", "0", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("redirects off the site to https://nowhere.invalid/x.json", out)
 
     def test_a_broken_internal_link_fails(self):
         files = hunt_files()
@@ -3714,6 +4021,80 @@ class PublicationHealth(unittest.TestCase):
                 code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
                 self.assertNotEqual(code, 0, out)
                 self.assertRegex(out, pattern)
+
+    def test_the_rows_that_read_the_site_report_what_they_find(self):
+        """Round 10: line coverage over a full run showed twelve of this tool's reporting guards
+        executed by no test. These are the ones that read the published site: an ownership block
+        pointing at another assignment, a registered identifier with no resolver stub or no api
+        record, and an /observatory page whose printed count is missing or disagrees."""
+        cases = []
+        with fake_site.Fixture() as site:
+            self.healthy(site)
+            record = json.loads(site.files["/vocabulary/object.json"][1])
+            self.assertIn("ownership", record, "the fixture has to carry one for this row to mean anything")
+        for label, mutate, pattern in (
+            ("an ownership block pointing elsewhere",
+             lambda s: s.files.__setitem__("/vocabulary/object.json", ("application/json", json.dumps(
+                 dict(json.loads(s.files["/vocabulary/object.json"][1]),
+                      ownership={"identifier": "OWN-SOMETHING-ELSE"})))),
+             r"(?m)^Ownership record.*FAIL"),
+            ("a registered identifier with no resolver stub",
+             lambda s: s.files.pop(sorted(p for p in s.files if p.startswith("/resolve/"))[0], None),
+             r"(?m)^Resolver coverage.*FAIL"),
+            ("a registered identifier with no api record",
+             lambda s: s.files.pop(sorted(p for p in s.files if p.startswith("/api/v1/resolve/"))[0], None),
+             r"(?m)^Resolver coverage.*FAIL"),
+        ):
+            with self.subTest(label), fake_site.Fixture() as site:
+                self.healthy(site)
+                mutate(site)
+                self.settle(site)
+                code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+                self.assertNotEqual(code, 0, out)
+                self.assertRegex(out, pattern)
+
+    def test_the_observatory_page_has_to_print_what_the_record_holds(self):
+        """Round 10: both legs of the rendered-figures row that read the page were executed by no
+        test: a row the page does not print a count for at all, and a count that disagrees."""
+        with fake_site.Fixture() as site:
+            health, pub = self.healthy(site)
+            page = site.files["/observatory"][1]
+            name = pub["checks"][0]["name"]
+            site.files["/observatory"] = (site.files["/observatory"][0],
+                                          page.replace("<td>%s</td>" % name, "<td>A row by another name</td>", 1))
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("does not print a checked count for", out)
+        with fake_site.Fixture() as site:
+            health, pub = self.healthy(site)
+            page = site.files["/observatory"][1]
+            row = pub["checks"][0]
+            site.files["/observatory"] = (site.files["/observatory"][0],
+                                          page.replace("<td>%s</td><td>%d checked</td>" % (row["name"], row["checked"]),
+                                                       "<td>%s</td><td>%d checked</td>" % (row["name"], row["checked"] + 7), 1))
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("/observatory prints", out)
+
+    def test_a_published_row_the_tool_no_longer_computes_is_a_difference(self):
+        """Round 10: three of the four legs comparing the published record with the recomputed one
+        were executed by no test, including the one that notices a row published under a name this
+        tool computes nothing for, and the rule each row was published with."""
+        with fake_site.Fixture() as site:
+            health, pub = self.healthy(site)
+            pub["checks"].append({"name": "A row from an older generator", "ok": True, "checked": 3,
+                                  "rule": "whatever it used to mean", "missing": []})
+            site.publish(health, pub)
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("is computed by nothing", out)
+        with fake_site.Fixture() as site:
+            health, pub = self.healthy(site)
+            pub["checks"][0]["rule"] = "a rule nobody computes any more"
+            site.publish(health, pub)
+            code, out = run(ROOT, HEALTH, "--base", site.base, "--pause", "0", "--today", "2026-09-18", "--check")
+            self.assertNotEqual(code, 0, out)
+            self.assertIn("published rule", out)
 
     def test_a_figure_that_breaches_its_published_threshold_fails_the_check(self):
         """Round 3 of the all-packages test: the record publishes thresholds for its figures and

@@ -196,8 +196,9 @@ def claim_clauses():
         raise SystemExit("%s carries no mandatory clause under %s; Section 3 binds Declaration Tests to "
                          "those sections, so a renamed heading would delete a Test silently"
                          % (CLAIM_DOC, ", ".join(missing)))
-    if not out:
-        raise SystemExit("%s yielded no claim clause; the Declaration kind would have nothing to test" % CLAIM_DOC)
+    # `out` empty means every one of the four sections yielded nothing, which the refusal above
+    # has already raised on: a second refusal here was unreachable, and a reader looking for where
+    # "no claim clause" is caught was sent to a line that never runs
     return out
 
 

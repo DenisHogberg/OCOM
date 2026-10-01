@@ -67,8 +67,12 @@ def base_files():
 
     for t in TERMS:
         cite = CITATION % t.capitalize()
+        # the ownership block the live records carry: without one, the Ownership row counted the
+        # assignment alone and the leg that catches a record pointing at another assignment was
+        # reached by no test at all
         j("/vocabulary/%s.json" % t, {"identifier": "OCOM-META-0%d" % (TERMS.index(t) + 1), "citation": cite,
-                                       "definition_lead": DEFINITION % t.capitalize(), "headings": ["Purpose"]})
+                                       "definition_lead": DEFINITION % t.capitalize(), "headings": ["Purpose"],
+                                       "ownership": {"assignment": "OWN-01"}})
         # the JSON-LD alternate publishes its nodes under @graph, as the real site does
         j("/vocabulary/%s.jsonld" % t, {"@context": {"ocom": "https://ocom.uno/vocabulary/"},
                                         "@graph": [{"@id": "https://ocom.uno/vocabulary/%s#term" % t, "citation": cite}]})
