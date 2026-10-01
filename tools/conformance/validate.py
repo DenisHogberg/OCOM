@@ -704,6 +704,18 @@ def one_of(subject, element, records, r):
     by_identity = {}
     for s, sy, i in r.identities():
         by_identity.setdefault(i, set()).add((s, sy))
+    # the two scans belong beside the index above: run per record they walked the whole
+    # Ownership collection twice for every Entity, and a 5,000-record export spent its whole
+    # run in them. The filters the listcomps carried are the keys these are built on
+    naming_index, owner_index = {}, {}
+    for _, o in ownership:
+        key = keyable(o.get(owned))
+        if key is not None and not is_absent(o.get(owned)):
+            naming_index.setdefault(key, []).append(o)
+        if own_id:
+            key = keyable(o.get(own_id))
+            if key is not None:
+                owner_index.setdefault(key, []).append(o)
     resolved, shared = 0, 0
     failures, undecided = [], []
     for path, rec in records:
@@ -735,8 +747,8 @@ def one_of(subject, element, records, r):
                              % (subject, ident, len(spaces),
                                 "; ".join(sorted(" ".join(x for x in s if x) or "no declared scope" for s in spaces))))
             continue
-        naming = [o for _, o in ownership if not is_absent(o.get(owned)) and o.get(owned) == ident]
-        by_id = [o for _, o in ownership if own_id and o.get(own_id) == value]
+        naming = naming_index.get(keyable(ident), [])
+        by_id = owner_index.get(keyable(value), []) if own_id else []
         if by_id and not any(o is x for o in by_id for x in naming):
             failures.append("%s record %s names Ownership record %s, which names %s as its owned object and not it"
                             % (subject, ident, value, by_id[0].get(owned, "nothing")))
@@ -1966,7 +1978,7 @@ def scope_declaration(test, text, r):
         return "Fail", ("the Representation Map lists %s only under type(s) for which it binds no identity, so the "
                         "identities those records carry are in no declared scope; add a `<Type>.identity` row for "
                         "the type the collection is listed under" % ", ".join(unbound[:3]))
-    uncovered = [p for p in r.all_paths() if r.namespace_of(p) == ("", "")]
+    uncovered = r.undeclared_paths()
     if uncovered:
         return "Fail", ("the map declares %s, which covers no identity in %d of the export's collections (%s); "
                         "CAND-026 binds every identity the export carries to a declared scope"
@@ -1976,7 +1988,8 @@ def scope_declaration(test, text, r):
     # Statement about identity scope, and failing it for one said something about records that carry
     # none; it is still outside every Test, so the Pass says so
     note = "" if not no_identity else (
-        "; %d collection(s) the map does not list carry no identity it binds (%s), so they are in no Test either"
+        "; %d collection(s) the map does not list carry no identity it binds (%s), so no identity Test reads "
+        "them, though a leg reaching them through a field binding may"
         % (len(no_identity), ", ".join(no_identity[:3])))
     return "Pass", ("the map declares %s%s" % ("; ".join(
         "%s for %s" % (v, "every identity the export carries" if k == "identity.scope" else "%s identities" % k.split(".")[0])
@@ -2585,6 +2598,9 @@ def main(argv):
     lines.append("## Erasure Records")
     lines.append("")
     erasures = erasure_records(r)
+    # the subjects of the Integrity Tests this run actually carried, read from the catalogue rows
+    # that ran rather than from what the export happens to hold
+    integrity_subjects = {subject_of(t.get("text", ""), r.types) for t in results if t.get("kind") == "Integrity"}
     if not r.types.get("erasure"):
         lines.append("The Representation Map declares no Erasure records, so no record was excluded from an "
                      "Integrity Test on that ground. `Memory/Retention.md` is outside the requirement set, so "
@@ -2594,8 +2610,9 @@ def main(argv):
         lines.append("%d erasure record(s); %d are well formed in the sense `Memory/Retention.md` requires, naming "
                      "a Policy the export declares, an actor, and one record the export declares. The records the "
                      "others name were verified like any other. What is not checked: Retention.md also requires the "
-                     "erasure to be recorded as a Memory Record, and no Test reaches the erasures collection itself, "
-                     "so an erasure record carries no demonstration of its own here (`AO-094`). `Memory/Retention.md` "
+                     "erasure to be recorded as a Memory Record, and no Integrity Test reaches the erasures "
+                     "collection itself, so an erasure record carries no demonstration of its own here (`AO-094`); "
+                     "once the map lists that collection the identity Tests read it like any other. `Memory/Retention.md` "
                      "is outside the requirement set, so this is an observation and not a Test outcome."
                      % (len(erasures), len(granted)))
         lines.append("")
@@ -2604,8 +2621,14 @@ def main(argv):
             if why:
                 lines.append("- %s names %s and grants no exclusion: %s" % (ident or "?", erased or "no record", "; ".join(why)))
             else:
-                covered = [s for s in MEMORY_TYPES if any(r.identity_of(p, rec) == erased
-                                                          for p, rec in r.records(s))]
+                # whether an Integrity Test in THIS run has that record's type as its subject, not
+                # whether some Memory-type collection carries the identity: the ten Integrity Tests
+                # resolve to Audit record and Event, and nothing in the requirement set has Evidence
+                # Record or Memory Record as its subject, so the report told the reader an erased
+                # Evidence Record was covered by a Test that does not exist
+                covered = [s for s in MEMORY_TYPES
+                           if s in integrity_subjects and any(r.identity_of(p, rec) == erased
+                                                              for p, rec in r.records(s))]
                 lines.append("- %s names %s: well formed, and %s"
                              % (ident or "?", erased,
                                 "the Integrity Test covering that record grants the exclusion where the record "

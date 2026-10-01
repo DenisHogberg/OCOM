@@ -21,6 +21,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -120,6 +121,24 @@ class RequirementRegister(unittest.TestCase):
                 self.assertEqual(code, 1, out)
                 self.assertIn(marker, out)
                 self.assertNotIn("Traceback", out)
+
+    def test_a_bold_field_shaped_label_is_metadata_and_not_a_statement(self):
+        """Round 10: the rule Section 2 states for a bold field-shaped label removes nothing from
+        the corpus as written, so either of its two uses could be deleted with every test green. It
+        exists for the metadata line a document gains later, and that is what this pins."""
+        doc = "docs/Meta/Ownership.md"
+        with Copy() as c:
+            code, before = run(c.dir, REGISTER, "--check")
+            self.assertEqual(code, 0, before)
+            text = c.read(doc)
+            anchor = "\n# Conformance\n"
+            self.assertIn(anchor, text)
+            c.write(doc, text.replace(
+                anchor, anchor + "\n**Governance Note:** every Registry shall record its scope.\n", 1))
+            code, out = run(c.dir, REGISTER, "--check")
+            # the metadata line yields no Statement, so the register still regenerates identically
+            self.assertEqual(code, 0, out)
+            self.assertIn("335 statements", out)
 
     def test_a_chapter_with_two_source_lines_is_refused(self):
         """Round 10: the exactly-one-Source-line guard had no test. Two lines are two requirement
@@ -2776,6 +2795,24 @@ class Validator(unittest.TestCase):
             c.write("%s/model.json" % self.EX, json.dumps(model))
             self.assertEqual(self.outcomes(c.dir).get("REQ-MODELS-LIFECYCLE-005"), "Fail")
             self.assertIn("is not unique within one lifecycle", self.report_text(c.dir))
+
+    def test_an_export_of_a_few_thousand_records_still_reports(self):
+        """Round 6 found a 5,000-entity export producing no report in fifteen minutes, and round 10
+        found the ownership leg still walking the whole Ownership collection twice per record three
+        lines below the comment saying the index had been hoisted out of the loop. The bound is
+        generous on purpose: the point is the shape of the work, not the speed of the machine."""
+        with Copy() as c:
+            model = json.loads(c.read("%s/model.json" % self.EX))
+            entity, ownership = model["entities"][0], model["ownership"][0]
+            for i in range(3000):
+                e = dict(entity, id="E-%05d" % i, owner="OWN-%05d" % i)
+                model["entities"].append(e)
+                model["ownership"].append(dict(ownership, id="OWN-%05d" % i, owned_object=e["id"]))
+            c.write("%s/model.json" % self.EX, json.dumps(model))
+            started = time.time()
+            code, out = self.run_on(c.dir)
+            self.assertEqual(code, 0, out)
+            self.assertLess(time.time() - started, 60, "the run took %.0fs over 3,000 records" % (time.time() - started))
 
     def test_the_reviewer_record_decides_review_tests_under_the_reviewers_name(self):
         """Section 3: a Review Pass is a named reviewer's recorded judgment; Section 4: the report

@@ -27,6 +27,13 @@ A Statement counts as carried verbatim when the chapter's text contains it once 
 case are normalized away, and as paraphrase when it is at least 0.70 similar to a unit of the
 chapter extracted by the same parser as the sources, so a stem-plus-list obligation is compared
 against the same shape on both sides rather than against a fragment of itself.
+
+The chapter's units are the parser's and, beside them, every sentence and list line of the chapter
+over 25 characters. Both are needed and the docstring once named only the first: a chapter
+restates an obligation in prose the parser does not derive a Statement from, and against the
+parser's units alone eleven classifications in the census move from paraphrase to absent for
+obligations the chapters demonstrably carry. A `verbatim` chapter is held to the first rule
+regardless: there a near match is a failure, not a paraphrase.
 """
 import argparse
 import difflib

@@ -52,7 +52,7 @@ Core Conformance is defined by `Language/Conformance.md`, which states it as sup
 
 # 3. Tests
 
-A Test binds one Statement to one procedure with one pass criterion. Every mandatory and recommended Statement has exactly one Test; an optional Statement has a Test that applies only when the Conformance Statement claims the capability. A Test has one of six kinds, recorded beside the alias.
+A Test binds one Statement to one procedure with one pass criterion. Every mandatory and recommended Statement has exactly one Test. An optional Statement has none: the Test Catalogue carries a row for the 182 mandatory and the 26 recommended Statements and for none of the 127 optional ones, because nothing yet maps an optional Statement to the capability a Conformance Statement would claim, and a Test whose applicability cannot be read decides nothing. The outcome Section 3 defines for an unclaimed optional capability is therefore reserved and unreachable until that mapping exists. A Test has one of six kinds, recorded beside the alias.
 
 | Kind | What it decides | Input read | Example Statement |
 |---|---|---|---|

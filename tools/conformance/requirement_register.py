@@ -82,6 +82,10 @@ def classify(text):
 # A metadata field line, the only thing a leading ** is allowed to mean here. A sentence that
 # merely opens with a bold term ("**Ownership** shall be explicit.") is a Statement like any other,
 # and skipping every line that starts with ** dropped it silently.
+# a line opening with a bold field-shaped label (`**Name:**`) is metadata, not a Statement:
+# `Conformance-Test-Suite.md` Section 2 states the rule. It removes nothing from the corpus as
+# written today, which is the point: it keeps a metadata line a document gains later from
+# entering the requirement set as an obligation nobody wrote
 FIELD = re.compile(r"^\*\*[A-Z][A-Za-z ]{2,30}:\*\*")
 
 
