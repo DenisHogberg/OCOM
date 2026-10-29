@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 23 September 2026
+**Last Updated:** 29 October 2026
 
 ---
 
@@ -36,7 +36,7 @@ own.
 
 A row of kind `method`, `Integrity.method`, names the method by which records demonstrate they are unaltered, and a row `Type.integrity` of kind `field` names the field that carries the demonstration on each record of that type. `content-addressed-identity` means the record's identity field holds the SHA-256 of the record's own content (its JSON with the identity field removed, keys sorted, no whitespace, UTF-8; a stated encoding, not RFC 8785), so an altered record is a different record and a party holding the old identity can tell. It is the one method `tools/conformance/validate.py` passes. A record that merely carries its own digest (`sha256-canonical-json`) is verified and reported pending, because matching one's own digest shows consistency and not that nothing changed. Audit Records in this export carry a `label` beside the content address, for reading; Evidence Records keep a readable identity: a Memory Record's content includes the Evidence it references and an Evidence Record names its Memory Record, so the two cannot both be content-addressed, and the Evidence side names the Memory Record by its content address.
 
-A row of kind `declaration` states something about the export as a whole rather than binding a field: `Identity.scope` declares which of the five Identity Scopes `Meta/Identity.md` names the export's identities carry (`CAND-026`); an export whose identities come from another system declares `External System` and names the system in a row `Identity.system`. A type may declare its own scope in a row `<Type>.identity scope`, and a type spread over several collections, one per source system, declares per collection in a row `<collection>.identity scope` (with `<collection>.identity system` for an External System). The suite keys identity uniqueness and reuse by the declared scope and system.
+A row of kind `declaration` states something about the export as a whole rather than binding a field: `Identity.scope` declares which of the five Identity Scopes `Meta/Identity.md` names the export's identities carry (`CAND-026`); an export whose identities come from another system declares `External System` and names the system in a row `Identity.system`. A type may declare its own scope in a row `<Type>.identity scope`, and a type spread over several collections, one per source system, declares per collection in a row `<collection>.identity scope` (with `<collection>.identity system` for an External System). The suite keys identity uniqueness and reuse by the declared scope and system. What a scope is, and who guarantees it, is stated in `Meta/Identity.md` Identity Scope (`CAND-030`): the range within which the assigner of an identity guarantees that it names one Object.
 
 An export whose Objects carry several Owners declares which Ownership Type the organization holds
 accountable (`CAND-025`; `Meta/Ownership.md` lists eight and the choice is the organization's), in a
@@ -237,3 +237,4 @@ that needs it fails rather than passing over an absence.
 | 0.1 | 22 September 2026 | How to Read a Row: declarations may be keyed by collection path, and the suite keys identity by the declared scope and system. |
 | 0.1 | 23 September 2026 | The Attributes this export nests inside its Entities are listed (`entities[].attributes`) with their four fields: they were represented and named by no row, and a Statement whose subject the map lists nowhere used to be reported as unreadable rather than unrepresented. Round 4 of the all-packages test. |
 | 0.1 | 23 September 2026 | How to Read a Row: the rows that declare the accountable Ownership Type, and the rows that declare an erasure record and what the exclusion requires of the record one names, and what a collection the map does not list costs. Round 3 of the all-packages test found that vocabulary written down nowhere outside the validator. The rows themselves are unchanged: this export erases nothing. |
+| 0.1 | 29 October 2026 | How to Read a Row points at `Meta/Identity.md` Identity Scope for what a scope is and who guarantees it (`CAND-030`). No row changes. |

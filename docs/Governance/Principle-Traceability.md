@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 23 September 2026
+**Last Updated:** 29 October 2026
 
 ---
 
@@ -113,7 +113,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 | `docs/Models/Entity.md:61` | binding rule | REQ-MODELS-ENTITY-003 | Identity shall not depend on implementation technology. |
 | `docs/Models/Domain.md:91` | binding rule | REQ-MODELS-DOMAIN-008 | Every Entity shall belong to exactly one primary Domain. |
 | `docs/Models/Model.md:59` | binding rule | REQ-MODELS-MODEL-004 | No element shall exist without a defined operational meaning. |
-| `docs/Meta/Identity.md:121` | binding rule | REQ-META-IDENTITY-010 | implementation technology. |
+| `docs/Meta/Identity.md:123` | binding rule | REQ-META-IDENTITY-010 | implementation technology. |
 | `docs/Meta/Classification.md:132` | binding rule | REQ-META-CLASSIFICATION-012 | Changing a Classification shall not change Object Identity. |
 | `docs/Language/Identifier Syntax.md:39` | definition |   | The same Identity may be represented by different identifiers in different implementation environments. |
 
@@ -353,7 +353,7 @@ Fourteen principles: 7 partly carried, 3 carried by rules, 2 restated only, 2 re
 |---|---|---|---|
 | `docs/Models/Entity.md:61` | binding rule | REQ-MODELS-ENTITY-003 | Identity shall not depend on implementation technology. |
 | `docs/Models/Model.md:103` | binding rule | REQ-MODELS-MODEL-009 | depend on implementation technologies. |
-| `docs/Meta/Identity.md:121` | binding rule | REQ-META-IDENTITY-010 | implementation technology. |
+| `docs/Meta/Identity.md:123` | binding rule | REQ-META-IDENTITY-010 | implementation technology. |
 | `docs/Lifecycles/Lifecycles.md:47` | binding rule | REQ-LIFECYCLES-005 | shall remain independent of implementation technologies. |
 | `docs/Core/Modeling-Rules.md:81` | binding rule |   | Operational models shall not depend on implementation technologies. |
 | `docs/Core/Principles.md:75` | restatement |   | Implementations adapt to the operational model; the operational model never adapts to implementation-specific constraints (Constitution §13). |
@@ -408,3 +408,4 @@ Three things follow, none of them decided here. A profile is the existing mechan
 | 0.1 | 21 September 2026 | Memory-tier line references re-pointed after `CAND-023` and `CAND-024` were integrated; the Principle 3 row that recorded Evidence's Definition as reserved now carries the Definition itself; Principle 4 gains the integrity guarantee of `Memory Record.md` as a binding-rule carrier. |
 | 0.1 | 22 September 2026 | Two carriers re-pointed after a paragraph was added above each (`Meta/Organization.md`, `CAND-027`; `Memory/Retention.md`, `AO-085`); no row added or removed. |
 | 0.1 | 23 September 2026 | Eight carriers in `Core/Terminology.md` re-pointed after Evidence moved from Reserved Terms into an entry of the index, which that document's revision history had recorded on 21 September without the move being made; no row added or removed. |
+| 0.1 | 29 October 2026 | Principles 2 and 13: the carrier line in `docs/Meta/Identity.md` moves from 121 to 123, the clarifying paragraph `CAND-030` added to Identity Scope having shifted it. The quote and the alias are unchanged; `tools/governance/principle_traceability.py` found the two rows. |

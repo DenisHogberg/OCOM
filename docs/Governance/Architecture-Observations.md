@@ -367,7 +367,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If independently corroborated, a future Reference Case should propose either (1) defining scope as a governed attribute of Identity with its own uniqueness rules, or (2) explicitly stating that Identity uniqueness is always evaluated within a declared Registry, making Registry the scope carrier.
 
-**Status:** Open; not escalated (single external source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2). 22 September 2026: `CAND-026` proposes that every identity an export carries declare one of the five scopes `Meta/Identity.md` names and, for External System, the system; it requires the declaration and does not define the semantics, which stay open here. `CAND-030` (22 September 2026) proposes the reading: a scope is the range within which an identity's assigner guarantees uniqueness, carried by the Registry, the organization or the named external system.
+**Status:** Closed, 29 October 2026. `CAND-030` (Decided the same day) states what a scope is and who guarantees it, and the integration authorized with it wrote the paragraph into `Meta/Identity.md` Identity Scope, with the example map's How to Read a Row and `Adoption/Reference Serialization.md` pointing at it. The paragraph carries no keyword and the requirement set is unchanged at 335 Statements: what was missing was a meaning, not a rule.
 
 **Architect Response:** *(pending)*
 
@@ -2180,3 +2180,4 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 1 October 2026 | Added AO-096 (an optional Statement has no Test, and the outcome Section 3 defines for an unclaimed optional capability can be produced by nothing), from round 10 of the all-packages test. The Entry Lifecycle declares `Closed in part`, which two entries carried and the section did not define. |
 | 0.1 | 23 September 2026 | Added AO-094 (an erasure record grants an exclusion from an Integrity Test and is itself in no Test), from round 5 of the all-packages test; AO-083 carries a postscript naming five further machine-facing files the site serves and this repository does not source, and AO-087's claim that the requirement set takes no Statement from `Lifecycles/` is corrected to the eight it takes. |
 | 0.1 | 29 October 2026 | `AO-095` and `AO-089` Escalated to `CAND-035` and `CAND-036`, each of which carries the Chief Architect's Decision of the same day. Both entries stay open until those Decisions are integrated. |
+| 0.1 | 29 October 2026 | `AO-009` Closed by the integration of `CAND-030`: `Meta/Identity.md` Identity Scope now says what a scope is and who guarantees it. |
