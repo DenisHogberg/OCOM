@@ -50,16 +50,16 @@ Declaration, the fifth kind, reaches one register Statement through rule 1, `Met
 
 | Kind | Statements | Of which mandatory |
 |---|---|---|
-| Presence | 28 | 28 |
+| Presence | 32 | 32 |
 | Integrity | 10 | 10 |
 | Invariant | 14 | 14 |
 | Transition | 10 | 9 |
-| Review | 145 | 120 |
+| Review | 141 | 116 |
 | Declaration | 1 | 1 |
 
 Beside the rows above, 6 claim clauses of `Language/Conformance.md` are catalogued separately below and carry Declaration Tests, four of them read from the Conformance Statement; they are not register Statements and are counted in neither column, so the two columns sum to 208 and 182, the figures this document's Purpose and `Requirement-Register.md` state.
 
-Of the 182 mandatory Statements, 62 carry a mechanical kind and 120 fall to Review. A Review outcome is a named reviewer's recorded judgment, which Section 3 counts toward Core Conformance as Review Pass; it is not a gap in the suite, and it is not a machine result either, which is why the count is printed rather than buried.
+Of the 182 mandatory Statements, 66 carry a mechanical kind and 116 fall to Review. A Review outcome is a named reviewer's recorded judgment, which Section 3 counts toward Core Conformance as Review Pass; it is not a gap in the suite, and it is not a machine result either, which is why the count is printed rather than buried.
 
 A Statement whose subject is persistence over time, such as "Identity shall remain stable throughout the Object's existence", falls to Review here because a single exported model carries no history to check it against. An export that carried its own event history would move several of these to Invariant; the catalogue will report that change when an export offers one, rather than claiming it now.
 
@@ -98,16 +98,16 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 
 | Alias | Document | Section | Class | Kind | Disposition |
 |---|---|---|---|---|---|
-| REQ-META-OBJECT-001 | `Meta/Object.md` | Design Principles | mandatory | Review |  |
+| REQ-META-OBJECT-001 | `Meta/Object.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-OBJECT-003 | `Meta/Object.md` | Object Identity | mandatory | Presence |  |
 | REQ-META-OBJECT-004 | `Meta/Object.md` | Object Identity | mandatory | Review |  |
 | REQ-META-OBJECT-008 | `Meta/Object.md` | Object Lifecycle | recommended | Review |  |
 | REQ-META-OBJECT-009 | `Meta/Object.md` | Object Ownership | recommended | Review |  |
-| REQ-META-OBJECT-018 | `Meta/Object.md` | Conformance | mandatory | Review |  |
-| REQ-META-ORGANIZATION-001 | `Meta/Organization.md` | Design Principles | mandatory | Review |  |
-| REQ-META-ORGANIZATION-002 | `Meta/Organization.md` | Conformance | mandatory | Review |  |
+| REQ-META-OBJECT-018 | `Meta/Object.md` | Conformance | mandatory | Review | Descriptive |
+| REQ-META-ORGANIZATION-001 | `Meta/Organization.md` | Design Principles | mandatory | Review | Descriptive |
+| REQ-META-ORGANIZATION-002 | `Meta/Organization.md` | Conformance | mandatory | Review | Descriptive |
 | REQ-META-IDENTITY-001 | `Meta/Identity.md` | Definition | mandatory | Review |  |
-| REQ-META-IDENTITY-002 | `Meta/Identity.md` | Design Principles | mandatory | Review |  |
+| REQ-META-IDENTITY-002 | `Meta/Identity.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-IDENTITY-003 | `Meta/Identity.md` | Core Characteristics | mandatory | Review |  |
 | REQ-META-IDENTITY-005 | `Meta/Identity.md` | Identity Scope | mandatory | Declaration |  |
 | REQ-META-IDENTITY-007 | `Meta/Identity.md` | Identity Assignment | mandatory | Presence |  |
@@ -116,8 +116,8 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-META-IDENTITY-010 | `Meta/Identity.md` | Identity Persistence | mandatory | Review |  |
 | REQ-META-IDENTITY-012 | `Meta/Identity.md` | Identity Resolution | mandatory | Review |  |
 | REQ-META-IDENTITY-013 | `Meta/Identity.md` | Relationship to Other Specifications | mandatory | Presence |  |
-| REQ-META-IDENTITY-014 | `Meta/Identity.md` | Conformance | mandatory | Review |  |
-| REQ-META-METADATA-002 | `Meta/Metadata.md` | Design Principles | mandatory | Review |  |
+| REQ-META-IDENTITY-014 | `Meta/Identity.md` | Conformance | mandatory | Review | Descriptive |
+| REQ-META-METADATA-002 | `Meta/Metadata.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-METADATA-006 | `Meta/Metadata.md` | Metadata Lifecycle | mandatory | Review |  |
 | REQ-META-METADATA-007 | `Meta/Metadata.md` | Metadata Lifecycle | recommended | Review |  |
 | REQ-META-METADATA-008 | `Meta/Metadata.md` | Metadata Ownership | recommended | Review |  |
@@ -125,8 +125,8 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-META-METADATA-010 | `Meta/Metadata.md` | Metadata Ownership | mandatory | Review |  |
 | REQ-META-METADATA-011 | `Meta/Metadata.md` | Metadata Validation | recommended | Review |  |
 | REQ-META-METADATA-013 | `Meta/Metadata.md` | Metadata Relationships | mandatory | Review |  |
-| REQ-META-METADATA-015 | `Meta/Metadata.md` | Conformance | mandatory | Review |  |
-| REQ-META-CLASSIFICATION-001 | `Meta/Classification.md` | Design Principles | mandatory | Review |  |
+| REQ-META-METADATA-015 | `Meta/Metadata.md` | Conformance | mandatory | Review | Descriptive |
+| REQ-META-CLASSIFICATION-001 | `Meta/Classification.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-CLASSIFICATION-002 | `Meta/Classification.md` | Core Characteristics | mandatory | Presence |  |
 | REQ-META-CLASSIFICATION-007 | `Meta/Classification.md` | Multiple Classification | mandatory | Invariant |  |
 | REQ-META-CLASSIFICATION-008 | `Meta/Classification.md` | Multiple Classification | mandatory | Review |  |
@@ -136,8 +136,8 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-META-CLASSIFICATION-014 | `Meta/Classification.md` | Governance | mandatory | Review |  |
 | REQ-META-CLASSIFICATION-015 | `Meta/Classification.md` | Auditability | mandatory | Review |  |
 | REQ-META-CLASSIFICATION-016 | `Meta/Classification.md` | Auditability | mandatory | Integrity |  |
-| REQ-META-CLASSIFICATION-017 | `Meta/Classification.md` | Conformance | mandatory | Review |  |
-| REQ-META-RELATIONSHIP-001 | `Meta/Relationship.md` | Design Principles | mandatory | Review |  |
+| REQ-META-CLASSIFICATION-017 | `Meta/Classification.md` | Conformance | mandatory | Review | Descriptive |
+| REQ-META-RELATIONSHIP-001 | `Meta/Relationship.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-RELATIONSHIP-002 | `Meta/Relationship.md` | Core Characteristics | mandatory | Presence |  |
 | REQ-META-RELATIONSHIP-007 | `Meta/Relationship.md` | Direction | mandatory | Review |  |
 | REQ-META-RELATIONSHIP-010 | `Meta/Relationship.md` | Lifecycle | mandatory | Invariant |  |
@@ -146,8 +146,8 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-META-RELATIONSHIP-014 | `Meta/Relationship.md` | Governance | recommended | Review |  |
 | REQ-META-RELATIONSHIP-015 | `Meta/Relationship.md` | Auditability | mandatory | Review |  |
 | REQ-META-RELATIONSHIP-016 | `Meta/Relationship.md` | Auditability | mandatory | Integrity |  |
-| REQ-META-RELATIONSHIP-017 | `Meta/Relationship.md` | Conformance | mandatory | Review |  |
-| REQ-META-REFERENCE-001 | `Meta/Reference.md` | Design Principles | mandatory | Review |  |
+| REQ-META-RELATIONSHIP-017 | `Meta/Relationship.md` | Conformance | mandatory | Review | Descriptive |
+| REQ-META-REFERENCE-001 | `Meta/Reference.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-REFERENCE-002 | `Meta/Reference.md` | Core Characteristics | mandatory | Presence |  |
 | REQ-META-REFERENCE-009 | `Meta/Reference.md` | Reference Integrity | recommended | Review |  |
 | REQ-META-REFERENCE-010 | `Meta/Reference.md` | Reference Integrity | recommended | Review |  |
@@ -157,16 +157,16 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-META-REFERENCE-015 | `Meta/Reference.md` | Governance | recommended | Review |  |
 | REQ-META-REFERENCE-016 | `Meta/Reference.md` | Auditability | recommended | Review |  |
 | REQ-META-REFERENCE-017 | `Meta/Reference.md` | Auditability | mandatory | Integrity |  |
-| REQ-META-REFERENCE-018 | `Meta/Reference.md` | Conformance | mandatory | Review |  |
-| REQ-META-CAPABILITY-002 | `Meta/Capability.md` | Design Principles | mandatory | Review |  |
+| REQ-META-REFERENCE-018 | `Meta/Reference.md` | Conformance | mandatory | Review | Descriptive |
+| REQ-META-CAPABILITY-002 | `Meta/Capability.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-CAPABILITY-003 | `Meta/Capability.md` | Core Characteristics | mandatory | Presence |  |
 | REQ-META-CAPABILITY-010 | `Meta/Capability.md` | Capability Composition | mandatory | Review |  |
 | REQ-META-CAPABILITY-012 | `Meta/Capability.md` | Capability Dependencies | mandatory | Review |  |
 | REQ-META-CAPABILITY-014 | `Meta/Capability.md` | Capability Lifecycle | recommended | Review |  |
 | REQ-META-CAPABILITY-015 | `Meta/Capability.md` | Governance | mandatory | Review |  |
 | REQ-META-CAPABILITY-016 | `Meta/Capability.md` | Governance | mandatory | Review |  |
-| REQ-META-CAPABILITY-018 | `Meta/Capability.md` | Conformance | mandatory | Review |  |
-| REQ-META-POLICY-002 | `Meta/Policy.md` | Design Principles | mandatory | Review |  |
+| REQ-META-CAPABILITY-018 | `Meta/Capability.md` | Conformance | mandatory | Review | Descriptive |
+| REQ-META-POLICY-002 | `Meta/Policy.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-POLICY-003 | `Meta/Policy.md` | Core Characteristics | mandatory | Presence |  |
 | REQ-META-POLICY-009 | `Meta/Policy.md` | Policy Application | mandatory | Review |  |
 | REQ-META-POLICY-012 | `Meta/Policy.md` | Policy Enforcement | mandatory | Review |  |
@@ -176,17 +176,17 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-META-POLICY-018 | `Meta/Policy.md` | Governance | mandatory | Review |  |
 | REQ-META-POLICY-019 | `Meta/Policy.md` | Auditability | mandatory | Review |  |
 | REQ-META-POLICY-020 | `Meta/Policy.md` | Auditability | mandatory | Integrity |  |
-| REQ-META-POLICY-021 | `Meta/Policy.md` | Conformance | mandatory | Review |  |
-| REQ-META-CONTRACT-001 | `Meta/Contract.md` | Design Principles | mandatory | Review |  |
+| REQ-META-POLICY-021 | `Meta/Policy.md` | Conformance | mandatory | Review | Descriptive |
+| REQ-META-CONTRACT-001 | `Meta/Contract.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-CONTRACT-002 | `Meta/Contract.md` | Core Characteristics | mandatory | Presence |  |
 | REQ-META-CONTRACT-006 | `Meta/Contract.md` | Responsibilities | recommended | Review |  |
 | REQ-META-CONTRACT-013 | `Meta/Contract.md` | Governance | mandatory | Review |  |
 | REQ-META-CONTRACT-014 | `Meta/Contract.md` | Governance | mandatory | Review |  |
 | REQ-META-CONTRACT-016 | `Meta/Contract.md` | Auditability | mandatory | Review |  |
 | REQ-META-CONTRACT-017 | `Meta/Contract.md` | Auditability | mandatory | Integrity |  |
-| REQ-META-CONTRACT-018 | `Meta/Contract.md` | Conformance | mandatory | Review |  |
+| REQ-META-CONTRACT-018 | `Meta/Contract.md` | Conformance | mandatory | Review | Descriptive |
 | REQ-META-CONSTRAINT-002 | `Meta/Constraint.md` | Definition | mandatory | Review |  |
-| REQ-META-CONSTRAINT-003 | `Meta/Constraint.md` | Design Principles | mandatory | Review |  |
+| REQ-META-CONSTRAINT-003 | `Meta/Constraint.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-CONSTRAINT-004 | `Meta/Constraint.md` | Core Characteristics | mandatory | Presence |  |
 | REQ-META-CONSTRAINT-009 | `Meta/Constraint.md` | Constraint Evaluation | recommended | Review |  |
 | REQ-META-CONSTRAINT-011 | `Meta/Constraint.md` | Constraint Violations | mandatory | Review |  |
@@ -197,8 +197,8 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-META-CONSTRAINT-018 | `Meta/Constraint.md` | Governance | mandatory | Review |  |
 | REQ-META-CONSTRAINT-019 | `Meta/Constraint.md` | Auditability | mandatory | Review |  |
 | REQ-META-CONSTRAINT-020 | `Meta/Constraint.md` | Auditability | mandatory | Integrity |  |
-| REQ-META-CONSTRAINT-021 | `Meta/Constraint.md` | Conformance | mandatory | Review |  |
-| REQ-META-OWNERSHIP-001 | `Meta/Ownership.md` | Design Principles | mandatory | Review |  |
+| REQ-META-CONSTRAINT-021 | `Meta/Constraint.md` | Conformance | mandatory | Review | Descriptive |
+| REQ-META-OWNERSHIP-001 | `Meta/Ownership.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-OWNERSHIP-002 | `Meta/Ownership.md` | Core Characteristics | mandatory | Presence |  |
 | REQ-META-OWNERSHIP-008 | `Meta/Ownership.md` | Shared Ownership | mandatory | Review |  |
 | REQ-META-OWNERSHIP-009 | `Meta/Ownership.md` | Shared Ownership | mandatory | Review |  |
@@ -213,8 +213,8 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-META-OWNERSHIP-020 | `Meta/Ownership.md` | Governance | mandatory | Review |  |
 | REQ-META-OWNERSHIP-021 | `Meta/Ownership.md` | Auditability | mandatory | Review |  |
 | REQ-META-OWNERSHIP-022 | `Meta/Ownership.md` | Auditability | mandatory | Integrity |  |
-| REQ-META-OWNERSHIP-023 | `Meta/Ownership.md` | Conformance | mandatory | Review |  |
-| REQ-META-REGISTRY-001 | `Meta/Registry.md` | Design Principles | mandatory | Review |  |
+| REQ-META-OWNERSHIP-023 | `Meta/Ownership.md` | Conformance | mandatory | Review | Descriptive |
+| REQ-META-REGISTRY-001 | `Meta/Registry.md` | Design Principles | mandatory | Review | Descriptive |
 | REQ-META-REGISTRY-002 | `Meta/Registry.md` | Core Characteristics | mandatory | Presence |  |
 | REQ-META-REGISTRY-005 | `Meta/Registry.md` | Registry Scope | mandatory | Review |  |
 | REQ-META-REGISTRY-006 | `Meta/Registry.md` | Registration | mandatory | Review |  |
@@ -226,7 +226,7 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-META-REGISTRY-014 | `Meta/Registry.md` | Governance | mandatory | Review |  |
 | REQ-META-REGISTRY-015 | `Meta/Registry.md` | Auditability | mandatory | Review |  |
 | REQ-META-REGISTRY-016 | `Meta/Registry.md` | Auditability | mandatory | Integrity |  |
-| REQ-META-REGISTRY-017 | `Meta/Registry.md` | Conformance | mandatory | Review |  |
+| REQ-META-REGISTRY-017 | `Meta/Registry.md` | Conformance | mandatory | Review | Descriptive |
 | REQ-MODELS-MODEL-001 | `Models/Model.md` | Composition | mandatory | Review |  |
 | REQ-MODELS-MODEL-002 | `Models/Model.md` | Model Integrity | mandatory | Review |  |
 | REQ-MODELS-MODEL-003 | `Models/Model.md` | Model Integrity | mandatory | Review |  |
@@ -240,7 +240,7 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-MODELS-ENTITY-003 | `Models/Entity.md` | Identity | mandatory | Review |  |
 | REQ-MODELS-ENTITY-004 | `Models/Entity.md` | Ownership | mandatory | Presence |  |
 | REQ-MODELS-ENTITY-006 | `Models/Entity.md` | Attributes | mandatory | Presence |  |
-| REQ-MODELS-ENTITY-007 | `Models/Entity.md` | State | mandatory | Review |  |
+| REQ-MODELS-ENTITY-007 | `Models/Entity.md` | State | mandatory | Presence |  |
 | REQ-MODELS-ENTITY-008 | `Models/Entity.md` | State | mandatory | Transition |  |
 | REQ-MODELS-ENTITY-009 | `Models/Entity.md` | Lifecycle | mandatory | Presence |  |
 | REQ-MODELS-ENTITY-011 | `Models/Entity.md` | Relationships | mandatory | Review |  |
@@ -271,7 +271,7 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-MODELS-EVENT-004 | `Models/Event.md` | Timestamp | mandatory | Integrity |  |
 | REQ-MODELS-EVENT-005 | `Models/Event.md` | Event Source | mandatory | Review |  |
 | REQ-MODELS-EVENT-008 | `Models/Event.md` | Event Payload | mandatory | Invariant |  |
-| REQ-MODELS-EVENT-009 | `Models/Event.md` | Entity References | mandatory | Review |  |
+| REQ-MODELS-EVENT-009 | `Models/Event.md` | Entity References | mandatory | Presence |  |
 | REQ-MODELS-EVENT-010 | `Models/Event.md` | Immutability | mandatory | Integrity |  |
 | REQ-MODELS-EVENT-011 | `Models/Event.md` | Immutability | mandatory | Review |  |
 | REQ-MODELS-EVENT-012 | `Models/Event.md` | Ordering | recommended | Review |  |
@@ -292,7 +292,7 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-MODELS-WORKFLOW-012 | `Models/Workflow.md` | Professional Review Escalation | mandatory | Invariant |  |
 | REQ-MODELS-WORKFLOW-013 | `Models/Workflow.md` | Professional Review Escalation | mandatory | Review |  |
 | REQ-MODELS-WORKFLOW-015 | `Models/Workflow.md` | Constraints | mandatory | Invariant |  |
-| REQ-MODELS-LIFECYCLE-001 | `Models/Lifecycle.md` | Definition | mandatory | Review |  |
+| REQ-MODELS-LIFECYCLE-001 | `Models/Lifecycle.md` | Definition | mandatory | Presence |  |
 | REQ-MODELS-LIFECYCLE-002 | `Models/Lifecycle.md` | Characteristics | mandatory | Transition |  |
 | REQ-MODELS-LIFECYCLE-003 | `Models/Lifecycle.md` | Initial State | mandatory | Transition |  |
 | REQ-MODELS-LIFECYCLE-005 | `Models/Lifecycle.md` | Operational States | mandatory | Presence |  |
@@ -301,7 +301,7 @@ Where it differs, the cause is the same in both cases: the example Statement is 
 | REQ-MODELS-LIFECYCLE-010 | `Models/Lifecycle.md` | Lifecycle Evolution | mandatory | Review |  |
 | REQ-MODELS-LIFECYCLE-011 | `Models/Lifecycle.md` | Lifecycle Evolution | recommended | Review |  |
 | REQ-MODELS-LIFECYCLE-012 | `Models/Lifecycle.md` | Constraints | mandatory | Invariant |  |
-| REQ-LIFECYCLES-001 | `Lifecycles/Lifecycles.md` | Principles | mandatory | Review |  |
+| REQ-LIFECYCLES-001 | `Lifecycles/Lifecycles.md` | Principles | mandatory | Presence |  |
 | REQ-LIFECYCLES-002 | `Lifecycles/Lifecycles.md` | Principles | mandatory | Transition |  |
 | REQ-LIFECYCLES-003 | `Lifecycles/Lifecycles.md` | Principles | mandatory | Transition |  |
 | REQ-LIFECYCLES-004 | `Lifecycles/Lifecycles.md` | Principles | mandatory | Review | Descriptive |
