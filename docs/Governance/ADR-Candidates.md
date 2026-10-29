@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 23 September 2026
+**Last Updated:** 29 October 2026
 
 ---
 
@@ -1659,7 +1659,7 @@ It does not make the weeks or the responsibility slots requirements. It does not
 
 **Title:** Measuring the Memory Tier Through Profile Conformance: the Suite Tests Every Document a Profile Declaration Includes, and the Example Declares One
 
-**Status:** Open, filed 22 September 2026 under `EPIC-E` (Conformance Test Suite tooling), on what `CAND-002` already decided; Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+**Status:** ✅ Decided, 29 October 2026, adopted as drafted by the Chief Architect, filed 22 September 2026 under `EPIC-E` (Conformance Test Suite tooling) on what `CAND-002` already decided. Integration is **not** authorized by this Decision: the two-step discipline holds, and the tooling, the example Profile Declaration and report, the README and the suite text named in the Next Action below wait for a separate authorization.
 
 **Owner:** Chief Architect (Decision); each integration item separately authorized
 
@@ -1700,7 +1700,7 @@ It does not make the Memory tier part of Core Conformance and does not decide `A
 
 **Title:** A Scope Is the Range Within Which the Assigner of an Identity Guarantees Uniqueness, and the Assigner Carries It
 
-**Status:** Open, filed 22 September 2026 under `EPIC-B` (Object Model consolidation); Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+**Status:** ✅ Decided, 29 October 2026, adopted as drafted by the Chief Architect, filed 22 September 2026 under `EPIC-B` (Object Model consolidation). Integration authorized separately and executed on 29 October 2026: the paragraph is in `Meta/Identity.md` Identity Scope, the example map's How to Read a Row and `Adoption/Reference Serialization.md` point at it, and `AO-009` is Closed. The paragraph carries no keyword and the requirement set is unchanged at 335 Statements.
 
 **Owner:** Chief Architect (Decision); each integration item separately authorized
 
@@ -1896,6 +1896,46 @@ It does not define closure or retroactivity. It does not close `AO-012`.
 
 ---
 
+## CAND-035 · ✅ Decided
+
+**Title:** Which Mandatory Attributes of a Memory Record Survive an Erasure
+
+**Status:** ✅ Decided, 29 October 2026, adopted as drafted by the Chief Architect, filed and decided the same day on `AO-095`. Integration is **not** authorized by this Decision: the sentence named in the Next Action below is a canonical text change and waits for a separate authorization, so `Memory/Retention.md` and `Memory/Memory Record.md` keep saying different things until it is written.
+
+**Owner:** Chief Architect
+
+**Created:** 29 October 2026
+
+**Grounding:** `AO-095`, recorded from round 6 of the all-packages test. `Memory/Memory Record.md` requires every Memory Record to define Identifier, Subject, Memory Type, Value, Layer and Created Date. `Memory/Retention.md`'s Deleted state requires the content to be made irrecoverable "while preserving the record's identity, its creation time and creator, and its demonstration of integrity", and says nothing about the other mandatory attributes. Read as integrated, a record that keeps Subject, Memory Type and Layer still carries content by Retention's account, and a record that drops them is no longer a conforming Memory Record by Memory Record.md's account. The suite reads the four preserved elements literally, which is the stricter reading and the one that cannot be gamed, and that is a reading rather than a rule either document states.
+
+**Decision:** An erasure under `Memory/Retention.md`'s Deleted state preserves the Identifier, the Memory Type, the Layer and the Created Date, together with the creator and the demonstration of integrity the state already names. The Subject and the Value are the content the erasure removes. A record in the Deleted state is therefore a conforming Memory Record carrying four of its six Mandatory Attributes, and `Memory/Memory Record.md` says so of the Deleted state rather than being contradicted by it. The reading the suite already applies becomes the rule it applies.
+
+**Next Action:** Two-step discipline. Step 1 is this Decision. Step 2, separately authorized: one sentence in `Memory/Retention.md`'s Deleted state naming the four attributes that survive, one sentence in `Memory/Memory Record.md` excepting the Deleted state from the Subject and Value obligations, the suite's reason text stops calling its strictness a reading, and `AO-095` closes.
+
+**Related Documents:** `AO-095`, `AO-094`, `CAND-024`, `Memory/Retention.md`, `Memory/Memory Record.md`, `tools/conformance/validate.py`
+
+---
+
+## CAND-036 · ✅ Decided
+
+**Title:** Reducing the Share of Core Conformance Decided by a Reviewer's Judgment, by Three Routes That Add No Rule
+
+**Status:** ✅ Decided, 29 October 2026, adopted as drafted by the Chief Architect, filed and decided the same day on `AO-089`; all three routes authorized. Integration is **not** authorized by this Decision: the dispositions, the kind changes and the regenerated catalogue and report named in the Next Action below wait for a separate authorization, and until then the published ratio stands as `AO-089` states it.
+
+**Owner:** Chief Architect
+
+**Created:** 29 October 2026
+
+**Grounding:** `AO-089`, recorded from the enterprise evaluation of 22 September 2026. `Language/Conformance.md` requires conformance to be objective, measurable and verifiable, and 120 of the 182 mandatory Statements of Core Conformance are decided by a named reviewer's judgment. The suite makes that judgment attributable and contestable, which is what a recorded judgment can be, and does not make it objective in the sense the Language tier requires.
+
+**Decision:** All three routes `AO-089` names are adopted, and each reduces the ratio without adding a rule to any canonical document. One: the four counting Statements move from Review to Presence, now that Presence counts what a Statement says it counts, per the `CAND-025` postscript. Two: the twenty-five unfalsifiable predicates are dispositioned Descriptive under `AO-076`, which removes them from the measured set rather than leaving a reviewer to pass what no reviewer can fail. Three: an export that carries its own event history is accepted, which moves the persistence Statements to Invariant, as the Test Catalogue already records that it would. What remains after the three is the honest size of judgment in this specification, and `Language/Conformance.md`'s principle is then read against that number rather than against 120.
+
+**Next Action:** Two-step discipline. Step 1 is this Decision. Step 2, separately authorized: the Disposition cells in `Governance/Requirement-Aliases.md` for the twenty-five, each Note naming this record; the kind changes carried by the generator rather than by hand, with `Test-Catalogue.md` regenerated; the event-history acceptance implemented in `tools/conformance/validate.py` with a negative test; the example report regenerated and the Reviewer Record rebound; and `AO-089` updated with the ratio the three routes actually produce, measured rather than predicted.
+
+**Related Documents:** `AO-089`, `AO-076`, `CAND-025`, `Language/Conformance.md`, `Governance/Requirement-Aliases.md`, `Governance/Test-Catalogue.md`, `Governance/Conformance-Test-Suite.md`
+
+---
+
 # Revision History
 
 | Version | Date | Description |
@@ -1959,3 +1999,6 @@ It does not define closure or retroactivity. It does not close `AO-012`.
 | 0.1 | 22 September 2026 | CAND-025's Next Action: the count of Statements the catalogue's cardinality rule holds at Review corrected from eleven to four, which are named; found by the all-packages test of the same day. No Decision changed. |
 | 0.1 | 22 September 2026 | CAND-033 re-grounded: as filed it quoted a sentence `EPIC-D` removed from `Core/Terminology.md` on 16 September 2026 and proposed restating it, work already done. The quote and the Terminology half are withdrawn; the open question, which kinds of party may hold Ownership and whether an Owner is an Object, stands. Found by the all-packages test of the same day. |
 | 0.1 | 23 September 2026 | CAND-025's Integration line quotes the sentence as written into `Models/Entity.md` ("Further Ownership records assign"), not the draft's "may assign"; round 2 of the all-packages test found the record and the document quoting each other differently. No Decision changed. |
+| 0.1 | 29 October 2026 | `CAND-029` (measuring the Memory tier through Profile Conformance) and `CAND-030` (a scope is the range within which the assigner of an identity guarantees uniqueness, and the assigner carries it) Decided as drafted by the Chief Architect. Integration of neither is authorized by the Decision: both wait for a separate authorization under the two-step discipline, and `AO-009` stays Open until `CAND-030`'s paragraph is written. `CAND-031`, `CAND-032`, `CAND-033` and `CAND-034` were put to the Chief Architect on the same day and stay Open; no Decision was recorded for them. |
+| 0.1 | 29 October 2026 | `CAND-035` (which Mandatory Attributes of a Memory Record survive an erasure) and `CAND-036` (three routes that reduce the share of Core Conformance decided by judgment) filed and Decided the same day, on `AO-095` and `AO-089`. Integration of neither is authorized by the Decision. |
+| 0.1 | 29 October 2026 | `CAND-030` integrated: the Identity Scope paragraph written, the two pointers added, `AO-009` Closed. The other three Decisions of this day remain unintegrated. |

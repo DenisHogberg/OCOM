@@ -342,7 +342,12 @@ class RegisterCounts(unittest.TestCase):
         rel = ".github/ISSUE_TEMPLATE/architecture-observation.md"
         with Copy() as c:
             line = self.stating_line(c, rel)
-            c.edit(rel, line, re.sub(r"AO-0\d\d\b", "AO-058", line.replace("94 recorded", "58 recorded")))
+            # both halves derived from the line: "94 recorded" was written here and went stale the
+            # day the register reached 95, after which this test mutated only the identifier and
+            # passed while checking half of what it names
+            count = re.search(r"(\d+) recorded", line).group(1)
+            stale = re.sub(r"AO-0\d\d\b", "AO-058", line.replace("%s recorded" % count, "58 recorded"))
+            c.edit(rel, line, stale)
             code, out = run(c.dir, COUNTS, "--check")
             self.assertNotEqual(code, 0, out)
             self.assertIn(rel, out)
@@ -413,7 +418,11 @@ class RegisterCounts(unittest.TestCase):
         with Copy() as c:
             text = c.read("docs/Governance/Evidence-Register.md")
             line = [l for l in text.splitlines() if l.startswith("| ADR Candidates |")][0]
-            c.edit("docs/Governance/Evidence-Register.md", line, line.replace("CAND-001 to CAND-034", "the candidates"))
+            # the range is read out of the line, never written here: a fixed identifier in this
+            # test went stale the day the register grew past it, which is the defect the sibling
+            # test above is about
+            shown = re.search(r"CAND-001 to CAND-\d+", line).group(0)
+            c.edit("docs/Governance/Evidence-Register.md", line, line.replace(shown, "the candidates"))
             code, out = run(c.dir, COUNTS, "--check")
             self.assertNotEqual(code, 0, out)
             self.assertIn("states no ADR Candidate range", out)

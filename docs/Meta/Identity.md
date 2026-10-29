@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 20 July 2026
+**Last Updated:** 29 October 2026
 
 ---
 
@@ -82,6 +82,8 @@ Identity scope may include:
 - Global Ecosystem
 
 Organizations shall define the appropriate scope for each Identity.
+
+A scope is the range within which the assigner of an identity guarantees that the identity names one Object, and the assigner carries it. Where a Registry assigns or registers the identity, the scope is that Registry's declared scope, and the guarantee is the unique Object registration `Meta/Registry.md` requires of it. Where the organization assigns identities without a Registry, the scope is the Organization or the Business Domain that assigns them. Where the identity comes from another system, the scope is External System and that system is named. Where the assigner is outside every organization, a standards body or a public registry, the scope is Global Ecosystem and the guarantee is that assigner's. Scope is a property of an identity's assignment rather than an Object of its own: the regress stops at the Registry, which is an Object with an Identity in the scope of the Organization that operates it. Uniqueness is evaluated within a scope, an identity is the pair of its scope and its value, and identities of different scopes do not collide. This passage clarifies the five scopes above and carries no obligation of its own (`CAND-030`).
 
 ---
 
@@ -185,3 +187,4 @@ A compliant implementation shall:
 | Version | Date | Description |
 |----------|------|-------------|
 | 0.1 | 20 July 2026 | Initial draft |
+| 0.1 | 29 October 2026 | Identity Scope gains one clarifying paragraph: a scope is the range within which the assigner of an identity guarantees that it names one Object, and the assigner carries it. It carries no keyword and adds no obligation; the register is unchanged at 335 Statements. Integration of `CAND-030`, under `EPIC-B`, `CAND-007` Section 3. |

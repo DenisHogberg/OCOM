@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 1 October 2026
+**Last Updated:** 29 October 2026
 
 ---
 
@@ -367,7 +367,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record only. If independently corroborated, a future Reference Case should propose either (1) defining scope as a governed attribute of Identity with its own uniqueness rules, or (2) explicitly stating that Identity uniqueness is always evaluated within a declared Registry, making Registry the scope carrier.
 
-**Status:** Open; not escalated (single external source; awaiting independent corroboration per Standard Evolution Methodology Rules 1 and 2). 22 September 2026: `CAND-026` proposes that every identity an export carries declare one of the five scopes `Meta/Identity.md` names and, for External System, the system; it requires the declaration and does not define the semantics, which stay open here. `CAND-030` (22 September 2026) proposes the reading: a scope is the range within which an identity's assigner guarantees uniqueness, carried by the Registry, the organization or the named external system.
+**Status:** Closed, 29 October 2026. `CAND-030` (Decided the same day) states what a scope is and who guarantees it, and the integration authorized with it wrote the paragraph into `Meta/Identity.md` Identity Scope, with the example map's How to Read a Row and `Adoption/Reference Serialization.md` pointing at it. The paragraph carries no keyword and the requirement set is unchanged at 335 Statements: what was missing was a meaning, not a rule.
 
 **Architect Response:** *(pending)*
 
@@ -1967,7 +1967,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record. Three routes reduce the ratio without adding a rule, each a recorded Decision: move the four counting Statements to Presence now that Presence counts (`CAND-025` postscript); disposition the twenty-five unfalsifiable predicates Descriptive under `AO-076`, which removes them from the count rather than pretending a reviewer can fail them; and accept an export that carries its own event history, which moves the persistence Statements to Invariant, as the catalogue already says it would. What remains after the three is the honest size of judgment in this specification, and the Language principle should then be read against it.
 
-**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2). It moves when one of the three routes is decided or when a submitted report shows two reviewers disagreeing on the same export.
+**Status:** Escalated, 29 October 2026; see `ADR-Candidates.md#cand-036`, which holds the question and carries the Chief Architect's Decision. This entry stays until that Decision is integrated: the Decision records what the text shall say, and the text does not say it yet.
 
 **Architect Response:** *(pending)*
 
@@ -2085,7 +2085,7 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 
 **Recommendation:** Record. The closure is one sentence in `Memory/Retention.md`'s Deleted state naming which Mandatory Attributes survive an erasure, which the natural reading makes Identifier, Memory Type, Layer and Created Date, with Subject and Value being the erased content. That is a canonical text change and therefore a Decision; until it is taken, the suite says in its reason that the strictness is a reading and names this entry.
 
-**Status:** Open; not escalated (single internal source; awaiting a Reference Case per Standard Evolution Methodology Rules 1 and 2).
+**Status:** Escalated, 29 October 2026; see `ADR-Candidates.md#cand-035`, which holds the question and carries the Chief Architect's Decision. This entry stays until that Decision is integrated: the Decision records what the text shall say, and the text does not say it yet.
 
 **Architect Response:** *(pending)*
 
@@ -2179,3 +2179,5 @@ RC-008 and RC-009 reach the same boundary condition (undocumented version-identi
 | 0.1 | 23 September 2026 | Added AO-095 (a Memory Record in the Deleted state must drop attributes `Memory Record.md` makes mandatory), from round 6 of the all-packages test. |
 | 0.1 | 1 October 2026 | Added AO-096 (an optional Statement has no Test, and the outcome Section 3 defines for an unclaimed optional capability can be produced by nothing), from round 10 of the all-packages test. The Entry Lifecycle declares `Closed in part`, which two entries carried and the section did not define. |
 | 0.1 | 23 September 2026 | Added AO-094 (an erasure record grants an exclusion from an Integrity Test and is itself in no Test), from round 5 of the all-packages test; AO-083 carries a postscript naming five further machine-facing files the site serves and this repository does not source, and AO-087's claim that the requirement set takes no Statement from `Lifecycles/` is corrected to the eight it takes. |
+| 0.1 | 29 October 2026 | `AO-095` and `AO-089` Escalated to `CAND-035` and `CAND-036`, each of which carries the Chief Architect's Decision of the same day. Both entries stay open until those Decisions are integrated. |
+| 0.1 | 29 October 2026 | `AO-009` Closed by the integration of `CAND-030`: `Meta/Identity.md` Identity Scope now says what a scope is and who guarantees it. |
