@@ -95,7 +95,13 @@ class RequirementRegister(unittest.TestCase):
     ALIASES = "docs/Governance/Requirement-Aliases.md"
 
     def dispositioned_row(self, c):
-        return [l for l in c.read(self.ALIASES).splitlines() if "| Descriptive |" in l][0]
+        """A dispositioned row whose Note cites `CAND-020`, which the cases below mutate by name.
+        Taking the first Descriptive row broke the day `CAND-036` dispositioned twenty-six rows
+        ahead of it, and the mutation then changed nothing."""
+        rows = [l for l in c.read(self.ALIASES).splitlines()
+                if "| Descriptive |" in l and "`CAND-020`" in l]
+        assert rows, "no dispositioned row cites CAND-020"
+        return rows[0]
 
     def test_the_requirement_set_refuses_a_source_it_cannot_read(self):
         """Round 10: `requirement_set` refused a path outside the canonical tiers with a careful
@@ -1439,7 +1445,16 @@ class Validator(unittest.TestCase):
             c.edit(path, row, "|".join(cells))
             code, out = self.run_on(c.dir)
             self.assertEqual(code, 0, out)
-            self.assertIn("mandatory 185", out)
+            self.assertIn("mandatory %d" % self.measured(), out)
+
+    def measured(self):
+        """The size of the measured set, taken from a run over the untouched repository rather than
+        written here. As a literal (`mandatory 185`) it went stale the day `CAND-036` dispositioned
+        twenty-six Statements Descriptive, and a count recomputed here would be a second opinion
+        about what the suite measures."""
+        code, out = self.run_on(ROOT)
+        self.assertEqual(code, 0, out)
+        return int(re.search(r"mandatory (\d+):", out).group(1))
 
     def test_the_two_names_for_an_audit_record_cannot_be_two_collections(self):
         """Round 9: round 8 resolved the subject to whichever name the map declares, so declaring
@@ -1580,7 +1595,7 @@ class Validator(unittest.TestCase):
             row = [l for l in text.splitlines() if l.startswith("| REQ-META-OWNERSHIP-022 ")][0]
             c.edit(path, row, "\n" + row)          # a gap in the middle of the table
             code, out = self.run_on(c.dir)
-            self.assertIn("mandatory 185", out)
+            self.assertIn("mandatory %d" % self.measured(), out)
 
     def test_a_version_field_that_is_an_absence_is_not_a_version(self):
         """Round 8: both Version Conformance clauses kept the truthiness test the extension clauses
@@ -3086,7 +3101,14 @@ class Validator(unittest.TestCase):
         carries the reviewer's identity. The example's illustrative record decides three Statements."""
         code, printed, text = self.run_with_reviews(ROOT, ROOT / self.REVIEWS)
         self.assertEqual(code, 0, printed)
-        self.assertIn("reviewed 3 pass and 0 fail", printed)
+        # how many of the record's judgments can land is the catalogue's to say: a Statement
+        # dispositioned Descriptive is decided mechanically and a judgment does not override it
+        cat = (ROOT / "docs/Governance/Test-Catalogue.md").read_text(encoding="utf-8")
+        judged = re.findall(r"(?m)^\| (REQ-[A-Z-]+-\d+) \|", (ROOT / self.REVIEWS).read_text(encoding="utf-8"))
+        landing = sum(1 for a in judged
+                      if re.search(r"(?m)^\| %s \|[^|]*\|[^|]*\|[^|]*\| Review \|\s*\|" % a, cat))
+        self.assertIn("reviewed %d pass and 0 fail" % landing, printed)
+        self.assertGreater(landing, 0)
         row = [l for l in text.splitlines() if l.startswith("| REQ-MODELS-ENTITY-003 |")][0]
         self.assertIn("| Review Pass |", row)
         self.assertIn("Example reviewer (first party), 22 September 2026:", row)
