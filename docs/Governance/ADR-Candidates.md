@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 23 September 2026
+**Last Updated:** 29 October 2026
 
 ---
 
@@ -1659,7 +1659,7 @@ It does not make the weeks or the responsibility slots requirements. It does not
 
 **Title:** Measuring the Memory Tier Through Profile Conformance: the Suite Tests Every Document a Profile Declaration Includes, and the Example Declares One
 
-**Status:** Open, filed 22 September 2026 under `EPIC-E` (Conformance Test Suite tooling), on what `CAND-002` already decided; Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+**Status:** ✅ Decided, 29 October 2026, adopted as drafted by the Chief Architect, filed 22 September 2026 under `EPIC-E` (Conformance Test Suite tooling) on what `CAND-002` already decided. Integration is **not** authorized by this Decision: the two-step discipline holds, and the tooling, the example Profile Declaration and report, the README and the suite text named in the Next Action below wait for a separate authorization.
 
 **Owner:** Chief Architect (Decision); each integration item separately authorized
 
@@ -1700,7 +1700,7 @@ It does not make the Memory tier part of Core Conformance and does not decide `A
 
 **Title:** A Scope Is the Range Within Which the Assigner of an Identity Guarantees Uniqueness, and the Assigner Carries It
 
-**Status:** Open, filed 22 September 2026 under `EPIC-B` (Object Model consolidation); Decision pending. The wording below is the CDKO's proposal and binds nothing until the Chief Architect records a Decision.
+**Status:** ✅ Decided, 29 October 2026, adopted as drafted by the Chief Architect, filed 22 September 2026 under `EPIC-B` (Object Model consolidation). Integration is **not** authorized by this Decision: the paragraph, the two pointers and the closure of `AO-009` named in the Next Action below wait for a separate authorization, so `AO-009` stays Open until the text it asks for exists.
 
 **Owner:** Chief Architect (Decision); each integration item separately authorized
 
@@ -1959,3 +1959,4 @@ It does not define closure or retroactivity. It does not close `AO-012`.
 | 0.1 | 22 September 2026 | CAND-025's Next Action: the count of Statements the catalogue's cardinality rule holds at Review corrected from eleven to four, which are named; found by the all-packages test of the same day. No Decision changed. |
 | 0.1 | 22 September 2026 | CAND-033 re-grounded: as filed it quoted a sentence `EPIC-D` removed from `Core/Terminology.md` on 16 September 2026 and proposed restating it, work already done. The quote and the Terminology half are withdrawn; the open question, which kinds of party may hold Ownership and whether an Owner is an Object, stands. Found by the all-packages test of the same day. |
 | 0.1 | 23 September 2026 | CAND-025's Integration line quotes the sentence as written into `Models/Entity.md` ("Further Ownership records assign"), not the draft's "may assign"; round 2 of the all-packages test found the record and the document quoting each other differently. No Decision changed. |
+| 0.1 | 29 October 2026 | `CAND-029` (measuring the Memory tier through Profile Conformance) and `CAND-030` (a scope is the range within which the assigner of an identity guarantees uniqueness, and the assigner carries it) Decided as drafted by the Chief Architect. Integration of neither is authorized by the Decision: both wait for a separate authorization under the two-step discipline, and `AO-009` stays Open until `CAND-030`'s paragraph is written. `CAND-031`, `CAND-032`, `CAND-033` and `CAND-034` were put to the Chief Architect on the same day and stay Open; no Decision was recorded for them. |
