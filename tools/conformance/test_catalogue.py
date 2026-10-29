@@ -144,10 +144,10 @@ def kind_of(text):
     if ABOUT_STATE.search(body):
         return "Transition"
     if REQUIRES.search(body):
-        if CARDINALITY.search(body):
-            # Presence counts one since CAND-025 ("shall have one responsible owner"), and the four
-            # Statements this clause holds stay at Review until a Decision names them (rule 8)
-            return "Review"
+        # Presence counts since CAND-025 ("shall have one responsible owner"), and `CAND-036`
+        # (29 October 2026) names the cardinality phrases it counts, so a Statement that requires
+        # something and also counts it is Presence rather than Review. The Statements that carry a
+        # cardinality phrase and are Review for another reason are already gone by this line.
         return "Presence"
     return "Review"
 
