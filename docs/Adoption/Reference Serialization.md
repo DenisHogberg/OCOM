@@ -14,7 +14,7 @@
 
 **Version:** 0.1
 
-**Last Updated:** 22 September 2026
+**Last Updated:** 29 October 2026
 
 ---
 
@@ -67,7 +67,7 @@ What every implementation owes the suite is not the Reference Serialization but 
 
 `Meta/Identity.md` names five Identity Scopes (Organization, Business Domain, Registry, External System, Global Ecosystem) and requires the organization to define the appropriate scope for each Identity. The rule this document states for an export is the declaration of that choice:
 
-1. Every identity the export carries is bound to one of the five scopes.
+1. Every identity the export carries is bound to one of the five scopes. A scope is the range within which the assigner of that identity guarantees that it names one Object, and the assigner carries it; `Meta/Identity.md` Identity Scope states this (`CAND-030`).
 2. The scope is declared in the Representation Map, in a row `Identity.scope` of kind `declaration`; a type whose identities carry a different scope declares its own in a row `<Type>.identity scope`, and a type spread over several collections, one per source system, declares per collection in a row `<collection>.identity scope`.
 3. An identity of scope External System names the system it comes from, in a row `Identity.system`, `<Type>.identity system` or `<collection>.identity system`.
 
@@ -85,6 +85,7 @@ It does not make the encoding, the schema or the map's field names normative; `L
 |----------|------|-------------|
 | 0.1 | 22 September 2026 | First version, authorized by `CAND-026` (Decided 22 September 2026) on the form `CAND-012` set for Adoption pages: the Reference Serialization, its derived schema, the Representation Map as the artifact every implementation owes the suite, and the declaration rule for identity scope. |
 | 0.1 | 22 September 2026 | The enterprise evaluation of the same day ran the suite on an SAP-and-ServiceNow-shaped export and found it comparing bare identifiers while this page promised coexistence, and found the derived schema demanding every collection. Both fixed in the tools; this page now says how the suite keys identity (declared scope and system, per type or per collection), that a bare reference to an identity present in two scopes is reported ambiguous, and that collections are optional in the schema. |
+| 0.1 | 29 October 2026 | The scope rule points at `Meta/Identity.md` Identity Scope for what a scope is and who guarantees it (`CAND-030`). The rule itself is unchanged. |
 
 ---
 
